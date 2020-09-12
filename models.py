@@ -20,4 +20,34 @@ def get_dadi_model(model_name, withSelection=False):
         else:
             raise Exception('Cannot find model ' + model_name + ' in dadi.DFE') 
     else:
-        import dadi 
+        import dadi
+
+def print_available_models():
+    print('1D demographic models:')
+    print('- bottlegrowth')
+    print('- growth')
+    print('- snm')
+    print('- three_epoch')
+    print('- two_epoch')
+    print()
+
+    print('2D demographic models:')
+    print('- bottlegrowth')
+    print('- bottlegrowth_split')
+    print('- bottlegrowth_split_mig')
+    print('- IM')
+    print('- IM_fsc')
+    print('- IM_pre')
+    print('- split_mig')
+    print('- snm')
+    print()
+
+    print('Demographic models with selection:')
+    print('- equil')
+    print('- IM')
+    print('- IM_single_gamma')
+    print('- IM_pre')
+    print('- IM_pre_single_gamma')
+    print('- split_mig')
+    print('- split_mig_single_gamma')
+    print('- two_epoch')
