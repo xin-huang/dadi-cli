@@ -1,7 +1,7 @@
 import dadi
 import dadi.DFE as DFE
 import pickle
-from models import get_dadi_model
+from Models import get_dadi_model
 
 def generate_cache(model, grids, demo_params,
                    gamma_bounds, gamma_pts, additional_gammas,
