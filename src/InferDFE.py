@@ -11,7 +11,7 @@ def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, theta, output_dir,
         func = spectra1d.integrate
         func_args = [sele_dist, theta]
     if cache2d != None:
-        spectra2d = pickle.load(open(cache1d, 'rb'))
+        spectra2d = pickle.load(open(cache2d, 'rb'))
         func = spectra2d.integrate
         func_args = [sele_dist, theta]
     if mixture:
@@ -22,10 +22,10 @@ def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, theta, output_dir,
 
     # Fit a DFE to the data
     # Initial guess and bounds
-    p0 = dadi.Misc.perturb_params(p0, fold=1, lower_bound=lower_bound, upper_bound=upper_bound)
+    p0 = dadi.Misc.perturb_params(p0, fold=1, lower_bound=lower_bounds, upper_bound=upper_bounds)
     popt = dadi.Inference.optimize_log(p0, data, func, pts=None,
                                        func_args=func_args,
-                                       lower_bound=lower_bound, upper_bound=upper_bound,
+                                       lower_bound=lower_bounds, upper_bound=upper_bounds,
                                        verbose=0, maxiter=200, multinom=False)
 
     print('Optimized parameters: {0}'.format(popt))

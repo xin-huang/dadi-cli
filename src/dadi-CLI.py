@@ -5,14 +5,15 @@ parser = argparse.ArgumentParser()
 subparsers = parser.add_subparsers(help='Commands', dest='command')
 
 # subparser for generating frequency spectrum
-generate_fs_parser = subparsers.add_parser('GenerateFs', help='generate frequency spectrum from VCF files or project down frequency spectrum')
-generate_fs_parser.add_argument('--fs', type=str, help='the frequency spectrum for projection')
+generate_fs_parser = subparsers.add_parser('GenerateFs', help='generate frequency spectrum from VCF files')
 generate_fs_parser.add_argument('--output', type=str, required=True, help='the name of the output file')
 generate_fs_parser.add_argument('--polarized', default=False, action='store_true', help='determine whether the resulting frequency spectrum is polarized or not')
-generate_fs_parser.add_argument('--pop_ids', type=str, nargs='+', help='the population names for the samples')
-generate_fs_parser.add_argument('--pop_info', type=str, help='the name of the file containing the population name of each sample')
+generate_fs_parser.add_argument('--pop_ids', type=str, nargs='+', required=True, help='the population names for the samples')
+generate_fs_parser.add_argument('--pop_info', type=str, required=True, help='the name of the file containing the population name of each sample')
 generate_fs_parser.add_argument('--projections', type=int, nargs='+', required=True, help='the sample sizes after projection')
-generate_fs_parser.add_argument('--vcf', type=str, help='the VCF file for generating frequency spectrum')
+generate_fs_parser.add_argument('--vcf', type=str, required=True, help='the VCF file for generating frequency spectrum')
+generate_fs_parser.add_argument('--bootstrap', type=int, help='the times to perform bootstrapping')
+generate_fs_parser.add_argument('--chunk_size', type=int, help='the chunk size to divide the genomes for bootstrapping')
 generate_fs_parser.set_defaults(generate_fs_parser=True)
 
 # subparser for generating cache
@@ -71,6 +72,7 @@ plot_parser.add_argument('--fs2', type=str, help='...')
 plot_parser.add_argument('--misid', default=False, action='store_true', help='determine whether adding a parameter for misidentifying ancestral alleles or not')
 plot_parser.add_argument('--model', type=str, help='')
 plot_parser.add_argument('--output', type=str, help='...')
+plot_parser.add_argument('--projection', type=int, nargs='+', default=[20, 20], help='')
 plot_parser.add_argument('--sele_dist', type=str, help='')
 plot_parser.add_argument('--sele_dist2', type=str, help='')
 plot_parser.add_argument('--theta', type=float, help='')
@@ -78,7 +80,7 @@ plot_parser.set_defaults(plot_parser=True)
 
 # subparser for statistics and uncertainty analysis
 stat_parser = subparsers.add_parser('Stat', help='perform statistical tests or generate simple statistics')
-stat_parser.add_argument('cmd5_options', type=int, help='...')
+stat_parser.add_argument('--fs', type=str, help='...')
 stat_parser.set_defaults(plot_parser=True)
 
 model_parser = subparsers.add_parser('Model', help='display available demographic models')
@@ -88,14 +90,8 @@ args = parser.parse_args()
 
 if args.command == 'GenerateFs':
 
-    if args.vcf != None:
-          if (args.pop_info == None) and (args.pop_ids == None): 
-              raise Exception('--pop_info and --pop_ids are required when using --vcf')
-          elif args.pop_info == None: raise Exception('--pop_info is required when using --vcf')
-          elif args.pop_ids == None: raise Exception('--pop_ids is required when using --vcf')
-
     from GenerateFs import generate_fs
-    generate_fs(vcf=args.vcf, fs=args.fs, output=args.output, 
+    generate_fs(vcf=args.vcf, output=args.output, bootstrap=args.bootstrap, chunk_size=args.chunk_size,
                 pop_ids=args.pop_ids, pop_info=args.pop_info, projections=args.projections, polarized=args.polarized)
 
 elif args.command == 'GenerateCache':
@@ -123,16 +119,20 @@ elif args.command == 'InferDFE':
 
 elif args.command == 'Plot':
 
-    from Plot import plot_comparison, plot_fitted_demography, plot_fitted_dfe
-    if args.fs2 != None:
-        plot_comparison(fs=args.fs, fs2=args.fs2)
+    from Plot import plot_comparison, plot_fitted_demography, plot_fitted_dfe, plot_single_sfs
+    if args.fs2 == None:
+        plot_single_sfs(fs=args.fs, projections=args.projections, output=args.output)
     elif len(args.demography_params) != 0:
-        plot_fitted_demography(fs=args.fs, model=args.model, demography_params=args.demography_params)
+        plot_fitted_demography(fs=args.fs, model=args.model, demography_params=args.demography_params, 
+                               projections=args.projections, misid=args.misid, output=args.output)
     elif len(args.selection_params) != 0:
         plot_fitted_dfe()
+    else:
+        plot_comparison(fs=args.fs, fs2=args.fs2, projections=args.projections, output=args.output)
 
 elif args.command == 'Stat':
-    print("Stat")
+
+    from Stat import simple_stat, godambe_stat
 
 elif args.command == 'Model':
     
