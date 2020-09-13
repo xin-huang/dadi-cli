@@ -1,4 +1,4 @@
-def get_dadi_model(model_name, withSelection=False):
+def get_dadi_model_func(model_name, withSelection=False):
     if withSelection:
         import dadi.DFE as DFE
         if model_name == 'IM':
@@ -18,28 +18,56 @@ def get_dadi_model(model_name, withSelection=False):
         elif model_name == 'two_epoch':
             return DFE.DemogSelModels.two_epoch, True
         else:
-            raise Exception('Cannot find model ' + model_name + ' in dadi.DFE') 
+            raise Exception('Cannot find model ' + model_name) 
     else:
         import dadi
+        if model_name == '1d_bottlegrowth':
+            return dadi.Demographics1D.bottlegrowth
+        elif model_name == '1d_growth':
+            return dadi.Demographics1D.growth
+        elif model_name == '1d_snm':
+            return dadi.Demographics1D.snm
+        elif model_name == '1d_three_epoch':
+            return dadi.Demographics1D.three_epoch
+        elif model_name == '1d_two_epoch':
+            return dadi.Demographics1D.two_epoch
+        elif model_name == '2d_bottlegrowth':
+            return dadi.Demographics2D.bottlegrowth
+        elif model_name == '2d_bottlegrowth_split':
+            return dadi.Demographics2D.bottlegrowth_split
+        elif model_name == '2d_bottlegrowth_split_mig':
+            return dadi.Demographics2D.bottlegrowth_split_mig
+        elif model_name == '2d_IM':
+            return dadi.Demographics2D.IM
+        elif model_name == '2d_IM_fsc':
+            return dadi.Demographics2D.IM_fsc
+        elif model_name == '2d_IM_pre':
+            return dadi.Demographics2D.IM_pre
+        elif model_name == '2d_split_mig':
+            return dadi.Demographics2D.split_mig
+        elif model_name == '2d_snm':
+            return dadi.Demographics2D.snm
+        else:
+            raise Exception('Cannot find model ' + model_name)
 
 def print_available_models():
     print('1D demographic models:')
-    print('- bottlegrowth')
-    print('- growth')
-    print('- snm')
-    print('- three_epoch')
-    print('- two_epoch')
+    print('- 1d_bottlegrowth')
+    print('- 1d_growth')
+    print('- 1d_snm')
+    print('- 1d_three_epoch')
+    print('- 1d_two_epoch')
     print()
 
     print('2D demographic models:')
-    print('- bottlegrowth')
-    print('- bottlegrowth_split')
-    print('- bottlegrowth_split_mig')
-    print('- IM')
-    print('- IM_fsc')
-    print('- IM_pre')
-    print('- split_mig')
-    print('- snm')
+    print('- 2d_bottlegrowth')
+    print('- 2d_bottlegrowth_split')
+    print('- 2d_bottlegrowth_split_mig')
+    print('- 2d_IM')
+    print('- 2d_IM_fsc')
+    print('- 2d_IM_pre')
+    print('- 2d_split_mig')
+    print('- 2d_snm')
     print()
 
     print('Demographic models with selection:')
