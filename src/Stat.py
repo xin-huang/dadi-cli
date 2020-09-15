@@ -7,7 +7,7 @@ from Models import get_dadi_model_func
 from Distribs import get_dadi_pdf
 
 def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2,
-                 bootstrap_dir, popt, theta, misid, logscale):
+                 bootstrap_dir, ll_complex, ll_simple, pi, popt, theta, misid, lrt, logscale):
 
     fs = dadi.Spectrum.from_file(fs)
     fs_files = glob.glob(bootstrap_dir + '/*.fs')
@@ -40,13 +40,21 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2,
                         sele_dist2, theta, None, exterior_int=True)
 
     boot_theta_adjusts = [b.sum()/fs.sum() for b in all_boot]
-    uncerts_adj = dadi.Godambe.GIM_uncert(model_func, [], all_boot, popt,
-                                          fs, multinom=False, eps=1e-4, log=logscale,
-                                          boot_theta_adjusts=boot_theta_adjusts)
-    print('Estimated 95% uncerts (theta adj): {0}'.format(1.96*uncerts_adj))
-    if logscale:
-        print('Lower bounds of 95% confidence interval : {0}'.format(np.exp(np.log(popt)-1.96*uncerts_adj)))
-        print('Upper bounds of 95% confidence interval : {0}'.format(np.exp(np.log(popt)+1.96*uncerts_adj)))
+    if lrt:
+        adj = dadi.Godambe.LRT_adjust(model_func, [], all_boot, popt, fs,
+                                      nested_indices=[pi-1], multinom=False, boot_theta_adjusts=boot_theta_adjusts)
+        D_adj = adj*2*(ll_complex - ll_simple)
+        pval = dadi.Godambe.sum_chi2_ppf(D_adj, weights=(0.5,0.5))
+        print('Adjusted D statistic: {0}'.format(D_adj))
+        print('p-value for rejecting the simple model: {0}'.format(pval))
     else:
-        print('Lower bounds of 95% confidence interval : {0}'.format(popt-1.96*uncerts_adj))
-        print('Upper bounds of 95% confidence interval : {0}'.format(popt+1.96*uncerts_adj))
+        uncerts_adj = dadi.Godambe.GIM_uncert(model_func, [], all_boot, popt,
+                                              fs, multinom=False, eps=1e-4, log=logscale,
+                                              boot_theta_adjusts=boot_theta_adjusts)
+        print('Estimated 95% uncerts (theta adj): {0}'.format(1.96*uncerts_adj))
+        if logscale:
+            print('Lower bounds of 95% confidence interval : {0}'.format(np.exp(np.log(popt)-1.96*uncerts_adj)))
+            print('Upper bounds of 95% confidence interval : {0}'.format(np.exp(np.log(popt)+1.96*uncerts_adj)))
+        else:
+            print('Lower bounds of 95% confidence interval : {0}'.format(popt-1.96*uncerts_adj))
+            print('Upper bounds of 95% confidence interval : {0}'.format(popt+1.96*uncerts_adj))

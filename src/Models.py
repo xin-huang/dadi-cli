@@ -17,6 +17,8 @@ def get_dadi_model_func(model_name, withSelection=False):
             return DFE.DemogSelModels.split_mig_single_gamma, True
         elif model_name == 'two_epoch':
             return DFE.DemogSelModels.two_epoch, True
+        elif model_name == 'mixture':
+            return DFE.mixture, True
         else:
             raise Exception('Cannot find model: ' + model_name) 
     else:
@@ -79,3 +81,4 @@ def print_available_models():
     print('- split_mig')
     print('- split_mig_single_gamma')
     print('- two_epoch')
+    print('- mixture')

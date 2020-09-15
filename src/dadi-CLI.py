@@ -86,11 +86,15 @@ stat_parser.add_argument('--misid',  default=False, action='store_true', help='d
 stat_parser.add_argument('--cache1d', type=str)
 stat_parser.add_argument('--cache2d', type=str)
 stat_parser.add_argument('--bootstrap_dir', type=str, required=True, help='the directory for boostrapping spectra')
+stat_parser.add_argument('--ll_complex', type=float, help='')
+stat_parser.add_argument('--ll_simple', type=float, help='')
 stat_parser.add_argument('--pdf', type=str)
 stat_parser.add_argument('--pdf2', type=str)
+stat_parser.add_argument('--pi', type=int)
 stat_parser.add_argument('--popt', type=float, nargs='+', required=True)
 stat_parser.add_argument('--theta', type=float, required=True)
 stat_parser.add_argument('--logscale', default=False, action='store_true')
+stat_parser.add_argument('--lrt', default=False, action='store_true')
 
 stat_parser.set_defaults(plot_parser=True)
 
@@ -157,7 +161,8 @@ elif args.command == 'Stat':
     from Stat import godambe_stat
     godambe_stat(fs=args.fs, model=args.model, bootstrap_dir=args.bootstrap_dir, 
                  cache1d=args.cache1d, cache2d=args.cache2d, sele_dist=args.pdf, 
-                 sele_dist2=args.pdf2, popt=args.popt, theta=args.theta, misid=args.misid, logscale=args.logscale)
+                 sele_dist2=args.pdf2, popt=args.popt, theta=args.theta, misid=args.misid, pi=args.pi,
+                 ll_complex=args.ll_complex, ll_simple=args.ll_simple, lrt=args.lrt, logscale=args.logscale)
 
 elif args.command == 'Model':
     
