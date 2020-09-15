@@ -1,49 +1,57 @@
 import dadi
 import dadi.DFE
 import pickle
+import matplotlib.pyplot as plt
+from Distribs import get_dadi_pdf
 
 
-def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, theta, output_dir, 
-              output_prefix, p0, upper_bounds, lower_bounds, fixed_params, mixture, misid, cuda):
+def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, theta, output,
+              p0, upper_bounds, lower_bounds, fixed_params, misid, cuda):
+
+    fs = dadi.Spectrum.from_file(fs)
 
     if cache1d != None:
         spectra1d = pickle.load(open(cache1d, 'rb'))
         func = spectra1d.integrate
-        func_args = [sele_dist, theta]
     if cache2d != None:
         spectra2d = pickle.load(open(cache2d, 'rb'))
         func = spectra2d.integrate
-        func_args = [sele_dist, theta]
-    if mixture:
+    
+    sele_dist = get_dadi_pdf(sele_dist)
+    if sele_dist2 != None:
+        sele_dist2 = get_dadi_pdf(sele_dist2)
+    if (cache1d != None) and (cache2d != None):
         func = dadi.DFE.Cache2D_mod.mixture
         func_args = [spectra1d, spectra2d, sele_dist, sele_dist2, theta]
+    else:
+        func_args = [sele_dist, theta]
+        
     if misid:
         func = dadi.Numerics.make_anc_state_misid_func(func)
 
     # Fit a DFE to the data
     # Initial guess and bounds
-    p0 = dadi.Misc.perturb_params(p0, fold=1, lower_bound=lower_bounds, upper_bound=upper_bounds)
-    popt = dadi.Inference.optimize_log(p0, data, func, pts=None,
-                                       func_args=func_args,
+    p0 = dadi.Misc.perturb_params(p0, lower_bound=lower_bounds, upper_bound=upper_bounds)
+    popt = dadi.Inference.optimize_log(p0, fs, func, pts=None,
+                                       func_args=func_args, fixed_params=fixed_params,
                                        lower_bound=lower_bounds, upper_bound=upper_bounds,
                                        verbose=0, maxiter=200, multinom=False)
 
     print('Optimized parameters: {0}'.format(popt))
 
     # Get expected SFS for MLE
-    if mixture:
+    if (cache1d != None) and (cache2d != None):
         model = func(popt, None, spectra1d, spectra2d, sele_dist, sele_dist2, theta, None)
     else:
         model = func(popt, None, sele_dist, theta, None)
     # Likelihood of the data given the model AFS.
-    ll_model = dadi.Inference.ll_multinom(model, data)
+    ll_model = dadi.Inference.ll_multinom(model, fs)
     print('Maximum log composite likelihood: {0}'.format(ll_model))
 
-    # Plot figures
-    output_prefix += '_ll_%.4f_params' %tuple([ll_model])
-    output_prefix += '_%.4f'*len(popt) %tuple(popt)
-
-    fig = plt.figure(219033)
-    fig.clear()
-    dadi.Plotting.plot_1d_comp_multinom(model, data)
-    fig.savefig(output_dir + "/" + output_prefix + '.pdf')
+    with open(output, 'w') as f:
+        f.write(str(ll_model))
+        for p in popt:
+            f.write("\t")
+            f.write(str(p))
+        f.write("\n")
+        

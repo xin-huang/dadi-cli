@@ -18,7 +18,7 @@ def get_dadi_model_func(model_name, withSelection=False):
         elif model_name == 'two_epoch':
             return DFE.DemogSelModels.two_epoch, True
         else:
-            raise Exception('Cannot find model ' + model_name) 
+            raise Exception('Cannot find model: ' + model_name) 
     else:
         import dadi
         if model_name == '1d_bottlegrowth':

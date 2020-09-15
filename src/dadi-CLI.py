@@ -22,7 +22,7 @@ generate_cache_parser.add_argument('--additional_gammas', type=float, nargs='+',
 generate_cache_parser.add_argument('--demography_params', type=float, nargs='+', default=[], help='the parameters for the demographic model; default: []')
 generate_cache_parser.add_argument('--gamma_bounds', type=float, nargs=2, default=[1e-4, 2000], help='the range of population-scaled selection coefficients to cache; default: [1e-4, 2000]')
 generate_cache_parser.add_argument('--gamma_pts', type=int, default=50, help='the number of gamma grid points over which to integrate; default: 50')
-generate_cache_parser.add_argument('--grids', type=int, nargs=3, default=[100, 200, 300], help='the sizes of grids; default: [100, 200, 300]')
+generate_cache_parser.add_argument('--grids', type=int, nargs=3, help='the sizes of grids; default: None')
 generate_cache_parser.add_argument('--model', type=str, required=True, help='the name of the demographic model with selection')
 generate_cache_parser.add_argument('--mp', default=False, action='store_true', help='determine whether generating cache with multiprocess or not; default: False')
 generate_cache_parser.add_argument('--output', type=str, required=True, help='the name of the output file')
@@ -49,7 +49,7 @@ infer_dfe_parser = subparsers.add_parser('InferDFE', help='infer distribution of
 infer_dfe_parser.add_argument('--cache1d', type=str, help='the name of the 1D DFE cache')
 infer_dfe_parser.add_argument('--cache2d', type=str, help='the name of the 2D DFE cache')
 infer_dfe_parser.add_argument('--cuda', default=False, action='store_true', help='')
-infer_dfe_parser.add_argument('--constants', type=str, nargs='+', default=[], help='the fixed parameters during the inference')
+infer_dfe_parser.add_argument('--constants', type=float, nargs='+', default=[], help='the fixed parameters during the inference')
 infer_dfe_parser.add_argument('--fs', type=str, required=True, help='the name of the frequency spectrum')
 infer_dfe_parser.add_argument('--lbounds', type=float, nargs='+', required=True, help='the lower bounds of the inferred parameters')
 infer_dfe_parser.add_argument('--misid', default=False, action='store_true', help='determine whether adding a parameter for misidentifying ancestral alleles or not')
@@ -58,6 +58,7 @@ infer_dfe_parser.add_argument('--pdf', type=str, help='the probability density f
 infer_dfe_parser.add_argument('--pdf2', type=str, help='the second probability density function for the joint DFE inference')
 infer_dfe_parser.add_argument('--theta', type=float, required=True, help='the population-scaled mutation rate for the nonsynonymous mutations')
 infer_dfe_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='the upper bounds of the inferred parameters')
+infer_dfe_parser.add_argument('--output', type=str, required=True, help='')
 infer_dfe_parser.set_defaults(infer_dfe_parser=True)
 
 # subparser for plotting
@@ -78,11 +79,15 @@ plot_parser.add_argument('--theta', type=float, help='')
 plot_parser.set_defaults(plot_parser=True)
 
 # subparser for statistics and uncertainty analysis
-stat_parser = subparsers.add_parser('Stat', help='perform statistical tests or generate simple statistics')
+stat_parser = subparsers.add_parser('Stat', help='perform statistical tests using Godambe Information Matrix')
 stat_parser.add_argument('--fs', type=str, help='...')
+stat_parser.add_argument('--model', type=str, help='')
+stat_parser.add_argument('--misid',  default=False, action='store_true', help='determine whether adding a parameter for misidentifying ancestral alleles or not')
 stat_parser.add_argument('--cache1d', type=str)
 stat_parser.add_argument('--cache2d', type=str)
 stat_parser.add_argument('--bootstrap_dir', type=str, required=True, help='the directory for boostrapping spectra')
+stat_parser.add_argument('--pdf', type=str)
+stat_parser.add_argument('--pdf2', type=str)
 stat_parser.add_argument('--popt', type=float, nargs='+', required=True)
 stat_parser.add_argument('--theta', type=float, required=True)
 stat_parser.add_argument('--logscale', default=False, action='store_true')
@@ -93,6 +98,13 @@ model_parser = subparsers.add_parser('Model', help='display available demographi
 dist_parser = subparsers.add_parser('Distrib', help='display available probability density functions for distribution of fitness effects')
 
 args = parser.parse_args()
+
+def check_params(params):
+    new_params = []
+    for p in params:
+        if p == -1.0: new_params.append(None)
+        else: new_params.append(p)
+    return new_params
 
 if args.command == 'GenerateFs':
 
@@ -117,11 +129,15 @@ elif args.command == 'InferDemography':
                      lower_bounds=args.lbounds, fixed_params=args.constants, misid=args.misid, cuda=args.cuda)
 
 elif args.command == 'InferDFE':
+   
+    if args.constants != None: args.constants = check_params(args.constants)
+    if args.lbounds != None: args.lbounds = check_params(args.lbounds)
+    if args.ubounds != None: args.ubounds = check_params(args.ubounds)
 
     from InferDFE import infer_dfe
-    infer_dfe(fs=args.fs, cache1d=args.cache1d, cache2d=args.cache2d, sele_dist=args.sele_dist, sele_dist2=args.sele_dist2,
-              output_dir=args.output_dir, output_prefix=args.output_prefix, p0=args.p0, upper_bounds=args.upper_bounds,
-              lower_bounds=args.lower_bounds, fixed_params=args.fixed_params, mixture=args.mixture, misid=args.misid, cuda=args.cuda)
+    infer_dfe(fs=args.fs, cache1d=args.cache1d, cache2d=args.cache2d, sele_dist=args.pdf, sele_dist2=args.pdf2,
+              output=args.output, p0=args.p0, upper_bounds=args.ubounds,
+              lower_bounds=args.lbounds, fixed_params=args.constants, theta=args.theta, misid=args.misid, cuda=args.cuda)
 
 elif args.command == 'Plot':
 
@@ -138,7 +154,10 @@ elif args.command == 'Plot':
 
 elif args.command == 'Stat':
 
-    from Stat import simple_stat, godambe_stat
+    from Stat import godambe_stat
+    godambe_stat(fs=args.fs, model=args.model, bootstrap_dir=args.bootstrap_dir, 
+                 cache1d=args.cache1d, cache2d=args.cache2d, sele_dist=args.pdf, 
+                 sele_dist2=args.pdf2, popt=args.popt, theta=args.theta, misid=args.misid, logscale=args.logscale)
 
 elif args.command == 'Model':
     
