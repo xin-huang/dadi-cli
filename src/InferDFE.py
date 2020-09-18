@@ -1,14 +1,17 @@
 import dadi
 import dadi.DFE
-import pickle
-import matplotlib.pyplot as plt
+import pickle, glob
+import numpy as np
 from Distribs import get_dadi_pdf
 
 
-def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, theta, output,
-              p0, upper_bounds, lower_bounds, fixed_params, misid, cuda):
+def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s, output,
+              popt, p0, upper_bounds, lower_bounds, fixed_params, misid, cuda):
 
     fs = dadi.Spectrum.from_file(fs)
+
+    popt = np.array(open(popt, 'r').readline().rstrip().split(), dtype=float)
+    theta = ns_s * popt[-1]
 
     if cache1d != None:
         spectra1d = pickle.load(open(cache1d, 'rb'))
@@ -54,4 +57,3 @@ def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, theta, output,
             f.write("\t")
             f.write(str(p))
         f.write("\n")
-        
