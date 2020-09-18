@@ -1,10 +1,9 @@
 import dadi
 import dadi.NLopt_mod
 import nlopt
-import matplotlib.pyplot as plt
 from Models import get_dadi_model_func
 
-def infer_demography(fs, model, grids, p0, output_dir, output_prefix,
+def infer_demography(fs, model, grids, p0, output,
                      upper_bounds, lower_bounds, fixed_params, misid, cuda):
     
     fs = dadi.Spectrum.from_file(fs)
@@ -48,15 +47,9 @@ def infer_demography(fs, model, grids, p0, output_dir, output_prefix,
     theta = dadi.Inference.optimal_sfs_scaling(model, fs)
     print('Optimal value of theta: {0}'.format(theta))
 
-    # Plot figures
-    output_prefix += '_ll_%.4f_params' %tuple([ll_model])
-    output_prefix += '_%.4f'*len(popt) %tuple(popt)
-    output_prefix += '_theta_%.4f' %tuple([theta])
-
-    fig = plt.figure(219033)
-    fig.clear()
-    if len(ns) == 1:
-        dadi.Plotting.plot_1d_comp_multinom(model, fs, vmin=1)
-    if len(ns) == 2:
-        dadi.Plotting.plot_2d_comp_multinom(model, fs, vmin=1)
-    fig.savefig(output_dir + "/" + output_prefix + '.pdf')
+    with open(output, 'w') as f:
+        f.write(str(ll_model))
+        for p in popt:
+            f.write("\t")
+            f.write(str(p))
+        f.write("\t" + str(theta) + "\n")
