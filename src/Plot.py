@@ -57,10 +57,12 @@ def plot_fitted_demography(fs, model, popt, projections, misid, output, vmin, re
     if len(ns) == 1: 
         if projections == None: projections = [20]
         fs = fs.project(projections)
+        model = model.project(projections)
         dadi.Plotting.plot_1d_comp_multinom(model, fs)   
     if len(ns) == 2:
         if projections == None: projections = [20, 20]
         fs = fs.project(projections)
+        model = model.project(projections)
         dadi.Plotting.plot_2d_comp_multinom(model, fs, vmin=vmin, resid_range=resid_range)
     fig.savefig(output) 
 
@@ -79,10 +81,10 @@ def plot_fitted_dfe(fs, cache1d, cache2d, demo_popt, sele_popt, ns_s, projection
     ns = fs.sample_sizes
     # Integrate over a range of gammas
     pts_l = [ns[0]+10, ns[0]+20, ns[0]+30]
-    if cache1d != None
+    if cache1d != None:
         spectra1d = pickle.load(open(cache1d, 'rb'))
         func = spectra1d.integrate
-    if cache2d != None
+    if cache2d != None:
         spectra2d = pickle.load(open(cache2d, 'rb'))
         func = spectra2d.integrate
     if (cache1d != None) and (cache2d != None): 
