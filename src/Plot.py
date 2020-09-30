@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
  
 fig = plt.figure(figsize=(8,6))
 
-def plot_single_sfs(fs, projections, output):
+def plot_single_sfs(fs, projections, output, vmin):
 
     fs = dadi.Spectrum.from_file(fs)    
     
@@ -16,7 +16,7 @@ def plot_single_sfs(fs, projections, output):
     if len(fs.sample_sizes) == 2:
         if projections == None: projections = [20, 20]
         fs = fs.project(projections)
-        dadi.Plotting.plot_single_2d_sfs(fs)
+        dadi.Plotting.plot_single_2d_sfs(fs, vmin=vmin)
     fig.savefig(output)
 
 def plot_comparison(fs, fs2, projections, output, vmin, resid_range):

@@ -19,7 +19,7 @@ def generate_cache(model, grids, popt,
     if is_cache1d:
        spectra = DFE.Cache1D(list(popt), sample_sizes, func, pts_l=grids, additional_gammas=additional_gammas, gamma_bounds=gamma_bounds, gamma_pts=gamma_pts, mp=mp) 
     else:
-       spectra = DFE.Cache2D(popt, sample_sizes, func, pts=grids, additional_gammas=additional_gammas, gamma_bounds=gamma_bounds, gamma_pts=gamma_pts, mp=mp)
+       spectra = DFE.Cache2D(list(popt), sample_sizes, func, pts=grids, additional_gammas=additional_gammas, gamma_bounds=gamma_bounds, gamma_pts=gamma_pts, mp=mp)
 
     fid = open(output, 'wb')
     pickle.dump(spectra, fid, protocol=2)

@@ -100,6 +100,7 @@ bestfit_parser.add_argument('--dir', type=str, required=True, help='The director
 bestfit_parser.add_argument('--output', type=str, required=True, help='The name of the ouput file')
 
 model_parser = subparsers.add_parser('Model', help='Display available demographic models')
+model_parser.add_argument('--name', type=str, help='Show the details of a given model')
 dist_parser = subparsers.add_parser('Distrib', help='Display available probability density functions for distribution of fitness effects')
 
 args = parser.parse_args()
@@ -160,9 +161,9 @@ elif args.command == 'Plot':
         plot_fitted_demography(fs=args.fs, model=args.model, popt=args.demo_popt, vmin=args.vmin,
                                projections=args.projections, misid=args.misid, resid_range=args.resid_range, output=args.output)
     elif args.fs2 == None:
-        plot_single_sfs(fs=args.fs, projections=args.projections, output=args.output)
+        plot_single_sfs(fs=args.fs, projections=args.projections, output=args.output, vmin=args.vmin)
     else:
-        plot_comparison(fs=args.fs, fs2=args.fs2, projections=args.projections, output=args.output)
+        plot_comparison(fs=args.fs, fs2=args.fs2, projections=args.projections, output=args.output, vmin=args.vmin, resid_range=args.resid_range)
 
 elif args.command == 'Stat':
 
@@ -179,8 +180,11 @@ elif args.command == 'Bestfit':
 
 elif args.command == 'Model':
     
-    from Models import print_available_models
-    print_available_models()
+    from Models import print_available_models, print_model_details
+    if args.name == None:
+        print_available_models()
+    else:
+        print_model_details(args.name)
 
 elif args.command == 'Distrib':
 
