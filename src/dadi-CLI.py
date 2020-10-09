@@ -94,14 +94,16 @@ stat_parser.add_argument('--ns_s', type=float, help='The ratio for nonsynonymous
 stat_parser.add_argument('--output', type=str, required=True, help='The name of the output file')
 stat_parser.add_argument('--logscale', default=False, action='store_true', help='Determine whether estimating the uncertainties by assuming log-normal distribution of parameters; Default: False')
 stat_parser.add_argument('--lrt', default=False, action='store_true', help='Determine whether perform likelihood ratio test; Default: False')
+stat_parser.add_argument('--eps', type=float, help='Fractional stepsize to use when taking finite-difference derivatives in likelihood ratio test')
 
 bestfit_parser = subparsers.add_parser('Bestfit', help='Obtain the bestfit parameters')
 bestfit_parser.add_argument('--dir', type=str, required=True, help='The directory containing the inferred demographic/dfe parameters')
 bestfit_parser.add_argument('--output', type=str, required=True, help='The name of the ouput file')
 
 model_parser = subparsers.add_parser('Model', help='Display available demographic models')
-model_parser.add_argument('--name', type=str, help='Show the details of a given model')
-dist_parser = subparsers.add_parser('Distrib', help='Display available probability density functions for distribution of fitness effects')
+model_parser.add_argument('--names', type=str, nargs='?', default=None, required=True, help='Show the details of a given model')
+dist_parser = subparsers.add_parser('Pdf', help='Display available probability density functions for distribution of fitness effects')
+dist_parser.add_argument('--names', type=str, nargs='?', default=None, required=True, help='Show the details of a given probability density distribution')
 
 args = parser.parse_args()
 
@@ -169,7 +171,7 @@ elif args.command == 'Stat':
 
     from Stat import godambe_stat
     godambe_stat(fs=args.fs, model=args.model, bootstrap_dir=args.bootstrap_dir, 
-                 cache1d=args.cache1d, cache2d=args.cache2d, sele_dist=args.pdf, ns_s=args.ns_s,
+                 cache1d=args.cache1d, cache2d=args.cache2d, sele_dist=args.pdf, ns_s=args.ns_s, eps=args.eps,
                  sele_dist2=args.pdf2, popt=args.popt_complex, misid=args.misid, pi=args.pi, demo_popt=args.demo_popt,
                  popt_simple=args.popt_simple, lrt=args.lrt, logscale=args.logscale, output=args.output)
 
@@ -181,12 +183,13 @@ elif args.command == 'Bestfit':
 elif args.command == 'Model':
     
     from Models import print_available_models, print_model_details
-    if args.name == None:
+    if args.names == None:
         print_available_models()
     else:
-        print_model_details(args.name)
+        print_model_details(args.names)
 
-elif args.command == 'Distrib':
+elif args.command == 'Pdf':
 
-    from Distribs import print_available_distribs
-    print_available_distribs()
+    from Pdfs import print_available_pdfs
+    if args.names == None:
+        print_available_pdfs()

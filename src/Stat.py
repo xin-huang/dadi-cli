@@ -6,7 +6,7 @@ import numpy as np
 from Models import get_dadi_model_func
 from Distribs import get_dadi_pdf
 
-def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, output,
+def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, output, eps,
                  bootstrap_dir, pi, demo_popt, popt, popt_simple, misid, lrt, logscale):
 
     popt = np.array(open(popt, 'r').readline().rstrip().split(), dtype=float)
@@ -49,7 +49,7 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, outpu
     if lrt:
         ll_complex = popt[0]
         ll_simple = popt_simple[0]
-        adj = dadi.Godambe.LRT_adjust(model_func, [], all_boot, popt_simple[1:], fs,
+        adj = dadi.Godambe.LRT_adjust(model_func, [], all_boot, popt_simple[1:], fs, eps=eps,
                                       nested_indices=[pi-1], multinom=False, boot_theta_adjusts=boot_theta_adjusts)
         D_adj = adj*2*(ll_complex - ll_simple)
         pval = dadi.Godambe.sum_chi2_ppf(D_adj, weights=(0.5,0.5))
@@ -59,7 +59,7 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, outpu
             f.write('p-value for rejecting the simple model: {0}'.format(pval) + '\n')
     else:
         uncerts_adj = dadi.Godambe.GIM_uncert(model_func, [], all_boot, popt[1:],
-                                              fs, multinom=False, eps=1e-4, log=logscale,
+                                              fs, multinom=False, eps=eps, log=logscale,
                                               boot_theta_adjusts=boot_theta_adjusts)
 
         with open(output, 'w') as f:
