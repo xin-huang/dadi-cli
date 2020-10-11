@@ -4,7 +4,7 @@ import dadi.DFE as DFE
 import glob, pickle
 import numpy as np
 from Models import get_dadi_model_func
-from Distribs import get_dadi_pdf
+from Pdfs import get_dadi_pdf
 
 def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, output, eps,
                  bootstrap_dir, pi, demo_popt, popt, popt_simple, misid, lrt, logscale):
@@ -38,10 +38,11 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, outpu
         func = dadi.DFE.mixture
         if misid:
             func = dadi.Numerics.make_anc_state_misid_func(func)
-        def model_func(params, ns, pts):
+        def model_func(pin, ns, pts):
             # for mixture model, pin = [mu, sigma, p0, misid]
             # Add in gammapos parameter
-            # params = np.concatenate([pin[0:2], [0], pin[2:]])
+            # fix rho=0
+            params = np.concatenate([pin[0:2], [0], pin[2:]])
             return func(params, None, s1, s2, sele_dist, 
                         sele_dist2, theta, None, exterior_int=True)
 
@@ -58,15 +59,16 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, outpu
             f.write('Adjusted D statistic: {0}'.format(D_adj) + '\n') 
             f.write('p-value for rejecting the simple model: {0}'.format(pval) + '\n')
     else:
-        uncerts_adj = dadi.Godambe.GIM_uncert(model_func, [], all_boot, popt[1:],
-                                              fs, multinom=False, eps=eps, log=logscale,
+        p = np.array([popt[1], popt[2], popt[4], popt[5]])
+        uncerts_adj = dadi.Godambe.GIM_uncert(model_func, [], all_boot, p,
+                                              fs, multinom=False, log=logscale,
                                               boot_theta_adjusts=boot_theta_adjusts)
 
         with open(output, 'w') as f:
             f.write('Estimated 95% uncerts (theta adj): {0}'.format(1.96*uncerts_adj) + '\n')
             if logscale:
-                f.write('Lower bounds of 95% confidence interval : {0}'.format(np.exp(np.log(popt[1:])-1.96*uncerts_adj)) + '\n')
-                f.write('Upper bounds of 95% confidence interval : {0}'.format(np.exp(np.log(popt[1:])+1.96*uncerts_adj)) + '\n')
+                f.write('Lower bounds of 95% confidence interval : {0}'.format(np.exp(np.log(p)-1.96*uncerts_adj)) + '\n')
+                f.write('Upper bounds of 95% confidence interval : {0}'.format(np.exp(np.log(p)+1.96*uncerts_adj)) + '\n')
             else:
-                f.write('Lower bounds of 95% confidence interval : {0}'.format(popt[1:]-1.96*uncerts_adj) + '\n')
-                f.write('Upper bounds of 95% confidence interval : {0}'.format(popt[1:]+1.96*uncerts_adj) + '\n')
+                f.write('Lower bounds of 95% confidence interval : {0}'.format(p-1.96*uncerts_adj) + '\n')
+                f.write('Upper bounds of 95% confidence interval : {0}'.format(p+1.96*uncerts_adj) + '\n')

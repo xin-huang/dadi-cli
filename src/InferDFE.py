@@ -2,7 +2,7 @@ import dadi
 import dadi.DFE
 import pickle, glob
 import numpy as np
-from Distribs import get_dadi_pdf
+from Pdfs import get_dadi_pdf
 
 
 def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s, output,
@@ -57,3 +57,41 @@ def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s, output,
             f.write("\t")
             f.write(str(p))
         f.write("\n")
+
+def infer_dfe_nuisance_1d(syn_fs, non_fs, pdf1d, cache1d, p0, lbounds, ubounds, output):
+
+    def nuisance(params, ns, data, pdf, spectra, pts=None):
+
+        shape = params[0]
+        scale = params[1]
+        ratio = params[2]
+
+        bneu = 1.0 / np.arange(len(data[0]))
+        bsel = spectra.integrate([shape, scale], ns, pdf, theta=ratio)
+
+        r = (data[0,:]+data[1,:]) / (bneu+bsel)
+        mneu = r * bneu
+        msel = r * bsel.data
+
+        model = dadi.Spectrum([mneu, msel])
+        model.mask[:,0] = model.mask[:,-1] = True
+
+        return model
+
+    spectra = pickle.load(open(cache1d, 'rb'))
+    syn_fs = dadi.Spectrum.from_file(syn_fs)
+    non_fs = dadi.Spectrum.from_file(non_fs)
+    data = dadi.Spectrum([syn_fs.data, non_fs.data])
+    data.mask[:,0] = data.mask[:,-1] = True
+    pdf = get_dadi_pdf(pdf1d)
+
+    p0 = dadi.Misc.perturb_params(p0, lower_bound=lbounds, upper_bound=ubounds)
+    popt = dadi.Inference.optimize(p0, data, nuisance, pts=None, func_args=[data, pdf, spectra], full_output=True, 
+                                   lower_bound=lbounds, upper_bound=ubounds, verbose=0, maxiter=1000, multinom=False)
+
+    results = str(-popt[1]) + "\t" + str(popt[0][0]) + "\t" + str(popt[0][1]) + "\t" + str(popt[0][2])
+    if output != None:
+        with open(output, 'w') as f:
+            f.write(results + "\n")
+    else:
+        print(results)

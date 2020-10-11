@@ -12,6 +12,8 @@ def get_dadi_model_func(model_name, withSelection=False):
             return DFE.DemogSelModels.IM_single_gamma, True
         elif model_name == 'equil':
             return DFE.DemogSelModels.equil, True
+        elif model_name == 'equil_X':
+            return DFE.DemogSelModels.equil_X, True
         elif model_name == 'split_mig_sel':
             return DFE.DemogSelModels.split_mig, False
         elif model_name == 'split_mig_sel_single_gamma':
@@ -55,7 +57,7 @@ def get_dadi_model_func(model_name, withSelection=False):
         elif model_name == 'snm_2d':
             return dadi.Demographics2D.snm
         else:
-            raise Exception('Cannot find model ' + model_name)
+            raise Exception('Demographic model ' + model_name + ' is not available!')
 
 def print_available_models():
     
@@ -80,6 +82,7 @@ def print_available_models():
 
     print('Available demographic models with selection:')
     print('- equil')
+    print('- equil_X')
     print('- IM_sel')
     print('- IM_sel_single_gamma')
     print('- IM_pre_sel')
@@ -251,6 +254,14 @@ def print_model_details(model_name):
 
             gamma: Population-scaled selection coefficient
     '''
+    equil_X = '''
+        Equilibrium demography in chromosome X, plus selection.
+        Only one population in this model.
+
+        params: [gamma]
+
+            gamma: Population-scaled selection coefficient
+    '''
     IM_sel = '''
         Isolation-with-migration model with exponential pop growth and selection.
         Two populations in this model.
@@ -348,6 +359,7 @@ def print_model_details(model_name):
     '''
 
     if model_name == 'equil': print('- equil:\n' + equil)
+    elif model_name == 'equil_X': print('- equil_X:\n' + equil_X)
     elif model_name == 'IM_sel': print('- IM_sel:\n' + IM_sel)
     elif model_name == 'IM_sel_single_gamma': print('- IM_sel_single_gamma:\n' + IM_sel_single_gamma)
     elif model_name == 'IM_pre_sel': print('- IM_pre_sel:\n' + IM_pre_sel)
@@ -370,3 +382,4 @@ def print_model_details(model_name):
     elif model_name == 'split_mig': print('- split_mig:\n' + split_mig)
     elif model_name == 'split_asym_mig': print('- split_asym_mig:\n' + split_asym_mig)
     elif model_name == 'snm_2d': print('- snm_2d:\n' + snm_2d)
+    else: raise Exception('Demographic model ' + model_name + ' is not available!') 
