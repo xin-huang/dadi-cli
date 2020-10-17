@@ -54,6 +54,7 @@ infer_dfe_parser.add_argument('--non-fs', type=str, required=True, help='The fre
 infer_dfe_parser.add_argument('--lbounds', type=float, nargs='+', required=True, help='The lower bounds of the inferred parameters, please use -1 to indicate a parameter without lower bound')
 infer_dfe_parser.add_argument('--misid', default=False, action='store_true', help='Determine whether adding a parameter for misidentifying ancestral alleles or not; Default: False')
 infer_dfe_parser.add_argument('--nuisance', default=False, action='store_true', help='Determine whether inferring DFE with nuisance parameters or not; Default: False')
+infer_dfe_parser.add_argument('--nlopt', default=False, action='store_true', help='Determine whether using nlopt or not; Default: False')
 infer_dfe_parser.add_argument('--p0', type=float, nargs='+', required=True, help='The initial parameters for inference')
 infer_dfe_parser.add_argument('--pdf1d', type=str, required=True, help='The 1D probability density function for the DFE inference; To check available probability density functions, please use `dadi-CLI Distrib`')
 infer_dfe_parser.add_argument('--pdf2d', type=str, help='The 2D probability density function for the joint DFE inference; To check available probability density functions, please use `dadi-CLI Distrib`')
@@ -152,10 +153,11 @@ elif args.subcommand == 'InferDFE':
     from InferDFE import infer_dfe, infer_dfe_nuisance_1d
     if args.nuisance:
         infer_dfe_nuisance_1d(syn_fs=args.syn_fs, non_fs=args.non_fs, pdf1d=args.pdf1d, cache1d=args.cache1d, 
+                              misid=args.misid, is_nlopt=args.nlopt, fixed_params=args.constants, 
                               p0=args.p0, ubounds=args.ubounds, lbounds=args.lbounds, output=args.output)
     else:
         infer_dfe(fs=args.non_fs, cache1d=args.cache1d, cache2d=args.cache2d, sele_dist=args.pdf1d, sele_dist2=args.pdf2d,
-                  output=args.output, p0=args.p0, upper_bounds=args.ubounds, popt=args.demo_popt, ns_s=args.ns_s,
+                  output=args.output, p0=args.p0, upper_bounds=args.ubounds, popt=args.demo_popt, ns_s=args.ratio,
                   lower_bounds=args.lbounds, fixed_params=args.constants, misid=args.misid, cuda=args.cuda)
 
 elif args.subcommand == 'Plot':
