@@ -84,7 +84,7 @@ def infer_dfe_nuisance_1d(syn_fs, non_fs, pdf1d, cache1d, p0, lbounds, ubounds,
     syn_fs = dadi.Spectrum.from_file(syn_fs)
     non_fs = dadi.Spectrum.from_file(non_fs)
     data = dadi.Spectrum([syn_fs.data, non_fs.data])
-    data.mask[:,0] = data.mask[:,1] = data.mask[:,-1] = True
+    data.mask[:,0] = data.mask[:,-1] = True
     pdf = get_dadi_pdf(pdf1d)
 
     if misid:
