@@ -70,7 +70,7 @@ def plot_fitted_demography(fs, model, popt, projections, misid, output, vmin, re
 def plot_fitted_dfe(fs, cache1d, cache2d, demo_popt, sele_popt, ns_s, projections, pdf, pdf2, misid, output, vmin, resid_range):
 
     import dadi.DFE
-    from Distribs import get_dadi_pdf
+    from Pdfs import get_dadi_pdf
     
     fs = dadi.Spectrum.from_file(fs)
     theta = ns_s * float(open(demo_popt, 'r').readline().rstrip().split()[-1])

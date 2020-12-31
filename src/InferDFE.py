@@ -20,10 +20,14 @@ def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s, output,
     if cache2d != None:
         spectra2d = pickle.load(open(cache2d, 'rb'))
         func = spectra2d.integrate
-    
-    sele_dist = get_dadi_pdf(sele_dist)
+   
+    if sele_dist != None: 
+        sele_dist = get_dadi_pdf(sele_dist)
     if sele_dist2 != None:
         sele_dist2 = get_dadi_pdf(sele_dist2)
+    if (sele_dist == None) and (sele_dist2 != None):
+        sele_dist = sele_dist2
+    
     if (cache1d != None) and (cache2d != None):
         func = dadi.DFE.Cache2D_mod.mixture
         func_args = [spectra1d, spectra2d, sele_dist, sele_dist2, theta]
@@ -74,6 +78,12 @@ def infer_dfe_nuisance_1d(syn_fs, non_fs, pdf1d, cache1d, p0, lbounds, ubounds,
         r = (data[0,:]+data[1,:]) / (bneu+bsel)
         mneu = r * bneu
         msel = r * bsel.data
+
+        rneu_1 = data[0,1]/bneu[1]
+        rsel_1 = data[1,1]/bsel[1]
+
+        mneu[1] = rneu_1 * bneu[1]
+        msel[1] = rsel_1 * bsel[1]
         
         model = dadi.Spectrum([mneu, msel])
         model.mask[:,0] = model.mask[:,-1] = True
@@ -116,6 +126,14 @@ def infer_dfe_nuisance_1d(syn_fs, non_fs, pdf1d, cache1d, p0, lbounds, ubounds,
 
     theta = np.mean(r[1:-1])
     norm = np.linalg.norm(r[1:-1])
+
+    rneu_1 = data[0,1]/bneu[1]
+    rsel_1 = data[1,1]/bsel[1]
+
+    mneu[1] = rneu_1 * bneu[1]
+    msel[1] = rsel_1 * bsel[1]
+
+    #print(str(r[1]) + "\t" + str(rneu_1) + "\t" + str(rsel_1))
 
     model = dadi.Spectrum([mneu, msel])
     model.mask[:,0] = model.mask[:,-1] = True

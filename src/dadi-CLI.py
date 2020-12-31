@@ -32,7 +32,7 @@ generate_cache_parser.add_argument('--sample-sizes', type=int, nargs='+', requir
 # subparser for inferring demography
 infer_demo_parser = subparsers.add_parser('InferDemography', help='Infer demographic models from frequency spectrum')
 infer_demo_parser.add_argument('--cuda', default=False, action='store_true', help='Determine whether using GPUs to accelerate inference or not; Default: False')
-infer_demo_parser.add_argument('--constants', type=str, nargs='+', help='The fixed parameters during the inference, please use -1 to indicate a parameter is NOT fixed; Default: None')
+infer_demo_parser.add_argument('--constants', type=float, nargs='+', help='The fixed parameters during the inference, please use -1 to indicate a parameter is NOT fixed; Default: None')
 infer_demo_parser.add_argument('--syn-fs', type=str, required=True, help='The frequency spectrum of synonymous mutations used for inference; To generate the frequency spectrum, please use `dadi-CLI GenerateFs`', dest='syn_fs')
 infer_demo_parser.add_argument('--grids', type=float, nargs=3, help='The sizes of the grids; Default: [sample_size[0]+10, sample_size[0]+20, sample_size[0]+30]')
 infer_demo_parser.add_argument('--lbounds', type=float, nargs='+', required=True, help='The lower bounds of the inferred parameters, please use -1 to indicate a parameter without lower bound')
@@ -56,7 +56,7 @@ infer_dfe_parser.add_argument('--misid', default=False, action='store_true', hel
 infer_dfe_parser.add_argument('--nuisance', default=False, action='store_true', help='Determine whether inferring DFE with nuisance parameters or not; Default: False')
 infer_dfe_parser.add_argument('--nlopt', default=False, action='store_true', help='Determine whether using nlopt or not; Default: False')
 infer_dfe_parser.add_argument('--p0', type=float, nargs='+', required=True, help='The initial parameters for inference')
-infer_dfe_parser.add_argument('--pdf1d', type=str, required=True, help='The 1D probability density function for the DFE inference; To check available probability density functions, please use `dadi-CLI Distrib`')
+infer_dfe_parser.add_argument('--pdf1d', type=str, help='The 1D probability density function for the DFE inference; To check available probability density functions, please use `dadi-CLI Distrib`')
 infer_dfe_parser.add_argument('--pdf2d', type=str, help='The 2D probability density function for the joint DFE inference; To check available probability density functions, please use `dadi-CLI Distrib`')
 infer_dfe_parser.add_argument('--ratio', type=float, help='The ratio for the nonsynonymous mutations vs. the synonymous mutations')
 infer_dfe_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='The upper bounds of the inferred parameters, please use -1 to indicate a parameter with no upper bound, please use -1 to indicate a parameter without upper bound')
@@ -138,7 +138,7 @@ elif args.subcommand == 'InferDemography':
     if args.constants != None: args.constants = check_params(args.constants)
     if args.lbounds != None: args.lbounds = check_params(args.lbounds)
     if args.ubounds != None: args.ubounds = check_params(args.ubounds)
-
+    
     from InferDemography import infer_demography
     infer_demography(fs=args.syn_fs, model=args.model, grids=args.grids, 
                      output=args.output, p0=args.p0, upper_bounds=args.ubounds,
@@ -164,10 +164,10 @@ elif args.subcommand == 'Plot':
 
     from Plot import plot_comparison, plot_fitted_demography, plot_fitted_dfe, plot_single_sfs
     
-    if args.sele_popt != None:
+    if args.sel_popt != None:
         plot_fitted_dfe(fs=args.fs, cache1d=args.cache1d, cache2d=args.cache2d, pdf=args.pdf, pdf2=args.pdf2, misid=args.misid,
-                        demo_popt=args.demo_popt, sele_popt=args.sele_popt, vmin=args.vmin, resid_range=args.resid_range,
-                        ns_s=args.ns_s, projections=args.projections, output=args.output)
+                        demo_popt=args.demo_popt, sele_popt=args.sel_popt, vmin=args.vmin, resid_range=args.resid_range,
+                        ns_s=args.ratio, projections=args.projections, output=args.output)
     elif args.demo_popt != None:
         plot_fitted_demography(fs=args.fs, model=args.model, popt=args.demo_popt, vmin=args.vmin,
                                projections=args.projections, misid=args.misid, resid_range=args.resid_range, output=args.output)

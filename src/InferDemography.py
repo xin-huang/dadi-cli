@@ -29,12 +29,12 @@ def infer_demography(fs, model, grids, p0, output,
 
     popt_global, LLopt_global, result_global = dadi.NLopt_mod.opt(p0, fs_proj, func_ex, grids_proj,
                                                                   lower_bound=lower_bounds,
-                                                                  upper_bound=upper_bounds,
+                                                                  upper_bound=upper_bounds, fixed_params=fixed_params,
                                                                   verbose=0, algorithm=nlopt.GN_MLSL_LDS,
                                                                   local_optimizer=nlopt.LN_BOBYQA, maxeval=400)
     popt, LLopt, result = dadi.NLopt_mod.opt(popt_global, fs, func_ex, grids,
                                              lower_bound=lower_bounds,
-                                             upper_bound=upper_bounds,
+                                             upper_bound=upper_bounds, fixed_params=fixed_params,
                                              verbose=0, algorithm=nlopt.LN_BOBYQA, maxeval=600)
     print('Optimized parameters: {0}'.format(popt))
 
