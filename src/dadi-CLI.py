@@ -103,6 +103,8 @@ stat_parser.add_argument('--eps', type=float, help='Fractional stepsize to use w
 bestfit_parser = subparsers.add_parser('Bestfit', help='Obtain the bestfit parameters')
 bestfit_parser.add_argument('--dir', type=str, required=True, help='The directory containing the inferred demographic/dfe parameters')
 bestfit_parser.add_argument('--output', type=str, required=True, help='The name of the ouput file')
+bestfit_parser.add_argument('--lbounds', type=float, nargs='+', required=True, help='The lower bounds of the optimized parameters, please use -1 to indicate a parameter without lower bound')
+bestfit_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='The upper bounds of the optimized parameters, please use -1 to indicate a parameter without upper bound')
 
 model_parser = subparsers.add_parser('Model', help='Display available demographic models')
 model_parser.add_argument('--names', type=str, nargs='?', default=None, required=True, help='Show the details of a given model')
@@ -186,8 +188,11 @@ elif args.subcommand == 'Stat':
 
 elif args.subcommand == 'Bestfit':
 
+    args.lbounds = check_params(args.lbounds)
+    args.ubounds = check_params(args.ubounds)
+
     from Bestfit import get_bestfit_params
-    get_bestfit_params(dir=args.dir, output=args.output)
+    get_bestfit_params(path=args.dir, lbounds=args.lbounds, ubounds=args.ubounds, output=args.output)
 
 elif args.subcommand == 'Model':
     
