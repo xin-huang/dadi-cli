@@ -100,7 +100,7 @@ stat_parser.add_argument('--logscale', default=False, action='store_true', help=
 stat_parser.add_argument('--lrt', default=False, action='store_true', help='Determine whether perform likelihood ratio test; Default: False')
 stat_parser.add_argument('--eps', type=float, help='Fractional stepsize to use when taking finite-difference derivatives in likelihood ratio test')
 
-bestfit_parser = subparsers.add_parser('Bestfit', help='Obtain the bestfit parameters')
+bestfit_parser = subparsers.add_parser('BestFit', help='Obtain the best fit parameters')
 bestfit_parser.add_argument('--dir', type=str, required=True, help='The directory containing the inferred demographic/dfe parameters')
 bestfit_parser.add_argument('--output', type=str, required=True, help='The name of the ouput file')
 bestfit_parser.add_argument('--lbounds', type=float, nargs='+', required=True, help='The lower bounds of the optimized parameters, please use -1 to indicate a parameter without lower bound')
@@ -186,12 +186,12 @@ elif args.subcommand == 'Stat':
                  sele_dist2=args.pdf2, popt=args.popt_complex, misid=args.misid, pi=args.pi, demo_popt=args.demo_popt,
                  popt_simple=args.popt_simple, lrt=args.lrt, logscale=args.logscale, output=args.output)
 
-elif args.subcommand == 'Bestfit':
+elif args.subcommand == 'BestFit':
 
     args.lbounds = check_params(args.lbounds)
     args.ubounds = check_params(args.ubounds)
 
-    from Bestfit import get_bestfit_params
+    from BestFit import get_bestfit_params
     get_bestfit_params(path=args.dir, lbounds=args.lbounds, ubounds=args.ubounds, output=args.output)
 
 elif args.subcommand == 'Model':
