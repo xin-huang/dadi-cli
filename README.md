@@ -33,12 +33,12 @@ To compare frequency spectra between a demographic model with selection and data
     
 ### Available demographic models
 
-`dadi-CLI` also provides a command `Model` to help users finding available demographic models in `dadi`.
+`dadi-CLI` provides a command `Model` to help users finding available demographic models in `dadi`.
 To find out available demographic models, we use
 
     dadi-CLI Model --names
     
-Then the available demographic models will be displayed in the screen
+Then the available demographic models will be displayed in the screen:
 
     Available 1D demographic models:
     - bottlegrowth_1d
@@ -75,7 +75,7 @@ To find out the parameters and detail of a specific model, we can use the name o
 
     dadi-CLI Model --names IM
     
-Then the detail of the model will be displayed in the screen.
+Then the detail of the model will be displayed in the screen:
 
     - IM:
 
@@ -92,6 +92,35 @@ Then the detail of the model will be displayed in the screen.
                 m21: Migration from pop 1 to pop 2 (2*Na*m21)
 
 ### Available DFE distributions
+
+`dadi-CLI` provides a command `Pdf` to help users finding available probability density functions for DFE inference in `dadi`.
+
+To find out available probability density functions, we use
+
+    dadi-CLI Pdf --names
+    
+Then the availalbe functions will be displayed in the screen:
+
+    Available probability density functions:
+    - beta
+    - biv_ind_gamma
+    - biv_lognormal
+    - exponential
+    - gamma
+    - lognormal
+    - normal
+
+To find out the parameters and the detail of a specific function, we can use the name of the function as the parameter after `--names`. For example,
+
+    dadi-CLI Pdf --names beta
+    
+Then the detail of the function will be displayed in the screen:
+
+    - beta:
+
+            Beta probability density function.
+
+            params = [alpha, beta]
 
 ## References
 
