@@ -33,11 +33,16 @@ For example,
 
 ### Generating allele frequency spectrum from VCF files
 
-`dadi-CLI` only accepts VCF files to generate allele frequency spectrum.
+`dadi-CLI` only accepts VCF files to generate allele frequency spectrum. 
 
-Users can also use `GenerateFs` to generate bootstrapping 
+    dadi-CLI GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.subset.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --output ./examples/results/1KG.YRI.CEU.synonymous.snps.fs
+
+Users can also use `GenerateFs` to generate bootstrapping data from 
 
 ### Inferring demographic models
+
+    dadi-CLI InferDemography --syn-fs ./examples/results/1KG.YRI.CEU.synonymous.snps.fs --model IM_pre --misid --p0 1 1 .5 1 1 1 1 1 .5 --ubounds 10 10 0.999 10 10 10 10 10 0.99999 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5 --output ./examples/results/1KG.YRI.CEU.IM_pre.demo.params --jobs 28
+
 ### Generating caches for DFE inference
 ### Inferring DFE
 ### Performing statistical testing
@@ -64,7 +69,7 @@ To compare frequency spectra between a demographic model with selection and data
 ### Available demographic models
 
 `dadi-CLI` provides a subcommand `Model` to help users finding available demographic models in `dadi`.
-To find out available demographic models, we use
+To find out available demographic models, users can use
 
     dadi-CLI Model --names
     
