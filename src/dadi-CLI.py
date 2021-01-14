@@ -41,6 +41,7 @@ infer_demo_parser.add_argument('--model', type=str, required=True, help='The nam
 infer_demo_parser.add_argument('--p0', type=float, nargs='+', required=True, help='The initial parameters for inference')
 infer_demo_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='The upper bounds of the inferred parameters, please use -1 to indicate a parameter without upper bound')
 infer_demo_parser.add_argument('--output', type=str, required=True, help='The name of the output file')
+infer_demo_parser.add_argument('--jobs', default=1, type=int, help='The number of jobs to run optimization parrallelly')
 
 # subparser for inferring DFE
 infer_dfe_parser = subparsers.add_parser('InferDFE', help='Infer distribution of fitness effects from frequency spectrum')
@@ -61,6 +62,7 @@ infer_dfe_parser.add_argument('--pdf2d', type=str, help='The 2D probability dens
 infer_dfe_parser.add_argument('--ratio', type=float, help='The ratio for the nonsynonymous mutations vs. the synonymous mutations')
 infer_dfe_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='The upper bounds of the inferred parameters, please use -1 to indicate a parameter with no upper bound, please use -1 to indicate a parameter without upper bound')
 infer_dfe_parser.add_argument('--output', type=str, help='The name of the output file')
+infer_dfe_parser.add_argument('--jobs', default=1, type=int, help='The number of jobs to run optimization parrallelly')
 
 # subparser for plotting
 plot_parser = subparsers.add_parser('Plot', help='Plot 1D/2D frequency spectrum')
@@ -140,11 +142,29 @@ elif args.subcommand == 'InferDemography':
     if args.constants != None: args.constants = check_params(args.constants)
     if args.lbounds != None: args.lbounds = check_params(args.lbounds)
     if args.ubounds != None: args.ubounds = check_params(args.ubounds)
-    
+   
+    from multiprocessing import Manager, Process 
     from InferDemography import infer_demography
-    infer_demography(fs=args.syn_fs, model=args.model, grids=args.grids, 
-                     output=args.output, p0=args.p0, upper_bounds=args.ubounds,
-                     lower_bounds=args.lbounds, fixed_params=args.constants, misid=args.misid, cuda=args.cuda)
+    #infer_demography(fs=args.syn_fs, model=args.model, grids=args.grids, 
+    #                 output=args.output, p0=args.p0, upper_bounds=args.ubounds,
+    #                 lower_bounds=args.lbounds, fixed_params=args.constants, misid=args.misid, cuda=args.cuda)
+    with Manager() as manager:
+        results = manager.list()
+
+        pool = []
+        for i in range(args.jobs):
+            p = Process(target=infer_demography, 
+                        args=(results, args.syn_fs, args.model, args.grids, args.p0, 
+                              args.ubounds, args.lbounds, args.constants, args.misid, args.cuda))
+            p.start()
+            pool.append(p)
+        
+        for p in pool:
+            p.join()
+
+        with open(args.output, 'w') as f:
+            for r in results:
+                f.write(r + "\n")
 
 elif args.subcommand == 'InferDFE':
    
