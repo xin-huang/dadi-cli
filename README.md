@@ -4,6 +4,22 @@
 
 ## Installation
 
+To install `dadi-CLI`, users can use `conda`.
+
+To get help information, we can use
+
+    dadi-CLI -h
+
+There are nine subcommands in `dadi-CLI`: `GenerateFs`, `GenerateCache`, `InferDemography`, `InferDFE`, `BestFit`, `Stat`, `Plot`, `Model`, `Pdf`.
+
+To display help information for each subcommand, we can use
+
+    dadi-CLI subcommand -h
+    
+For example,
+
+    dadi-CLI GenerateFs -h
+
 ## Usage
 
 ### Generating frequency spectrum from VCF files
