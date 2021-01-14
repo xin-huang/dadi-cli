@@ -29,11 +29,11 @@ For example,
 
     dadi-CLI GenerateFs -h
 
-## Usage
+## Usage: An Example
 
 ### Generating allele frequency spectrum from VCF files
 
-`dadi-CLI` only accept VCF files to generate allele frequency spectrum.
+`dadi-CLI` only accepts VCF files to generate allele frequency spectrum.
 
 Users can also use `GenerateFs` to generate bootstrapping 
 
@@ -151,6 +151,10 @@ Then the detail of the function will be displayed in the screen:
             Beta probability density function.
 
             params = [alpha, beta]
+
+## Dependencies
+
+- [dadi](https://bitbucket.org/gutenkunstlab/dadi/src/master/)
 
 ## References
 
