@@ -1,17 +1,16 @@
-import glob
-
-def get_bestfit_params(path, lbounds, ubounds, output):
-    files = glob.glob(path + '/*')
-    res = {}
-    for f in files:
-        line = open(f, 'r').readline().rstrip().split()
-        ll = line[0]
-        params = line[1:]
-        if ll != '--':
-            ll = float(ll)
-            if ll not in res:
-                res[ll] = []
-            res[ll].append(params)
+def get_bestfit_params(params, lbounds, ubounds, output):
+    
+    with open(params, 'r') as f:
+        res = {}
+        for line in f:
+            line = line.rstrip().split()
+            ll = line[0]
+            popt = line[1:]
+            if ll != '--':
+                ll = float(ll)
+                if ll not in res:
+                    res[ll] = []
+                res[ll].append(popt)
 
     ll = sorted(res)
     d = ll[-1] - ll[-2]
