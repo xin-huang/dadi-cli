@@ -2,12 +2,17 @@ import dadi
 import dadi.DFE
 import dadi.NLopt_mod
 import pickle, glob, nlopt
+import os, time
 import numpy as np
 from Pdfs import get_dadi_pdf
 
 
-def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s, output,
+def infer_dfe(opt, fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s, #output,
               popt, p0, upper_bounds, lower_bounds, fixed_params, misid, cuda):
+
+    ts = time.time()
+    seed = int(ts) + int(os.getpid())
+    np.random.seed(seed)
 
     fs = dadi.Spectrum.from_file(fs)
 
@@ -45,7 +50,7 @@ def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s, output,
                                        lower_bound=lower_bounds, upper_bound=upper_bounds,
                                        verbose=0, maxiter=200, multinom=False)
 
-    print('Optimized parameters: {0}'.format(popt))
+    #print('Optimized parameters: {0}'.format(popt))
 
     # Get expected SFS for MLE
     if (cache1d != None) and (cache2d != None):
@@ -54,14 +59,20 @@ def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s, output,
         model = func(popt, None, sele_dist, theta, None)
     # Likelihood of the data given the model AFS.
     ll_model = dadi.Inference.ll_multinom(model, fs)
-    print('Maximum log composite likelihood: {0}'.format(ll_model))
+    #print('Maximum log composite likelihood: {0}'.format(ll_model))
 
-    with open(output, 'w') as f:
-        f.write(str(ll_model))
-        for p in popt:
-            f.write("\t")
-            f.write(str(p))
-        f.write("\n")
+    res = str(ll_model)
+    for p in popt:
+        res += "\t" + str(p)
+
+    opt.append(res)
+
+    #with open(output, 'w') as f:
+    #    f.write(str(ll_model))
+    #    for p in popt:
+    #        f.write("\t")
+    #        f.write(str(p))
+    #    f.write("\n")
 
 def infer_dfe_nuisance_1d(syn_fs, non_fs, pdf1d, cache1d, p0, lbounds, ubounds, 
                           fixed_params, misid, is_nlopt, output):
