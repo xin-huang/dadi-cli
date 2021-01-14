@@ -6,13 +6,22 @@
 
 To install `dadi-CLI`, users can use `conda`.
 
-To get help information, we can use
+To get help information, users can use
 
     dadi-CLI -h
 
-There are nine subcommands in `dadi-CLI`: `GenerateFs`, `GenerateCache`, `InferDemography`, `InferDFE`, `BestFit`, `Stat`, `Plot`, `Model`, `Pdf`.
+There are nine subcommands in `dadi-CLI`: 
+- `GenerateFs`
+- `GenerateCache`
+- `InferDemography`
+- `InferDFE`
+- `BestFit` 
+- `Stat`
+- `Plot`
+- `Model`
+- `Pdf`
 
-To display help information for each subcommand, we can use
+To display help information for each subcommand, users can use
 
     dadi-CLI subcommand -h
     
@@ -31,19 +40,19 @@ For example,
 
 `dadi-CLI` can plot frequency spectrum from data or compare the spectra between model and data.
 
-To plot frequency spectrum from data, we use
+To plot frequency spectrum from data, users can use
 
     dadi-CLI Plot --fs example.fs --output example.fs.pdf
     
-To compare two frequency spectra from data, we use
+To compare two frequency spectra from data, users can use
 
     dadi-CLI Plot --fs example1.fs --fs2 example2.fs --output example.fs.comparison.pdf
     
-To compare frequency spectra between a demographic model without selection and data, we use
+To compare frequency spectra between a demographic model without selection and data, users can use
 
     dadi-CLI Plot --fs example.fs 
     
-To compare frequency spectra between a demographic model with selection and data, we use
+To compare frequency spectra between a demographic model with selection and data, users can use
 
     dadi-CLI Plot --fs
     
@@ -87,7 +96,7 @@ Then the available demographic models will be displayed in the screen:
     - two_epoch_sel
     - mixture
 
-To find out the parameters and detail of a specific model, we can use the name of the demograpic model as the parameter after `--names`. For example,
+To find out the parameters and detail of a specific model, users can use the name of the demograpic model as the parameter after `--names`. For example,
 
     dadi-CLI Model --names IM
     
@@ -111,7 +120,7 @@ Then the detail of the model will be displayed in the screen:
 
 `dadi-CLI` provides a command `Pdf` to help users finding available probability density functions for DFE inference in `dadi`.
 
-To find out available probability density functions, we use
+To find out available probability density functions, users can use
 
     dadi-CLI Pdf --names
     
@@ -126,7 +135,7 @@ Then the availalbe functions will be displayed in the screen:
     - lognormal
     - normal
 
-To find out the parameters and the detail of a specific function, we can use the name of the function as the parameter after `--names`. For example,
+To find out the parameters and the detail of a specific function, users can use the name of the function as the parameter after `--names`. For example,
 
     dadi-CLI Pdf --names beta
     
