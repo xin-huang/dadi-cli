@@ -31,14 +31,19 @@ For example,
 
 ## Usage
 
-### Generating frequency spectrum from VCF files
+### Generating allele frequency spectrum from VCF files
+
+`dadi-CLI` only accept VCF files to generate allele frequency spectrum.
+
+Users can also use `GenerateFs` to generate bootstrapping 
+
 ### Inferring demographic models
 ### Generating caches for DFE inference
 ### Inferring DFE
 ### Performing statistical testing
 ### Plotting
 
-`dadi-CLI` can plot frequency spectrum from data or compare the spectra between model and data.
+`dadi-CLI` can plot allele frequency spectrum from data or compare the spectra between model and data.
 
 To plot frequency spectrum from data, users can use
 
@@ -58,7 +63,7 @@ To compare frequency spectra between a demographic model with selection and data
     
 ### Available demographic models
 
-`dadi-CLI` provides a command `Model` to help users finding available demographic models in `dadi`.
+`dadi-CLI` provides a subcommand `Model` to help users finding available demographic models in `dadi`.
 To find out available demographic models, we use
 
     dadi-CLI Model --names
@@ -118,7 +123,7 @@ Then the detail of the model will be displayed in the screen:
 
 ### Available DFE distributions
 
-`dadi-CLI` provides a command `Pdf` to help users finding available probability density functions for DFE inference in `dadi`.
+`dadi-CLI` provides a subcommand `Pdf` to help users finding available probability density functions for DFE inference in `dadi`.
 
 To find out available probability density functions, users can use
 
