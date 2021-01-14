@@ -6,11 +6,17 @@
 
 ## Usage
 
-1. Generating frequency spectrum from VCF files
-2. Inferring demographic models
-3. Generating caches for DFE inference
-4. Inferring DFE
-5. Performing statistical testing
-6. Plotting
+### Generating frequency spectrum from VCF files
+### Inferring demographic models
+### Generating caches for DFE inference
+### Inferring DFE
+### Performing statistical testing
+### Plotting
+
+`dadi-CLI` can plot frequency spectrum from data or compare the spectra between model and data.
+
+To plot frequency spectrum from data, we use
+
+    dadi-CLI Plot --fs example.fs --output example.fs.pdf
 
 ## References
