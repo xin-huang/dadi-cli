@@ -18,5 +18,15 @@
 To plot frequency spectrum from data, we use
 
     dadi-CLI Plot --fs example.fs --output example.fs.pdf
+    
+To compare two frequency spectra from data, we use
+
+    dadi-CLI Plot --fs example1.fs --fs2 example2.fs --output example.fs.comparison.pdf
+    
+To compare frequency spectra from a demographic model and data, we use
+
+    dadi-CLI Plot --fs example.fs 
 
 ## References
+
+[Gutenkunst et al., **PLoS Genet**, 2009](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1000695)
