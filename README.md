@@ -1,5 +1,6 @@
 # dadi-CLI
 
+[![license](https://img.shields.io/badge/license-Apache%202.0-red.svg)](LICENSE)
 [![language](http://img.shields.io/badge/language-python-blue.svg)](https://www.python.org/)
 
 `dadi-CLI` provides a command line interface for [dadi](https://bitbucket.org/gutenkunstlab/dadi/src/master/) to help users to quickly apply `dadi` to their research. `dadi` is a flexible python package for inferring demographic history and the distribution of fitness effects (DFE) from population genomic data based on diffusion approximation. 
@@ -60,11 +61,15 @@ By default, `dadi-CLI` generates folded spectrum. To generate unfold spectrum, u
 
 Users can also use `GenerateFs` to generate bootstrapping data from VCF files. These bootstrapping data will be used in the statistical testing with the Godambe Information Matrix.
 
+    dadi-CLI GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --polarized --bootstrap 100 --chunk-size 1000000 --output ./examples/results/bootstrapping_syn/1KG.YRI.CEU.synonymous.snps.unfold.bootstrapping
+    
+    dadi-CLI GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.nonsynonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --polarized --bootstrap 100 --chunk-size 1000000 --output ./examples/results/bootstrapping_non/1KG.YRI.CEU.nonsynonymous.snps.unfold.bootstrapping
+
 ### Inferring demographic models
 
 For inferring demographic models, we use the spectrum from the synonymous SNPs.
 
-    dadi-CLI InferDemography --syn-fs ./examples/results/1KG.YRI.CEU.synonymous.snps.unfold.fs --model IM_pre --misid --p0 1 1 .5 1 1 1 1 1 .5 --ubounds 10 10 0.999 10 10 10 10 10 0.99999 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5 --output ./examples/results/1KG.YRI.CEU.IM_pre.demo.params --jobs 100
+    dadi-CLI InferDemography --syn-fs ./examples/results/1KG.YRI.CEU.synonymous.snps.unfold.fs --model IM_pre --misid --p0 1 1 .5 1 1 1 1 1 .5 --ubounds 10 10 0.999 10 10 10 10 10 0.99999 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5 --output ./examples/results/demo/1KG.YRI.CEU.IM_pre.demo.params --jobs 100
 
 ### Generating caches for DFE inference
 
