@@ -37,20 +37,41 @@ Here we use the data from the 1000 Genomes Project to demonstrate how to apply `
 
 `dadi-CLI` only accepts VCF files to generate allele frequency spectrum. To generate the spectrum, users can use
 
-    dadi-CLI GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --output ./examples/results/1KG.YRI.CEU.synonymous.snps.fs
+    dadi-CLI GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --polarized --output ./examples/results/1KG.YRI.CEU.synonymous.snps.unfold.fs
     
-    dadi-CLI GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.nonsynonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --output ./examples/results/1KG.YRI.CEU.nonsynonymous.snps.fs
+    dadi-CLI GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.nonsynonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --polarized --output ./examples/results/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs
 
-Here `./examples/data/1KG.YRI.CEU.popfile.txt` is a file providing the population information for each individuals.
+Here `./examples/data/1KG.YRI.CEU.popfile.txt` is a file providing the population information for each individuals. In the population information file, each line contains two fields. The first field is the name of the individual, and the second field is the name of the population that the individual belongs to. For example,
 
-Users can also use `GenerateFs` to generate bootstrapping data from 
+    NA12718	CEU
+    NA12748	CEU
+    NA12775	CEU
+    NA19095	YRI
+    NA19096	YRI
+    NA19107	YRI
+
+`--pop-ids` specifies the ID of the population. Here we have two populations YRI and CEU. The population IDs should match those in the population information file above.
+
+`--projections` specifies the sample size of the population. Here we have 108 YRI individuals and 99 CEU individuals. Therefore, we have 216 (108*2) and 198 (99*2) haplodtypes for YRI and CEU respectively. 
+
+By default, `dadi-CLI` generates folded spectrum. To generate unfold spectrum, users should add `--polarized`.
+
+Users can also use `GenerateFs` to generate bootstrapping data from VCF files. These bootstrapping data will be used in the statistical testing with the Godambe Information Matrix.
 
 ### Inferring demographic models
+
+For inferring demographic models, we use the spectrum from the synonymous SNPs.
 
     dadi-CLI InferDemography --syn-fs ./examples/results/1KG.YRI.CEU.synonymous.snps.fs --model IM_pre --misid --p0 1 1 .5 1 1 1 1 1 .5 --ubounds 10 10 0.999 10 10 10 10 10 0.99999 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5 --output ./examples/results/1KG.YRI.CEU.IM_pre.demo.params --jobs 28
 
 ### Generating caches for DFE inference
+
+
+
 ### Inferring DFE
+
+For inferring DFE, we use the spectrum from the nonsynonymous SNPs.
+
 ### Performing statistical testing
 ### Plotting
 
