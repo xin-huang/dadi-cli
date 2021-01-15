@@ -5,7 +5,7 @@ import os, time
 import numpy as np
 from Models import get_dadi_model_func
 
-def infer_demography(opt, fs, model, grids, p0, #output,
+def infer_demography(fs, model, grids, p0, output,
                      upper_bounds, lower_bounds, fixed_params, misid, cuda):
 
     ts = time.time()
@@ -53,16 +53,16 @@ def infer_demography(opt, fs, model, grids, p0, #output,
     theta = dadi.Inference.optimal_sfs_scaling(model, fs)
     #print('Optimal value of theta: {0}'.format(theta))
 
-    res = str(ll_model)
-    for p in popt:
-        res += "\t" + str(p)
-    res += "\t" + str(theta)
+    #res = str(ll_model)
+    #for p in popt:
+    #    res += "\t" + str(p)
+    #res += "\t" + str(theta)
 
-    opt.append(res)
+    #opt.append(res)
 
-    #with open(output, 'w') as f:
-    #    f.write(str(ll_model))
-    #    for p in popt:
-    #        f.write("\t")
-    #        f.write(str(p))
-    #    f.write("\t" + str(theta) + "\n")
+    with open(output, 'w') as f:
+        f.write(str(ll_model))
+        for p in popt:
+            f.write("\t")
+            f.write(str(p))
+        f.write("\t" + str(theta) + "\n")

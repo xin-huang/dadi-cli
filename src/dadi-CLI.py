@@ -104,7 +104,7 @@ stat_parser.add_argument('--eps', type=float, help='Fractional stepsize to use w
 
 # subparser for getting the best fit parameters
 bestfit_parser = subparsers.add_parser('BestFit', help='Obtain the best fit parameters')
-bestfit_parser.add_argument('--dir', type=str, required=True, help='The directory containing the inferred demographic/dfe parameters')
+bestfit_parser.add_argument('--params', type=str, required=True, help='The file containing the inferred demographic/dfe parameters')
 bestfit_parser.add_argument('--output', type=str, required=True, help='The name of the ouput file')
 bestfit_parser.add_argument('--lbounds', type=float, nargs='+', required=True, help='The lower bounds of the optimized parameters, please use -1 to indicate a parameter without lower bound')
 bestfit_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='The upper bounds of the optimized parameters, please use -1 to indicate a parameter without upper bound')
@@ -116,10 +116,6 @@ model_parser.add_argument('--names', type=str, nargs='?', default=None, required
 # subparser for getting the available probability distribution for DFE in dadi
 dist_parser = subparsers.add_parser('Pdf', help='Display available probability density functions for distribution of fitness effects')
 dist_parser.add_argument('--names', type=str, nargs='?', default=None, required=True, help='Show the details of a given probability density distribution')
-
-# subparser for 
-workflow_parser = subparsers.add_parser('Workflow', help='Construct workflow for population genetic inference with dadi')
-workflow_parser.add_argument('--config', type=str, required=True, help='The configuration file for constructing the workflow')
 
 args = parser.parse_args()
 
@@ -157,12 +153,12 @@ elif args.subcommand == 'InferDemography':
     #                 output=args.output, p0=args.p0, upper_bounds=args.ubounds,
     #                 lower_bounds=args.lbounds, fixed_params=args.constants, misid=args.misid, cuda=args.cuda)
     with Manager() as manager:
-        results = manager.list()
+        #results = manager.list()
 
         pool = []
         for i in range(args.jobs):
             p = Process(target=infer_demography, 
-                        args=(results, args.syn_fs, args.model, args.grids, args.p0, 
+                        args=(args.syn_fs, args.model, args.grids, args.p0, args.output+'.run'+str(i), 
                               args.ubounds, args.lbounds, args.constants, args.misid, args.cuda))
             p.start()
             pool.append(p)
@@ -170,9 +166,9 @@ elif args.subcommand == 'InferDemography':
         for p in pool:
             p.join()
 
-        with open(args.output, 'w') as f:
-            for r in results:
-                f.write(r + "\n")
+        #with open(args.output, 'w') as f:
+        #    for r in results:
+        #        f.write(r + "\n")
 
 elif args.subcommand == 'InferDFE':
    
@@ -238,7 +234,7 @@ elif args.subcommand == 'BestFit':
     args.ubounds = check_params(args.ubounds)
 
     from BestFit import get_bestfit_params
-    get_bestfit_params(path=args.dir, lbounds=args.lbounds, ubounds=args.ubounds, output=args.output)
+    get_bestfit_params(params=args.params, lbounds=args.lbounds, ubounds=args.ubounds, output=args.output)
 
 elif args.subcommand == 'Model':
     
