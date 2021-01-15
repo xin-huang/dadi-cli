@@ -1,5 +1,7 @@
 # dadi-CLI
 
+[![language](http://img.shields.io/badge/language-python-blue.svg)](https://www.python.org/)
+
 `dadi-CLI` provides a command line interface for [dadi](https://bitbucket.org/gutenkunstlab/dadi/src/master/) to help users to quickly apply `dadi` to their research. `dadi` is a flexible python package for inferring demographic history and the distribution of fitness effects (DFE) from population genomic data based on diffusion approximation. 
 
 ## Installation
@@ -41,7 +43,7 @@ Here we use the data from the 1000 Genomes Project to demonstrate how to apply `
     
     dadi-CLI GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.nonsynonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --polarized --output ./examples/results/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs
 
-Here `./examples/data/1KG.YRI.CEU.popfile.txt` is a file providing the population information for each individuals. In the population information file, each line contains two fields. The first field is the name of the individual, and the second field is the name of the population that the individual belongs to. For example,
+Here `./examples/data/1KG.YRI.CEU.popfile.txt` is a file providing the population information for each individual. In the population information file, each line contains two fields. The first field is the name of the individual, and the second field is the name of the population that the individual belongs to. For example,
 
     NA12718	CEU
     NA12748	CEU
@@ -50,7 +52,7 @@ Here `./examples/data/1KG.YRI.CEU.popfile.txt` is a file providing the populatio
     NA19096	YRI
     NA19107	YRI
 
-`--pop-ids` specifies the ID of the population. Here we have two populations YRI and CEU. The population IDs should match those in the population information file above.
+`--pop-ids` specifies the ID of the population. Here we have two populations YRI and CEU. The population IDs should match those listed in the population information file above.
 
 `--projections` specifies the sample size of the population. Here we have 108 YRI individuals and 99 CEU individuals. Therefore, we have 216 and 198 haploidtypes for YRI and CEU respectively. 
 
@@ -62,7 +64,7 @@ Users can also use `GenerateFs` to generate bootstrapping data from VCF files. T
 
 For inferring demographic models, we use the spectrum from the synonymous SNPs.
 
-    dadi-CLI InferDemography --syn-fs ./examples/results/1KG.YRI.CEU.synonymous.snps.fs --model IM_pre --misid --p0 1 1 .5 1 1 1 1 1 .5 --ubounds 10 10 0.999 10 10 10 10 10 0.99999 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5 --output ./examples/results/1KG.YRI.CEU.IM_pre.demo.params --jobs 28
+    dadi-CLI InferDemography --syn-fs ./examples/results/1KG.YRI.CEU.synonymous.snps.unfold.fs --model IM_pre --misid --p0 1 1 .5 1 1 1 1 1 .5 --ubounds 10 10 0.999 10 10 10 10 10 0.99999 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5 --output ./examples/results/1KG.YRI.CEU.IM_pre.demo.params --jobs 100
 
 ### Generating caches for DFE inference
 
