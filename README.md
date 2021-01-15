@@ -31,11 +31,17 @@ For example,
 
 ## Usage: An Example
 
+Here we use the data from the 1000 Genomes Project to demonstrate how to apply `dadi-CLI` in research.
+
 ### Generating allele frequency spectrum from VCF files
 
-`dadi-CLI` only accepts VCF files to generate allele frequency spectrum. 
+`dadi-CLI` only accepts VCF files to generate allele frequency spectrum. To generate the spectrum, users can use
 
-    dadi-CLI GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.subset.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --output ./examples/results/1KG.YRI.CEU.synonymous.snps.fs
+    dadi-CLI GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --output ./examples/results/1KG.YRI.CEU.synonymous.snps.fs
+    
+    dadi-CLI GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.nonsynonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --output ./examples/results/1KG.YRI.CEU.nonsynonymous.snps.fs
+
+Here `./examples/data/1KG.YRI.CEU.popfile.txt` is a file providing the population information for each individuals.
 
 Users can also use `GenerateFs` to generate bootstrapping data from 
 
