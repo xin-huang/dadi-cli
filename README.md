@@ -52,9 +52,9 @@ Here `./examples/data/1KG.YRI.CEU.popfile.txt` is a file providing the populatio
 
 `--pop-ids` specifies the ID of the population. Here we have two populations YRI and CEU. The population IDs should match those in the population information file above.
 
-`--projections` specifies the sample size of the population. Here we have 108 YRI individuals and 99 CEU individuals. Therefore, we have 216 (108*2) and 198 (99*2) haplodtypes for YRI and CEU respectively. 
+`--projections` specifies the sample size of the population. Here we have 108 YRI individuals and 99 CEU individuals. Therefore, we have 216 and 198 haploidtypes for YRI and CEU respectively. 
 
-By default, `dadi-CLI` generates folded spectrum. To generate unfold spectrum, users should add `--polarized`.
+By default, `dadi-CLI` generates folded spectrum. To generate unfold spectrum, users should add `--polarized` and the VCF files should have the `AA` in the `INFO` field to specify the ancestral allele for each SNP.
 
 Users can also use `GenerateFs` to generate bootstrapping data from VCF files. These bootstrapping data will be used in the statistical testing with the Godambe Information Matrix.
 
