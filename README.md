@@ -9,6 +9,8 @@
 
 To install `dadi-CLI`, users can use `conda`.
 
+    conda install -c conda-forge dadi-CLI
+
 To get help information, users can use
 
     dadi-CLI -h
