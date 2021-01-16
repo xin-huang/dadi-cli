@@ -87,9 +87,9 @@ Now we find our optimization is converged, and the best fit parameters are in `.
 
 ### Generating caches for DFE inference
 
-    dadi-CLI GenerateCache --model IM_pre_sel_single_gamma --demo-popt 1.8597907391800936 0.5364664703406542 0.961215941903285 3.4123989204975254 4.3523495145830795 0.09951499748102086 0.2985451283565041 0.2564721142886847 --sample-size 216 198 --output ./examples/results/caches/1KG.YRI.CEU.IM_pre.spectra1d.bpkl --mp
+    dadi-CLI GenerateCache --model IM_pre_sel_single_gamma --demo-popt 1.8597907391800936 0.5364664703406542 0.961215941903285 3.4123989204975254 4.3523495145830795 0.09951499748102086 0.2985451283565041 0.2564721142886847 --sample-size 216 198 --output ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --mp
     
-    dadi-CLI GenerateCache --model IM_pre_sel --demo-popt 1.8597907391800936 0.5364664703406542 0.961215941903285 3.4123989204975254 4.3523495145830795 0.09951499748102086 0.2985451283565041 0.2564721142886847 --sample-sizes 216 198 --output ./examples/results/caches/1KG.YRI.CEU.IM_pre.spectra2d.bpkl --mp
+    dadi-CLI GenerateCache --model IM_pre_sel --demo-popt 1.8597907391800936 0.5364664703406542 0.961215941903285 3.4123989204975254 4.3523495145830795 0.09951499748102086 0.2985451283565041 0.2564721142886847 --sample-sizes 216 198 --output ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --mp
 
 ### Inferring DFE
 
