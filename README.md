@@ -83,17 +83,20 @@ After the optimization
 
     dadi-CLI BestFit --dir ./examples/results/demo/optimization2/ --output ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ubounds 10 10 0.999 10 10 10 10 10 0.99999 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5
     
-Now we found our optimization was converged, and the best fit parameters in `./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params`.
+Now we find our optimization is converged, and the best fit parameters are in `./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params`.
 
 ### Generating caches for DFE inference
 
-
+    dadi-CLI GenerateCache --model IM_pre_sel_single_gamma --demo-popt 1.8597907391800936 0.5364664703406542 0.961215941903285 3.4123989204975254 4.3523495145830795 0.09951499748102086 0.2985451283565041 0.2564721142886847 --sample-size 216 198 --output ./examples/results/caches/1KG.YRI.CEU.IM_pre.spectra1d.bpkl --mp
+    
+    dadi-CLI GenerateCache --model IM_pre_sel --demo-popt 1.8597907391800936 0.5364664703406542 0.961215941903285 3.4123989204975254 4.3523495145830795 0.09951499748102086 0.2985451283565041 0.2564721142886847 --sample-sizes 216 198 --output ./examples/results/caches/1KG.YRI.CEU.IM_pre.spectra2d.bpkl --mp
 
 ### Inferring DFE
 
 For inferring DFE, we use the spectrum from the nonsynonymous SNPs.
 
 ### Performing statistical testing
+
 ### Plotting
 
 `dadi-CLI` can plot allele frequency spectrum from data or compare the spectra between model and data.
