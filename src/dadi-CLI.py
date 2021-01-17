@@ -19,7 +19,7 @@ generate_fs_parser.add_argument('--chunk-size', type=int, help='The chunk size t
 # subparser for generating cache
 generate_cache_parser = subparsers.add_parser('GenerateCache', help='Generate selection coefficient cache for inferring DFE')
 generate_cache_parser.add_argument('--additional-gammas', type=float, nargs='+', default=[], help='The additional positive population-scaled selection coefficients to cache for; Default: []', dest='additional_gammas')
-generate_cache_parser.add_argument('--demo-popt', type=float, nargs='+', default=[], help='The bestfit parameters for the demographic model; Default: []', dest='demo_popt')
+generate_cache_parser.add_argument('--demo-popt', type=str, nargs='+', default=[], help='The bestfit parameters for the demographic model; Default: []', dest='demo_popt')
 generate_cache_parser.add_argument('--gamma-bounds', type=float, nargs=2, default=[1e-4, 2000], help='The range of population-scaled selection coefficients to cache; Default: [1e-4, 2000]', dest='gamma_bounds')
 generate_cache_parser.add_argument('--gamma-pts', type=int, default=50, help='The number of gamma grid points over which to integrate; Default: 50', dest='gamma_pts')
 generate_cache_parser.add_argument('--grids', type=int, nargs=3, help='The sizes of grids; Default: None')
@@ -38,7 +38,7 @@ infer_demo_parser.add_argument('--grids', type=float, nargs=3, help='The sizes o
 infer_demo_parser.add_argument('--lbounds', type=float, nargs='+', required=True, help='The lower bounds of the inferred parameters, please use -1 to indicate a parameter without lower bound')
 infer_demo_parser.add_argument('--misid', default=False, action='store_true', help='Determine whether adding a parameter for misidentifying ancestral alleles or not; Default: False')
 infer_demo_parser.add_argument('--model', type=str, required=True, help='The name of the demographic model; To check available demographic models, please use `dadi-CLI Model`')
-infer_demo_parser.add_argument('--p0', type=float, nargs='+', required=True, help='The initial parameters for inference')
+infer_demo_parser.add_argument('--p0', type=str, nargs='+', required=True, help='The initial parameters for inference')
 infer_demo_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='The upper bounds of the inferred parameters, please use -1 to indicate a parameter without upper bound')
 infer_demo_parser.add_argument('--output', type=str, required=True, help='The name of the output file')
 infer_demo_parser.add_argument('--jobs', default=1, type=int, help='The number of jobs to run optimization parrallelly')
@@ -126,6 +126,19 @@ def check_params(params):
         else: new_params.append(p)
     return new_params
 
+def read_demo_params(params):
+    new_params = []
+    line = open(params, 'r').readline().rstrip().split()
+    for p in line:
+        new_params.append(float(p))
+    return new_params[1:-1]
+
+def parse_demo_params(params):
+    new_params = []
+    for p in params:
+        new_params.append(float(p))
+    return new_params
+
 if args.subcommand == 'GenerateFs':
 
     from GenerateFs import generate_fs
@@ -137,6 +150,12 @@ elif args.subcommand == 'GenerateCache':
     if len(args.sample_sizes) > 2: raise Exception('Cannot generate cache with more than two populations')
 
     from GenerateCache import generate_cache
+    if len(args.demo_popt) == 1: 
+        args.demo_popt = read_demo_params(args.demo_popt[0])
+        if args.misid: args.demo_popt = args.demo_popt[:-1]
+    else: args.demo_popt = parse_demo_params(args.demo_popt)
+    print(args.demo_popt)
+
     generate_cache(model=args.model, grids=args.grids, popt=args.demo_popt,
                    gamma_bounds=args.gamma_bounds, gamma_pts=args.gamma_pts, additional_gammas=args.additional_gammas,
                    output=args.output, sample_sizes=args.sample_sizes, misid=args.misid, mp=args.mp)
@@ -146,6 +165,9 @@ elif args.subcommand == 'InferDM':
     if args.constants != None: args.constants = check_params(args.constants)
     if args.lbounds != None: args.lbounds = check_params(args.lbounds)
     if args.ubounds != None: args.ubounds = check_params(args.ubounds)
+
+    if len(args.p0) == 1: args.p0 = read_demo_params(args.p0[0])
+    else: args.p0 = parse_demo_params(args.p0)
    
     from multiprocessing import Manager, Process 
     from InferDM import infer_demography
