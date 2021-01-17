@@ -30,7 +30,7 @@ generate_cache_parser.add_argument('--output', type=str, required=True, help='Th
 generate_cache_parser.add_argument('--sample-sizes', type=int, nargs='+', required=True, help='The sample sizes of populations', dest='sample_sizes')
 
 # subparser for inferring demography
-infer_demo_parser = subparsers.add_parser('InferDemography', help='Infer demographic models from frequency spectrum')
+infer_demo_parser = subparsers.add_parser('InferDM', help='Infer demographic models from frequency spectrum')
 infer_demo_parser.add_argument('--cuda', default=False, action='store_true', help='Determine whether using GPUs to accelerate inference or not; Default: False')
 infer_demo_parser.add_argument('--constants', type=float, nargs='+', help='The fixed parameters during the inference, please use -1 to indicate a parameter is NOT fixed; Default: None')
 infer_demo_parser.add_argument('--syn-fs', type=str, required=True, help='The frequency spectrum of synonymous mutations used for inference; To generate the frequency spectrum, please use `dadi-CLI GenerateFs`', dest='syn_fs')
@@ -141,14 +141,14 @@ elif args.subcommand == 'GenerateCache':
                    gamma_bounds=args.gamma_bounds, gamma_pts=args.gamma_pts, additional_gammas=args.additional_gammas,
                    output=args.output, sample_sizes=args.sample_sizes, misid=args.misid, mp=args.mp)
 
-elif args.subcommand == 'InferDemography':
+elif args.subcommand == 'InferDM':
 
     if args.constants != None: args.constants = check_params(args.constants)
     if args.lbounds != None: args.lbounds = check_params(args.lbounds)
     if args.ubounds != None: args.ubounds = check_params(args.ubounds)
    
     from multiprocessing import Manager, Process 
-    from InferDemography import infer_demography
+    from InferDM import infer_demography
     #infer_demography(fs=args.syn_fs, model=args.model, grids=args.grids, 
     #                 output=args.output, p0=args.p0, upper_bounds=args.ubounds,
     #                 lower_bounds=args.lbounds, fixed_params=args.constants, misid=args.misid, cuda=args.cuda)
