@@ -69,31 +69,41 @@ Users can also use `GenerateFs` to generate bootstrapping data from VCF files. T
 
 ### Inferring demographic models
 
-For inferring demographic models, we use the spectrum from the synonymous SNPs.
+For inferring demographic models, we use the spectrum from the synonymous SNPs. Here, we use the `IM_pre` model. In this model, the ancestral population had an instantaneous change of population size before it diverged into two populations. After divergence, the two populations experienced exponential expansion. To find out the parameters of the `IM_pre` model, users can use `dadi-CLI Model --names IM_pre`.
+
+To start the inference, users should choose the initial value for each parameters with `--p0`, and specify the lower bounds and upper bounds for these parameters with `--lbounds` and `--ubounds`. Because we need to run optimization several times to find out a , users can use `--jobs` to specify how many times of optimization will run parrallelly.
 
     dadi-CLI InferDM --syn-fs ./examples/results/1KG.YRI.CEU.synonymous.snps.unfold.fs --model IM_pre --misid --p0 1 1 .5 1 1 1 1 1 .5 --ubounds 10 10 0.999 10 10 10 10 10 0.99999 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5 --output ./examples/results/demo/optimization1/1KG.YRI.CEU.IM_pre.demo.params --jobs 28
     
-To obtain the best fit parameters, users can use
+After the optimization, users can use `BestFit` command to obtain the best fit parameters.
 
     dadi-CLI BestFit --dir ./examples/results/demo/optimization1/ --output ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ubounds 10 10 0.999 10 10 10 10 10 0.99999 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5
     
-As the results suggest, our optimization is not converged. Therefore, we need further optimization using the parameters with the maximum likelihood as the initial parameters.
+The result is
+
+
+    
+As the result suggests, our optimization is not converged. Therefore, we need further optimization using the parameters with the maximum likelihood as the initial parameters.
 
     dadi-CLI InferDM --syn-fs ./examples/results/1KG.YRI.CEU.synonymous.snps.unfold.fs --model IM_pre --misid --p0 ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ubounds 10 10 0.999 10 10 10 10 10 0.99999 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5 --output ./examples/results/demo/optimization2/1KG.YRI.CEU.IM_pre.demo.params --jobs 28
     
-After the optimization, we use `dadi-CLI BestFit` again.
+After the optimization, we use `BestFit` command again.
 
     dadi-CLI BestFit --dir ./examples/results/demo/optimization2/ --output ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ubounds 10 10 0.999 10 10 10 10 10 0.99999 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5
     
-As the results suggest, our optimization is converged, and the best fit parameters are in `./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params`. However, some parameters may be close to the boundaries. Users should be cautious and may increase the boundaries to examine whether these boundaries would affect the results significantly. The meaning of each parameter is shown in below.
+The result is
+
+
+    
+As the result suggests, our optimization is converged, and the best fit parameters are in `./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params`. However, some parameters may be close to the boundaries. Users should be cautious and may increase the boundaries to examine whether these boundaries would affect the results significantly. The best fit parameters are shown in below. The first column is the likelihood corresponding to these parameters, and the last column is the population-scaled mutation rate.
 
 | Likelihood | theta |
 | - | - |
 | -29931.941978000257 | 6328.564611583578 |
 
-To find out the parameters of the `IM_pre` model, users can use `dadi-CLI Model --names IM_pre`.
-
 ### Generating caches for DFE inference
+
+After inferring the best fit demographic model, users may also infer DFE from data. To perform DFE inference, users need to generate caches at first. Because we use the `IM_pre` model in the demographic inference, here we need to use the same demographic model plus selection, the `IM_pre_sel_single_gamma` model or the `IM_pre_sel` model. The `IM_pre_sel` model is used for inferring DFE from two populations by assuming the population-scaled selection coefficients are different in the two populations, while the `IM_pre_sel_single_gamma` model assumes the population-scaled selection coefficients are the same in the two populations. The `IM_pre_sel_single_gamma` model can also be used for inferring DFE from a single population.
 
     dadi-CLI GenerateCache --model IM_pre_sel_single_gamma --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --sample-size 216 198 --output ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --mp
     
@@ -101,11 +111,17 @@ To find out the parameters of the `IM_pre` model, users can use `dadi-CLI Model 
 
 ### Inferring DFE
 
-For inferring DFE, we use the spectrum from the nonsynonymous SNPs.
+For inferring DFE, we use the spectrum from the nonsynonymous SNPs. Here we use an example for inferring joint DFE.
 
     dadi-CLI InferDFE --non-fs ./examples/results/fs/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --misid --constants -1 -1 0 -1 -1 --pdf1d lognormal --pdf2d biv_lognormal --p0 1 1 0 .5 .5 --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ratio 2.31 --output ./examples/results/dfe/varied_w/optimization1/1KG.YRI.CEU.IM_pre.dfe.params --jobs 28
 
+After the optimization, users can use `BestFit` to obtain the best fit parameters.
+
     dadi-CLI BestFit --dir ./examples/results/dfe/optimization1/ --output ./examples/results/dfe/varied_w/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1
+    
+The result is
+
+
     
     dadi-CLI InferDFE --non-fs ./examples/results/fs/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --misid --constants -1 -1 0 0 -1 --pdf1d lognormal --pdf2d biv_lognormal --p0 1 1 0 .5 .5 --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ratio 2.31 --output ./examples/results/dfe/fixed_w/optimization1/1KG.YRI.CEU.IM_pre.dfe.params --jobs 28
     
@@ -234,4 +250,4 @@ Then the detail of the function will be displayed in the screen:
 ## References
 
 1. [Gutenkunst et al., *PLoS Genet*, 2009.](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1000695)
-2. [Huang et al., bioRixv, 2021]()
+2. [Huang et al., bioRixv, 2021.]()
