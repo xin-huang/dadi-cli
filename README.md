@@ -97,6 +97,10 @@ Now we find our optimization is converged, and the best fit parameters are in `.
 
 For inferring DFE, we use the spectrum from the nonsynonymous SNPs.
 
+    dadi-CLI InferDFE --non-fs ./examples/results/fs/1KG.YRI.CEU.non.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --misid --constants -1 -1 0 -1 -1 --pdf1d lognormal --pdf2d biv_lognormal --p0 1 1 0 .5 .5 --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ratio 2.31 --output ./examples/results/dfe/optimization1/1KG.YRI.CEU.IM_pre.dfe.params --jobs 28
+
+    dadi-CLI BestFit --dir ./examples/results/dfe/optimization1/ --output ./examples/results/dfe/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1
+
 ### Performing statistical testing
 
 ### Plotting
