@@ -77,19 +77,21 @@ To obtain the best fit parameters, users can use
 
     dadi-CLI BestFit --dir ./examples/results/demo/optimization1/ --output ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ubounds 10 10 0.999 10 10 10 10 10 0.99999 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5
     
-Therefore, we need further optimization using the parameters with maximum likelihood as the initial parameters.
+As the results suggest, our optimization is not converged. Therefore, we need further optimization using the parameters with the maximum likelihood as the initial parameters.
 
     dadi-CLI InferDM --syn-fs ./examples/results/1KG.YRI.CEU.synonymous.snps.unfold.fs --model IM_pre --misid --p0 1.8631877349945314 0.548573103499551 0.9612911219579375 3.438145697001221 4.391082674816054 0.09972864053502319 0.2939414026578067 0.2547625062911173 0.015493918178101734 --ubounds 10 10 0.999 10 10 10 10 10 0.99999 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5 --output ./examples/results/demo/optimization2/1KG.YRI.CEU.IM_pre.demo.params --jobs 28
     
-After the optimization, 
+After the optimization, we use `dadi-CLI BestFit` again.
 
     dadi-CLI BestFit --dir ./examples/results/demo/optimization2/ --output ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ubounds 10 10 0.999 10 10 10 10 10 0.99999 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5
     
-Now we find our optimization is converged, and the best fit parameters are in `./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params`.
+As the results suggest, our optimization is converged, and the best fit parameters are in `./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params`. However, some parameters may be close to the boundaries. Users should be cautious and may increase the boundaries to examine whether these boundaries would affect the results significantly. The meaning of each parameter is shown in below.
 
 | Likelihood | theta |
 | - | - |
 | -29931.941978000257 | 6328.564611583578 |
+
+To find out the parameters of the `IM_pre` model, users can use `dadi-CLI Model --names IM_pre`.
 
 ### Generating caches for DFE inference
 
@@ -177,19 +179,22 @@ To find out the parameters and detail of a specific model, users can use the nam
     
 Then the detail of the model will be displayed in the screen:
 
-    - IM:
+    - IM_pre:
 
-            Isolation-with-migration model with exponential pop growth.
-            Two populations in this model.
+        Isolation-with-migration model with exponential pop growth and a size change
+        prior to split.
+        Two populations in this model.
 
-            params = [s,nu1,nu2,T,m12,m21]
+        params = [nuPre,TPre,s,nu1,nu2,T,m12,m21]
 
-                  s: Size of pop 1 after split (Pop 2 has size 1-s)
-                nu1: Final size of pop 1 (in units of Na)
-                nu2: Final size of pop 2 (in units of Na)
-                  T: Time in the past of split (in units of 2*Na generations)
-                m12: Migration from pop 2 to pop 1 (2*Na*m12)
-                m21: Migration from pop 1 to pop 2 (2*Na*m21)
+            nuPre: Size after first size change (in units of Na)
+             TPre: Time before split of first size change (in units of 2*Na generations)
+                s: Fraction of nuPre that goes to pop1 (Pop 2 has size nuPre*(1-s))
+              nu1: Final size of pop 1 (in units of Na)
+              nu2: Final size of pop 2 (in units of Na)
+                T: Time in the past of split (in units of 2*Na generations)
+              m12: Migration from pop 2 to pop 1 (2*Na*m12)
+              m21: Migration from pop 1 to pop 2 (2*Na*m21)
 
 ### Available DFE distributions
 
