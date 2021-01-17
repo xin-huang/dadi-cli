@@ -34,6 +34,8 @@ For example,
 
     dadi-CLI GenerateFs -h
 
+## The workflow
+
 ## Usage: An Example
 
 Here we use the data from the 1000 Genomes Project to demonstrate how to apply `dadi-CLI` in research.
@@ -97,9 +99,9 @@ The result is
     
 As the result suggests, our optimization is converged, and the best fit parameters are in `./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params`. However, some parameters may be close to the boundaries. Users should be cautious and may increase the boundaries to examine whether these boundaries would affect the results significantly. The best fit parameters are shown in below. The first column is the likelihood corresponding to these parameters, and the last column is the population-scaled mutation rate.
 
-| Likelihood | theta |
-| - | - |
-| -29931.941978000257 | 6328.564611583578 |
+| Likelihood | nuPre | TPre | s | nu1 | nu2 | T | m12 | m21 | misid | theta |
+| - | - | - | - | - | - | - | - | - | - | - |
+| -29931.941978000257 | 1.8597907391800936 | 0.5364664703406542 | 0.961215941903285 | 3.4123989204975254 | 4.3523495145830795 | 0.09951499748102086 | 0.2985451283565041 | 0.2564721142886847 | 0.015434829254785003 | 6328.564611583578 |
 
 ### Generating caches for DFE inference
 
