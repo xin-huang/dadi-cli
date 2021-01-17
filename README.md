@@ -77,15 +77,19 @@ To obtain the best fit parameters, users can use
 
     dadi-CLI BestFit --dir ./examples/results/demo/optimization1/ --output ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ubounds 10 10 0.999 10 10 10 10 10 0.99999 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5
     
-Therefore, we need further optimization. 
+Therefore, we need further optimization using the parameters with maximum likelihood as the initial parameters.
 
     dadi-CLI InferDM --syn-fs ./examples/results/1KG.YRI.CEU.synonymous.snps.unfold.fs --model IM_pre --misid --p0 1.8631877349945314 0.548573103499551 0.9612911219579375 3.438145697001221 4.391082674816054 0.09972864053502319 0.2939414026578067 0.2547625062911173 0.015493918178101734 --ubounds 10 10 0.999 10 10 10 10 10 0.99999 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5 --output ./examples/results/demo/optimization2/1KG.YRI.CEU.IM_pre.demo.params --jobs 28
     
-After the optimization
+After the optimization, 
 
     dadi-CLI BestFit --dir ./examples/results/demo/optimization2/ --output ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ubounds 10 10 0.999 10 10 10 10 10 0.99999 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5
     
 Now we find our optimization is converged, and the best fit parameters are in `./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params`.
+
+| Likelihood | theta |
+| - | - |
+| -29931.941978000257 | 6328.564611583578 |
 
 ### Generating caches for DFE inference
 
