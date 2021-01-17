@@ -73,7 +73,7 @@ Users can also use `GenerateFs` to generate bootstrapping data from VCF files. T
 
 For inferring demographic models, we use the spectrum from the synonymous SNPs. Here, we use the `IM_pre` model. In this model, the ancestral population had an instantaneous change of population size before it diverged into two populations. After divergence, the two populations experienced exponential expansion. To find out the parameters of the `IM_pre` model, users can use `dadi-CLI Model --names IM_pre`.
 
-To start the inference, users should choose the initial value for each parameters with `--p0`, and specify the lower bounds and upper bounds for these parameters with `--lbounds` and `--ubounds`. Because we need to run optimization several times to find out a , users can use `--jobs` to specify how many times of optimization will run parrallelly.
+To start the inference, users should choose the initial value for each parameters with `--p0`, and specify the lower bounds and upper bounds for these parameters with `--lbounds` and `--ubounds`. Because we need to run optimization several times to find out a coverged result with maximum likelihood, users can use `--jobs` to specify how many times of optimization will run parallelly.
 
     dadi-CLI InferDM --syn-fs ./examples/results/1KG.YRI.CEU.synonymous.snps.unfold.fs --model IM_pre --misid --p0 1 1 .5 1 1 1 1 1 .5 --ubounds 10 10 0.999 10 10 10 10 10 0.99999 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5 --output ./examples/results/demo/optimization1/1KG.YRI.CEU.IM_pre.demo.params --jobs 28
     
@@ -98,7 +98,10 @@ After the optimization, we use `BestFit` command again.
     
 The result is
 
-
+    WARNING: The optimized parameters are close to the boundaries
+    The maximum likelihood: -29931.941978000257
+    The best fit parameters:
+    1.8597907391800936      0.5364664703406542      0.961215941903285       3.4123989204975254      4.3523495145830795      0.09951499748102086  0.2985451283565041       0.2564721142886847      0.015434829254785003    6328.564611583578
     
 As the result suggests, our optimization is converged, and the best fit parameters are in `./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params`. However, some parameters may be close to the boundaries. Users should be cautious and may increase the boundaries to examine whether these boundaries would affect the results significantly. The best fit parameters are shown in below. The first column is the likelihood corresponding to these parameters, and the last column is the population-scaled mutation rate.
 
