@@ -116,7 +116,7 @@ Here, `--model` specifies the demographic model plus selection used in the infer
 
 ### Inferring DFE
 
-For inferring DFE, we use the spectrum from the nonsynonymous SNPs. Here we use an example for inferring joint DFE<sup>2</sup>. In joint DFE inference, we need two caches. `--cache1d` accepts the cache that assumes the population-scaled selection coefficients are the same in the two populations. `--cache2d` accepts the cache that assumes the population-scaled selection coefficients are different in the two populations. Here, we assume the . `-1` indicates there is no boundary for a parameter. We use `--ratio` to specify the ratio of the nonsynonymous SNPs to the synonymous SNPs to calculate the population-scaled mutation rate of the nonsynonymous SNPs. 
+For inferring DFE, we use the spectrum from the nonsynonymous SNPs and an example from inferring joint DFE<sup>2</sup>. In joint DFE inference, we need two caches. `--cache1d` accepts the cache that assumes the population-scaled selection coefficients are the same in the two populations. `--cache2d` accepts the cache that assumes the population-scaled selection coefficients are different in the two populations. Here, we define the marginal DFE is a lognormal distribution with `--pdf1d` and the joint DFE is a bivariate lognormal distribution with `--pdf2d`. In total, we have five parameters: the mean of the lognormal distribution, the standard deviation of the lognormal distribution, the correlation coefficient of the bivariate lognormal distribution, the DFE correlation coefficienct, and the misidentification for the ancestral states. We fix the correlation coefficient in the bivariate lognormal distribution (the third parameter) to be zero with `--constants`. `-1` indicates there is no boundary or not fixed for a parameter. We use `--ratio` to specify the ratio of the nonsynonymous SNPs to the synonymous SNPs to calculate the population-scaled mutation rate of the nonsynonymous SNPs. 
 
     dadi-CLI InferDFE --non-fs ./examples/results/fs/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --misid --pdf1d lognormal --pdf2d biv_lognormal --p0 1 1 0 .5 .5 --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1 --constants -1 -1 0 -1 -1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ratio 2.31 --output ./examples/results/dfe/varied_w/optimization1/1KG.YRI.CEU.IM_pre.dfe.params --jobs 28
 
@@ -126,11 +126,11 @@ After the optimization, users can use `BestFit` to obtain the best fit parameter
     
 The result is
 
-
-    
-    dadi-CLI InferDFE --non-fs ./examples/results/fs/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --misid --constants -1 -1 0 0 -1 --pdf1d lognormal --pdf2d biv_lognormal --p0 1 1 0 .5 .5 --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ratio 2.31 --output ./examples/results/dfe/fixed_w/optimization1/1KG.YRI.CEU.IM_pre.dfe.params --jobs 28
-    
-    dadi-CLI BestFit --dir ./examples/results/dfe/optimization1/ --output ./examples/results/dfe/fixed_w/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1
+    WARNING: The optimized parameters are close to the boundaries
+    CONVERGED RESULT FOUND!
+    The maximum likelihood: -27880.30877335643
+    The best fit parameters:
+    2.114903459080246       4.913174122734687       0.0     0.005034967797548346    0.008922032850131625
 
 ### Performing statistical testing
 
@@ -139,6 +139,10 @@ Users can also use `GenerateFs` to generate bootstrapping data from VCF files. T
     dadi-CLI GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --polarized --bootstrap 100 --chunk-size 1000000 --output ./examples/results/bootstrapping_syn/1KG.YRI.CEU.synonymous.snps.unfold.bootstrapping
     
     dadi-CLI GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.nonsynonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --polarized --bootstrap 100 --chunk-size 1000000 --output ./examples/results/bootstrapping_non/1KG.YRI.CEU.nonsynonymous.snps.unfold.bootstrapping
+    
+    dadi-CLI InferDFE --non-fs ./examples/results/fs/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --misid --constants -1 -1 0 0 -1 --pdf1d lognormal --pdf2d biv_lognormal --p0 1 1 0 .5 .5 --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ratio 2.31 --output ./examples/results/dfe/fixed_w/optimization1/1KG.YRI.CEU.IM_pre.dfe.params --jobs 28
+    
+    dadi-CLI BestFit --dir ./examples/results/dfe/optimization1/ --output ./examples/results/dfe/fixed_w/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1
 
 ### Plotting
 
