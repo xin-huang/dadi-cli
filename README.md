@@ -83,7 +83,10 @@ After the optimization, users can use `BestFit` command to obtain the best fit p
     
 The result is
 
-
+    NO CONVERGENCE: Likelihoods are not converged
+    The maximum likelihood: -29932.010892115122
+    The parameters with the maximum likelihood:
+    1.8631877349945314      0.548573103499551       0.9612911219579375      3.438145697001221       4.391082674816054       0.09972864053502319  0.2939414026578067       0.2547625062911173      0.015493918178101734    6302.264966655559
     
 As the result suggests, our optimization is not converged. Therefore, we need further optimization using the parameters with the maximum likelihood as the initial parameters.
 
