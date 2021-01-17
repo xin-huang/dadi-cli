@@ -18,7 +18,7 @@ To get help information, users can use
 There are nine subcommands in `dadi-CLI`: 
 - `GenerateFs`
 - `GenerateCache`
-- `InferDemography`
+- `InferDM`
 - `InferDFE`
 - `BestFit` 
 - `Stat`
@@ -71,7 +71,7 @@ Users can also use `GenerateFs` to generate bootstrapping data from VCF files. T
 
 For inferring demographic models, we use the spectrum from the synonymous SNPs.
 
-    dadi-CLI InferDemography --syn-fs ./examples/results/1KG.YRI.CEU.synonymous.snps.unfold.fs --model IM_pre --misid --p0 1 1 .5 1 1 1 1 1 .5 --ubounds 10 10 0.999 10 10 10 10 10 0.99999 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5 --output ./examples/results/demo/optimization1/1KG.YRI.CEU.IM_pre.demo.params --jobs 28
+    dadi-CLI InferDM --syn-fs ./examples/results/1KG.YRI.CEU.synonymous.snps.unfold.fs --model IM_pre --misid --p0 1 1 .5 1 1 1 1 1 .5 --ubounds 10 10 0.999 10 10 10 10 10 0.99999 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5 --output ./examples/results/demo/optimization1/1KG.YRI.CEU.IM_pre.demo.params --jobs 28
     
 To obtain the best fit parameters, users can use
 
@@ -79,7 +79,7 @@ To obtain the best fit parameters, users can use
     
 Therefore, we need further optimization. 
 
-    dadi-CLI InferDemography --syn-fs ./examples/results/1KG.YRI.CEU.synonymous.snps.unfold.fs --model IM_pre --misid --p0 1.8631877349945314 0.548573103499551 0.9612911219579375 3.438145697001221 4.391082674816054 0.09972864053502319 0.2939414026578067 0.2547625062911173 0.015493918178101734 --ubounds 10 10 0.999 10 10 10 10 10 0.99999 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5 --output ./examples/results/demo/optimization2/1KG.YRI.CEU.IM_pre.demo.params --jobs 28
+    dadi-CLI InferDM --syn-fs ./examples/results/1KG.YRI.CEU.synonymous.snps.unfold.fs --model IM_pre --misid --p0 1.8631877349945314 0.548573103499551 0.9612911219579375 3.438145697001221 4.391082674816054 0.09972864053502319 0.2939414026578067 0.2547625062911173 0.015493918178101734 --ubounds 10 10 0.999 10 10 10 10 10 0.99999 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5 --output ./examples/results/demo/optimization2/1KG.YRI.CEU.IM_pre.demo.params --jobs 28
     
 After the optimization
 
@@ -89,17 +89,21 @@ Now we find our optimization is converged, and the best fit parameters are in `.
 
 ### Generating caches for DFE inference
 
-    dadi-CLI GenerateCache --model IM_pre_sel_single_gamma --demo-popt 1.8597907391800936 0.5364664703406542 0.961215941903285 3.4123989204975254 4.3523495145830795 0.09951499748102086 0.2985451283565041 0.2564721142886847 --sample-size 216 198 --output ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --mp
+    dadi-CLI GenerateCache --model IM_pre_sel_single_gamma --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --sample-size 216 198 --output ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --mp
     
-    dadi-CLI GenerateCache --model IM_pre_sel --demo-popt 1.8597907391800936 0.5364664703406542 0.961215941903285 3.4123989204975254 4.3523495145830795 0.09951499748102086 0.2985451283565041 0.2564721142886847 --sample-sizes 216 198 --output ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --mp
+    dadi-CLI GenerateCache --model IM_pre_sel --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --sample-sizes 216 198 --output ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --mp
 
 ### Inferring DFE
 
 For inferring DFE, we use the spectrum from the nonsynonymous SNPs.
 
-    dadi-CLI InferDFE --non-fs ./examples/results/fs/1KG.YRI.CEU.non.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --misid --constants -1 -1 0 -1 -1 --pdf1d lognormal --pdf2d biv_lognormal --p0 1 1 0 .5 .5 --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ratio 2.31 --output ./examples/results/dfe/optimization1/1KG.YRI.CEU.IM_pre.dfe.params --jobs 28
+    dadi-CLI InferDFE --non-fs ./examples/results/fs/1KG.YRI.CEU.non.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --misid --constants -1 -1 0 -1 -1 --pdf1d lognormal --pdf2d biv_lognormal --p0 1 1 0 .5 .5 --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ratio 2.31 --output ./examples/results/dfe/varied_w/optimization1/1KG.YRI.CEU.IM_pre.dfe.params --jobs 28
 
-    dadi-CLI BestFit --dir ./examples/results/dfe/optimization1/ --output ./examples/results/dfe/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1
+    dadi-CLI BestFit --dir ./examples/results/dfe/optimization1/ --output ./examples/results/dfe/varied_w/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1
+    
+    dadi-CLI InferDFE --non-fs ./examples/results/fs/1KG.YRI.CEU.non.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --misid --constants -1 -1 0 0 -1 --pdf1d lognormal --pdf2d biv_lognormal --p0 1 1 0 .5 .5 --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ratio 2.31 --output ./examples/results/dfe/fixed_w/optimization1/1KG.YRI.CEU.IM_pre.dfe.params --jobs 28
+    
+    dadi-CLI BestFit --dir ./examples/results/dfe/optimization1/ --output ./examples/results/dfe/fixed_w/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1
 
 ### Performing statistical testing
 
@@ -220,4 +224,5 @@ Then the detail of the function will be displayed in the screen:
 
 ## References
 
-[Gutenkunst et al., *PLoS Genet*, 2009.](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1000695)
+1. [Gutenkunst et al., *PLoS Genet*, 2009.](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1000695)
+2. [Huang et al., bioRixv, 2021]()
