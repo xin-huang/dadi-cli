@@ -7,7 +7,7 @@ import numpy as np
 from Pdfs import get_dadi_pdf
 
 
-def infer_dfe(opt, fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s, #output,
+def infer_dfe(fs, output, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
               popt, p0, upper_bounds, lower_bounds, fixed_params, misid, cuda):
 
     ts = time.time()
@@ -61,18 +61,12 @@ def infer_dfe(opt, fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s, #output,
     ll_model = dadi.Inference.ll_multinom(model, fs)
     #print('Maximum log composite likelihood: {0}'.format(ll_model))
 
-    res = str(ll_model)
-    for p in popt:
-        res += "\t" + str(p)
-
-    opt.append(res)
-
-    #with open(output, 'w') as f:
-    #    f.write(str(ll_model))
-    #    for p in popt:
-    #        f.write("\t")
-    #        f.write(str(p))
-    #    f.write("\n")
+    with open(output, 'w') as f:
+        f.write(str(ll_model))
+        for p in popt:
+            f.write("\t")
+            f.write(str(p))
+        f.write("\n")
 
 def infer_dfe_nuisance_1d(syn_fs, non_fs, pdf1d, cache1d, p0, lbounds, ubounds, 
                           fixed_params, misid, is_nlopt, output):

@@ -104,7 +104,7 @@ stat_parser.add_argument('--eps', type=float, help='Fractional stepsize to use w
 
 # subparser for getting the best fit parameters
 bestfit_parser = subparsers.add_parser('BestFit', help='Obtain the best fit parameters')
-bestfit_parser.add_argument('--params', type=str, required=True, help='The file containing the inferred demographic/dfe parameters')
+bestfit_parser.add_argument('--dir', type=str, required=True, help='The directory containing the inferred demographic/dfe parameters')
 bestfit_parser.add_argument('--output', type=str, required=True, help='The name of the ouput file')
 bestfit_parser.add_argument('--lbounds', type=float, nargs='+', required=True, help='The lower bounds of the optimized parameters, please use -1 to indicate a parameter without lower bound')
 bestfit_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='The upper bounds of the optimized parameters, please use -1 to indicate a parameter without upper bound')
@@ -153,7 +153,6 @@ elif args.subcommand == 'InferDemography':
     #                 output=args.output, p0=args.p0, upper_bounds=args.ubounds,
     #                 lower_bounds=args.lbounds, fixed_params=args.constants, misid=args.misid, cuda=args.cuda)
     with Manager() as manager:
-        #results = manager.list()
 
         pool = []
         for i in range(args.jobs):
@@ -165,10 +164,6 @@ elif args.subcommand == 'InferDemography':
         
         for p in pool:
             p.join()
-
-        #with open(args.output, 'w') as f:
-        #    for r in results:
-        #        f.write(r + "\n")
 
 elif args.subcommand == 'InferDFE':
    
@@ -187,22 +182,17 @@ elif args.subcommand == 'InferDFE':
         #          output=args.output, p0=args.p0, upper_bounds=args.ubounds, popt=args.demo_popt, ns_s=args.ratio,
         #          lower_bounds=args.lbounds, fixed_params=args.constants, misid=args.misid, cuda=args.cuda)
         with Manager() as manager:
-            results = manager.list()
 
             pool = []
             for i in range(args.jobs):
                 p = Process(target=infer_dfe,
-                            args=(results, args.non_fs, args.cache1d, args.cache2d, args.pdf1d, args.pdf2d, 
+                            args=(args.non_fs, args.output+'.run'+str(i), args.cache1d, args.cache2d, args.pdf1d, args.pdf2d, 
                                   args.ratio, args.demo_popt, args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda))
                 p.start()
                 pool.append(p)
 
             for p in pool:
                 p.join()
-
-            with open(args.output, 'w') as f:
-                for r in results:
-                    f.write(r + "\n")
 
 elif args.subcommand == 'Plot':
 
@@ -234,7 +224,7 @@ elif args.subcommand == 'BestFit':
     args.ubounds = check_params(args.ubounds)
 
     from BestFit import get_bestfit_params
-    get_bestfit_params(params=args.params, lbounds=args.lbounds, ubounds=args.ubounds, output=args.output)
+    get_bestfit_params(path=args.dir, lbounds=args.lbounds, ubounds=args.ubounds, output=args.output)
 
 elif args.subcommand == 'Model':
     

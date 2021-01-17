@@ -53,13 +53,6 @@ def infer_demography(fs, model, grids, p0, output,
     theta = dadi.Inference.optimal_sfs_scaling(model, fs)
     #print('Optimal value of theta: {0}'.format(theta))
 
-    #res = str(ll_model)
-    #for p in popt:
-    #    res += "\t" + str(p)
-    #res += "\t" + str(theta)
-
-    #opt.append(res)
-
     with open(output, 'w') as f:
         f.write(str(ll_model))
         for p in popt:

@@ -1,16 +1,18 @@
-def get_bestfit_params(params, lbounds, ubounds, output):
-    
-    with open(params, 'r') as f:
-        res = {}
-        for line in f:
-            line = line.rstrip().split()
-            ll = line[0]
-            popt = line[1:]
-            if ll != '--':
-                ll = float(ll)
-                if ll not in res:
-                    res[ll] = []
-                res[ll].append(popt)
+import glob
+
+def get_bestfit_params(path, lbounds, ubounds, output):
+   
+    files = glob.glob(path + '/*')
+    res = {} 
+    for f in files:
+        line = open(f, 'r').readline().rstrip().split()
+        ll = line[0]
+        popt = line[1:]
+        if ll != '--':
+            ll = float(ll)
+            if ll not in res:
+                res[ll] = []
+            res[ll].append(popt)
 
     ll = sorted(res)
     d = ll[-1] - ll[-2]
@@ -32,6 +34,9 @@ def get_bestfit_params(params, lbounds, ubounds, output):
     else:
         print("NO CONVERGENCE: Likelihoods are not converged")
         print("The maximum likelihood: " + str(opt_ll))
+        print("The parameters with the maximum likelihood: ")
+        for i in range(len(opt_params)):
+            print("\t".join(opt_params[i]))
 
 def opt_params_converged(params):
     for i in range(len(params)):
@@ -43,7 +48,9 @@ def opt_params_converged(params):
 
 def close2boundaries(params, lbounds, ubounds):
     for i in range(len(params)):
-        if (ubounds[i] - float(params[i])) < 1: return True
-        if (float(params[i]) - lbounds[i]) < 1: return True
+        if ubounds[i] != None:
+            if (ubounds[i] - float(params[i])) < 1: return True
+        if lbounds[i] != None:
+            if (float(params[i]) - lbounds[i]) < 1: return True
 
     return False
