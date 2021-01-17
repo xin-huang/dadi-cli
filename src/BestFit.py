@@ -23,6 +23,10 @@ def get_bestfit_params(path, lbounds, ubounds, output):
         if opt_params_converged(opt_params):
             if close2boundaries(opt_params[0], lbounds, ubounds):
                 print("WARNING: The optimized parameters are close to the boundaries")
+            print("CONVERGED RESULT FOUND!")
+            print("The maximum likelihood: " + str(opt_ll))
+            print("The best fit parameters: ")
+            print("\t".join(opt_params[0]))
             with open(output, 'w') as f:
                 f.write(str(opt_ll) + "\t" + "\t".join(opt_params[0]) + '\n')
         else:
@@ -35,8 +39,9 @@ def get_bestfit_params(path, lbounds, ubounds, output):
         print("NO CONVERGENCE: Likelihoods are not converged")
         print("The maximum likelihood: " + str(opt_ll))
         print("The parameters with the maximum likelihood: ")
-        for i in range(len(opt_params)):
-            print("\t".join(opt_params[i]))
+        print("\t".join(opt_params[0]))
+        with open(output, 'w') as f:
+            f.write(str(opt_ll) + "\t" + "\t".join(opt_params[0]) + '\n')
 
 def opt_params_converged(params):
     for i in range(len(params)):
