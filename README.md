@@ -1,21 +1,21 @@
-# dadi-CLI
+# dadi-cli
 
 [![license](https://img.shields.io/badge/license-Apache%202.0-red.svg)](LICENSE)
 [![language](http://img.shields.io/badge/language-python-blue.svg)](https://www.python.org/)
 
-`dadi-CLI` provides a command line interface for [dadi](https://bitbucket.org/gutenkunstlab/dadi/src/master/)<sup>1</sup> to help users to quickly apply `dadi` to their research. `dadi` is a flexible python package for inferring demographic history and the distribution of fitness effects (DFE) from population genomic data based on diffusion approximation. 
+`dadi-cli` provides a command line interface for [dadi](https://bitbucket.org/gutenkunstlab/dadi/src/master/)<sup>1</sup> to help users to quickly apply `dadi` to their research. `dadi` is a flexible python package for inferring demographic history and the distribution of fitness effects (DFE) from population genomic data based on diffusion approximation. 
 
 ## Installation
 
-To install `dadi-CLI`, users can use `conda`.
+To install `dadi-cli`, users can use `pip`.
 
-    conda install -c conda-forge dadi-CLI
+    pip install dadi-cli
 
 To get help information, users can use
 
-    dadi-CLI -h
+    dadi-cli -h
 
-There are nine subcommands in `dadi-CLI`: 
+There are nine subcommands in `dadi-cli`: 
 - `GenerateFs`
 - `GenerateCache`
 - `InferDM`
@@ -28,25 +28,25 @@ There are nine subcommands in `dadi-CLI`:
 
 To display help information for each subcommand, users can use
 
-    dadi-CLI subcommand -h
+    dadi-cli subcommand -h
     
 For example,
 
-    dadi-CLI GenerateFs -h
+    dadi-cli GenerateFs -h
 
 ## The workflow
 
 ## Usage: An Example
 
-Here we use the data from the 1000 Genomes Project to demonstrate how to apply `dadi-CLI` in research.
+Here we use the data from the 1000 Genomes Project to demonstrate how to apply `dadi-cli` in research.
 
 ### Generating allele frequency spectrum from VCF files
 
-`dadi-CLI` only accepts VCF files to generate allele frequency spectrum. To generate the spectrum, users can use
+`dadi-cli` only accepts VCF files to generate allele frequency spectrum. To generate the spectrum, users can use
 
-    dadi-CLI GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --polarized --output ./examples/results/1KG.YRI.CEU.synonymous.snps.unfold.fs
+    dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --polarized --output ./examples/results/1KG.YRI.CEU.synonymous.snps.unfold.fs
     
-    dadi-CLI GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.nonsynonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --polarized --output ./examples/results/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs
+    dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.nonsynonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --polarized --output ./examples/results/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs
 
 Here `./examples/data/1KG.YRI.CEU.popfile.txt` is a file providing the population information for each individual. In the population information file, each line contains two fields. The first field is the name of the individual, and the second field is the name of the population that the individual belongs to. For example,
 
@@ -61,7 +61,7 @@ Here `./examples/data/1KG.YRI.CEU.popfile.txt` is a file providing the populatio
 
 `--projections` specifies the sample size of the population. Here we have 108 YRI individuals and 99 CEU individuals. Therefore, we have 216 and 198 haploidtypes for YRI and CEU respectively. 
 
-By default, `dadi-CLI` generates folded spectrum. To generate unfold spectrum, users should add `--polarized` and the VCF files should have the `AA` in the `INFO` field to specify the ancestral allele for each SNP.
+By default, `dadi-cli` generates folded spectrum. To generate unfold spectrum, users should add `--polarized` and the VCF files should have the `AA` in the `INFO` field to specify the ancestral allele for each SNP.
 
 ### Inferring demographic models
 
@@ -69,11 +69,11 @@ For inferring demographic models, we use the spectrum from the synonymous SNPs. 
 
 To start the inference, users should choose the initial value for each parameters with `--p0`, and specify the lower bounds and upper bounds for these parameters with `--lbounds` and `--ubounds`. Beside the eight parameters in the `IM_pre` model, we also use `--misid` to include a parameter measuring the proportion of alleles that their ancestral states are misidentified as the last parameter. Therefore, we have nine parameters in total. Because we need to run optimization several times to find out a coverged result with maximum likelihood, users can use `--jobs` to specify how many times of optimization will run parallelly.
 
-    dadi-CLI InferDM --syn-fs ./examples/results/1KG.YRI.CEU.synonymous.snps.unfold.fs --model IM_pre --misid --p0 1 1 .5 1 1 1 1 1 .5 --ubounds 10 10 1 10 10 10 10 10 1 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5 --output ./examples/results/demo/optimization1/1KG.YRI.CEU.IM_pre.demo.params --jobs 28
+    dadi-cli InferDM --syn-fs ./examples/results/1KG.YRI.CEU.synonymous.snps.unfold.fs --model IM_pre --misid --p0 1 1 .5 1 1 1 1 1 .5 --ubounds 10 10 1 10 10 10 10 10 1 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5 --output ./examples/results/demo/optimization1/1KG.YRI.CEU.IM_pre.demo.params --jobs 28
     
 After the optimization, users can use `BestFit` to obtain the best fit parameters.
 
-    dadi-CLI BestFit --dir ./examples/results/demo/optimization1/ --output ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ubounds 10 10 1 10 10 10 10 10 1 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5
+    dadi-cli BestFit --dir ./examples/results/demo/optimization1/ --output ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ubounds 10 10 1 10 10 10 10 10 1 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5
     
 The result is
 
@@ -84,11 +84,11 @@ The result is
     
 As the result suggests, our optimization is not converged. Therefore, we need further optimization using the parameters with the maximum likelihood as the initial parameters.
 
-    dadi-CLI InferDM --syn-fs ./examples/results/1KG.YRI.CEU.synonymous.snps.unfold.fs --model IM_pre --misid --p0 ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ubounds 10 10 1 10 10 10 10 10 1 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5 --output ./examples/results/demo/optimization2/1KG.YRI.CEU.IM_pre.demo.params --jobs 28
+    dadi-cli InferDM --syn-fs ./examples/results/1KG.YRI.CEU.synonymous.snps.unfold.fs --model IM_pre --misid --p0 ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ubounds 10 10 1 10 10 10 10 10 1 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5 --output ./examples/results/demo/optimization2/1KG.YRI.CEU.IM_pre.demo.params --jobs 28
     
 After the optimization, we use `BestFit` again.
 
-    dadi-CLI BestFit --dir ./examples/results/demo/optimization2/ --output ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ubounds 10 10 1 10 10 10 10 10 1 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5
+    dadi-cli BestFit --dir ./examples/results/demo/optimization2/ --output ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ubounds 10 10 1 10 10 10 10 10 1 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5
     
 The result is
 
@@ -110,19 +110,19 @@ After inferring the best fit demographic model, users may also infer DFE from da
 
 Here, `--model` specifies the demographic model plus selection used in the inference. `--demo-popt` specifies the demographic parameters, which are stored in `./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params`. `--sample-size` defines the population size of each population. `--mp` indicates using multiprocess to accelerate the computation. The output is pickled and can access through the `pickle` module in `Python`.
 
-    dadi-CLI GenerateCache --model IM_pre_sel_single_gamma --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --misid --sample-size 216 198 --output ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --mp
+    dadi-cli GenerateCache --model IM_pre_sel_single_gamma --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --misid --sample-size 216 198 --output ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --mp
     
-    dadi-CLI GenerateCache --model IM_pre_sel --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --misid --sample-sizes 216 198 --output ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --mp
+    dadi-cli GenerateCache --model IM_pre_sel --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --misid --sample-sizes 216 198 --output ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --mp
 
 ### Inferring DFE
 
 For inferring DFE, we use the spectrum from the nonsynonymous SNPs and an example from inferring joint DFE<sup>2</sup>. In joint DFE inference, we need two caches. `--cache1d` accepts the cache that assumes the population-scaled selection coefficients are the same in the two populations. `--cache2d` accepts the cache that assumes the population-scaled selection coefficients are different in the two populations. Here, we define the marginal DFE is a lognormal distribution with `--pdf1d` and the joint DFE is a bivariate lognormal distribution with `--pdf2d`. In total, we have five parameters: the mean of the lognormal distribution, the standard deviation of the lognormal distribution, the correlation coefficient of the bivariate lognormal distribution, the DFE correlation coefficienct, and the misidentification for the ancestral states. We fix the correlation coefficient in the bivariate lognormal distribution (the third parameter) to be zero with `--constants`. `-1` indicates there is no boundary or not fixed for a parameter. We use `--ratio` to specify the ratio of the nonsynonymous SNPs to the synonymous SNPs to calculate the population-scaled mutation rate of the nonsynonymous SNPs. 
 
-    dadi-CLI InferDFE --non-fs ./examples/results/fs/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --misid --pdf1d lognormal --pdf2d biv_lognormal --p0 1 1 0 .5 .5 --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1 --constants -1 -1 0 -1 -1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ratio 2.31 --output ./examples/results/dfe/varied_w/optimization1/1KG.YRI.CEU.IM_pre.dfe.params --jobs 28
+    dadi-cli InferDFE --non-fs ./examples/results/fs/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --misid --pdf1d lognormal --pdf2d biv_lognormal --p0 1 1 0 .5 .5 --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1 --constants -1 -1 0 -1 -1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ratio 2.31 --output ./examples/results/dfe/varied_w/optimization1/1KG.YRI.CEU.IM_pre.dfe.params --jobs 28
 
 After the optimization, users can use `BestFit` to obtain the best fit parameters and save it in `./examples/results/dfe/varied_w/1KG.YRI.CEU.IM_pre.bestfit.dfe.params`.
 
-    dadi-CLI BestFit --dir ./examples/results/dfe/optimization1/ --output ./examples/results/dfe/varied_w/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1
+    dadi-cli BestFit --dir ./examples/results/dfe/optimization1/ --output ./examples/results/dfe/varied_w/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1
     
 The result is
 
@@ -136,40 +136,40 @@ The result is
 
 Users can also use `GenerateFs` to generate bootstrapping data from VCF files. These bootstrapping data will be used in the statistical testing with the Godambe Information Matrix.
 
-    dadi-CLI GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --polarized --bootstrap 100 --chunk-size 1000000 --output ./examples/results/bootstrapping_syn/1KG.YRI.CEU.synonymous.snps.unfold.bootstrapping
+    dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --polarized --bootstrap 100 --chunk-size 1000000 --output ./examples/results/bootstrapping_syn/1KG.YRI.CEU.synonymous.snps.unfold.bootstrapping
     
-    dadi-CLI GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.nonsynonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --polarized --bootstrap 100 --chunk-size 1000000 --output ./examples/results/bootstrapping_non/1KG.YRI.CEU.nonsynonymous.snps.unfold.bootstrapping
+    dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.nonsynonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --polarized --bootstrap 100 --chunk-size 1000000 --output ./examples/results/bootstrapping_non/1KG.YRI.CEU.nonsynonymous.snps.unfold.bootstrapping
     
-    dadi-CLI InferDFE --non-fs ./examples/results/fs/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --misid --constants -1 -1 0 0 -1 --pdf1d lognormal --pdf2d biv_lognormal --p0 1 1 0 .5 .5 --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ratio 2.31 --output ./examples/results/dfe/fixed_w/optimization1/1KG.YRI.CEU.IM_pre.dfe.params --jobs 28
+    dadi-cli InferDFE --non-fs ./examples/results/fs/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --misid --constants -1 -1 0 0 -1 --pdf1d lognormal --pdf2d biv_lognormal --p0 1 1 0 .5 .5 --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ratio 2.31 --output ./examples/results/dfe/fixed_w/optimization1/1KG.YRI.CEU.IM_pre.dfe.params --jobs 28
     
-    dadi-CLI BestFit --dir ./examples/results/dfe/optimization1/ --output ./examples/results/dfe/fixed_w/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1
+    dadi-cli BestFit --dir ./examples/results/dfe/optimization1/ --output ./examples/results/dfe/fixed_w/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1
 
 ### Plotting
 
-`dadi-CLI` can plot allele frequency spectrum from data or compare the spectra between model and data.
+`dadi-cli` can plot allele frequency spectrum from data or compare the spectra between model and data.
 
 To plot frequency spectrum from data, users can use
 
-    dadi-CLI Plot --fs example.fs --output example.fs.pdf
+    dadi-cli Plot --fs example.fs --output example.fs.pdf
     
 To compare two frequency spectra from data, users can use
 
-    dadi-CLI Plot --fs example1.fs --fs2 example2.fs --output example.fs.comparison.pdf
+    dadi-cli Plot --fs example1.fs --fs2 example2.fs --output example.fs.comparison.pdf
     
 To compare frequency spectra between a demographic model without selection and data, users can use
 
-    dadi-CLI Plot --fs example.fs 
+    dadi-cli Plot --fs example.fs 
     
 To compare frequency spectra between a demographic model with selection and data, users can use
 
-    dadi-CLI Plot --fs
+    dadi-cli Plot --fs
     
 ### Available demographic models
 
-`dadi-CLI` provides a subcommand `Model` to help users finding available demographic models in `dadi`.
+`dadi-cli` provides a subcommand `Model` to help users finding available demographic models in `dadi`.
 To find out available demographic models, users can use
 
-    dadi-CLI Model --names
+    dadi-cli Model --names
     
 Then the available demographic models will be displayed in the screen:
 
@@ -206,7 +206,7 @@ Then the available demographic models will be displayed in the screen:
 
 To find out the parameters and detail of a specific model, users can use the name of the demograpic model as the parameter after `--names`. For example,
 
-    dadi-CLI Model --names IM
+    dadi-cli Model --names IM
     
 Then the detail of the model will be displayed in the screen:
 
@@ -229,11 +229,11 @@ Then the detail of the model will be displayed in the screen:
 
 ### Available DFE distributions
 
-`dadi-CLI` provides a subcommand `Pdf` to help users finding available probability density functions for DFE inference in `dadi`.
+`dadi-cli` provides a subcommand `Pdf` to help users finding available probability density functions for DFE inference in `dadi`.
 
 To find out available probability density functions, users can use
 
-    dadi-CLI Pdf --names
+    dadi-cli Pdf --names
     
 Then the availalbe functions will be displayed in the screen:
 
@@ -248,7 +248,7 @@ Then the availalbe functions will be displayed in the screen:
 
 To find out the parameters and the detail of a specific function, users can use the name of the function as the parameter after `--names`. For example,
 
-    dadi-CLI Pdf --names beta
+    dadi-cli Pdf --names beta
     
 Then the detail of the function will be displayed in the screen:
 
