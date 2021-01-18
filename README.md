@@ -146,23 +146,9 @@ To performing statistical testing with the Godambe Information Matrix, users sho
     
     dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.nonsynonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --polarized --bootstrap 100 --chunk-size 1000000 --output ./examples/results/fs/bootstrapping_non/1KG.YRI.CEU.nonsynonymous.snps.unfold
     
-Users should also infer the parameters with simpler scenario, for example, the DFE correlation (the fourth parameter here) is fixed to be zero. 
-    
-    dadi-cli InferDFE --non-fs ./examples/results/fs/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --misid --constants -1 -1 0 0 -1 --pdf1d lognormal --pdf2d biv_lognormal --p0 1 1 0 .5 .5 --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ratio 2.31 --output ./examples/results/dfe/fixed_w/optimization1/1KG.YRI.CEU.IM_pre.dfe.params --jobs 28
-    
-    dadi-cli BestFit --dir ./examples/results/dfe/optimization1/ --output ./examples/results/dfe/fixed_w/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1
-    
-After obtaining the best fit parameters under the simpler scenario, users can estimate the confidence intervals and p-values for the likelihood ratio test by comparing the two sets of the best fit parameters.
-
 To estimate the confidence intervals for the joint DFE parameters, users can use
 
-    dadi-cli Stat --fs ./examples/results/fs/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --pdf1d lognormal --pdf2d biv_lognormal --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --misid --popt-complex ./examples/results/dfe/varied_w/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --popt-simple ./examples/results/dfe/fixed_w/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --bootstrapping-dir ./examples/results/fs/bootstrapping_non/ --ratio 2.31 --output ./examples/results/stat/1KG.YRI.CEU.IM_pre.bestfit.dfe.params.godambe.ci
-    
-To estimate the p-value for the likelihood ratio test, users can use
-
-    dadi-cli Stat --fs ./examples/results/fs/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --pdf1d lognormal --pdf2d biv_lognormal --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --misid --popt-complex ./examples/results/dfe/varied_w/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --popt-simple ./examples/results/dfe/fixed_w/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --bootstrapping-dir ./examples/results/fs/bootstrapping_non/ --ratio 2.31 --pi 4 --lrt --output ./examples/results/stat/1KG.YRI.CEU.IM_pre.bestfit.dfe.params.godambe.lrt.pvalues
-    
-Here we want to test whether the fourth parameter (one minus the DFE correlation) is different from zero. We use `--pi` to specify which parameter is tested. `--lrt` is used for performing likelihood ratio test.
+    dadi-cli Stat --fs ./examples/results/fs/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --pdf1d lognormal --pdf2d biv_lognormal --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --misid --popt ./examples/results/dfe/varied_w/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --bootstrapping-dir ./examples/results/fs/bootstrapping_non/ --ratio 2.31 --output ./examples/results/stat/1KG.YRI.CEU.IM_pre.bestfit.dfe.params.godambe.ci
 
 ### Plotting
 
