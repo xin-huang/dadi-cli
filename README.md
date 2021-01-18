@@ -100,7 +100,7 @@ The result is
     
 As the result suggests, our optimization is converged, and the best fit parameters are in `./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params`. However, some parameters may be close to the boundaries. Users should be cautious and may increase the boundaries to examine whether these boundaries would affect the results significantly. The best fit parameters are shown in below. The first column is the likelihood corresponding to these parameters, and the last column is the population-scaled mutation rate of the synonymous SNPs.
 
-| Likelihood | nuPre | TPre | s | nu1 | nu2 | T | m12 | m21 | misid | theta |
+| likelihood | nuPre | TPre | s | nu1 | nu2 | T | m12 | m21 | misid | theta |
 | - | - | - | - | - | - | - | - | - | - | - |
 | -29931.942 | 1.860 | 0.536 | 0.961 | 3.412 | 4.352 | 0.100 | 0.299 | 0.256 | 0.015 | 6328.565 |
 
@@ -134,7 +134,7 @@ The result is
 
 Similar to the best fit parameters in `./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params`, the first column is the likelihood.
 
-| likelihood | mu | sigma | rho | w | misidentification |
+| likelihood | mu | sigma | rho | 1 - w | misidentification |
 | - | - | - | - | - | - |
 | -27880.309 | 2.115  | 4.913  | 0.0  | 0.005  | 0.009 |
 
