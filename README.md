@@ -150,11 +150,13 @@ After obtaining the best fit parameters under the simpler scenario, users can es
 
 To estimate the confidence intervals for the joint DFE parameters, users can use
 
-    dadi-cli Stat --fs ./examples/results/fs/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --pdf1d lognormal --pdf2d biv_lognormal --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --misid --popt-complex ./examples/results/dfe/varied_w/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --popt-simple ./examples/results/dfe/fixed_w/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --bootstrapping-dir ./examples/results/fs/bootstrapping_non/ --ratio 2.31 --output ./examples/results/stat/1KG.YRI.CEU.IM_pre.bestfit.dfe.params.ci
+    dadi-cli Stat --fs ./examples/results/fs/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --pdf1d lognormal --pdf2d biv_lognormal --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --misid --popt-complex ./examples/results/dfe/varied_w/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --popt-simple ./examples/results/dfe/fixed_w/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --bootstrapping-dir ./examples/results/fs/bootstrapping_non/ --ratio 2.31 --output ./examples/results/stat/1KG.YRI.CEU.IM_pre.bestfit.dfe.params.godambe.ci
     
-To estimate the p-values for the likelihood ratio test, users can use
+To estimate the p-value for the likelihood ratio test, users can use
 
-    dadi-cli Stat --fs 
+    dadi-cli Stat --fs ./examples/results/fs/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --pdf1d lognormal --pdf2d biv_lognormal --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --misid --popt-complex ./examples/results/dfe/varied_w/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --popt-simple ./examples/results/dfe/fixed_w/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --bootstrapping-dir ./examples/results/fs/bootstrapping_non/ --ratio 2.31 --pi 4 --lrt --output ./examples/results/stat/1KG.YRI.CEU.IM_pre.bestfit.dfe.params.godambe.lrt.pvalues
+    
+Here we want to test whether the DFE correlation (the fourth parameter) is different from zero. We use `--pi` to specify which parameter is tested. `--lrt` is used for performing likelihood ratio test.
 
 ### Plotting
 
