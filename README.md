@@ -102,7 +102,7 @@ As the result suggests, our optimization is converged, and the best fit paramete
 
 | Likelihood | nuPre | TPre | s | nu1 | nu2 | T | m12 | m21 | misid | theta |
 | - | - | - | - | - | - | - | - | - | - | - |
-| -29931.941978000257 | 1.8597907391800936 | 0.5364664703406542 | 0.961215941903285 | 3.4123989204975254 | 4.3523495145830795 | 0.09951499748102086 | 0.2985451283565041 | 0.2564721142886847 | 0.015434829254785003 | 6328.564611583578 |
+| -29931.942 | 1.860 | 0.536 | 0.961 | 3.412 | 4.352 | 0.100 | 0.299 | 0.256 | 0.015 | 6328.565 |
 
 ### Generating caches for DFE inference
 
@@ -139,6 +139,8 @@ To performing statistical testing with the Godambe Information Matrix, users sho
     dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --polarized --bootstrap 100 --chunk-size 1000000 --output ./examples/results/fs/bootstrapping_syn/1KG.YRI.CEU.synonymous.snps.unfold
     
     dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.nonsynonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --polarized --bootstrap 100 --chunk-size 1000000 --output ./examples/results/fs/bootstrapping_non/1KG.YRI.CEU.nonsynonymous.snps.unfold
+    
+
     
     dadi-cli InferDFE --non-fs ./examples/results/fs/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --misid --constants -1 -1 0 0 -1 --pdf1d lognormal --pdf2d biv_lognormal --p0 1 1 0 .5 .5 --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ratio 2.31 --output ./examples/results/dfe/fixed_w/optimization1/1KG.YRI.CEU.IM_pre.dfe.params --jobs 28
     
