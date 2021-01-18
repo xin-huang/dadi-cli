@@ -6,8 +6,8 @@ import numpy as np
 from src.Models import get_dadi_model_func
 from src.Pdfs import get_dadi_pdf
 
-def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, output, eps,
-                 bootstrap_dir, pi, demo_popt, popt, popt_simple, misid, lrt, logscale):
+def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, 
+                 output, bootstrap_dir, demo_popt, popt, misid, logscale):
 
     popt = np.array(open(popt, 'r').readline().rstrip().split(), dtype=float)
     theta = ns_s * float(open(demo_popt, 'r').readline().rstrip().split()[-1])
@@ -29,46 +29,36 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, outpu
 
     if model != None:
         func = get_dadi_model_func(model)
+        if misid:
+            func = dadi.Numerics.make_anc_state_misid_func(func)
     if sele_dist != None:
         sele_dist = get_dadi_pdf(sele_dist)
     if sele_dist2 != None:
         sele_dist2 = get_dadi_pdf(sele_dist2)
 
     if (cache1d != None) and (cache2d != None):
-        func = dadi.DFE.mixture
+        mfunc = dadi.DFE.mixture
         if misid:
-            func = dadi.Numerics.make_anc_state_misid_func(func)
-        def model_func(pin, ns, pts):
+            mfunc = dadi.Numerics.make_anc_state_misid_func(mfunc)
+        def func(pin, ns, pts):
             # for mixture model, pin = [mu, sigma, p0, misid]
             # Add in gammapos parameter
             # fix rho=0
             params = np.concatenate([pin[0:2], [0], pin[2:]])
-            return func(params, None, s1, s2, sele_dist, 
-                        sele_dist2, theta, None, exterior_int=True)
+            return mfunc(params, None, s1, s2, sele_dist, 
+                         sele_dist2, theta, None, exterior_int=True)
 
     boot_theta_adjusts = [b.sum()/fs.sum() for b in all_boot]
-    if lrt:
-        ll_complex = popt[0]
-        ll_simple = popt_simple[0]
-        adj = dadi.Godambe.LRT_adjust(model_func, [], all_boot, popt_simple[1:], fs, eps=eps,
-                                      nested_indices=[pi-1], multinom=False, boot_theta_adjusts=boot_theta_adjusts)
-        D_adj = adj*2*(ll_complex - ll_simple)
-        pval = dadi.Godambe.sum_chi2_ppf(D_adj, weights=(0.5,0.5))
-        
-        with open(output, 'w') as f:
-            f.write('Adjusted D statistic: {0}'.format(D_adj) + '\n') 
-            f.write('p-value for rejecting the simple model: {0}'.format(pval) + '\n')
-    else:
-        p = np.array([popt[1], popt[2], popt[4], popt[5]])
-        uncerts_adj = dadi.Godambe.GIM_uncert(model_func, [], all_boot, p,
-                                              fs, multinom=False, log=logscale,
-                                              boot_theta_adjusts=boot_theta_adjusts)
+    p = np.array([popt[1], popt[2], popt[4], popt[5]])
+    uncerts_adj = dadi.Godambe.GIM_uncert(func, [], all_boot, p,
+                                          fs, multinom=False, log=logscale,
+                                          boot_theta_adjusts=boot_theta_adjusts)
 
-        with open(output, 'w') as f:
-            f.write('Estimated 95% uncerts (theta adj): {0}'.format(1.96*uncerts_adj) + '\n')
-            if logscale:
-                f.write('Lower bounds of 95% confidence interval : {0}'.format(np.exp(np.log(p)-1.96*uncerts_adj)) + '\n')
-                f.write('Upper bounds of 95% confidence interval : {0}'.format(np.exp(np.log(p)+1.96*uncerts_adj)) + '\n')
-            else:
-                f.write('Lower bounds of 95% confidence interval : {0}'.format(p-1.96*uncerts_adj) + '\n')
-                f.write('Upper bounds of 95% confidence interval : {0}'.format(p+1.96*uncerts_adj) + '\n')
+    with open(output, 'w') as f:
+        f.write('Estimated 95% uncerts (theta adj): {0}'.format(1.96*uncerts_adj) + '\n')
+        if logscale:
+            f.write('Lower bounds of 95% confidence interval : {0}'.format(np.exp(np.log(p)-1.96*uncerts_adj)) + '\n')
+            f.write('Upper bounds of 95% confidence interval : {0}'.format(np.exp(np.log(p)+1.96*uncerts_adj)) + '\n')
+        else:
+            f.write('Lower bounds of 95% confidence interval : {0}'.format(p-1.96*uncerts_adj) + '\n')
+            f.write('Upper bounds of 95% confidence interval : {0}'.format(p+1.96*uncerts_adj) + '\n')
