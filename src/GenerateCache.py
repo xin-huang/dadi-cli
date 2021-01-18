@@ -2,7 +2,7 @@ import dadi
 import dadi.DFE as DFE
 import pickle, glob
 import numpy as np
-from Models import get_dadi_model_func
+from src.Models import get_dadi_model_func
 
 def generate_cache(model, grids, popt,
                    gamma_bounds, gamma_pts, additional_gammas,

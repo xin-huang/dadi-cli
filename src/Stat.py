@@ -3,8 +3,8 @@ import dadi.Godambe
 import dadi.DFE as DFE
 import glob, pickle
 import numpy as np
-from Models import get_dadi_model_func
-from Pdfs import get_dadi_pdf
+from src.Models import get_dadi_model_func
+from src.Pdfs import get_dadi_pdf
 
 def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, output, eps,
                  bootstrap_dir, pi, demo_popt, popt, popt_simple, misid, lrt, logscale):

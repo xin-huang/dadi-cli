@@ -3,7 +3,7 @@ import dadi.NLopt_mod
 import nlopt
 import os, time
 import numpy as np
-from Models import get_dadi_model_func
+from src.Models import get_dadi_model_func
 
 def infer_demography(fs, model, grids, p0, output,
                      upper_bounds, lower_bounds, fixed_params, misid, cuda):

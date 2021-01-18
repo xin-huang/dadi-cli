@@ -9,7 +9,7 @@
 
 To install `dadi-cli`, users can use `pip`.
 
-    pip install -i https://test.pypi.org/simple/ dadi-cli==0.5.0
+    pip install -i https://test.pypi.org/simple/ dadi-cli==0.5.2
 
 To get help information, users can use
 
@@ -65,7 +65,7 @@ By default, `dadi-cli` generates folded spectrum. To generate unfold spectrum, u
 
 ### Inferring demographic models
 
-For inferring demographic models, we use the spectrum from the synonymous SNPs. Here, we use the `IM_pre` model. In this model, the ancestral population had an instantaneous change of population size before it diverged into two populations. After divergence, the two populations experienced exponential expansion. To find out the parameters of the `IM_pre` model, users can use `dadi-CLI Model --names IM_pre`.
+For inferring demographic models, we use the spectrum from the synonymous SNPs. Here, we use the `IM_pre` model. In this model, the ancestral population had an instantaneous change of population size before it diverged into two populations. After divergence, the two populations experienced exponential expansion. To find out the parameters of the `IM_pre` model, users can use `dadi-cli Model --names IM_pre`.
 
 To start the inference, users should choose the initial value for each parameters with `--p0`, and specify the lower bounds and upper bounds for these parameters with `--lbounds` and `--ubounds`. Beside the eight parameters in the `IM_pre` model, we also use `--misid` to include a parameter measuring the proportion of alleles that their ancestral states are misidentified as the last parameter. Therefore, we have nine parameters in total. Because we need to run optimization several times to find out a coverged result with maximum likelihood, users can use `--jobs` to specify how many times of optimization will run parallelly.
 
@@ -134,11 +134,11 @@ The result is
 
 ### Performing statistical testing
 
-Users can also use `GenerateFs` to generate bootstrapping data from VCF files. These bootstrapping data will be used in the statistical testing with the Godambe Information Matrix.
+To performing statistical testing with the Godambe Information Matrix, users should first use `GenerateFs` to generate bootstrapping data from VCF files.
 
-    dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --polarized --bootstrap 100 --chunk-size 1000000 --output ./examples/results/bootstrapping_syn/1KG.YRI.CEU.synonymous.snps.unfold.bootstrapping
+    dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --polarized --bootstrap 100 --chunk-size 1000000 --output ./examples/results/fs/bootstrapping_syn/1KG.YRI.CEU.synonymous.snps.unfold
     
-    dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.nonsynonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --polarized --bootstrap 100 --chunk-size 1000000 --output ./examples/results/bootstrapping_non/1KG.YRI.CEU.nonsynonymous.snps.unfold.bootstrapping
+    dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.nonsynonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --polarized --bootstrap 100 --chunk-size 1000000 --output ./examples/results/fs/bootstrapping_non/1KG.YRI.CEU.nonsynonymous.snps.unfold
     
     dadi-cli InferDFE --non-fs ./examples/results/fs/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --misid --constants -1 -1 0 0 -1 --pdf1d lognormal --pdf2d biv_lognormal --p0 1 1 0 .5 .5 --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ratio 2.31 --output ./examples/results/dfe/fixed_w/optimization1/1KG.YRI.CEU.IM_pre.dfe.params --jobs 28
     

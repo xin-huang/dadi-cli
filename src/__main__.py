@@ -56,7 +56,6 @@ def main():
     infer_dfe_parser.add_argument('--non-fs', type=str, required=True, help='The frequency spectrum of the non-synonymous mutations; To generate the frequency spectrum, please use `dadi-CLI GenerateFs`', dest='non_fs')
     infer_dfe_parser.add_argument('--lbounds', type=float, nargs='+', required=True, help='The lower bounds of the inferred parameters, please use -1 to indicate a parameter without lower bound')
     infer_dfe_parser.add_argument('--misid', default=False, action='store_true', help='Determine whether adding a parameter for misidentifying ancestral alleles or not; Default: False')
-    infer_dfe_parser.add_argument('--nuisance', default=False, action='store_true', help='Determine whether inferring DFE with nuisance parameters or not; Default: False')
     infer_dfe_parser.add_argument('--nlopt', default=False, action='store_true', help='Determine whether using nlopt or not; Default: False')
     infer_dfe_parser.add_argument('--p0', type=float, nargs='+', required=True, help='The initial parameters for inference')
     infer_dfe_parser.add_argument('--pdf1d', type=str, help='The 1D probability density function for the DFE inference; To check available probability density functions, please use `dadi-CLI Distrib`')
@@ -143,7 +142,7 @@ def main():
 
     if args.subcommand == 'GenerateFs':
 
-        from GenerateFs import generate_fs
+        from src.GenerateFs import generate_fs
         generate_fs(vcf=args.vcf, output=args.output, bootstrap=args.bootstrap, chunk_size=args.chunk_size,
                     pop_ids=args.pop_ids, pop_info=args.pop_info, projections=args.projections, polarized=args.polarized)
 
@@ -151,7 +150,7 @@ def main():
 
         if len(args.sample_sizes) > 2: raise Exception('Cannot generate cache with more than two populations')
 
-        from GenerateCache import generate_cache
+        from src.GenerateCache import generate_cache
         if len(args.demo_popt) == 1: 
             args.demo_popt = read_demo_params(args.demo_popt[0])
             if args.misid: args.demo_popt = args.demo_popt[:-1]
@@ -171,7 +170,7 @@ def main():
         else: args.p0 = parse_demo_params(args.p0)
    
         from multiprocessing import Manager, Process 
-        from InferDM import infer_demography
+        from src.InferDM import infer_demography
     
         with Manager() as manager:
 
@@ -193,7 +192,7 @@ def main():
         if args.ubounds != None: args.ubounds = check_params(args.ubounds)
 
         from multiprocessing import Manager, Process
-        from InferDFE import infer_dfe, infer_dfe_nuisance_1d
+        from src.InferDFE import infer_dfe
         with Manager() as manager:
 
             pool = []
@@ -209,7 +208,7 @@ def main():
 
     elif args.subcommand == 'Plot':
 
-        from Plot import plot_comparison, plot_fitted_demography, plot_fitted_dfe, plot_single_sfs
+        from src.Plot import plot_comparison, plot_fitted_demography, plot_fitted_dfe, plot_single_sfs
     
         if args.sel_popt != None:
             plot_fitted_dfe(fs=args.fs, cache1d=args.cache1d, cache2d=args.cache2d, pdf=args.pdf, pdf2=args.pdf2, misid=args.misid,
@@ -225,7 +224,7 @@ def main():
 
     elif args.subcommand == 'Stat':
 
-        from Stat import godambe_stat
+        from src.Stat import godambe_stat
         godambe_stat(fs=args.fs, model=args.model, bootstrap_dir=args.bootstrap_dir, 
                      cache1d=args.cache1d, cache2d=args.cache2d, sele_dist=args.pdf, ns_s=args.ratio, eps=args.eps,
                      sele_dist2=args.pdf2, popt=args.popt_complex, misid=args.misid, pi=args.pi, demo_popt=args.demo_popt,
@@ -236,12 +235,12 @@ def main():
         args.lbounds = check_params(args.lbounds)
         args.ubounds = check_params(args.ubounds)
 
-        from BestFit import get_bestfit_params
+        from src.BestFit import get_bestfit_params
         get_bestfit_params(path=args.dir, lbounds=args.lbounds, ubounds=args.ubounds, output=args.output)
 
     elif args.subcommand == 'Model':
     
-        from Models import print_available_models, print_model_details
+        from src.Models import print_available_models, print_model_details
         if args.names == None:
             print_available_models()
         else:
@@ -249,7 +248,7 @@ def main():
 
     elif args.subcommand == 'Pdf':
 
-        from Pdfs import print_available_pdfs, print_pdf_details
+        from src.Pdfs import print_available_pdfs, print_pdf_details
         if args.names == None:
             print_available_pdfs()
         else:

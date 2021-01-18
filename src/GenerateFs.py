@@ -9,7 +9,7 @@ def generate_fs(vcf, output, pop_ids, pop_info, projections, polarized, bootstra
     else:
         for b in range(bootstrap):
             fs = generate_bootstrap_fs(dd, chunk_size, pop_ids, projections, polarized)
-            fs.to_file(output + '.bootstrap.' + str(b) + '.fs')
+            fs.to_file(output + '.bootstrapping.' + str(b) + '.fs')
 
 def generate_bootstrap_fs(dd, chunk_size, pop_ids, projections, polarized):
     import random
