@@ -132,6 +132,12 @@ The result is
     The best fit parameters:
     2.114903459080246       4.913174122734687       0.0     0.005034967797548346    0.008922032850131625
 
+Similar to the best fit parameters in `./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params`, the first column is the likelihood.
+
+| likelihood | mu | sigma | rho | w | misidentification |
+| - | - | - | - | - | - |
+| -27880.309 | 2.115  | 4.913  | 0.0  | 0.005  | 0.009 |
+
 ### Performing statistical testing
 
 To performing statistical testing with the Godambe Information Matrix, users should first use `GenerateFs` to generate bootstrapping data from VCF files.
