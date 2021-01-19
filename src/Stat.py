@@ -39,7 +39,6 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, grids
         sele_dist2 = get_dadi_pdf(sele_dist2)
 
     if (cache1d != None) and (cache2d != None):
-        popt = np.array([dfe_popt[1], dfe_popt[2], dfe_popt[4], dfe_popt[5]])
         mfunc = dadi.DFE.mixture
         if misid:
             mfunc = dadi.Numerics.make_anc_state_misid_func(mfunc)
@@ -51,24 +50,21 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, grids
             return mfunc(params, None, s1, s2, sele_dist, 
                          sele_dist2, theta, None, exterior_int=True)
 
-    if (cache1d != None) or (cache2d != None):
-        popt = dfe_popt[1:]
-    else:
-        popt = demo_popt[1:-1]
-
     if model != None:
+        popt = demo_popt[1:-1]
         func_ex = dadi.Numerics.make_extrap_func(func)
         uncerts_adj = dadi.Godambe.GIM_uncert(func_ex, grids, all_boot, popt,
                                               fs, multinom=True, log=logscale)
         uncerts_adj = uncerts_adj[:-1]
     else:
+        if (cache1d != None) and (cache2d != None):
+            popt = np.array([dfe_popt[1], dfe_popt[2], dfe_popt[4], dfe_popt[5]])
+        else:
+            popt = dfe_popt[1:]
         boot_theta_adjusts = [b.sum()/fs.sum() for b in all_boot]
         uncerts_adj = dadi.Godambe.GIM_uncert(func, [], all_boot, popt,
                                               fs, multinom=False, log=logscale,
                                               boot_theta_adjusts=boot_theta_adjusts)
-
-    print(popt)
-    print(uncerts_adj)
 
     with open(output, 'w') as f:
         f.write('Estimated 95% uncerts (theta adj): {0}'.format(1.96*uncerts_adj) + '\n')
