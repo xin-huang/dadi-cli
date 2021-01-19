@@ -11,7 +11,7 @@ with open(os.path.join(HERE, "README.md")) as fid:
 # This call to setup() does all the work
 setup(
     name="dadi-cli",
-    version="0.6.0",
+    version="0.6.1",
     description="A command line interface for dadi",
     long_description=README,
     long_description_content_type="text/markdown",
