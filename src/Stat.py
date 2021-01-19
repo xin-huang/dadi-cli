@@ -12,7 +12,7 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
     demo_popt = np.array(open(demo_popt, 'r').readline().rstrip().split(), dtype=float)
     if dfe_popt != None:
         dfe_popt = np.array(open(dfe_popt, 'r').readline().rstrip().split(), dtype=float)
-    theta = ns_s * demo_popt[-1]
+        theta = ns_s * demo_popt[-1]
 
     fs = dadi.Spectrum.from_file(fs)
     fs_files = glob.glob(bootstrap_dir + '/*.fs')
