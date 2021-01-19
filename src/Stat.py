@@ -7,10 +7,11 @@ from src.Models import get_dadi_model_func
 from src.Pdfs import get_dadi_pdf
 
 def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, 
-                 output, bootstrap_dir, demo_popt, popt, misid, logscale):
+                 output, bootstrap_dir, demo_popt, dfe_popt, misid, logscale):
 
-    popt = np.array(open(popt, 'r').readline().rstrip().split(), dtype=float)
-    theta = ns_s * float(open(demo_popt, 'r').readline().rstrip().split()[-1])
+    demo_popt = np.array(open(demo_popt, 'r').readline().rstrip().split(), dtype=float)
+    dfe_popt = np.array(open(dfe_popt, 'r').readline().rstrip().split(), dtype=float)
+    theta = ns_s * demo_popt[-1]
 
     fs = dadi.Spectrum.from_file(fs)
     fs_files = glob.glob(bootstrap_dir + '/*.fs')
@@ -23,7 +24,11 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
         s1 = pickle.load(open(cache1d, 'rb'))
     if cache2d != None:
         s2 = pickle.load(open(cache2d, 'rb'))
-
+    if (cache1d != None) or (cache2d != None):
+        popt = dfe_popt[1:]
+    else
+        popt = demo_popt[1:-1]
+        
     if model != None:
         func = get_dadi_model_func(model)
         if misid:
@@ -34,7 +39,7 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
         sele_dist2 = get_dadi_pdf(sele_dist2)
 
     if (cache1d != None) and (cache2d != None):
-        popt = np.array([popt[1], popt[2], popt[4], popt[5]])
+        popt = np.array([dfe_popt[1], dfe_popt[2], dfe_popt[4], dfe_popt[5]])
         mfunc = dadi.DFE.mixture
         if misid:
             mfunc = dadi.Numerics.make_anc_state_misid_func(mfunc)
