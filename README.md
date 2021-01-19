@@ -174,7 +174,7 @@ To compare frequency spectra between a demographic model without selection and d
     
 To compare frequency spectra between a demographic model with selection and data, users can use
 
-    dadi-cli Plot --fs
+    dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --misid --ratio 2.31 --dfe-popt ./examples/results/dfe/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --pdf1d lognormal --pdf2d biv_lognormal --output ./examples/results/plots/1KG.YRI.CEU.nonsynonymous.snps.vs.joint.lognormal.mixture.pdf
     
 By default, `dadi-cli` projects the sample size down to 20 for each population. Users can use `--projections` to change the sample size.
     

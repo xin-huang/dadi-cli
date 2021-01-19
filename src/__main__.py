@@ -79,8 +79,8 @@ def main():
     plot_parser.add_argument('--output', type=str, help='The name of the output file')
     plot_parser.add_argument('--projections', type=int, nargs='+', help='The sample sizes after projection')
     plot_parser.add_argument('--resid-range', type=float, help='The ranges of the residual plots', dest='resid_range')
-    plot_parser.add_argument('--pdf', type=str, help='The 1D probability density function for the DFE inference; To check available probability density functions, please use `dadi-cli Pdf`')
-    plot_parser.add_argument('--pdf2', type=str, help='The 2D probability density function for the joint DFE inference; To check available probability density functions, please use `dadi-cli Pdf')
+    plot_parser.add_argument('--pdf1d', type=str, help='The 1D probability density function for the DFE inference; To check available probability density functions, please use `dadi-cli Pdf`')
+    plot_parser.add_argument('--pdf2d', type=str, help='The 2D probability density function for the joint DFE inference; To check available probability density functions, please use `dadi-cli Pdf')
     plot_parser.add_argument('--vmin', type=float, default=0.1, help='The minimum value to be plotted in the frequency spectrum; Default: 0.1')
 
     # subparser for statistics and uncertainty analysis
