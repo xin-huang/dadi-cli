@@ -87,6 +87,7 @@ def main():
     stat_parser = subparsers.add_parser('Stat', help='Perform statistical tests using Godambe Information Matrix')
     stat_parser.add_argument('--fs', type=str, required=True, help='The name of the frequency spectrum; To generate the frequency spectrum, please use `dadi-cli GenerateFs`')
     stat_parser.add_argument('--model', type=str, help='The name of the demographic model; To check available demographic models, please use `dadi-cli Model`')
+    stat_parser.add_argument('--grids', type=float, nargs=3, default=[], help='The sizes of the grids; Default: []')
     stat_parser.add_argument('--misid',  default=False, action='store_true', help='Determine whether adding a parameter for misidentifying ancestral alleles or not; Default: False')
     stat_parser.add_argument('--cache1d', type=str, help='The name of the 1D DFE cache; To generate the cache, please use `dadi-cli GenerateCache`')
     stat_parser.add_argument('--cache2d', type=str, help='The name of the 2D DFE cache; To generate the cache, please use `dadi-cli GenerateCache`')
@@ -222,7 +223,7 @@ def main():
     elif args.subcommand == 'Stat':
 
         from src.Stat import godambe_stat
-        godambe_stat(fs=args.fs, model=args.model, bootstrap_dir=args.bootstrapping_dir, 
+        godambe_stat(fs=args.fs, model=args.model, bootstrap_dir=args.bootstrapping_dir, grids=args.grids,
                      cache1d=args.cache1d, cache2d=args.cache2d, sele_dist=args.pdf1d, ns_s=args.ratio,
                      sele_dist2=args.pdf2d, dfe_popt=args.dfe_popt, misid=args.misid, demo_popt=args.demo_popt,
                      logscale=args.logscale, output=args.output)
