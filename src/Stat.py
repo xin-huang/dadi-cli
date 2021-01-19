@@ -26,7 +26,7 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
         s2 = pickle.load(open(cache2d, 'rb'))
     if (cache1d != None) or (cache2d != None):
         popt = dfe_popt[1:]
-    else
+    else:
         popt = demo_popt[1:-1]
         
     if model != None:
