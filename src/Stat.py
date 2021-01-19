@@ -27,10 +27,8 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, grids
         s2 = pickle.load(open(cache2d, 'rb'))
     if (cache1d != None) or (cache2d != None):
         popt = dfe_popt[1:]
-        multinom = False
     else:
         popt = demo_popt[1:-1]
-        multinom = True
         
     if model != None:
         func = get_dadi_model_func(model)
@@ -57,7 +55,7 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, grids
     boot_theta_adjusts = [b.sum()/fs.sum() for b in all_boot]
     #p = np.array([popt[1], popt[2], popt[4], popt[5]])
     uncerts_adj = dadi.Godambe.GIM_uncert(func, grids, all_boot, popt,
-                                          fs, multinom=multinom, log=logscale,
+                                          fs, multinom=False, log=logscale,
                                           boot_theta_adjusts=boot_theta_adjusts)
 
     with open(output, 'w') as f:
