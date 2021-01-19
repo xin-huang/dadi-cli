@@ -9,7 +9,7 @@
 
 To install `dadi-cli`, users can use `pip`.
 
-    pip install -i https://test.pypi.org/simple/ dadi-cli==0.5.8
+    pip install -i https://test.pypi.org/simple/ dadi-cli==0.6.9
 
 To get help information, users can use
 
