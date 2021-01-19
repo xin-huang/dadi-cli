@@ -23,17 +23,16 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, grids
 
     if cache1d != None:
         s1 = pickle.load(open(cache1d, 'rb'))
+        func = s1.integrate
     if cache2d != None:
         s2 = pickle.load(open(cache2d, 'rb'))
-    if (cache1d != None) or (cache2d != None):
-        popt = dfe_popt[1:]
-    else:
-        popt = demo_popt[1:-1]
+        func = s2.integrate
         
     if model != None:
         func = get_dadi_model_func(model)
-        if misid:
-            func = dadi.Numerics.make_anc_state_misid_func(func)
+    if misid:
+        func = dadi.Numerics.make_anc_state_misid_func(func)
+    
     if sele_dist != None:
         sele_dist = get_dadi_pdf(sele_dist)
     if sele_dist2 != None:
@@ -52,11 +51,24 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, grids
             return mfunc(params, None, s1, s2, sele_dist, 
                          sele_dist2, theta, None, exterior_int=True)
 
-    boot_theta_adjusts = [b.sum()/fs.sum() for b in all_boot]
-    #p = np.array([popt[1], popt[2], popt[4], popt[5]])
-    uncerts_adj = dadi.Godambe.GIM_uncert(func, grids, all_boot, popt,
-                                          fs, multinom=False, log=logscale,
-                                          boot_theta_adjusts=boot_theta_adjusts)
+    if (cache1d != None) or (cache2d != None):
+        popt = dfe_popt[1:]
+    else:
+        popt = demo_popt[1:-1]
+
+    if model != None:
+        func_ex = dadi.Numerics.make_extrap_func(func)
+        uncerts_adj = dadi.Godambe.GIM_uncert(func_ex, grids, all_boot, popt,
+                                              fs, multinom=True, log=logscale)
+        uncerts_adj = uncerts_adj[:-1]
+    else:
+        boot_theta_adjusts = [b.sum()/fs.sum() for b in all_boot]
+        uncerts_adj = dadi.Godambe.GIM_uncert(func, [], all_boot, popt,
+                                              fs, multinom=False, log=logscale,
+                                              boot_theta_adjusts=boot_theta_adjusts)
+
+    print(popt)
+    print(uncerts_adj)
 
     with open(output, 'w') as f:
         f.write('Estimated 95% uncerts (theta adj): {0}'.format(1.96*uncerts_adj) + '\n')
