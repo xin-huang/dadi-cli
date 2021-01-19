@@ -34,6 +34,7 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
         sele_dist2 = get_dadi_pdf(sele_dist2)
 
     if (cache1d != None) and (cache2d != None):
+        popt = np.array([popt[1], popt[2], popt[4], popt[5]])
         mfunc = dadi.DFE.mixture
         if misid:
             mfunc = dadi.Numerics.make_anc_state_misid_func(mfunc)
@@ -46,16 +47,16 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
                          sele_dist2, theta, None, exterior_int=True)
 
     boot_theta_adjusts = [b.sum()/fs.sum() for b in all_boot]
-    p = np.array([popt[1], popt[2], popt[4], popt[5]])
-    uncerts_adj = dadi.Godambe.GIM_uncert(func, [], all_boot, p,
+    #p = np.array([popt[1], popt[2], popt[4], popt[5]])
+    uncerts_adj = dadi.Godambe.GIM_uncert(func, [], all_boot, popt,
                                           fs, multinom=False, log=logscale,
                                           boot_theta_adjusts=boot_theta_adjusts)
 
     with open(output, 'w') as f:
         f.write('Estimated 95% uncerts (theta adj): {0}'.format(1.96*uncerts_adj) + '\n')
         if logscale:
-            f.write('Lower bounds of 95% confidence interval : {0}'.format(np.exp(np.log(p)-1.96*uncerts_adj)) + '\n')
-            f.write('Upper bounds of 95% confidence interval : {0}'.format(np.exp(np.log(p)+1.96*uncerts_adj)) + '\n')
+            f.write('Lower bounds of 95% confidence interval : {0}'.format(np.exp(np.log(popt)-1.96*uncerts_adj)) + '\n')
+            f.write('Upper bounds of 95% confidence interval : {0}'.format(np.exp(np.log(popt)+1.96*uncerts_adj)) + '\n')
         else:
-            f.write('Lower bounds of 95% confidence interval : {0}'.format(p-1.96*uncerts_adj) + '\n')
-            f.write('Upper bounds of 95% confidence interval : {0}'.format(p+1.96*uncerts_adj) + '\n')
+            f.write('Lower bounds of 95% confidence interval : {0}'.format(popt-1.96*uncerts_adj) + '\n')
+            f.write('Upper bounds of 95% confidence interval : {0}'.format(popt+1.96*uncerts_adj) + '\n')
