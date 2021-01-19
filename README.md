@@ -152,7 +152,7 @@ To estimate the confidence intervals for the demographic parameters, users can u
     
 To estimate the confidence intervals for the joint DFE parameters, users can use
 
-    dadi-cli Stat --fs ./examples/results/fs/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --pdf1d lognormal --pdf2d biv_lognormal --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --misid --popt ./examples/results/dfe/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --bootstrapping-dir ./examples/results/fs/bootstrapping_non/ --ratio 2.31 --output ./examples/results/stat/1KG.YRI.CEU.IM_pre.bestfit.dfe.params.godambe.ci
+    dadi-cli Stat --fs ./examples/results/fs/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --pdf1d lognormal --pdf2d biv_lognormal --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --misid --dfe-popt ./examples/results/dfe/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --bootstrapping-dir ./examples/results/fs/bootstrapping_non/ --ratio 2.31 --output ./examples/results/stat/1KG.YRI.CEU.IM_pre.bestfit.dfe.params.godambe.ci
 
 ### Plotting
 
@@ -160,19 +160,23 @@ To estimate the confidence intervals for the joint DFE parameters, users can use
 
 To plot frequency spectrum from data, users can use
 
-    dadi-cli Plot --fs example.fs --output example.fs.pdf
+    dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.synonymous.snps.unfold.fs --output ./examples/results/plots/1KG.YRI.CEU.synonymous.snps.unfold.fs.pdf
+    
+    dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs --output ./examples/results/plots/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs.pdf
     
 To compare two frequency spectra from data, users can use
 
-    dadi-cli Plot --fs example1.fs --fs2 example2.fs --output example.fs.comparison.pdf
+    dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.synonymous.snps.unfold.fs --fs2 ./examples/results/fs/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs --output ./examples/results/plots/1KG.YRI.CEU.synonymous.vs.nonsynonymous.snps.unfold.fs.pdf
     
 To compare frequency spectra between a demographic model without selection and data, users can use
 
-    dadi-cli Plot --fs example.fs 
+    dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.synonymous.snps.unfold.fs --demo-model IM_pre --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --misid --output ./examples/results/plots/1KG.YRI.CEU.synonymous.snps.vs.IM_pre.pdf
     
 To compare frequency spectra between a demographic model with selection and data, users can use
 
     dadi-cli Plot --fs
+    
+By default, `dadi-cli` projects the sample size down to 20 for each population. Users can use `--projections` to change the sample size.
     
 ### Available demographic models
 

@@ -39,7 +39,7 @@ def plot_comparison(fs, fs2, projections, output, vmin, resid_range):
 
 def plot_fitted_demography(fs, model, popt, projections, misid, output, vmin, resid_range):
     
-    from Models import get_dadi_model_func
+    from src.Models import get_dadi_model_func
     func = get_dadi_model_func(model)
 
     popt = np.array(open(popt, 'r').readline().rstrip().split()[1:-1], dtype=float)
@@ -70,7 +70,7 @@ def plot_fitted_demography(fs, model, popt, projections, misid, output, vmin, re
 def plot_fitted_dfe(fs, cache1d, cache2d, demo_popt, sele_popt, ns_s, projections, pdf, pdf2, misid, output, vmin, resid_range):
 
     import dadi.DFE
-    from Pdfs import get_dadi_pdf
+    from src.Pdfs import get_dadi_pdf
     
     fs = dadi.Spectrum.from_file(fs)
     theta = ns_s * float(open(demo_popt, 'r').readline().rstrip().split()[-1])
