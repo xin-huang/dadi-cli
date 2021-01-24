@@ -12,7 +12,7 @@ def plot_single_sfs(fs, projections, output, vmin):
     if len(fs.sample_sizes) == 1:
         if projections == None: projections = [20]
         fs = fs.project(projections)
-        dadi.Plotting.plot_1d_sfs(fs)
+        dadi.Plotting.plot_1d_fs(fs)
     if len(fs.sample_sizes) == 2:
         if projections == None: projections = [20, 20]
         fs = fs.project(projections)
