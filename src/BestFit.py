@@ -14,7 +14,7 @@ def get_bestfit_params(path, lbounds, ubounds, output):
             res.append(popt)
 
     opt = sorted(res, key=lambda x: x[0])
-    d = opt[-1] - opt[-2]
+    d = opt[-1][0] - opt[-2][0]
     opt_ll = opt[-1][0]
     opt_params = opt[-1][1:]
 
