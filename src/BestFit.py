@@ -3,20 +3,22 @@ import glob
 def get_bestfit_params(path, lbounds, ubounds, output):
    
     files = glob.glob(path + '/*')
-    res = []
+    res = {} 
     for f in files:
         line = open(f, 'r').readline().rstrip().split()
         ll = line[0]
+        popt = line[1:]
         if ll != '--':
-            popt = []
-            for l in line:
-                popt.append(float(l))
-            res.append(popt)
+            ll = float(ll)
+            if ll not in res:
+                res[ll] = []
+            res[ll].append(popt)
 
-    opt = sorted(res, key=lambda x: x[0])
-    d = opt[-1][0] - opt[-2][0]
-    opt_ll = opt[-1][0]
-    opt_params = opt[-1][1:]
+    ll = sorted(res)
+    opt_ll = ll[-1]
+    if len(res[opt_ll]) > 1: d = 0
+    else: d = ll[-1] - ll[-2]
+    opt_params = res[opt_ll]
 
     if d < 0.05:
         if opt_params_converged(opt_params):
