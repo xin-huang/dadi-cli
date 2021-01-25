@@ -27,9 +27,18 @@ def infer_demography(fs, model, grids, p0, output,
 
     # Optimization
     if len(ns) == 1:
-        fs_proj = fs.project([20])
+        if ns > 20:
+            fs_proj = fs.project([20])
+        else: fs_proj = fs
     if len(ns) == 2:
-        fs_proj = fs.project([20, 20])
+        if (ns[0] > 20) and (ns[1] > 20):
+            fs_proj = fs.project([20, 20])
+        elif (ns[0] > 20) and (ns[1] <= 20):
+            fs_proj = fs.project([20, ns[1]])
+        elif (ns[0] <= 20) and (ns[1] > 20):
+            fs_proj = fs.project([ns[0], 20])
+        else:
+            fs_proj = fs
     ns_proj = fs_proj.sample_sizes
     grids_proj = [ns_proj.max()+10, ns_proj.max()+20, ns_proj.max()+30]
 
