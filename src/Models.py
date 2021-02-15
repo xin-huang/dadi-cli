@@ -24,6 +24,8 @@ def get_dadi_model_func(model_name, withSelection=False):
             return DFE.DemogSelModels.split_asym_mig_single_gamma, True
         elif model_name == 'two_epoch_sel':
             return DFE.DemogSelModels.two_epoch, True
+        elif model_name == 'three_epoch_sel':
+            return DFE.DemogSelModels.three_epoch, True
         elif model_name == 'mixture':
             return DFE.mixture, True
         else:
@@ -91,6 +93,7 @@ def print_available_models():
     print('- split_mig_sel_single_gamma')
     print('- split_asym_mig_sel')
     print('- split_asym_mig_sel_single_gamma')
+    print('- three_epoch_sel')
     print('- two_epoch_sel')
     print('- mixture')
 
@@ -354,6 +357,19 @@ def print_model_details(model_name):
 
             nu: Final population size (in units of Na)
              T: Time of size changei (in units of 2*Na generations)
+         gamma: Population-scaled selection coefficient
+    '''
+    three_epoch_sel = '''
+        Two instantaneous size changes some time ago. 
+        Only one population in this model.
+
+        params = [nuB,nuF,TB,TF]
+
+            nuB: Ratio of bottleneck population size to ancient pop size (in units of Na)
+            nuF: Ratio of contemporary to ancient pop size (in units of Na)
+             TB: Length of bottleneck (in units of 2*Na generations) 
+             TF: Time since bottleneck recovery (in units of 2*Na generations)
+          gamma: Population-scaled selection coefficient
     '''
     mixture = '''
     '''
@@ -369,6 +385,7 @@ def print_model_details(model_name):
     elif model_name == 'split_asym_mig_sel': print('- split_asym_mig_sel:\n' + split_asym_mig_sel)
     elif model_name == 'split_asym_mig_sel_single_gamma': print('- split_asym_mig_sel_single_gamma:\n' + split_asym_mig_sel_single_gamma)
     elif model_name == 'two_epoch_sel': print('- two_epoch_sel:\n' + two_epoch_sel)
+    elif model_name == 'three_epoch_sel': print('- three_epoch_sel:\n' + three_epoch_sel)
     elif model_name == 'bottlegrowth_1d': print('- bottlegrowth_1d:\n' + bottlegrowth_1d)
     elif model_name == 'growth_1d': print('- growth_1d:\n' + growth_1d)
     elif model_name == 'snm_1d': print('- snm_1d:\n' + snm_1d)
