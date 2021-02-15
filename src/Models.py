@@ -363,7 +363,7 @@ def print_model_details(model_name):
         Two instantaneous size changes some time ago. 
         Only one population in this model.
 
-        params = [nuB,nuF,TB,TF]
+        params = [nuB,nuF,TB,TF,gamma]
 
             nuB: Ratio of bottleneck population size to ancient pop size (in units of Na)
             nuF: Ratio of contemporary to ancient pop size (in units of Na)
