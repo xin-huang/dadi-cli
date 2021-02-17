@@ -76,7 +76,8 @@ def plot_fitted_dfe(fs, cache1d, cache2d, demo_popt, sele_popt, ns_s, projection
     theta = ns_s * float(open(demo_popt, 'r').readline().rstrip().split()[-1])
     sele_popt = np.array(open(sele_popt, 'r').readline().rstrip().split()[1:], dtype=float)
     pdf = get_dadi_pdf(pdf)
-    pdf2 = get_dadi_pdf(pdf2)
+    if pdf2 != None:
+        pdf2 = get_dadi_pdf(pdf2)
 
     ns = fs.sample_sizes
     # Integrate over a range of gammas
