@@ -208,7 +208,7 @@ def main():
         from src.Plot import plot_comparison, plot_fitted_demography, plot_fitted_dfe, plot_single_sfs
     
         if args.dfe_popt != None:
-            plot_fitted_dfe(fs=args.fs, cache1d=args.cache1d, cache2d=args.cache2d, pdf=args.pdf, pdf2=args.pdf2, misid=args.misid,
+            plot_fitted_dfe(fs=args.fs, cache1d=args.cache1d, cache2d=args.cache2d, pdf=args.pdf1d, pdf2=args.pdf2d, misid=args.misid,
                             demo_popt=args.demo_popt, sele_popt=args.dfe_popt, vmin=args.vmin, resid_range=args.resid_range,
                             ns_s=args.ratio, projections=args.projections, output=args.output)
         elif args.demo_popt != None:
