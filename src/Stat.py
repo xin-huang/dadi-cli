@@ -50,7 +50,8 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, grids
             return mfunc(params, None, s1, s2, sele_dist, 
                          sele_dist2, theta, None, exterior_int=True)
     else:
-        sfunc = dadi.Numerics.make_anc_state_misid_func(sfunc)
+        if misid:
+            sfunc = dadi.Numerics.make_anc_state_misid_func(sfunc)
         def func(params, ns, pts):
             return sfunc(params, None, sele_dist, theta, None, exterior_int=True)
 
