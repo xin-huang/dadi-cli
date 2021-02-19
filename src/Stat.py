@@ -30,8 +30,8 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, grids
         
     if model != None:
         func = get_dadi_model_func(model)
-    if misid:
-        func = dadi.Numerics.make_anc_state_misid_func(func)
+        if misid:
+            func = dadi.Numerics.make_anc_state_misid_func(func)
     
     if sele_dist != None:
         sele_dist = get_dadi_pdf(sele_dist)
