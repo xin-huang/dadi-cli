@@ -60,6 +60,36 @@ def get_dadi_model_func(model_name, withSelection=False):
             return dadi.Demographics2D.snm
         else:
             raise Exception('Demographic model ' + model_name + ' is not available!')
+            
+def get_dadi_model_params(model_name):
+    if model_name == 'bottlegrowth_1d':
+        return ['nuB', 'nuF', 'T']
+    elif model_name == 'growth_1d':
+        return ['nu', 'T']
+    elif model_name == 'snm_1d':
+        return []
+    elif model_name == 'three_epoch_1d':
+        return ['nuB', 'nuF', 'TB', 'TF']
+    elif model_name == 'two_epoch_1d':
+        return ['nu', 'T']
+    elif model_name == 'bottlegrowth_2d':
+        return ['nuB', 'nuF', 'T']
+    elif model_name == 'bottlegrowth_split':
+        return ['nuB', 'nuF', 'T', 'Ts']
+    elif model_name == 'bottlegrowth_split_mig':
+        return ['nuB', 'nuF', 'm', 'T', 'Ts']
+    elif model_name == 'IM':
+        return ['s', 'nu1', 'nu2', 'T', 'm12', 'm21']
+    elif model_name == 'split_asym_mig':
+        return ['nu1', 'nu2', 'T', 'm12', 'm21']
+    elif model_name == 'IM_pre':
+        return ['nuPre', 'TPre', 's', 'nu1', 'nu2', 'T', 'm12', 'm21']
+    elif model_name == 'split_mig':
+        return ['nu1', 'nu2', 'T', 'm']
+    elif model_name == 'snm_2d':
+        return []
+    else:
+        raise Exception('Demographic model ' + model_name + ' is not available!')
 
 def print_available_models():
     
@@ -93,8 +123,8 @@ def print_available_models():
     print('- split_mig_sel_single_gamma')
     print('- split_asym_mig_sel')
     print('- split_asym_mig_sel_single_gamma')
-    print('- three_epoch_sel')
     print('- two_epoch_sel')
+    print('- three_epoch_sel')
     print('- mixture')
 
 def print_model_details(model_name):
@@ -360,11 +390,10 @@ def print_model_details(model_name):
          gamma: Population-scaled selection coefficient
     '''
     three_epoch_sel = '''
-        Two instantaneous size changes some time ago. 
+        Two instantaneous size changes some time ago, plus selection.
         Only one population in this model.
-
+        
         params = [nuB,nuF,TB,TF,gamma]
-
             nuB: Ratio of bottleneck population size to ancient pop size (in units of Na)
             nuF: Ratio of contemporary to ancient pop size (in units of Na)
              TB: Length of bottleneck (in units of 2*Na generations) 

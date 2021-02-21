@@ -1,8 +1,9 @@
 from tkinter import *
 from tkinter import ttk
-from tkinter.filedialog import askopenfilename, asksaveasfilename
+from tkinter.filedialog import askopenfilename, asksaveasfilename, askdirectory
 
 from GenerateFs import generate_fs
+from Models import
 
 def main():
     root = Tk()
@@ -20,13 +21,11 @@ def main():
     def create_new_window(title):
         window = Toplevel(root)
         window.title(title)
-        #window.geometry("500x300")
         
         return window
     
     def generate_fs_window():
-        window = Toplevel(root)
-        window.title("Generate frequency spectrum")
+        window = create_new_window("Generate frequency spectrum")
         
         frm = Frame(window)
         frm_sample_size = Frame(frm)
@@ -38,8 +37,7 @@ def main():
                 parent=window,
                 filetypes=[("GZcompressed VCF Files", "*.vcf.gz"), ("VCF Files", "*.vcf"), ("All Files", "*.*")]
             )
-            if not file_name:
-                return
+            if not file_name: return
             
             lbl_vcf['text'] = file_name
             
@@ -50,8 +48,7 @@ def main():
                 parent=window,
                 filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")]
             )
-            if not file_name:
-                return
+            if not file_name: return
             
             lbl_pop_info['text'] = file_name
             
@@ -80,8 +77,7 @@ def main():
                 defaultextension="fs",
                 filetypes=[("Frequency Spectrum Files", "*.fs"), ("All Files", "*.*")],
             )
-            if not file_name:
-                return
+            if not file_name: return
             
             lbl_output['text'] = file_name
             return file_name
@@ -132,6 +128,82 @@ def main():
     
     def infer_dm_window():
         window = create_new_window("Infer demographic models")
+        
+        frm = Frame(window)
+        
+        def select_fs_file():
+            file_name = askopenfilename(
+                parent=window,
+                filetypes=[("Frequency Spectrum Files", "*.fs"), ("All Files", "*.*")]
+            )
+            if not file_name: return
+            
+            lbl_fs['text'] = file_name
+            
+            return file_name
+        
+        def select_output_dir():
+            file_dir = askdirectory(parent=window)
+            
+            if not file_dir: return
+            
+            lbl_output_dir['text'] = file_dir
+            
+            return file_dir
+        
+        def run_infer_dm():
+            return
+        
+        btn_select_fs = Button(frm, text="Select a frequency spectrum file", command=select_fs_file)
+        lbl_fs = Label(frm, text="No frequency spectrum file selected")   
+        btn_select_fs.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
+        lbl_fs.grid(row=0, column=1, sticky="ew", padx=5, pady=5)
+        
+        btn_select_output_dir = Button(frm, text="Select a output directory", command=select_output_dir)
+        lbl_output_dir = Label(frm, text="No output directory selected")
+        btn_select_output_dir.grid(row=1, column=0, sticky="ew", padx=5, pady=5)
+        lbl_output_dir.grid(row=1, column=1, sticky="ew", padx=5, pady=5)
+        
+        lbl_output_file_prefix = Label(frm, text="Output file prefix")
+        ent_output_file = Entry(frm, width=50)
+        lbl_output_file_prefix.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
+        ent_output_file.grid(row=2, column=1, sticky="ew", padx=5, pady=5)
+        
+        lbl_model = Label(frm, text="Select a demographic model")
+        cbb_models = ttk.Combobox(frm)
+        cbb_models['values'] = (
+            'bottlegrowth_1d',
+            'growth_1d',
+            'snm_1d',
+            'three_epoch_1d',
+            'two_epoch_1d',
+            'bottlegrowth_2d',
+            'bottlegrowth_split',
+            'bottlegrowth_split_mig',
+            'IM',
+            'IM_pre',
+            'split_mig',
+            'split_asym_mig',
+            'snm_2d'
+        )
+        cbb_models.state(["readonly"])
+        lbl_model.grid(row=3, column=0, sticky="ew", padx=5, pady=5)
+        cbb_models.grid(row=3, column=1, sticky="ew", padx=5, pady=5)
+        
+        cbt_misid = Checkbutton(frm, text="Add misidentification")
+        cbt_misid.grid(row=4, column=0, sticky="n", padx=5, pady=5)
+        
+        lbl_initial_values = Label(frm, text="Initial values")
+        lbl_upper_bounds = Label(frm, text="Upper bounds")
+        lbl_lower_bounds = Label(frm, text="Lower bounds")
+        lbl_initial_values.grid(row=5, column=0, sticky="ew", padx=5, pady=5)
+        lbl_upper_bounds.grid(row=6, column=0, sticky="ew", padx=5, pady=5)
+        lbl_lower_bounds.grid(row=7, column=0, sticky="ew", padx=5, pady=5)
+        
+        btn_infer = Button(frm, text="Infer", command=run_infer_dm)
+        btn_infer.grid(row=8, column=2, sticky="ew", padx=5, pady=5)
+        
+        frm.grid(row=0, column=0, sticky="ns")
 
     def generate_cache_window():
         window = create_new_window("Generate cache for DFE inference")
