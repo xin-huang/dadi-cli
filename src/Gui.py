@@ -340,8 +340,8 @@ class compare_frequency_with_dm_window(plot_a_frequency_spectrum_window):
         plot_a_frequency_spectrum_window.__init__(self, master)
         self.set_window_title("Make plot - Compare a frequency spectrum with a demographic model")
         
-        self.params_labels = []
-        self.params_entries = []
+        self.params_demo_labels = []
+        self.params_demo_entries = []
         
         self.lbl_model = Label(self.frm, text="Select a demographic model")
         self.cbb_models = ttk.Combobox(self.frm)
@@ -372,33 +372,54 @@ class compare_frequency_with_dm_window(plot_a_frequency_spectrum_window):
         self.demo_params.grid(row=6, column=0, sticky="ew", padx=5, pady=5)
         self.frm_demo_params.grid(row=6, column=1, sticky="ew", padx=5, pady=5)
                 
-        self.cbt_misid = Checkbutton(self.frm, text="Add misidentification")
+        self.cbt_value = IntVar()
+        self.cbt_misid = Checkbutton(self.frm, text="Add misidentification", variable=self.cbt_value, command=self.add_misid)
         self.cbt_misid.grid(row=7, column=0, sticky="n", padx=5, pady=5)
         
     def select_models(self, event):
+        for lbl in self.params_demo_labels: lbl.destroy()
+        for ent in self.params_demo_entries: ent.destroy()
             
-        for lbl in self.params_labels: lbl.destroy()
-        for ent in self.params_entries: ent.destroy()
+        self.params_demo_labels = []
+        self.params_demo_entries = []
             
         params = get_dadi_model_params(self.cbb_models.get())
-        params.append('theta')
+        params.append("theta")
+        if self.cbt_value.get() == 1: params.append("misid")
         i = 0
         for p in params:
             lbl = Label(self.frm_demo_params, text=p)
-            self.params_labels.append(lbl)
+            self.params_demo_labels.append(lbl)
                 
-            ent = Entry(self.frm_demo_params, width=10)
-            self.params_entries.append(lbl)
+            ent = Entry(self.frm_demo_params, width=8)
+            self.params_demo_entries.append(ent)
                 
             lbl.grid(row=0, column=i, sticky="ew", padx=5, pady=5)
             i += 1
             ent.grid(row=0, column=i, sticky="ew", padx=5, pady=5)
             i += 1
         
+    def add_misid(self):
+        if (self.cbt_value.get() == 1) and (self.cbb_models.get() != ''):
+            lbl_misid = Label(self.frm_demo_params, text="misid")
+            ent_misid = Entry(self.frm_demo_params, width=8)
+            lbl_misid.grid(row=0, column=len(self.params_demo_labels)*2, sticky="ew", padx=5, pady=5)
+            ent_misid.grid(row=0, column=len(self.params_demo_entries)*2+1, sticky="ew", padx=5, pady=5)
+            self.params_demo_labels.append(lbl_misid)
+            self.params_demo_entries.append(ent_misid)
+        if (self.cbt_value.get() == 0) and (self.cbb_models.get() != ''):
+            lbl = self.params_demo_labels.pop()
+            ent = self.params_demo_entries.pop()
+            lbl.destroy()
+            ent.destroy()
+        
 class compare_frequency_with_dfe_window(compare_frequency_with_dm_window):
     def __init__(self, master):
         compare_frequency_with_dm_window.__init__(self, master)
         self.set_window_title("Make plot - Compare a frequency spectrum with a DFE model")
+        
+        self.params_dfe_labels = []
+        self.params_dfe_entries = []
         
         self.lbl_cache = Label(self.frm, text="No cache file selected")   
         self.btn_select_cache = Button(self.frm, text="Select a 1D/2D cache file", command=self.select_cache_file)
@@ -412,7 +433,7 @@ class compare_frequency_with_dfe_window(compare_frequency_with_dm_window):
             'biv_asym_ind_gamma',
             'biv_asym_lognormal',
             'biv_sym_ind_gamma',
-            'biv_asym_lognormal',
+            'biv_sym_lognormal',
             'exponential',
             'gamma',
             'lognormal',
@@ -424,11 +445,44 @@ class compare_frequency_with_dfe_window(compare_frequency_with_dm_window):
         self.lbl_pdfs.grid(row=8, column=0, sticky="ew", padx=5, pady=5)
         self.cbb_pdfs.grid(row=8, column=1, sticky="ew", padx=5, pady=5)
         
+        self.dfe_params = Label(self.frm, text="DFE distribution parameters")
+        self.frm_dfe_params = Frame(self.frm)
+        
+        self.dfe_params.grid(row=10, column=0, sticky="ew", padx=5, pady=5)
+        self.frm_dfe_params.grid(row=10, column=1, sticky="ew", padx=5, pady=5)
+        
+        self.lbl_ratio = Label(self.frm, text="Nonsynonymous vs synonymous ratio")
+        self.ent_ratio = Entry(self.frm)
+        self.lbl_ratio.grid(row=11, column=0, sticky="ew", padx=5, pady=5)
+        self.ent_ratio.grid(row=11, column=1, sticky="ew", padx=5, pady=5)
+        
     def select_cache_file(self):
-        return
+        file_name = askopenfilename(
+            parent=self.window,
+            filetypes=[("Cache Files", "*.bpkl"), ("All Files", "*.*")]
+        )
+        if not file_name: return
+            
+        self.lbl_cache['text'] = file_name
     
     def select_pdfs(self, event):
-        return
+        for lbl in self.params_dfe_labels: lbl.destroy()
+        for ent in self.params_dfe_entries: ent.destroy()
+            
+        params = get_dadi_pdf_params(self.cbb_pdfs.get())
+        i = 0
+        for p in params:
+            lbl = Label(self.frm_dfe_params, text=p)
+            self.params_dfe_labels.append(lbl)
+                
+            ent = Entry(self.frm_dfe_params, width=10)
+            self.params_dfe_entries.append(ent)
+                
+            lbl.grid(row=0, column=i, sticky="ew", padx=5, pady=5)
+            i += 1
+            ent.grid(row=0, column=i, sticky="ew", padx=5, pady=5)
+            i += 1
+
         
 class compare_frequency_with_joint_dfe_window(compare_frequency_with_dfe_window):
     def __init__(self, master):
@@ -443,6 +497,17 @@ class compare_frequency_with_joint_dfe_window(compare_frequency_with_dfe_window)
         self.btn_select_ant_cache.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
         self.lbl_ant_cache.grid(row=2, column=1, sticky="ew", padx=5, pady=5)
         
+        self.cbb_models['values'] = (
+            'bottlegrowth_2d',
+            'bottlegrowth_split',
+            'bottlegrowth_split_mig',
+            'IM',
+            'IM_pre',
+            'split_mig',
+            'split_asym_mig',
+            'snm_2d'
+        )
+        
         self.lbl_pdfs['text'] = "Select a 1D DFE distribution"
         self.cbb_pdfs['values'] = (
             'gamma',
@@ -450,24 +515,42 @@ class compare_frequency_with_joint_dfe_window(compare_frequency_with_dfe_window)
         )
         
         self.lbl_2d_pdfs = Label(self.frm, text="Select a 2D DFE distribution")
-        self.cbb_2d_pdfs = ttk.Combobox(self.frm)
-        self.cbb_2d_pdfs['values'] = (
-            'biv_asym_ind_gamma',
-            'biv_asym_lognormal',
-            'biv_sym_ind_gamma',
-            'biv_sym_lognormal',
-        )
-        self.cbb_2d_pdfs.state(["readonly"])
-        self.cbb_2d_pdfs.bind('<<ComboboxSelected>>', self.select_2d_pdfs)
+        self.lbl_2d_pdf_selected = Label(self.frm, text="No DFE distribution selected")
         
         self.lbl_2d_pdfs.grid(row=9, column=0, sticky="ew", padx=5, pady=5)
-        self.cbb_2d_pdfs.grid(row=9, column=1, sticky="ew", padx=5, pady=5)
+        self.lbl_2d_pdf_selected.grid(row=9, column=1, sticky="ew", padx=5, pady=5)
 
     def select_ant_cache_file(self):
-        return
+        file_name = askopenfilename(
+            parent=self.window,
+            filetypes=[("Cache Files", "*.bpkl"), ("All Files", "*.*")]
+        )
+        if not file_name: return
+            
+        self.lbl_ant_cache['text'] = file_name
     
-    def select_2d_pdfs(self, event):
-        return
+    def select_pdfs(self, event):
+        for lbl in self.params_dfe_labels: lbl.destroy()
+        for ent in self.params_dfe_entries: ent.destroy()
+            
+        params = get_dadi_pdf_params(self.cbb_pdfs.get())
+        params.append("DFE correlation")
+        i = 0
+        for p in params:
+            lbl = Label(self.frm_dfe_params, text=p)
+            self.params_dfe_labels.append(lbl)
+                
+            ent = Entry(self.frm_dfe_params, width=10)
+            self.params_dfe_entries.append(ent)
+                
+            lbl.grid(row=0, column=i, sticky="ew", padx=5, pady=5)
+            i += 1
+            ent.grid(row=0, column=i, sticky="ew", padx=5, pady=5)
+            i += 1
+        
+        if self.cbb_pdfs.get() == 'gamma': self.lbl_2d_pdf_selected['text'] = 'biv_sym_ind_gamma'
+        else: self.lbl_2d_pdf_selected['text'] = 'biv_sym_lognormal'
+        
         
 def main():
     # create the root window
