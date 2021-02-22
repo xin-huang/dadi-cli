@@ -102,7 +102,7 @@ class generate_fs_window(analysis_window):
         
         self.lbl_vcf = Label(self.frm, text="No VCF file selected")
         self.lbl_pop_info = Label(self.frm, text="No Pop Info file selected")
-        self.lbl_output = Label(self.frm, text="No output file")
+        self.lbl_output = Label(self.frm, text="No output file selected")
         self.lbl_projections = Label(self.frm, text="Sample sizes (chromosomes)")
         
         self.is_unfolded = IntVar()
@@ -171,8 +171,7 @@ class infer_dm_window(analysis_window):
         self.ent_output_file.grid(row=2, column=1, sticky="ew", padx=5, pady=5)
         
         self.lbl_model = Label(self.frm, text="Select a demographic model")
-        self.model_value = StringVar()
-        self.cbb_models = ttk.Combobox(self.frm, textvariable=self.model_value)
+        self.cbb_models = ttk.Combobox(self.frm)
         self.cbb_models['values'] = (
             'bottlegrowth_1d',
             'growth_1d',
@@ -257,73 +256,82 @@ class infer_dm_window(analysis_window):
         self.frm_fixed_params.grid(row=8, column=1, sticky="ew", padx=5, pady=5)
         self.frm.grid(row=0, column=0, sticky="ns")
 
-class make_plots_window(analysis_window):
+class plot_a_frequency_spectrum_window(analysis_window):
     def __init__(self, master):
         analysis_window.__init__(self, master, "Make plots")
         
         self.frm = Frame(self.window)
         self.canvases = []
         
-        def select_fs_file():
-            file_name = askopenfilename(
-                parent=self.window,
-                filetypes=[("Frequency Spectrum Files", "*.fs"), ("All Files", "*.*")]
-            )
-            if not file_name: return
-            
-            self.lbl_fs['text'] = file_name
-            
-        def select_ant_fs_file():
-            file_name = askopenfilename(
-                parent=self.window,
-                filetypes=[("Frequency Spectrum Files", "*.fs"), ("All Files", "*.*")]
-            )
-            if not file_name: return
-            
-            self.lbl_ant_fs['text'] = file_name
-            
-        def output_file():
-            file_name = asksaveasfilename(
-                parent=self.window,
-                defaultextension="pdf",
-                filetypes=[("Portable Network Graphics", "*.png"), ("Portable Document Format", "*.pdf"), ("All Files", "*.*")],
-            )
-            if not file_name: return
-            
-            self.lbl_output['text'] = file_name
-        
-        def run_make_plots():
-            
-            if self.lbl_ant_fs['text'] == "No frequency spectrum file selected":
-                subprocess.run(["dadi-cli", "Plot", "--fs", self.lbl_fs['text'], "--output", self.lbl_output['text']])
-            else:
-                subprocess.run(["dadi-cli", "Plot", "--fs", self.lbl_fs['text'], "--fs2", self.lbl_ant_fs['text'], "--output", self.lbl_output['text']])
-            
-            load = Image.open(self.lbl_output['text'])
-            render = ImageTk.PhotoImage(load)
-            img = Label(self.frm, image=render)
-            img.image = render
-            img.grid(row=3, column=1)
-        
         self.lbl_fs = Label(self.frm, text="No frequency spectrum file selected")
-        self.btn_select_fs = Button(self.frm, text="Select a frequency spectrum file", command=select_fs_file)
+        self.btn_select_fs = Button(self.frm, text="Select a frequency spectrum file", command=self.select_fs_file)
         self.btn_select_fs.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
         self.lbl_fs.grid(row=0, column=1, sticky="ew", padx=5, pady=5)
         
-        self.lbl_ant_fs = Label(self.frm, text="No frequency spectrum file selected")   
-        self.btn_select_ant_fs = Button(self.frm, text="Select another frequency spectrum file", command=select_ant_fs_file)
-        self.btn_select_ant_fs.grid(row=1, column=0, sticky="ew", padx=5, pady=5)
-        self.lbl_ant_fs.grid(row=1, column=1, sticky="ew", padx=5, pady=5)
-        
-        self.lbl_output = Label(self.frm, text="No output file")
-        self.btn_select_output = Button(self.frm, text="Save as", command=output_file)
+        self.lbl_output = Label(self.frm, text="No output file selected")
+        self.btn_select_output = Button(self.frm, text="Save as", command=self.output_file)
         self.btn_select_output.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
         self.lbl_output.grid(row=2, column=1, sticky="ew", padx=5, pady=5)
         
-        self.btn_plot = Button(self.frm, width=10, text="Plot", command=run_make_plots)
+        self.btn_plot = Button(self.frm, width=10, text="Plot", command=self.run_make_plots)
         self.btn_plot.grid(row=10, column=2, sticky="ew", padx=5, pady=5)
         
         self.frm.grid(row=0, column=0, sticky="ns")
+        
+    def select_fs_file(self):
+        file_name = askopenfilename(
+            parent=self.window,
+            filetypes=[("Frequency Spectrum Files", "*.fs"), ("All Files", "*.*")]
+        )
+        if not file_name: return
+            
+        self.lbl_fs['text'] = file_name
+        
+    def output_file(self):
+        file_name = asksaveasfilename(
+            parent=self.window,
+            defaultextension="pdf",
+            filetypes=[("Portable Network Graphics", "*.png"), ("Portable Document Format", "*.pdf"), ("All Files", "*.*")],
+        )
+        if not file_name: return
+            
+        self.lbl_output['text'] = file_name
+        
+    def run_make_plots(self):
+        subprocess.run(["dadi-cli", "Plot", "--fs", self.lbl_fs['text'], "--output", self.lbl_output['text']])
+            
+        load = Image.open(self.lbl_output['text'])
+        render = ImageTk.PhotoImage(load)
+        img = Label(self.frm, image=render)
+        img.image = render
+        img.grid(row=3, column=1)
+        
+class compare_two_frequency_spectra_window(plot_a_frequency_spectrum_window):
+    def __init__(self, master):
+        plot_a_frequency_spectrum_window.__init__(self, master)
+
+        self.lbl_ant_fs = Label(self.frm, text="No frequency spectrum file selected")   
+        self.btn_select_ant_fs = Button(self.frm, text="Select another frequency spectrum file", command=self.select_ant_fs_file)
+        self.btn_select_ant_fs.grid(row=1, column=0, sticky="ew", padx=5, pady=5)
+        self.lbl_ant_fs.grid(row=1, column=1, sticky="ew", padx=5, pady=5)
+        
+    def select_ant_fs_file(self):
+        file_name = askopenfilename(
+            parent=self.window,
+            filetypes=[("Frequency Spectrum Files", "*.fs"), ("All Files", "*.*")]
+        )
+        if not file_name: return
+            
+        self.lbl_ant_fs['text'] = file_name
+        
+    def run_make_plots(self):
+        subprocess.run(["dadi-cli", "Plot", "--fs", self.lbl_fs['text'], "--fs2", self.lbl_ant_fs['text'], "--output", self.lbl_output['text']])
+            
+        load = Image.open(self.lbl_output['text'])
+        render = ImageTk.PhotoImage(load)
+        img = Label(self.frm, image=render)
+        img.image = render
+        img.grid(row=3, column=1)
         
 def main():
     # create the root window
@@ -360,17 +368,36 @@ def main():
     def analyze_uncerts_window():
         window = create_new_window("Analyze uncertainty")
 
-    def create_make_plots_window():
-        make_plots_window(root)
+    def create_plot_a_frequency_spectrum_window():
+        plot_a_frequency_spectrum_window(root)
+        
+    def create_compare_two_frequency_spectra_window():
+        compare_two_frequency_spectra_window(root)
+        
+    def create_compare_frequency_with_dm_window():
+        #compare_frequency_with_dm_window(root)
+        return
+        
+    def create_compare_frequency_with_dfe_window():
+        #compare_frequency_with_dfe_window(root)
+        return
 
     # create a menu for analysis
     menu_analysis = Menu(menubar)
+    menu_make_plots = Menu(menubar)
+    
     menu_analysis.add_command(label="Generate frequency spectrum", command=create_generate_fs_window)
     menu_analysis.add_command(label="Infer demographic models", command=create_infer_dm_window)
     menu_analysis.add_command(label="Generate cache for DFE inference", command=generate_cache_window)
     menu_analysis.add_command(label="Infer DFEs", command=infer_dfe_window)
     menu_analysis.add_command(label="Analyze uncertainty", command=analyze_uncerts_window)
-    menu_analysis.add_command(label="Make plots", command=create_make_plots_window)
+    menu_analysis.add_cascade(label="Make plots", menu=menu_make_plots)
+    
+    menu_make_plots.add_command(label="Plot a frequency spectrum", command=create_plot_a_frequency_spectrum_window)
+    menu_make_plots.add_command(label="Compare two frequency spectra", command=create_compare_two_frequency_spectra_window)
+    menu_make_plots.add_command(label="Compare a frequency spectrum with a demographic model", command=create_compare_frequency_with_dm_window)
+    menu_make_plots.add_command(label="Compare a frequency spectrum with a demographic model plus selection", command=create_compare_frequency_with_dfe_window)
+    
     menubar.add_cascade(menu=menu_analysis, label='Analysis')
 
     # create a menu for help
