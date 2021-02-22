@@ -259,9 +259,9 @@ class infer_dm_window(analysis_window):
 class plot_a_frequency_spectrum_window(analysis_window):
     def __init__(self, master):
         analysis_window.__init__(self, master, "Make plots")
+        self.set_window_title("Make plot - Plot a frequency spectrum")
         
         self.frm = Frame(self.window)
-        self.canvases = []
         
         self.lbl_fs = Label(self.frm, text="No frequency spectrum file selected")
         self.btn_select_fs = Button(self.frm, text="Select a frequency spectrum file", command=self.select_fs_file)
@@ -274,9 +274,12 @@ class plot_a_frequency_spectrum_window(analysis_window):
         self.lbl_output.grid(row=2, column=1, sticky="ew", padx=5, pady=5)
         
         self.btn_plot = Button(self.frm, width=10, text="Plot", command=self.run_make_plots)
-        self.btn_plot.grid(row=10, column=2, sticky="ew", padx=5, pady=5)
+        self.btn_plot.grid(row=100, column=2, sticky="ew", padx=5, pady=5)
         
         self.frm.grid(row=0, column=0, sticky="ns")
+        
+    def set_window_title(self, title):
+        self.window.title(title)
         
     def select_fs_file(self):
         file_name = askopenfilename(
@@ -298,17 +301,21 @@ class plot_a_frequency_spectrum_window(analysis_window):
         self.lbl_output['text'] = file_name
         
     def run_make_plots(self):
-        subprocess.run(["dadi-cli", "Plot", "--fs", self.lbl_fs['text'], "--output", self.lbl_output['text']])
+        self.run_dadi_cli_command()
             
         load = Image.open(self.lbl_output['text'])
         render = ImageTk.PhotoImage(load)
         img = Label(self.frm, image=render)
         img.image = render
-        img.grid(row=3, column=1)
+        img.grid(row=99, column=1)
+        
+    def run_dadi_cli_command(self):
+        subprocess.run(["dadi-cli", "Plot", "--fs", self.lbl_fs['text'], "--output", self.lbl_output['text']])
         
 class compare_two_frequency_spectra_window(plot_a_frequency_spectrum_window):
     def __init__(self, master):
         plot_a_frequency_spectrum_window.__init__(self, master)
+        self.set_window_title("Make plot - Compare two frequency spectra")
 
         self.lbl_ant_fs = Label(self.frm, text="No frequency spectrum file selected")   
         self.btn_select_ant_fs = Button(self.frm, text="Select another frequency spectrum file", command=self.select_ant_fs_file)
@@ -324,14 +331,138 @@ class compare_two_frequency_spectra_window(plot_a_frequency_spectrum_window):
             
         self.lbl_ant_fs['text'] = file_name
         
-    def run_make_plots(self):
+    def run_dadi_cli_command(self):
         subprocess.run(["dadi-cli", "Plot", "--fs", self.lbl_fs['text'], "--fs2", self.lbl_ant_fs['text'], "--output", self.lbl_output['text']])
+
+class compare_frequency_with_dm_window(plot_a_frequency_spectrum_window):
+    def __init__(self, master):
+        plot_a_frequency_spectrum_window.__init__(self, master)
+        self.set_window_title("Make plot - Compare a frequency spectrum with a demographic model")
+        
+        self.params_labels = []
+        self.params_entries = []
+        
+        self.lbl_model = Label(self.frm, text="Select a demographic model")
+        self.cbb_models = ttk.Combobox(self.frm)
+        self.cbb_models['values'] = (
+            'bottlegrowth_1d',
+            'growth_1d',
+            'snm_1d',
+            'three_epoch_1d',
+            'two_epoch_1d',
+            'bottlegrowth_2d',
+            'bottlegrowth_split',
+            'bottlegrowth_split_mig',
+            'IM',
+            'IM_pre',
+            'split_mig',
+            'split_asym_mig',
+            'snm_2d'
+        )
+        self.cbb_models.state(["readonly"])
+        self.cbb_models.bind('<<ComboboxSelected>>', self.select_models)
+        
+        self.lbl_model.grid(row=5, column=0, sticky="ew", padx=5, pady=5)
+        self.cbb_models.grid(row=5, column=1, sticky="ew", padx=5, pady=5)
+
+        self.demo_params = Label(self.frm, text="Demographic model parameters")
+        self.frm_demo_params = Frame(self.frm)
+        
+        self.demo_params.grid(row=6, column=0, sticky="ew", padx=5, pady=5)
+        self.frm_demo_params.grid(row=6, column=1, sticky="ew", padx=5, pady=5)
+                
+        self.cbt_misid = Checkbutton(self.frm, text="Add misidentification")
+        self.cbt_misid.grid(row=7, column=0, sticky="n", padx=5, pady=5)
+        
+    def select_models(self, event):
             
-        load = Image.open(self.lbl_output['text'])
-        render = ImageTk.PhotoImage(load)
-        img = Label(self.frm, image=render)
-        img.image = render
-        img.grid(row=3, column=1)
+        for lbl in self.params_labels: lbl.destroy()
+        for ent in self.params_entries: ent.destroy()
+            
+        params = get_dadi_model_params(self.cbb_models.get())
+        params.append('theta')
+        i = 0
+        for p in params:
+            lbl = Label(self.frm_demo_params, text=p)
+            self.params_labels.append(lbl)
+                
+            ent = Entry(self.frm_demo_params, width=10)
+            self.params_entries.append(lbl)
+                
+            lbl.grid(row=0, column=i, sticky="ew", padx=5, pady=5)
+            i += 1
+            ent.grid(row=0, column=i, sticky="ew", padx=5, pady=5)
+            i += 1
+        
+class compare_frequency_with_dfe_window(compare_frequency_with_dm_window):
+    def __init__(self, master):
+        compare_frequency_with_dm_window.__init__(self, master)
+        self.set_window_title("Make plot - Compare a frequency spectrum with a DFE model")
+        
+        self.lbl_cache = Label(self.frm, text="No cache file selected")   
+        self.btn_select_cache = Button(self.frm, text="Select a 1D/2D cache file", command=self.select_cache_file)
+        self.btn_select_cache.grid(row=1, column=0, sticky="ew", padx=5, pady=5)
+        self.lbl_cache.grid(row=1, column=1, sticky="ew", padx=5, pady=5)
+        
+        self.lbl_pdfs = Label(self.frm, text="Select a DFE distribution")
+        self.cbb_pdfs = ttk.Combobox(self.frm)
+        self.cbb_pdfs['values'] = (
+            'beta',
+            'biv_ind_gamma',
+            'biv_lognormal',
+            'exponential',
+            'gamma',
+            'lognormal',
+            'normal'
+        )
+        self.cbb_pdfs.state(["readonly"])
+        self.cbb_pdfs.bind('<<ComboboxSelected>>', self.select_pdfs)
+        
+        self.lbl_pdfs.grid(row=8, column=0, sticky="ew", padx=5, pady=5)
+        self.cbb_pdfs.grid(row=8, column=1, sticky="ew", padx=5, pady=5)
+        
+    def select_cache_file(self):
+        return
+    
+    def select_pdfs(self, event):
+        return
+        
+class compare_frequency_with_joint_dfe_window(compare_frequency_with_dfe_window):
+    def __init__(self, master):
+        compare_frequency_with_dfe_window.__init__(self, master)
+        self.set_window_title("Make plot - Compare a frequency spectrum with a joint DFE model")
+        
+        self.lbl_cache['text'] = "No 1D cache file selected"
+        self.btn_select_cache['text'] = "Select a 1D cache file"
+        
+        self.lbl_ant_cache = Label(self.frm, text="No 2D cache file selected")   
+        self.btn_select_ant_cache = Button(self.frm, text="Select a 2D cache file", command=self.select_ant_cache_file)
+        self.btn_select_ant_cache.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
+        self.lbl_ant_cache.grid(row=2, column=1, sticky="ew", padx=5, pady=5)
+        
+        self.lbl_pdfs['text'] = "Select a 1D DFE distribution"
+        self.cbb_pdfs['values'] = (
+            'gamma',
+            'lognormal'
+        )
+        
+        self.lbl_2d_pdfs = Label(self.frm, text="Select a 2D DFE distribution")
+        self.cbb_2d_pdfs = ttk.Combobox(self.frm)
+        self.cbb_2d_pdfs['values'] = (
+            'biv_ind_gamma',
+            'biv_lognormal',
+        )
+        self.cbb_2d_pdfs.state(["readonly"])
+        self.cbb_2d_pdfs.bind('<<ComboboxSelected>>', self.select_2d_pdfs)
+        
+        self.lbl_2d_pdfs.grid(row=9, column=0, sticky="ew", padx=5, pady=5)
+        self.cbb_2d_pdfs.grid(row=9, column=1, sticky="ew", padx=5, pady=5)
+
+    def select_ant_cache_file(self):
+        return
+    
+    def select_2d_pdfs(self, event):
+        return
         
 def main():
     # create the root window
@@ -375,12 +506,13 @@ def main():
         compare_two_frequency_spectra_window(root)
         
     def create_compare_frequency_with_dm_window():
-        #compare_frequency_with_dm_window(root)
-        return
+        compare_frequency_with_dm_window(root)
         
     def create_compare_frequency_with_dfe_window():
-        #compare_frequency_with_dfe_window(root)
-        return
+        compare_frequency_with_dfe_window(root)
+        
+    def create_compare_frequency_with_joint_dfe_window():
+        compare_frequency_with_joint_dfe_window(root)
 
     # create a menu for analysis
     menu_analysis = Menu(menubar)
@@ -396,7 +528,8 @@ def main():
     menu_make_plots.add_command(label="Plot a frequency spectrum", command=create_plot_a_frequency_spectrum_window)
     menu_make_plots.add_command(label="Compare two frequency spectra", command=create_compare_two_frequency_spectra_window)
     menu_make_plots.add_command(label="Compare a frequency spectrum with a demographic model", command=create_compare_frequency_with_dm_window)
-    menu_make_plots.add_command(label="Compare a frequency spectrum with a demographic model plus selection", command=create_compare_frequency_with_dfe_window)
+    menu_make_plots.add_command(label="Compare a frequency spectrum with a DFE model", command=create_compare_frequency_with_dfe_window)
+    menu_make_plots.add_command(label="Compare a frequency spectrum with a joint DFE model", command=create_compare_frequency_with_joint_dfe_window)
     
     menubar.add_cascade(menu=menu_analysis, label='Analysis')
 
