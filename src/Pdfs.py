@@ -19,6 +19,28 @@ def get_dadi_pdf(pdf):
     else:
         raise Exception('Probability density function ' + pdf + ' is not available!')
 
+def get_dadi_pdf_params(pdf):
+    if pdf == 'beta':
+        return ['alpha', 'beta']
+    elif pdf == 'biv_sym_ind_gamma':
+        return ['shape', 'scale']
+    elif pdf == 'biv_asym_ind_gamma':
+        return ['shape1', 'scale1', 'shape2', 'scale2']
+    elif pdf == 'biv_sym_lognormal':
+        return ['log(mu)', 'log(sigma)', 'rho']
+    elif pdf == 'biv_asym_lognormal':
+        return ['log(mu1)', 'log(sigma1)', 'log(mu2)', 'log(sigma2)', 'rho']
+    elif pdf == 'exponential':
+        return ['scale']
+    elif pdf == 'gamma':
+        return ['shape', 'scale']
+    elif pdf == 'lognormal':
+        return ['log(mu)', 'log(sigma)']
+    elif pdf == 'normal':
+        return ['mu', 'sigma']
+    else:
+        raise Exception('Probability density function ' + pdf + ' is not available!')
+        
 def print_available_pdfs():
     print('Available probability density functions:')
     print('- beta')

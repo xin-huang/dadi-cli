@@ -5,6 +5,7 @@ from PIL import Image, ImageTk
 
 from GenerateFs import generate_fs
 from Models import get_dadi_model_params
+from Pdfs import get_dadi_pdf_params
 
 import subprocess
 import threading
@@ -408,8 +409,10 @@ class compare_frequency_with_dfe_window(compare_frequency_with_dm_window):
         self.cbb_pdfs = ttk.Combobox(self.frm)
         self.cbb_pdfs['values'] = (
             'beta',
-            'biv_ind_gamma',
-            'biv_lognormal',
+            'biv_asym_ind_gamma',
+            'biv_asym_lognormal',
+            'biv_sym_ind_gamma',
+            'biv_asym_lognormal',
             'exponential',
             'gamma',
             'lognormal',
@@ -449,8 +452,10 @@ class compare_frequency_with_joint_dfe_window(compare_frequency_with_dfe_window)
         self.lbl_2d_pdfs = Label(self.frm, text="Select a 2D DFE distribution")
         self.cbb_2d_pdfs = ttk.Combobox(self.frm)
         self.cbb_2d_pdfs['values'] = (
-            'biv_ind_gamma',
-            'biv_lognormal',
+            'biv_asym_ind_gamma',
+            'biv_asym_lognormal',
+            'biv_sym_ind_gamma',
+            'biv_sym_lognormal',
         )
         self.cbb_2d_pdfs.state(["readonly"])
         self.cbb_2d_pdfs.bind('<<ComboboxSelected>>', self.select_2d_pdfs)
