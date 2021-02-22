@@ -1,10 +1,12 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter.filedialog import askopenfilename, asksaveasfilename, askdirectory
+from PIL import Image, ImageTk
 
 from GenerateFs import generate_fs
 from Models import get_dadi_model_params
 
+import subprocess
 import threading
 
 class analysis_window:
@@ -254,6 +256,74 @@ class infer_dm_window(analysis_window):
         self.frm_lower_bounds.grid(row=7, column=1, sticky="ew", padx=5, pady=5)
         self.frm_fixed_params.grid(row=8, column=1, sticky="ew", padx=5, pady=5)
         self.frm.grid(row=0, column=0, sticky="ns")
+
+class make_plots_window(analysis_window):
+    def __init__(self, master):
+        analysis_window.__init__(self, master, "Make plots")
+        
+        self.frm = Frame(self.window)
+        self.canvases = []
+        
+        def select_fs_file():
+            file_name = askopenfilename(
+                parent=self.window,
+                filetypes=[("Frequency Spectrum Files", "*.fs"), ("All Files", "*.*")]
+            )
+            if not file_name: return
+            
+            self.lbl_fs['text'] = file_name
+            
+        def select_ant_fs_file():
+            file_name = askopenfilename(
+                parent=self.window,
+                filetypes=[("Frequency Spectrum Files", "*.fs"), ("All Files", "*.*")]
+            )
+            if not file_name: return
+            
+            self.lbl_ant_fs['text'] = file_name
+            
+        def output_file():
+            file_name = asksaveasfilename(
+                parent=self.window,
+                defaultextension="pdf",
+                filetypes=[("Portable Network Graphics", "*.png"), ("Portable Document Format", "*.pdf"), ("All Files", "*.*")],
+            )
+            if not file_name: return
+            
+            self.lbl_output['text'] = file_name
+        
+        def run_make_plots():
+            
+            if self.lbl_ant_fs['text'] == "No frequency spectrum file selected":
+                subprocess.run(["dadi-cli", "Plot", "--fs", self.lbl_fs['text'], "--output", self.lbl_output['text']])
+            else:
+                subprocess.run(["dadi-cli", "Plot", "--fs", self.lbl_fs['text'], "--fs2", self.lbl_ant_fs['text'], "--output", self.lbl_output['text']])
+            
+            load = Image.open(self.lbl_output['text'])
+            render = ImageTk.PhotoImage(load)
+            img = Label(self.frm, image=render)
+            img.image = render
+            img.grid(row=3, column=1)
+        
+        self.lbl_fs = Label(self.frm, text="No frequency spectrum file selected")
+        self.btn_select_fs = Button(self.frm, text="Select a frequency spectrum file", command=select_fs_file)
+        self.btn_select_fs.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
+        self.lbl_fs.grid(row=0, column=1, sticky="ew", padx=5, pady=5)
+        
+        self.lbl_ant_fs = Label(self.frm, text="No frequency spectrum file selected")   
+        self.btn_select_ant_fs = Button(self.frm, text="Select another frequency spectrum file", command=select_ant_fs_file)
+        self.btn_select_ant_fs.grid(row=1, column=0, sticky="ew", padx=5, pady=5)
+        self.lbl_ant_fs.grid(row=1, column=1, sticky="ew", padx=5, pady=5)
+        
+        self.lbl_output = Label(self.frm, text="No output file")
+        self.btn_select_output = Button(self.frm, text="Save as", command=output_file)
+        self.btn_select_output.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
+        self.lbl_output.grid(row=2, column=1, sticky="ew", padx=5, pady=5)
+        
+        self.btn_plot = Button(self.frm, width=10, text="Plot", command=run_make_plots)
+        self.btn_plot.grid(row=10, column=2, sticky="ew", padx=5, pady=5)
+        
+        self.frm.grid(row=0, column=0, sticky="ns")
         
 def main():
     # create the root window
@@ -290,8 +360,8 @@ def main():
     def analyze_uncerts_window():
         window = create_new_window("Analyze uncertainty")
 
-    def make_plots_window():
-        window = create_new_window("Make plots")
+    def create_make_plots_window():
+        make_plots_window(root)
 
     # create a menu for analysis
     menu_analysis = Menu(menubar)
@@ -300,7 +370,7 @@ def main():
     menu_analysis.add_command(label="Generate cache for DFE inference", command=generate_cache_window)
     menu_analysis.add_command(label="Infer DFEs", command=infer_dfe_window)
     menu_analysis.add_command(label="Analyze uncertainty", command=analyze_uncerts_window)
-    menu_analysis.add_command(label="Make plots", command=make_plots_window)
+    menu_analysis.add_command(label="Make plots", command=create_make_plots_window)
     menubar.add_cascade(menu=menu_analysis, label='Analysis')
 
     # create a menu for help
