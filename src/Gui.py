@@ -85,14 +85,6 @@ class generate_fs_window(analysis_window):
             for e in self.params_entries:
                 sample_sizes.append(int(e.get()))
                 
-            #generate_fs(
-            #    vcf=self.lbl_vcf['text'], 
-            #    output=self.lbl_output['text'], 
-            #    pop_ids=self.pop_ids, 
-            #    pop_info=self.lbl_pop_info['text'], 
-            #    projections=sample_sizes, 
-            #    polarized=is_polarized, 
-            #    bootstrap=None, chunk_size=0)
             t = threading.Thread(target=generate_fs, args=(self.lbl_vcf['text'], self.lbl_output['text'], self.pop_ids, self.lbl_pop_info['text'], sample_sizes, is_polarized, None, 0))
             t.start()
         
@@ -412,6 +404,14 @@ class compare_frequency_with_dm_window(plot_a_frequency_spectrum_window):
             ent = self.params_demo_entries.pop()
             lbl.destroy()
             ent.destroy()
+            
+    def run_dadi_cli_command(self):
+        self.demo_model = self.cbb_models.get()
+        self.demo_params = []
+        for p in self.params_demo_entries:
+            self.demo_params.append(p.get())
+
+        subprocess.run(["dadi-cli", "Plot", "--fs", self.lbl_fs['text'], "--demo-model", self.demo_model, "--demo-popt", " ".join(self.demo_params), "--output", self.lbl_output['text']])
         
 class compare_frequency_with_dfe_window(compare_frequency_with_dm_window):
     def __init__(self, master):

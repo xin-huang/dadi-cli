@@ -42,8 +42,6 @@ def plot_fitted_demography(fs, model, popt, projections, misid, output, vmin, re
     from src.Models import get_dadi_model_func
     func = get_dadi_model_func(model)
 
-    popt = np.array(open(popt, 'r').readline().rstrip().split()[1:-1], dtype=float)
-
     fs = dadi.Spectrum.from_file(fs)
     if misid:
         func = dadi.Numerics.make_anc_state_misid_func(func)
