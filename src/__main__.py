@@ -215,7 +215,7 @@ def main():
             if len(args.demo_popt) == 1: 
                 args.demo_popt = read_demo_params(args.demo_popt[0])
             if args.misid: args.demo_popt = args.demo_popt[:-1]
-                else: args.demo_popt = parse_demo_params(args.demo_popt)
+            else: args.demo_popt = parse_demo_params(args.demo_popt)
             plot_fitted_demography(fs=args.fs, model=args.model, popt=args.demo_popt, vmin=args.vmin,
                                    projections=args.projections, misid=args.misid, resid_range=args.resid_range, output=args.output)
         elif args.fs2 == None:
