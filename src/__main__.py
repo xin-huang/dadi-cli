@@ -33,8 +33,14 @@ def main():
     def _check_positive_int(value):
         ivalue = int(value)
         if ivalue <= 0:
-            raise argparse.ArgumentTypeError("only accepts postive integers; %s is an invalid positive integer value" % value)
+            raise argparse.ArgumentTypeError("only accepts postive integers; %s is an invalid value" % value)
         return ivalue
+
+    def _check_positive_num(value):
+        fvalue = float(value)
+        if fvalue <= 0:
+            raise argparse.ArgumentTypeError("only accepts postive numbers; %s is an invalid value" % value)
+        return fvalue
 
     parser = argparse.ArgumentParser()
 
@@ -54,10 +60,10 @@ def main():
 
     # subparser for generating cache
     generate_cache_parser = subparsers.add_parser('GenerateCache', help='Generate selection coefficient cache for inferring DFE')
-    generate_cache_parser.add_argument('--additional-gammas', type=float, nargs='+', default=[], help='The additional positive population-scaled selection coefficients to cache for; Default: []', dest='additional_gammas')
+    generate_cache_parser.add_argument('--additional-gammas', type=_check_positive_num, nargs='+', default=[], help='The additional positive population-scaled selection coefficients to cache for; Default: []', dest='additional_gammas')
     generate_cache_parser.add_argument('--cuda', default=False, action='store_true', help='Determine whether using GPUs to accelerate inference or not; Default: False')
     generate_cache_parser.add_argument('--demo-popt', type=str, nargs='+', default=[], help='The bestfit parameters for the demographic model; Default: []', dest='demo_popt')
-    generate_cache_parser.add_argument('--gamma-bounds', type=float, nargs=2, default=[1e-4, 2000], help='The range of population-scaled selection coefficients to cache; Default: [1e-4, 2000]', dest='gamma_bounds')
+    generate_cache_parser.add_argument('--gamma-bounds', type=_check_positive_num, nargs=2, default=[1e-4, 2000], help='The range of population-scaled selection coefficients to cache; Default: [1e-4, 2000]', dest='gamma_bounds')
     generate_cache_parser.add_argument('--gamma-pts', type=_check_positive_int, default=50, help='The number of gamma grid points over which to integrate; Default: 50', dest='gamma_pts')
     generate_cache_parser.add_argument('--grids', type=_check_positive_int, nargs=3, help='The sizes of grids; Default: None')
     generate_cache_parser.add_argument('--misid', default=False, action='store_true', help='Determine whether removing the last demographic parameter for misidentifying ancestral alleles or not; Default: False')
@@ -67,20 +73,19 @@ def main():
     generate_cache_parser.add_argument('--sample-sizes', type=_check_positive_int, nargs='+', required=True, help='The sample sizes of populations', dest='sample_sizes')
     generate_cache_parser.add_argument('--single-gamma', default=False, action='store_true', help='', dest='single_gamma')
 
-
     # subparser for inferring demography
     infer_demo_parser = subparsers.add_parser('InferDM', help='Infer demographic models from frequency spectrum')
     infer_demo_parser.add_argument('--cuda', default=False, action='store_true', help='Determine whether using GPUs to accelerate inference or not; Default: False')
     infer_demo_parser.add_argument('--constants', type=float, nargs='+', help='The fixed parameters during the inference, please use -1 to indicate a parameter is NOT fixed; Default: None')
     infer_demo_parser.add_argument('--syn-fs', type=str, required=True, help='The frequency spectrum of synonymous mutations used for inference; To generate the frequency spectrum, please use `dadi-cli GenerateFs`', dest='syn_fs')
-    infer_demo_parser.add_argument('--grids', type=int, nargs=3, help='The sizes of the grids; Default: [sample_size[0]+10, sample_size[0]+20, sample_size[0]+30]')
+    infer_demo_parser.add_argument('--grids', type=_check_positive_int, nargs=3, help='The sizes of the grids; Default: [sample_size[0]+10, sample_size[0]+20, sample_size[0]+30]')
     infer_demo_parser.add_argument('--lbounds', type=float, nargs='+', required=True, help='The lower bounds of the inferred parameters, please use -1 to indicate a parameter without lower bound')
     infer_demo_parser.add_argument('--misid', default=False, action='store_true', help='Determine whether adding a parameter for misidentifying ancestral alleles or not; Default: False')
     infer_demo_parser.add_argument('--model', type=str, required=True, help='The name of the demographic model; To check available demographic models, please use `dadi-cli Model`')
     infer_demo_parser.add_argument('--p0', type=str, nargs='+', required=True, help='The initial parameters for inference')
     infer_demo_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='The upper bounds of the inferred parameters, please use -1 to indicate a parameter without upper bound')
     infer_demo_parser.add_argument('--output', type=str, required=True, help='The name of the output file')
-    infer_demo_parser.add_argument('--jobs', default=1, type=int, help='The number of jobs to run optimization parrallelly')
+    infer_demo_parser.add_argument('--jobs', default=1, type=_check_positive_int, help='The number of jobs to run optimization parrallelly')
 
     # subparser for inferring DFE
     infer_dfe_parser = subparsers.add_parser('InferDFE', help='Infer distribution of fitness effects from frequency spectrum')
@@ -100,7 +105,7 @@ def main():
     infer_dfe_parser.add_argument('--ratio', type=float, help='The ratio for the nonsynonymous mutations vs. the synonymous mutations')
     infer_dfe_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='The upper bounds of the inferred parameters, please use -1 to indicate a parameter with no upper bound, please use -1 to indicate a parameter without upper bound')
     infer_dfe_parser.add_argument('--output', type=str, help='The name of the output file')
-    infer_dfe_parser.add_argument('--jobs', default=1, type=int, help='The number of jobs to run optimization parrallelly')
+    infer_dfe_parser.add_argument('--jobs', default=1, type=_check_positive_int, help='The number of jobs to run optimization parrallelly')
 
     # subparser for plotting
     plot_parser = subparsers.add_parser('Plot', help='Plot 1D/2D frequency spectrum')
