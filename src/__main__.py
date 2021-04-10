@@ -120,18 +120,21 @@ def main():
 
     args = parser.parse_args()
 
-    def check_params(params):
+    from src.Models import get_dadi_model_params
+
+    def check_params(params, model, option, misid):
+        input_params_len = len(params)
+        model_params_len = len(get_dadi_model_params(model))
+        if misid: input_params_len = input_params_len - 1
+        if (input_params_len != model_params_len):
+            raise Exception("Found " + str(input_params_len) + " demographic parameters from the option " + option + 
+                            "; however, " + str(model_params_len) + " demographic parameters are required from the " + model + " model")
+
         new_params = []
         for p in params:
             if p == -1.0: new_params.append(None)
             else: new_params.append(p)
         return new_params
-
-    def check_model(model, subcommand):
-        if subcommand == 'GenerateCache':
-        elif subcommand == 'InferDM':
-        elif subcommand == 'Plot':
-        elif subcommand == 'Stat':
 
     def read_demo_params(params):
         new_params = []
@@ -168,9 +171,9 @@ def main():
 
     elif args.subcommand == 'InferDM':
 
-        if args.constants != None: args.constants = check_params(args.constants)
-        if args.lbounds != None: args.lbounds = check_params(args.lbounds)
-        if args.ubounds != None: args.ubounds = check_params(args.ubounds)
+        if args.constants != None: args.constants = check_params(args.constants, args.model, '--constant', args.misid)
+        if args.lbounds != None: args.lbounds = check_params(args.lbounds, args.model, '--lbounds', args.misid)
+        if args.ubounds != None: args.ubounds = check_params(args.ubounds, args.model, '--ubounds', args.misid)
 
         if len(args.p0) == 1: args.p0 = read_demo_params(args.p0[0])
         else: args.p0 = parse_demo_params(args.p0)
