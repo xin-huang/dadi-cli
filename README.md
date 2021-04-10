@@ -275,7 +275,7 @@ Then the detail of the function will be displayed in the screen:
 
 ## Dependencies
 
-- [dadi](https://bitbucket.org/gutenkunstlab/dadi/src/master/)
+- [dadi 2.1.0](https://bitbucket.org/gutenkunstlab/dadi/src/master/)
 
 ## References
 
