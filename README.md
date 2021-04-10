@@ -2,6 +2,7 @@
 
 [![license](https://img.shields.io/badge/license-Apache%202.0-red.svg)](LICENSE)
 [![language](http://img.shields.io/badge/language-python-blue.svg)](https://www.python.org/)
+[![build Status](https://travis-ci.org/xin-huang/dadi-cli.svg?branch=master)](https://travis-ci.org/xin-huang/dadi-cli)
 
 `dadi-cli` provides a robust and user-friendly command line interface for [dadi](https://bitbucket.org/gutenkunstlab/dadi/src/master/)<sup>1</sup> to help users to quickly apply `dadi` to their research. `dadi` is a flexible python package for inferring demographic history and the distribution of fitness effects (DFE) from population genomic data based on diffusion approximation. However, using `dadi` requires knowledge of python and patience to tune different models.
 
