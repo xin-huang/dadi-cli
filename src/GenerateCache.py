@@ -6,13 +6,16 @@ from src.Models import get_dadi_model_func
 
 def generate_cache(model, grids, popt,
                    gamma_bounds, gamma_pts, additional_gammas,
-                   output, sample_sizes, misid, mp):
+                   output, sample_sizes, misid, mp, cuda, single_gamma):
 
-    func, is_cache1d = get_dadi_model_func(model, True)
+    if cuda:
+        dadi.cuda_enabled(True)
+
+    func = get_dadi_model_func(model, True, single_gamma)
     if grids == None:
         grids = [sample_sizes[0]+10, sample_sizes[0]+20, sample_sizes[0]+30]
 
-    if is_cache1d:
+    if single_gamma:
        spectra = DFE.Cache1D(popt, sample_sizes, func, pts_l=grids, additional_gammas=additional_gammas, gamma_bounds=gamma_bounds, gamma_pts=gamma_pts, mp=mp) 
     else:
        spectra = DFE.Cache2D(popt, sample_sizes, func, pts=grids, additional_gammas=additional_gammas, gamma_bounds=gamma_bounds, gamma_pts=gamma_pts, mp=mp)

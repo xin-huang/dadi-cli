@@ -1,35 +1,23 @@
-def get_dadi_model_func(model_name, withSelection=False):
+def get_dadi_model_func(model_name, withSelection=False, single_gamma=False):
 
     if withSelection:
         import dadi.DFE as DFE
-        if model_name == 'IM_sel':
-            return DFE.DemogSelModels.IM, False
-        elif model_name == 'IM_pre_sel':
-            return DFE.DemogSelModels.IM_pre, False
-        elif model_name == 'IM_pre_sel_single_gamma':
-            return DFE.DemogSelModels.IM_pre_single_gamma, True
-        elif model_name == 'IM_sel_single_gamma':
-            return DFE.DemogSelModels.IM_single_gamma, True
-        elif model_name == 'equil':
-            return DFE.DemogSelModels.equil, True
-        elif model_name == 'equil_X':
-            return DFE.DemogSelModels.equil_X, True
-        elif model_name == 'split_mig_sel':
-            return DFE.DemogSelModels.split_mig, False
-        elif model_name == 'split_mig_sel_single_gamma':
-            return DFE.DemogSelModels.split_mig_single_gamma, True
-        elif model_name == 'split_asym_mig_sel':
-            return DFE.DemogSelModels.split_asym_mig, False
-        elif model_name == 'split_asym_mig_sel_single_gamma':
-            return DFE.DemogSelModels.split_asym_mig_single_gamma, True
-        elif model_name == 'two_epoch_sel':
-            return DFE.DemogSelModels.two_epoch, True
-        elif model_name == 'three_epoch_sel':
-            return DFE.DemogSelModels.three_epoch, True
-        elif model_name == 'mixture':
-            return DFE.mixture, True
+        if single_gamma:
+            if model_name == 'IM': return DFE.DemogSelModels.IM_single_gamma
+            elif model_name == 'IM_pre': return DFE.DemogSelModels.IM_pre_single_gamma
+            elif model_name == 'split_mig': return DFE.DemogSelModels.split_mig_single_gamma
+            elif model_name == 'split_asym_mig': return DFE.DemogSelModels.split_asym_mig_single_gamma
+            else: raise Exception('Cannot find mode: ' + model_name + ' plus selection with single gamma')
         else:
-            raise Exception('Cannot find model: ' + model_name) 
+            if model_name == 'IM': return DFE.DemogSelModels.IM
+            elif model_name == 'IM_pre': return DFE.DemogSelModels.IM_pre
+            elif model_name == 'split_mig': return DFE.DemogSelModels.split_mig
+            elif model_name == 'split_asym_mig': return DFE.DemogSelModels.split_asym_mig
+            elif model_name == 'equil': return DFE.DemogSelModels.equil 
+            elif model_name == 'two_epoch': return DFE.DemogSelModels.two_epoch
+            elif model_name == 'three_epoch': return DFE.DemogSelModels.three_epoch 
+            elif model_name == 'mixture': return DFE.mixture
+            else: raise Exception('Cannot find model: ' + model_name + ' plus selection')
     else:
         import dadi
         if model_name == 'bottlegrowth_1d':

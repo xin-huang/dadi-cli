@@ -21,6 +21,7 @@ def main():
     # subparser for generating cache
     generate_cache_parser = subparsers.add_parser('GenerateCache', help='Generate selection coefficient cache for inferring DFE')
     generate_cache_parser.add_argument('--additional-gammas', type=float, nargs='+', default=[], help='The additional positive population-scaled selection coefficients to cache for; Default: []', dest='additional_gammas')
+    generate_cache_parser.add_argument('--cuda', default=False, action='store_true', help='Determine whether using GPUs to accelerate inference or not; Default: False')
     generate_cache_parser.add_argument('--demo-popt', type=str, nargs='+', default=[], help='The bestfit parameters for the demographic model; Default: []', dest='demo_popt')
     generate_cache_parser.add_argument('--gamma-bounds', type=float, nargs=2, default=[1e-4, 2000], help='The range of population-scaled selection coefficients to cache; Default: [1e-4, 2000]', dest='gamma_bounds')
     generate_cache_parser.add_argument('--gamma-pts', type=int, default=50, help='The number of gamma grid points over which to integrate; Default: 50', dest='gamma_pts')
@@ -30,6 +31,8 @@ def main():
     generate_cache_parser.add_argument('--mp', default=False, action='store_true', help='Determine whether generating cache with multiprocess or not; Default: False')
     generate_cache_parser.add_argument('--output', type=str, required=True, help='The name of the output file')
     generate_cache_parser.add_argument('--sample-sizes', type=int, nargs='+', required=True, help='The sample sizes of populations', dest='sample_sizes')
+    generate_cache_parser.add_argument('--single-gamma', default=False, action='store_true', help='', dest='single_gamma')
+
 
     # subparser for inferring demography
     infer_demo_parser = subparsers.add_parser('InferDM', help='Infer demographic models from frequency spectrum')
@@ -124,6 +127,12 @@ def main():
             else: new_params.append(p)
         return new_params
 
+    def check_model(model, subcommand):
+        if subcommand == 'GenerateCache':
+        elif subcommand == 'InferDM':
+        elif subcommand == 'Plot':
+        elif subcommand == 'Stat':
+
     def read_demo_params(params):
         new_params = []
         line = open(params, 'r').readline().rstrip().split()
@@ -155,7 +164,7 @@ def main():
 
         generate_cache(model=args.model, grids=args.grids, popt=args.demo_popt,
                        gamma_bounds=args.gamma_bounds, gamma_pts=args.gamma_pts, additional_gammas=args.additional_gammas,
-                       output=args.output, sample_sizes=args.sample_sizes, misid=args.misid, mp=args.mp)
+                       output=args.output, sample_sizes=args.sample_sizes, misid=args.misid, mp=args.mp, cuda=args.cuda, single_gamma=args.single_gamma)
 
     elif args.subcommand == 'InferDM':
 
