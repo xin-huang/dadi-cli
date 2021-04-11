@@ -13,12 +13,15 @@ def main():
             raise Exception("Found " + str(input_params_len) + " demographic parameters from the option " + option + 
                             "; however, " + str(model_params_len) + " demographic parameters are required from the " + model + " model")
 
-    def _read_params_from_file(params, model, option, misid):
+    def _read_opt_params_from_file(path, model, option, misid):
         new_params = []
-        line = open(params, 'r').readline().rstrip().split()
+        line = open(path, 'r').readline().rstrip().split()
         for p in line:
             new_params.append(float(p))
-        new_params = new_params[1:-1]
+        # the first parameter is the likelihood
+        # the second parameter is theta
+        # the last parameter is misid
+        new_params = new_params[2:-1]
         _check_params(new_params, model, option, misid)
         return new_params
 
@@ -42,6 +45,12 @@ def main():
             raise argparse.ArgumentTypeError("only accepts postive numbers; %s is an invalid value" % value)
         return fvalue
 
+    def _check_dir(path):
+        parent_dir = os.path.dirname(path)
+        if not os.path.isdir(parent_dir):
+            raise argparse.ArgumentTypeError("directory %s does not exist" % parent_dir)
+        return path
+
     parser = argparse.ArgumentParser()
 
     subparsers = parser.add_subparsers(help='Commands', dest='subcommand')
@@ -62,16 +71,15 @@ def main():
     generate_cache_parser = subparsers.add_parser('GenerateCache', help='Generate selection coefficient cache for inferring DFE')
     generate_cache_parser.add_argument('--additional-gammas', type=_check_positive_num, nargs='+', default=[], help='The additional positive population-scaled selection coefficients to cache for; Default: []', dest='additional_gammas')
     generate_cache_parser.add_argument('--cuda', default=False, action='store_true', help='Determine whether using GPUs to accelerate inference or not; Default: False')
-    generate_cache_parser.add_argument('--demo-popt', type=str, nargs='+', default=[], help='The bestfit parameters for the demographic model; Default: []', dest='demo_popt')
+    generate_cache_parser.add_argument('--demo-popt', type=str, required=True, help='The bestfit parameters for the demographic model; Default: []', dest='demo_popt')
     generate_cache_parser.add_argument('--gamma-bounds', type=_check_positive_num, nargs=2, default=[1e-4, 2000], help='The range of population-scaled selection coefficients to cache; Default: [1e-4, 2000]', dest='gamma_bounds')
     generate_cache_parser.add_argument('--gamma-pts', type=_check_positive_int, default=50, help='The number of gamma grid points over which to integrate; Default: 50', dest='gamma_pts')
     generate_cache_parser.add_argument('--grids', type=_check_positive_int, nargs=3, help='The sizes of grids; Default: None')
-    generate_cache_parser.add_argument('--misid', default=False, action='store_true', help='Determine whether removing the last demographic parameter for misidentifying ancestral alleles or not; Default: False')
     generate_cache_parser.add_argument('--model', type=str, required=True, help='The name of the demographic model with selection; To check available demographic models, please use `dadi-cli Model`')
     generate_cache_parser.add_argument('--mp', default=False, action='store_true', help='Determine whether generating cache with multiprocess or not; Default: False')
-    generate_cache_parser.add_argument('--output', type=str, required=True, help='The name of the output file')
+    generate_cache_parser.add_argument('--output', type=_check_dir, required=True, help='The name of the output file')
     generate_cache_parser.add_argument('--sample-sizes', type=_check_positive_int, nargs='+', required=True, help='The sample sizes of populations', dest='sample_sizes')
-    generate_cache_parser.add_argument('--single-gamma', default=False, action='store_true', help='', dest='single_gamma')
+    generate_cache_parser.add_argument('--single-gamma', default=False, action='store_true', help='Determine whether using demographic model plus selection with the same gamma in both the two populations or not; Default: False', dest='single_gamma')
 
     # subparser for inferring demography
     infer_demo_parser = subparsers.add_parser('InferDM', help='Infer demographic models from frequency spectrum')
@@ -171,14 +179,11 @@ def main():
         if len(args.sample_sizes) > 2: raise Exception('Cannot generate cache with more than two populations')
 
         from src.GenerateCache import generate_cache
-        if (len(args.demo_popt) == 1) and (os.path.isfile(args.demo_popt[0])): 
-            args.demo_popt = _read_params_from_file(args.demo_popt[0], args.model, '--model', args.misid)
-            if args.misid: args.demo_popt = args.demo_popt[:-1]
-        else: args.demo_popt = _parse_params_from_command(args.demo_popt, args.model, '--model', args.misid)
+        args.demo_popt = _read_opt_params_from_file(args.demo_popt, args.model, '--model', False)
 
         generate_cache(model=args.model, grids=args.grids, popt=args.demo_popt,
                        gamma_bounds=args.gamma_bounds, gamma_pts=args.gamma_pts, additional_gammas=args.additional_gammas,
-                       output=args.output, sample_sizes=args.sample_sizes, misid=args.misid, mp=args.mp, cuda=args.cuda, single_gamma=args.single_gamma)
+                       output=args.output, sample_sizes=args.sample_sizes, mp=args.mp, cuda=args.cuda, single_gamma=args.single_gamma)
 
     elif args.subcommand == 'InferDM':
 

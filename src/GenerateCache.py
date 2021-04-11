@@ -6,7 +6,7 @@ from src.Models import get_dadi_model_func
 
 def generate_cache(model, grids, popt,
                    gamma_bounds, gamma_pts, additional_gammas,
-                   output, sample_sizes, misid, mp, cuda, single_gamma):
+                   output, sample_sizes, mp, cuda, single_gamma):
 
     if cuda:
         dadi.cuda_enabled(True)
