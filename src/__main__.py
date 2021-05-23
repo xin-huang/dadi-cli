@@ -1,6 +1,55 @@
 def main():
     
     import argparse
+    import os.path
+    from src.Models import get_dadi_model_params
+
+    # helper functions for reading, parsing, and validating parameters from command line or files
+    def _check_params(params, model, option, misid):
+        input_params_len = len(params)
+        model_params_len = len(get_dadi_model_params(model))
+        if misid: input_params_len = input_params_len - 1
+        if input_params_len != model_params_len:
+            raise Exception("Found " + str(input_params_len) + " demographic parameters from the option " + option + 
+                            "; however, " + str(model_params_len) + " demographic parameters are required from the " + model + " model")
+
+    def _read_opt_params_from_file(path, model, option, misid):
+        new_params = []
+        line = open(path, 'r').readline().rstrip().split()
+        for p in line:
+            new_params.append(float(p))
+        # the first parameter is the likelihood
+        # the second parameter is theta
+        # the last parameter is misid
+        new_params = new_params[2:-1]
+        _check_params(new_params, model, option, misid)
+        return new_params
+
+    def _parse_params_from_command(params, model, option, misid):
+        new_params = []
+        for p in params:
+            if p == 'None': new_params.append(None)
+            else: new_params.append(float(p))
+        _check_params(new_params, model, option, misid)
+        return new_params
+
+    def _check_positive_int(value):
+        ivalue = int(value)
+        if ivalue <= 0:
+            raise argparse.ArgumentTypeError("only accepts postive integers; %s is an invalid value" % value)
+        return ivalue
+
+    def _check_positive_num(value):
+        fvalue = float(value)
+        if fvalue <= 0:
+            raise argparse.ArgumentTypeError("only accepts postive numbers; %s is an invalid value" % value)
+        return fvalue
+
+    def _check_dir(path):
+        parent_dir = os.path.dirname(path)
+        if not os.path.isdir(parent_dir):
+            raise argparse.ArgumentTypeError("directory %s does not exist" % parent_dir)
+        return path
 
     parser = argparse.ArgumentParser()
 
@@ -13,37 +62,38 @@ def main():
     generate_fs_parser.add_argument('--polarized', default=False, action='store_true', help='Determine whether the resulting frequency spectrum is polarized or not; Default: False')
     generate_fs_parser.add_argument('--pop-ids', type=str, nargs='+', required=True, help='The population names for the samples', dest='pop_ids')
     generate_fs_parser.add_argument('--pop-info', type=str, required=True, help='The name of the file containing the population name of each sample', dest='pop_info')
-    generate_fs_parser.add_argument('--projections', type=int, nargs='+', required=True, help='The sample sizes after projection; If you do not want to project down your data, please input the original sample sizes of your data')
+    generate_fs_parser.add_argument('--projections', type=_check_positive_int, nargs='+', required=True, help='The sample sizes after projection; If you do not want to project down your data, please input the original sample sizes of your data')
     generate_fs_parser.add_argument('--vcf', type=str, required=True, help='The VCF file for generating frequency spectrum')
-    generate_fs_parser.add_argument('--bootstrap', type=int, help='The times to perform bootstrapping')
-    generate_fs_parser.add_argument('--chunk-size', type=int, help='The chunk size to divide the genomes for bootstrapping', dest='chunk_size')
+    generate_fs_parser.add_argument('--bootstrap', type=_check_positive_int, help='The times to perform bootstrapping')
+    generate_fs_parser.add_argument('--chunk-size', type=_check_positive_int, help='The chunk size to divide the genomes for bootstrapping', dest='chunk_size')
 
     # subparser for generating cache
     generate_cache_parser = subparsers.add_parser('GenerateCache', help='Generate selection coefficient cache for inferring DFE')
-    generate_cache_parser.add_argument('--additional-gammas', type=float, nargs='+', default=[], help='The additional positive population-scaled selection coefficients to cache for; Default: []', dest='additional_gammas')
-    generate_cache_parser.add_argument('--demo-popt', type=str, nargs='+', default=[], help='The bestfit parameters for the demographic model; Default: []', dest='demo_popt')
-    generate_cache_parser.add_argument('--gamma-bounds', type=float, nargs=2, default=[1e-4, 2000], help='The range of population-scaled selection coefficients to cache; Default: [1e-4, 2000]', dest='gamma_bounds')
-    generate_cache_parser.add_argument('--gamma-pts', type=int, default=50, help='The number of gamma grid points over which to integrate; Default: 50', dest='gamma_pts')
-    generate_cache_parser.add_argument('--grids', type=int, nargs=3, help='The sizes of grids; Default: None')
-    generate_cache_parser.add_argument('--misid', default=False, action='store_true', help='Determine whether removing the last demographic parameter for misidentifying ancestral alleles or not; Default: False')
+    generate_cache_parser.add_argument('--additional-gammas', type=_check_positive_num, nargs='+', default=[], help='The additional positive population-scaled selection coefficients to cache for; Default: []', dest='additional_gammas')
+    generate_cache_parser.add_argument('--cuda', default=False, action='store_true', help='Determine whether using GPUs to accelerate inference or not; Default: False')
+    generate_cache_parser.add_argument('--demo-popt', type=str, required=True, help='The bestfit parameters for the demographic model; Default: []', dest='demo_popt')
+    generate_cache_parser.add_argument('--gamma-bounds', type=_check_positive_num, nargs=2, default=[1e-4, 2000], help='The range of population-scaled selection coefficients to cache; Default: [1e-4, 2000]', dest='gamma_bounds')
+    generate_cache_parser.add_argument('--gamma-pts', type=_check_positive_int, default=50, help='The number of gamma grid points over which to integrate; Default: 50', dest='gamma_pts')
+    generate_cache_parser.add_argument('--grids', type=_check_positive_int, nargs=3, help='The sizes of grids; Default: None')
     generate_cache_parser.add_argument('--model', type=str, required=True, help='The name of the demographic model with selection; To check available demographic models, please use `dadi-cli Model`')
     generate_cache_parser.add_argument('--mp', default=False, action='store_true', help='Determine whether generating cache with multiprocess or not; Default: False')
-    generate_cache_parser.add_argument('--output', type=str, required=True, help='The name of the output file')
-    generate_cache_parser.add_argument('--sample-sizes', type=int, nargs='+', required=True, help='The sample sizes of populations', dest='sample_sizes')
+    generate_cache_parser.add_argument('--output', type=_check_dir, required=True, help='The name of the output file')
+    generate_cache_parser.add_argument('--sample-sizes', type=_check_positive_int, nargs='+', required=True, help='The sample sizes of populations', dest='sample_sizes')
+    generate_cache_parser.add_argument('--single-gamma', default=False, action='store_true', help='Determine whether using demographic model plus selection with the same gamma in both the two populations or not; Default: False', dest='single_gamma')
 
     # subparser for inferring demography
     infer_demo_parser = subparsers.add_parser('InferDM', help='Infer demographic models from frequency spectrum')
     infer_demo_parser.add_argument('--cuda', default=False, action='store_true', help='Determine whether using GPUs to accelerate inference or not; Default: False')
     infer_demo_parser.add_argument('--constants', type=float, nargs='+', help='The fixed parameters during the inference, please use -1 to indicate a parameter is NOT fixed; Default: None')
     infer_demo_parser.add_argument('--syn-fs', type=str, required=True, help='The frequency spectrum of synonymous mutations used for inference; To generate the frequency spectrum, please use `dadi-cli GenerateFs`', dest='syn_fs')
-    infer_demo_parser.add_argument('--grids', type=int, nargs=3, help='The sizes of the grids; Default: [sample_size[0]+10, sample_size[0]+20, sample_size[0]+30]')
+    infer_demo_parser.add_argument('--grids', type=_check_positive_int, nargs=3, help='The sizes of the grids; Default: [sample_size[0]+10, sample_size[0]+20, sample_size[0]+30]')
     infer_demo_parser.add_argument('--lbounds', type=float, nargs='+', required=True, help='The lower bounds of the inferred parameters, please use -1 to indicate a parameter without lower bound')
     infer_demo_parser.add_argument('--misid', default=False, action='store_true', help='Determine whether adding a parameter for misidentifying ancestral alleles or not; Default: False')
     infer_demo_parser.add_argument('--model', type=str, required=True, help='The name of the demographic model; To check available demographic models, please use `dadi-cli Model`')
     infer_demo_parser.add_argument('--p0', type=str, nargs='+', required=True, help='The initial parameters for inference')
     infer_demo_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='The upper bounds of the inferred parameters, please use -1 to indicate a parameter without upper bound')
     infer_demo_parser.add_argument('--output', type=str, required=True, help='The name of the output file')
-    infer_demo_parser.add_argument('--jobs', default=1, type=int, help='The number of jobs to run optimization parrallelly')
+    infer_demo_parser.add_argument('--jobs', default=1, type=_check_positive_int, help='The number of jobs to run optimization parrallelly')
 
     # subparser for inferring DFE
     infer_dfe_parser = subparsers.add_parser('InferDFE', help='Infer distribution of fitness effects from frequency spectrum')
@@ -63,7 +113,7 @@ def main():
     infer_dfe_parser.add_argument('--ratio', type=float, help='The ratio for the nonsynonymous mutations vs. the synonymous mutations')
     infer_dfe_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='The upper bounds of the inferred parameters, please use -1 to indicate a parameter with no upper bound, please use -1 to indicate a parameter without upper bound')
     infer_dfe_parser.add_argument('--output', type=str, help='The name of the output file')
-    infer_dfe_parser.add_argument('--jobs', default=1, type=int, help='The number of jobs to run optimization parrallelly')
+    infer_dfe_parser.add_argument('--jobs', default=1, type=_check_positive_int, help='The number of jobs to run optimization parrallelly')
 
     # subparser for plotting
     plot_parser = subparsers.add_parser('Plot', help='Plot 1D/2D frequency spectrum')
@@ -117,26 +167,7 @@ def main():
 
     args = parser.parse_args()
 
-    def check_params(params):
-        new_params = []
-        for p in params:
-            if p == -1.0: new_params.append(None)
-            else: new_params.append(p)
-        return new_params
-
-    def read_demo_params(params):
-        new_params = []
-        line = open(params, 'r').readline().rstrip().split()
-        for p in line:
-            new_params.append(float(p))
-        return new_params[1:-1]
-
-    def parse_demo_params(params):
-        new_params = []
-        for p in params:
-            new_params.append(float(p))
-        return new_params
-
+    # assign task from subcommand
     if args.subcommand == 'GenerateFs':
 
         from src.GenerateFs import generate_fs
@@ -148,20 +179,17 @@ def main():
         if len(args.sample_sizes) > 2: raise Exception('Cannot generate cache with more than two populations')
 
         from src.GenerateCache import generate_cache
-        if len(args.demo_popt) == 1: 
-            args.demo_popt = read_demo_params(args.demo_popt[0])
-            if args.misid: args.demo_popt = args.demo_popt[:-1]
-        else: args.demo_popt = parse_demo_params(args.demo_popt)
+        args.demo_popt = _read_opt_params_from_file(args.demo_popt, args.model, '--model', False)
 
         generate_cache(model=args.model, grids=args.grids, popt=args.demo_popt,
                        gamma_bounds=args.gamma_bounds, gamma_pts=args.gamma_pts, additional_gammas=args.additional_gammas,
-                       output=args.output, sample_sizes=args.sample_sizes, misid=args.misid, mp=args.mp)
+                       output=args.output, sample_sizes=args.sample_sizes, mp=args.mp, cuda=args.cuda, single_gamma=args.single_gamma)
 
     elif args.subcommand == 'InferDM':
 
-        if args.constants != None: args.constants = check_params(args.constants)
-        if args.lbounds != None: args.lbounds = check_params(args.lbounds)
-        if args.ubounds != None: args.ubounds = check_params(args.ubounds)
+        if args.constants != None: args.constants = _check_params(args.constants, args.model, '--constant', args.misid)
+        if args.lbounds != None: args.lbounds = _check_params(args.lbounds, args.model, '--lbounds', args.misid)
+        if args.ubounds != None: args.ubounds = _check_params(args.ubounds, args.model, '--ubounds', args.misid)
 
         if len(args.p0) == 1: args.p0 = read_demo_params(args.p0[0])
         else: args.p0 = parse_demo_params(args.p0)
