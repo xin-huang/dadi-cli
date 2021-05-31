@@ -280,4 +280,4 @@ Then the detail of the function will be displayed in the screen:
 ## References
 
 1. [Gutenkunst et al., *PLoS Genet*, 2009.](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1000695)
-2. [Huang et al., *Mol Biol Evol*, 2021.](https://doi.org/10.1101/703918)
+2. [Huang et al., *Mol Biol Evol*, 2021.](https://doi.org/10.1093/molbev/msab162)
