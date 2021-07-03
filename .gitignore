@@ -1,0 +1,3 @@
+build/*
+dadi_cli.egg-info/*
+dist/*
