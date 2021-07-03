@@ -12,6 +12,7 @@ def main():
         if input_params_len != model_params_len:
             raise Exception("Found " + str(input_params_len) + " demographic parameters from the option " + option + 
                             "; however, " + str(model_params_len) + " demographic parameters are required from the " + model + " model")
+        return params
 
     def _read_opt_params_from_file(path, model, option, misid):
         new_params = []
