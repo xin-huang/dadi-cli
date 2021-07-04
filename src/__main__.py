@@ -188,9 +188,7 @@ def main():
 
     elif args.subcommand == 'InferDM':
 
-        if args.constants != None: args.constants = _check_params(args.constants, args.model, '--constant', args.misid)
-        if args.lbounds != None: args.lbounds = _check_params(args.lbounds, args.model, '--lbounds', args.misid)
-        if args.ubounds != None: args.ubounds = _check_params(args.ubounds, args.model, '--ubounds', args.misid)
+        if not args.model_file and args.ubounds != None: args.ubounds = _check_params(args.ubounds, args.model, '--ubounds', args.misid)
 
         if len(args.p0) == 1: args.p0 = read_demo_params(args.p0[0])
         else: args.p0 = parse_demo_params(args.p0)
@@ -198,7 +196,13 @@ def main():
         from multiprocessing import Manager, Process 
         from src.InferDM import infer_demography
     
-        with Manager() as manager:
+        from src.Models import get_dadi_model_func
+        if not args.model_file:
+            func = get_dadi_model_func(args.model)
+        else:
+            import importlib
+            temp = importlib.import_module(args.model_file)
+            func = getattr(temp, args.model)
 
             pool = []
             for i in range(args.jobs):

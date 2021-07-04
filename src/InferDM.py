@@ -5,7 +5,7 @@ import os, time
 import numpy as np
 from src.Models import get_dadi_model_func
 
-def infer_demography(fs, model, grids, p0, output,
+def infer_demography(fs, func, grids, p0, output,
                      upper_bounds, lower_bounds, fixed_params, misid, cuda):
     
     if cuda:
