@@ -17,6 +17,7 @@ def get_bestfit_params(path, lbounds, ubounds, output):
     ll = sorted(res)
     opt_ll = ll[-1]
     if len(res[opt_ll]) > 1: d = 0
+    elif len(ll) < 2: d = np.inf
     else: d = ll[-1] - ll[-2]
     opt_params = res[opt_ll]
 
