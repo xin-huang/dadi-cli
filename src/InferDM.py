@@ -71,3 +71,5 @@ def infer_demography(fs, model, grids, p0, output,
             f.write("\t")
             f.write(str(p))
         f.write("\t" + str(theta) + "\n")
+
+    return ll_model, popt, theta
