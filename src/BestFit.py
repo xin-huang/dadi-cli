@@ -1,18 +1,20 @@
+import numpy as np
 import glob
 
 def get_bestfit_params(path, lbounds, ubounds, output):
    
-    files = glob.glob(path + '/*')
+    files = glob.glob(path)
     res = {} 
     for f in files:
-        line = open(f, 'r').readline().rstrip().split()
-        ll = line[0]
-        popt = line[1:]
-        if ll != '--':
-            ll = float(ll)
-            if ll not in res:
-                res[ll] = []
-            res[ll].append(popt)
+        for line in open(f, 'r').readlines():
+            line = line.rstrip().split()
+            ll = line[0]
+            popt = line[1:]
+            if ll != '--':
+                ll = float(ll)
+                if ll not in res:
+                    res[ll] = []
+                res[ll].append(popt)
 
     ll = sorted(res)
     opt_ll = ll[-1]
