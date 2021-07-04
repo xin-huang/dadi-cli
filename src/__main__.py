@@ -190,7 +190,6 @@ def main():
                        output=args.output, sample_sizes=args.sample_sizes, mp=args.mp, cuda=args.cuda, single_gamma=args.single_gamma)
 
     elif args.subcommand == 'InferDM':
-
         if not args.model_file and args.constants != None: args.constants = _check_params(args.constants, args.model, '--constant', args.misid)
         if not args.model_file and args.lbounds != None: args.lbounds = _check_params(args.lbounds, args.model, '--lbounds', args.misid)
         if not args.model_file and args.ubounds != None: args.ubounds = _check_params(args.ubounds, args.model, '--ubounds', args.misid)
@@ -200,30 +199,31 @@ def main():
 
         from src.InferDM import infer_demography
 
+        # Extract model function, from custom model_file if necessary
         from src.Models import get_dadi_model_func
         if not args.model_file:
             func = get_dadi_model_func(args.model)
         else:
             import importlib
-            temp = importlib.import_module(args.model_file)
-            func = getattr(temp, args.model)
+            func = getattr(importlib.import_module(args.model_file), args.model)
+
         if args.work_queue:
             import work_queue as wq
             q = wq.WorkQueue(name = "dadi-distributed-RNG")
             # Returns 1 for success, 0 for failure
+            # XXX: Check for missing file here
             q.specify_password_file('mypwfile')
 
             for ii in range(args.jobs): 
                 t = wq.PythonTask(infer_demography, args.syn_fs, func, args.grids, args.p0, args.output+'.run'+str(ii),
                                args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
+                # If using a custom model, need to include the file from which it comes
                 if args.model_file:
                     t.specify_input_file(args.model_file+'.py')
                 q.submit(t)
         else:
             import multiprocessing; from multiprocessing import Process, Queue
             from src.InferDM import infer_demography
-
-            num_workers = multiprocessing.cpu_count()
 
             def todo(in_queue, out_queue):
                 while True:
@@ -235,24 +235,28 @@ def main():
             # Queues to manage input and output
             in_queue, out_queue = Queue(), Queue()
             # Create workers
-            workers = [Process(target=todo, args=(in_queue, out_queue)) for ii in range(num_workers)]
+            workers = [Process(target=todo, args=(in_queue, out_queue)) for ii in range(multiprocessing.cpu_count())]
             # Put the tasks to be done in the queue. 
-            for ii in range(args.jobs): in_queue.put(ii)
+            for ii in range(args.jobs):
+                in_queue.put(ii)
             # Start the workers
-            for worker in workers: worker.start()
+            for worker in workers:
+                worker.start()
 
         fid = open(args.output+'.runs', 'a')
+        # Collect and process results
         from src.BestFit import get_bestfit_params
-        for count in range(args.jobs):
+        for _ in range(args.jobs):
             if args.work_queue: 
                 result = q.wait().output
             else:
                 result = out_queue.get()
-            print('Results: {0}.'.format(result))
+            # Write latest result ot file
             fid.write('{0}\t{1}\t{2}\n'.format(result[0], '\t'.join(str(_) for _ in result[1]), result[2]))
             fid.flush()
             if args.check_convergence:
                 exitcode = get_bestfit_params(path=args.output+'.run*', lbounds=args.lbounds, ubounds=args.ubounds, output='temp.out')
+                # Stop if we have convergence
                 if exitcode == 0:
                     break
         fid.close()
