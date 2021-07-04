@@ -20,7 +20,6 @@ def infer_demography(fs, func, grids, p0, output,
     if grids == None:
         grids = [int(ns[0]+10), int(ns[0]+20), int(ns[0]+30)]
 
-    func = get_dadi_model_func(model)
     if misid:
         func = dadi.Numerics.make_anc_state_misid_func(func)
     func_ex = dadi.Numerics.make_extrap_func(func)
@@ -65,11 +64,11 @@ def infer_demography(fs, func, grids, p0, output,
     theta = dadi.Inference.optimal_sfs_scaling(model, fs)
     #print('Optimal value of theta: {0}'.format(theta))
 
-    with open(output, 'w') as f:
-        f.write(str(ll_model))
-        for p in popt:
-            f.write("\t")
-            f.write(str(p))
-        f.write("\t" + str(theta) + "\n")
+    #with open(output, 'w') as f:
+    #    f.write(str(ll_model))
+    #    for p in popt:
+    #        f.write("\t")
+    #        f.write(str(p))
+    #    f.write("\t" + str(theta) + "\n")
 
     return ll_model, popt, theta

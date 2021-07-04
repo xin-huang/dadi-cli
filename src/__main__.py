@@ -91,10 +91,13 @@ def main():
     infer_demo_parser.add_argument('--lbounds', type=float, nargs='+', required=True, help='The lower bounds of the inferred parameters, please use -1 to indicate a parameter without lower bound')
     infer_demo_parser.add_argument('--misid', default=False, action='store_true', help='Determine whether adding a parameter for misidentifying ancestral alleles or not; Default: False')
     infer_demo_parser.add_argument('--model', type=str, required=True, help='The name of the demographic model; To check available demographic models, please use `dadi-cli Model`')
+    infer_demo_parser.add_argument('--model_file', type=str, required=False, help='If using a custom model, the filename in which the model function is defined')
     infer_demo_parser.add_argument('--p0', type=str, nargs='+', required=True, help='The initial parameters for inference')
     infer_demo_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='The upper bounds of the inferred parameters, please use -1 to indicate a parameter without upper bound')
     infer_demo_parser.add_argument('--output', type=str, required=True, help='The name of the output file')
     infer_demo_parser.add_argument('--jobs', default=1, type=_check_positive_int, help='The number of jobs to run optimization parrallelly')
+    infer_demo_parser.add_argument('--check_convergence', default=False, action='store_true', help='Stop optimization runs when convergence criteria are reached; Default: False')
+    infer_demo_parser.add_argument('--work_queue', default=False, action='store_true', help='Use WorkQueue')
 
     # subparser for inferring DFE
     infer_dfe_parser = subparsers.add_parser('InferDFE', help='Infer distribution of fitness effects from frequency spectrum')
@@ -188,14 +191,15 @@ def main():
 
     elif args.subcommand == 'InferDM':
 
+        if not args.model_file and args.constants != None: args.constants = _check_params(args.constants, args.model, '--constant', args.misid)
+        if not args.model_file and args.lbounds != None: args.lbounds = _check_params(args.lbounds, args.model, '--lbounds', args.misid)
         if not args.model_file and args.ubounds != None: args.ubounds = _check_params(args.ubounds, args.model, '--ubounds', args.misid)
 
         if len(args.p0) == 1: args.p0 = read_demo_params(args.p0[0])
-        else: args.p0 = parse_demo_params(args.p0)
-   
-        from multiprocessing import Manager, Process 
+        else: args.p0 = [float(_) for _ in args.p0]
+
         from src.InferDM import infer_demography
-    
+
         from src.Models import get_dadi_model_func
         if not args.model_file:
             func = get_dadi_model_func(args.model)
@@ -203,17 +207,60 @@ def main():
             import importlib
             temp = importlib.import_module(args.model_file)
             func = getattr(temp, args.model)
+        if args.work_queue:
+            import work_queue as wq
+            q = wq.WorkQueue(name = "dadi-distributed-RNG")
+            # Returns 1 for success, 0 for failure
+            q.specify_password_file('mypwfile')
 
-            pool = []
-            for i in range(args.jobs):
-                p = Process(target=infer_demography, 
-                            args=(args.syn_fs, args.model, args.grids, args.p0, args.output+'.run'+str(i), 
-                            args.ubounds, args.lbounds, args.constants, args.misid, args.cuda))
-                p.start()
-                pool.append(p)
-        
-            for p in pool:
-                p.join()
+            for ii in range(args.jobs): 
+                t = wq.PythonTask(infer_demography, args.syn_fs, func, args.grids, args.p0, args.output+'.run'+str(ii),
+                               args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
+                if args.model_file:
+                    t.specify_input_file(args.model_file+'.py')
+                q.submit(t)
+        else:
+            import multiprocessing; from multiprocessing import Process, Queue
+            from src.InferDM import infer_demography
+
+            num_workers = multiprocessing.cpu_count()
+
+            def todo(in_queue, out_queue):
+                while True:
+                    i = in_queue.get()
+                    results = infer_demography(args.syn_fs, func, args.grids, args.p0, args.output+'.run'+str(i), 
+                                     args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
+                    out_queue.put(results)
+
+            # Queues to manage input and output
+            in_queue, out_queue = Queue(), Queue()
+            # Create workers
+            workers = [Process(target=todo, args=(in_queue, out_queue)) for ii in range(num_workers)]
+            # Put the tasks to be done in the queue. 
+            for ii in range(args.jobs): in_queue.put(ii)
+            # Start the workers
+            for worker in workers: worker.start()
+
+        fid = open(args.output+'.runs', 'a')
+        from src.BestFit import get_bestfit_params
+        for count in range(args.jobs):
+            if args.work_queue: 
+                result = q.wait().output
+            else:
+                result = out_queue.get()
+            print('Results: {0}.'.format(result))
+            fid.write('{0}\t{1}\t{2}\n'.format(result[0], '\t'.join(str(_) for _ in result[1]), result[2]))
+            fid.flush()
+            if args.check_convergence:
+                exitcode = get_bestfit_params(path=args.output+'.run*', lbounds=args.lbounds, ubounds=args.ubounds, output='temp.out')
+                if exitcode == 0:
+                    break
+        fid.close()
+
+        if not args.work_queue:
+            # Stop the workers
+            for worker in workers:
+                worker.terminate()
 
     elif args.subcommand == 'InferDFE':
    
@@ -221,7 +268,7 @@ def main():
         if args.lbounds != None: args.lbounds = check_params(args.lbounds)
         if args.ubounds != None: args.ubounds = check_params(args.ubounds)
 
-        from multiprocessing import Manager, Process
+        from multiprocessing import Manager, Process, Queue
         from src.InferDFE import infer_dfe
         with Manager() as manager:
 
@@ -266,8 +313,8 @@ def main():
 
     elif args.subcommand == 'BestFit':
 
-        args.lbounds = check_params(args.lbounds)
-        args.ubounds = check_params(args.ubounds)
+        #args.lbounds = check_params(args.lbounds)
+        #args.ubounds = check_params(args.ubounds)
 
         from src.BestFit import get_bestfit_params
         get_bestfit_params(path=args.dir, lbounds=args.lbounds, ubounds=args.ubounds, output=args.output)
