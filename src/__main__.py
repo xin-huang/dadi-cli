@@ -216,7 +216,7 @@ def main():
 
 
             for ii in range(args.jobs): 
-                t = wq.PythonTask(infer_demography, args.syn_fs, func, args.grids, args.p0, args.output+'.run'+str(ii),
+                t = wq.PythonTask(infer_demography, args.syn_fs, func, args.p0, 
                                args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
                 # If using a custom model, need to include the file from which it comes
                 if args.model_file:
@@ -229,7 +229,7 @@ def main():
             def todo(in_queue, out_queue):
                 while True:
                     i = in_queue.get()
-                    results = infer_demography(args.syn_fs, func, args.grids, args.p0, args.output+'.run'+str(i), 
+                    results = infer_demography(args.syn_fs, func, args.p0, 
                                      args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
                     out_queue.put(results)
 

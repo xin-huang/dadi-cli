@@ -1,49 +1,52 @@
-import dadi
-import nlopt
 import os, time
 import numpy as np
-from src.Models import get_dadi_model_func
+import dadi, nlopt
 
-def infer_demography(fs, func, grids, p0, output,
-                     upper_bounds, lower_bounds, fixed_params, misid, cuda):
+def pts_l_func(fs):
+    """
+    Plausible pts_l for modeling an fs
+    """
+    n = max(fs.sample_sizes)
+    return (int(n*1.1)+2, int(n*1.2)+4, int(n*1.3)+6)
+
+def infer_demography(fs, func, p0, upper_bounds, lower_bounds, 
+                     fixed_params, misid, cuda):
+    # TODO: Need to consider appropriate rtol & atol values, and whether these maxeval are appropriate
     if cuda:
         dadi.cuda_enabled(True)
 
-    seed = int(time.time()) + int(os.getpid())
-    np.random.seed(seed)
-    
     fs = dadi.Spectrum.from_file(fs)
-    ns = fs.sample_sizes
-    if grids is None:
-        grids = [int(ns[0]+10), int(ns[0]+20), int(ns[0]+30)]
 
     if misid:
         func = dadi.Numerics.make_anc_state_misid_func(func)
     func_ex = dadi.Numerics.make_extrap_func(func)
 
+    # Randomize starting parameter values
+    seed = int(time.time()) + int(os.getpid())
+    np.random.seed(seed)
     p0 = dadi.Misc.perturb_params(p0, fold=1, upper_bound=upper_bounds,
                                   lower_bound=lower_bounds)
 
-    # First, a global optimization in which sample sizes are at most 20 per axis
-    # XXX: Need option to disable this if modeling inbreeding
-    proj_ns = np.mininum(ns, 20)
+    # First, global optimization in which sample sizes are at most 20 per axis
+    # TODO: Need option to disable this if modeling inbreeding
+    proj_ns = np.minimum(fs.sample_sizes, 20)
     fs_proj = fs.project(proj_ns)
-
-    ns_proj = fs_proj.sample_sizes
-    grids_proj = [ns_proj.max()+10, ns_proj.max()+20, ns_proj.max()+30]
-
-    popt_global, _ = dadi.Inference.opt(p0, fs_proj, func_ex, grids_proj,
+    pts_l_proj = pts_l_func(fs_proj)
+    popt_global, _ = dadi.Inference.opt(p0, fs_proj, func_ex, pts_l_proj,
                                         lower_bound=lower_bounds,
                                         upper_bound=upper_bounds, fixed_params=fixed_params,
                                         algorithm=nlopt.GN_MLSL_LDS,
                                         local_optimizer=nlopt.LN_BOBYQA, maxeval=400)
-    popt, LLopt = dadi.Inference.opt(popt_global, fs, func_ex, grids,
-                                     lower_bound=lower_bounds,
-                                     upper_bound=upper_bounds, fixed_params=fixed_params,
-                                     algorithm=nlopt.LN_BOBYQA, maxeval=600)
 
-    # Calculate the best-fit model to get ll, and theta
-    model = func_ex(popt, ns, grids)
+    # Now local optimization
+    pts_l = pts_l_func(fs)
+    popt, _ = dadi.Inference.opt(popt_global, fs, func_ex, pts_l,
+                                 lower_bound=lower_bounds,
+                                 upper_bound=upper_bounds, fixed_params=fixed_params,
+                                 algorithm=nlopt.LN_BOBYQA, maxeval=600)
+
+    # Calculate the best-fit model to get ll and theta
+    model = func_ex(popt, fs.sample_sizes, pts_l)
     ll_model = dadi.Inference.ll_multinom(model, fs)
     theta = dadi.Inference.optimal_sfs_scaling(model, fs)
 
