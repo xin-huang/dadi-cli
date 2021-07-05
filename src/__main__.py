@@ -97,7 +97,7 @@ def main():
     infer_demo_parser.add_argument('--output', type=str, required=True, help='The name of the output file')
     infer_demo_parser.add_argument('--jobs', default=1, type=_check_positive_int, help='The number of jobs to run optimization parrallelly')
     infer_demo_parser.add_argument('--check_convergence', default=False, action='store_true', help='Stop optimization runs when convergence criteria are reached; Default: False')
-    infer_demo_parser.add_argument('--work_queue', default=False, action='store_true', help='Use WorkQueue')
+    infer_demo_parser.add_argument('--work_queue', nargs=2, default=[], action='store', help='Use WorkQueue')
 
     # subparser for inferring DFE
     infer_dfe_parser = subparsers.add_parser('InferDFE', help='Infer distribution of fitness effects from frequency spectrum')
@@ -209,10 +209,11 @@ def main():
 
         if args.work_queue:
             import work_queue as wq
-            q = wq.WorkQueue(name = "dadi-distributed-RNG")
+            q = wq.WorkQueue(name = args.work_queue[0])
             # Returns 1 for success, 0 for failure
-            # XXX: Check for missing file here
-            q.specify_password_file('mypwfile')
+            if not q.specify_password_file(args.work_queue[1]):
+                raise ValueError('Work Queue password file "{0}" not found.'.format(args.work_queue[1]))
+
 
             for ii in range(args.jobs): 
                 t = wq.PythonTask(infer_demography, args.syn_fs, func, args.grids, args.p0, args.output+'.run'+str(ii),
