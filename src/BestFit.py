@@ -7,6 +7,8 @@ def get_bestfit_params(path, lbounds, ubounds, output):
     res = {} 
     for f in files:
         for line in open(f, 'r').readlines():
+            if line.startswith('#'):
+                continue
             line = line.rstrip().split()
             ll = line[0]
             popt = line[1:]
@@ -17,10 +19,16 @@ def get_bestfit_params(path, lbounds, ubounds, output):
                 res[ll].append(popt)
 
     ll = sorted(res)
+    if len(ll) == 0:
+        return None
+
     opt_ll = ll[-1]
-    if len(res[opt_ll]) > 1: d = 0
-    elif len(ll) < 2: d = np.inf
-    else: d = ll[-1] - ll[-2]
+    if len(res[opt_ll]) > 1: 
+        d = 0
+    elif len(ll) < 2:
+        d = np.inf
+    else:
+        d = ll[-1] - ll[-2]
     opt_params = res[opt_ll]
 
     if d < 0.05:
@@ -39,7 +47,7 @@ def get_bestfit_params(path, lbounds, ubounds, output):
             print("The optimized parameters:")
             for i in range(len(opt_params)):
                 print("\t".join(opt_params[i]))
-        return 0
+        return True
     else:
         print("NO CONVERGENCE: Likelihoods are not converged")
         print("The maximum likelihood: " + str(opt_ll))
@@ -47,7 +55,6 @@ def get_bestfit_params(path, lbounds, ubounds, output):
         print("\t".join(opt_params[0]))
         with open(output, 'w') as f:
             f.write(str(opt_ll) + "\t" + "\t".join(opt_params[0]) + '\n')
-        return 1
 
 def opt_params_converged(params):
     for i in range(len(params)):

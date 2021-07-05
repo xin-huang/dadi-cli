@@ -1,7 +1,8 @@
+import argparse, glob, os.path, sys
+import os.path
+
 def main():
     
-    import argparse
-    import os.path
     from src.Models import get_dadi_model_params
 
     # helper functions for reading, parsing, and validating parameters from command line or files
@@ -194,8 +195,10 @@ def main():
         if not args.model_file and args.lbounds != None: args.lbounds = _check_params(args.lbounds, args.model, '--lbounds', args.misid)
         if not args.model_file and args.ubounds != None: args.ubounds = _check_params(args.ubounds, args.model, '--ubounds', args.misid)
 
-        if len(args.p0) == 1: args.p0 = read_demo_params(args.p0[0])
-        else: args.p0 = [float(_) for _ in args.p0]
+        if len(args.p0) == 1: 
+            args.p0 = float(args.p0)
+        else: 
+            args.p0 = [float(_) for _ in args.p0]
 
         from src.InferDM import infer_demography
 
@@ -213,7 +216,6 @@ def main():
             # Returns 1 for success, 0 for failure
             if not q.specify_password_file(args.work_queue[1]):
                 raise ValueError('Work Queue password file "{0}" not found.'.format(args.work_queue[1]))
-
 
             for ii in range(args.jobs): 
                 t = wq.PythonTask(infer_demography, args.syn_fs, func, args.p0, args.grids, 
@@ -244,7 +246,10 @@ def main():
             for worker in workers:
                 worker.start()
 
-        fid = open(args.output+'.runs', 'a')
+        existing_files = glob.glob(args.output + '.InferDM*.')
+        fid = open(args.output+'.InferDM.{0}'.format(len(existing_files)), 'a')
+        # Write command line to results file
+        fid.write('#{0}\n'.format(' '.join(sys.argv)))
         # Collect and process results
         from src.BestFit import get_bestfit_params
         for _ in range(args.jobs):
@@ -256,9 +261,9 @@ def main():
             fid.write('{0}\t{1}\t{2}\n'.format(result[0], '\t'.join(str(_) for _ in result[1]), result[2]))
             fid.flush()
             if args.check_convergence:
-                exitcode = get_bestfit_params(path=args.output+'.run*', lbounds=args.lbounds, ubounds=args.ubounds, output='temp.out')
+                exitcode = get_bestfit_params(path=args.output+'.InferDM.*', lbounds=args.lbounds, ubounds=args.ubounds, output='temp.out')
                 # Stop if we have convergence
-                if exitcode == 0:
+                if exitcode:
                     break
         fid.close()
 
