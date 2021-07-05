@@ -87,7 +87,7 @@ def main():
     infer_demo_parser.add_argument('--cuda', default=False, action='store_true', help='Determine whether using GPUs to accelerate inference or not; Default: False')
     infer_demo_parser.add_argument('--constants', type=float, nargs='+', help='The fixed parameters during the inference, please use -1 to indicate a parameter is NOT fixed; Default: None')
     infer_demo_parser.add_argument('--syn-fs', type=str, required=True, help='The frequency spectrum of synonymous mutations used for inference; To generate the frequency spectrum, please use `dadi-cli GenerateFs`', dest='syn_fs')
-    infer_demo_parser.add_argument('--grids', type=_check_positive_int, nargs=3, help='The sizes of the grids; Default: [sample_size[0]+10, sample_size[0]+20, sample_size[0]+30]')
+    infer_demo_parser.add_argument('--grids', type=_check_positive_int, nargs=3, help='The sizes of the grids; Default: (int(n*1.1)+2, int(n*1.2)+4, int(n*1.3)+6)')
     infer_demo_parser.add_argument('--lbounds', type=float, nargs='+', required=True, help='The lower bounds of the inferred parameters, please use -1 to indicate a parameter without lower bound')
     infer_demo_parser.add_argument('--misid', default=False, action='store_true', help='Determine whether adding a parameter for misidentifying ancestral alleles or not; Default: False')
     infer_demo_parser.add_argument('--model', type=str, required=True, help='The name of the demographic model; To check available demographic models, please use `dadi-cli Model`')
@@ -216,7 +216,7 @@ def main():
 
 
             for ii in range(args.jobs): 
-                t = wq.PythonTask(infer_demography, args.syn_fs, func, args.p0, 
+                t = wq.PythonTask(infer_demography, args.syn_fs, func, args.p0, args.grids, 
                                args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
                 # If using a custom model, need to include the file from which it comes
                 if args.model_file:
@@ -229,7 +229,7 @@ def main():
             def todo(in_queue, out_queue):
                 while True:
                     i = in_queue.get()
-                    results = infer_demography(args.syn_fs, func, args.p0, 
+                    results = infer_demography(args.syn_fs, func, args.p0, args.grids,
                                      args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
                     out_queue.put(results)
 

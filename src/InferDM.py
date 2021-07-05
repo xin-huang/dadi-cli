@@ -9,7 +9,7 @@ def pts_l_func(fs):
     n = max(fs.sample_sizes)
     return (int(n*1.1)+2, int(n*1.2)+4, int(n*1.3)+6)
 
-def infer_demography(fs, func, p0, upper_bounds, lower_bounds, 
+def infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds, 
                      fixed_params, misid, cuda):
     # TODO: Need to consider appropriate rtol & atol values, and whether these maxeval are appropriate
     if cuda:
@@ -39,7 +39,8 @@ def infer_demography(fs, func, p0, upper_bounds, lower_bounds,
                                         local_optimizer=nlopt.LN_BOBYQA, maxeval=400)
 
     # Now local optimization
-    pts_l = pts_l_func(fs)
+    if pts_l is None:
+        pts_l = pts_l_func(fs)
     popt, _ = dadi.Inference.opt(popt_global, fs, func_ex, pts_l,
                                  lower_bound=lower_bounds,
                                  upper_bound=upper_bounds, fixed_params=fixed_params,
