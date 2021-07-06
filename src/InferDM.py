@@ -35,8 +35,7 @@ def infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds,
     popt_global, _ = dadi.Inference.opt(p0, fs_proj, func_ex, pts_l_proj,
                                         lower_bound=lower_bounds,
                                         upper_bound=upper_bounds, fixed_params=fixed_params,
-                                        algorithm=nlopt.GN_MLSL_LDS,
-                                        local_optimizer=nlopt.LN_BOBYQA, maxeval=400)
+                                        algorithm=nlopt.GN_MLSL,
 
     # Now local optimization
     if pts_l is None:
