@@ -261,9 +261,7 @@ def main():
             fid.write('{0}\t{1}\t{2}\n'.format(result[0], '\t'.join(str(_) for _ in result[1]), result[2]))
             fid.flush()
             if args.check_convergence:
-                exitcode = get_bestfit_params(path=args.output+'.InferDM.*', lbounds=args.lbounds, ubounds=args.ubounds, output='temp.out')
-                # Stop if we have convergence
-                if exitcode:
+                if get_bestfit_params(path=args.output+'.InferDM.*', lbounds=args.lbounds, ubounds=args.ubounds, output=args.output+'.InferDM.bestfits'):
                     break
         fid.close()
 
@@ -322,12 +320,11 @@ def main():
                      logscale=args.logscale, output=args.output)
 
     elif args.subcommand == 'BestFit':
-
         #args.lbounds = check_params(args.lbounds)
         #args.ubounds = check_params(args.ubounds)
 
         from src.BestFit import get_bestfit_params
-        get_bestfit_params(path=args.dir, lbounds=args.lbounds, ubounds=args.ubounds, output=args.output)
+        get_bestfit_params(path=args.dir+'.*', lbounds=args.lbounds, ubounds=args.ubounds, output=args.dir+'.bestfits')
 
     elif args.subcommand == 'Model':
     
