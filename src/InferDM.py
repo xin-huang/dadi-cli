@@ -36,6 +36,7 @@ def infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds,
                                         lower_bound=lower_bounds,
                                         upper_bound=upper_bounds, fixed_params=fixed_params,
                                         algorithm=nlopt.GN_MLSL,
+                                        local_optimizer=nlopt.LN_BOBYQA, maxeval=100)
 
     # Now local optimization
     if pts_l is None:
@@ -43,7 +44,7 @@ def infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds,
     popt, _ = dadi.Inference.opt(popt_global, fs, func_ex, pts_l,
                                  lower_bound=lower_bounds,
                                  upper_bound=upper_bounds, fixed_params=fixed_params,
-                                 algorithm=nlopt.LN_BOBYQA, maxeval=600)
+                                 algorithm=nlopt.LN_BOBYQA, maxeval=100)
 
     # Calculate the best-fit model to get ll and theta
     model = func_ex(popt, fs.sample_sizes, pts_l)
