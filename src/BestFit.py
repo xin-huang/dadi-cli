@@ -20,7 +20,7 @@ def get_bestfit_params(path, lbounds, ubounds, output, delta=0.05, Nclose=3, Nbe
         print('No optimization results found')
         return
 
-    res = np.array(sorted(res))
+    res = np.array(sorted(res, reverse=True))
     opt_ll = res[0][0]
     # Filter out those results within delta threshold
     close_enough = res[res[:,0] > opt_ll - delta]
@@ -29,7 +29,7 @@ def get_bestfit_params(path, lbounds, ubounds, output, delta=0.05, Nclose=3, Nbe
         # Output command line
         fid.write('# {0}\n'.format(' '.join(sys.argv)))
         # Output all comment lines found
-        fid.write('\n'.join(comments))
+        fid.write('\n'.join(comments) + '\n')
 
         if len(close_enough) >= Nclose:
             print("Converged")
