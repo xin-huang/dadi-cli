@@ -264,7 +264,8 @@ def main():
             fid.write('{0}\t{1}\t{2}\n'.format(result[0], '\t'.join(str(_) for _ in result[1]), result[2]))
             fid.flush()
             if args.check_convergence:
-                if get_bestfit_params(path=args.output_prefix+'.InferDM.opts.*', lbounds=args.lbounds, ubounds=args.ubounds, output=args.output_prefix+'.InferDM.bestfits'):
+                result = get_bestfit_params(path=args.output_prefix+'.InferDM.opts.*', lbounds=args.lbounds, ubounds=args.ubounds, output=args.output_prefix+'.InferDM.bestfits')
+                if result is not None:
                     break
         fid.close()
 
