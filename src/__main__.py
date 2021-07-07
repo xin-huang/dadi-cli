@@ -1,5 +1,6 @@
 import argparse, glob, os.path, sys
 import os.path
+import dadi
 
 def main():
     
@@ -84,21 +85,22 @@ def main():
     generate_cache_parser.add_argument('--single-gamma', default=False, action='store_true', help='Determine whether using demographic model plus selection with the same gamma in both the two populations or not; Default: False', dest='single_gamma')
 
     # subparser for inferring demography
-    infer_demo_parser = subparsers.add_parser('InferDM', help='Infer demographic models from frequency spectrum')
+    infer_demo_parser = subparsers.add_parser('InferDM', help='Infer a demographic models from an allele frequency spectrum')
+    # TODO: Need to workout how to do this well for parallel execution. Don't want multiple workers competing for limited GPUs
     infer_demo_parser.add_argument('--cuda', default=False, action='store_true', help='Determine whether using GPUs to accelerate inference or not; Default: False')
-    infer_demo_parser.add_argument('--constants', type=float, nargs='+', help='The fixed parameters during the inference, please use -1 to indicate a parameter is NOT fixed; Default: None')
-    infer_demo_parser.add_argument('--syn-fs', type=str, required=True, help='The frequency spectrum of synonymous mutations used for inference; To generate the frequency spectrum, please use `dadi-cli GenerateFs`', dest='syn_fs')
-    infer_demo_parser.add_argument('--grids', type=_check_positive_int, nargs=3, help='The sizes of the grids; Default: (int(n*1.1)+2, int(n*1.2)+4, int(n*1.3)+6)')
-    infer_demo_parser.add_argument('--lbounds', type=float, nargs='+', required=True, help='The lower bounds of the inferred parameters, please use -1 to indicate a parameter without lower bound')
-    infer_demo_parser.add_argument('--misid', default=False, action='store_true', help='Determine whether adding a parameter for misidentifying ancestral alleles or not; Default: False')
-    infer_demo_parser.add_argument('--model', type=str, required=True, help='The name of the demographic model; To check available demographic models, please use `dadi-cli Model`')
-    infer_demo_parser.add_argument('--model_file', type=str, required=False, help='If using a custom model, the filename in which the model function is defined')
-    infer_demo_parser.add_argument('--p0', type=str, nargs='+', required=True, help='The initial parameters for inference')
-    infer_demo_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='The upper bounds of the inferred parameters, please use -1 to indicate a parameter without upper bound')
-    infer_demo_parser.add_argument('--output', type=str, required=True, help='The name of the output file')
-    infer_demo_parser.add_argument('--jobs', default=1, type=_check_positive_int, help='The number of jobs to run optimization parrallelly')
-    infer_demo_parser.add_argument('--check_convergence', default=False, action='store_true', help='Stop optimization runs when convergence criteria are reached; Default: False')
-    infer_demo_parser.add_argument('--work_queue', nargs=2, default=[], action='store', help='Use WorkQueue')
+    infer_demo_parser.add_argument('--fs', type=str, required=True, help='The frequency spectrum of mutations used for inference. To generate the frequency spectrum, please use `dadi-cli GenerateFs`')
+    infer_demo_parser.add_argument('--constants', type=float, nargs='+', help='Fixed parameters during the inference. Use -1 to indicate a parameter is NOT fixed. Default: None')
+    infer_demo_parser.add_argument('--grids', type=_check_positive_int, nargs=3, help='Integration grid sizes. Default: (int(n*1.1)+2, int(n*1.2)+4, int(n*1.3)+6)')
+    infer_demo_parser.add_argument('--lbounds', type=float, nargs='+', required=True, help='Lower bounds for parameter inference. Use -1 to indicate a parameter without lower bound.')
+    infer_demo_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='Upper bounds for parameter inference. Use -1 to indicate a parameter without upper bound.')
+    infer_demo_parser.add_argument('--misid', default=False, action='store_true', help='Add a parameter for ancestral state misidentification. Default: False')
+    infer_demo_parser.add_argument('--model', type=str, required=True, help='Name of the demographic model. To check built-in demographic models, use `dadi-cli Model`.')
+    infer_demo_parser.add_argument('--model_file', type=str, required=False, help='Name of python module file (not including .py) that contains custom models to use. Default: None')
+    infer_demo_parser.add_argument('--p0', type=str, nargs='+', required=True, help='Initial parameter values for inference.')
+    infer_demo_parser.add_argument('--output_prefix', type=str, required=True, help='Prefix for output files, which will be named <output_prefix>.InferDM.opts.<N>, where N is an increasing integer (to avoid overwriting existing files).')
+    infer_demo_parser.add_argument('--jobs', default=1, type=_check_positive_int, help='Number of optimization jobs to run in parallel. Default: 1.')
+    infer_demo_parser.add_argument('--check_convergence', default=False, action='store_true', help='Stop optimization runs when convergence criteria are reached. BestFit results file will be call <output_prefix>.InferDM.bestfits. Default: False')
+    infer_demo_parser.add_argument('--work_queue', nargs=2, default=[], action='store', help='Enable Work Queue. Additional arguments are the WorkQueue project name and the name of the password file.')
 
     # subparser for inferring DFE
     infer_dfe_parser = subparsers.add_parser('InferDFE', help='Infer distribution of fitness effects from frequency spectrum')
@@ -201,6 +203,7 @@ def main():
             args.p0 = [float(_) for _ in args.p0]
 
         from src.InferDM import infer_demography
+        fs = dadi.Spectrum.from_file(args.fs)
 
         # Extract model function, from custom model_file if necessary
         from src.Models import get_dadi_model_func
@@ -218,7 +221,7 @@ def main():
                 raise ValueError('Work Queue password file "{0}" not found.'.format(args.work_queue[1]))
 
             for ii in range(args.jobs): 
-                t = wq.PythonTask(infer_demography, args.syn_fs, func, args.p0, args.grids, 
+                t = wq.PythonTask(infer_demography, fs, func, args.p0, args.grids, 
                                args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
                 # If using a custom model, need to include the file from which it comes
                 if args.model_file:
@@ -231,7 +234,7 @@ def main():
             def todo(in_queue, out_queue):
                 while True:
                     i = in_queue.get()
-                    results = infer_demography(args.syn_fs, func, args.p0, args.grids,
+                    results = infer_demography(fs, func, args.p0, args.grids,
                                      args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
                     out_queue.put(results)
 
@@ -246,8 +249,8 @@ def main():
             for worker in workers:
                 worker.start()
 
-        existing_files = glob.glob(args.output + '.InferDM.opts.*')
-        fid = open(args.output+'.InferDM.opts.{0}'.format(len(existing_files)), 'a')
+        existing_files = glob.glob(args.output_prefix+'.InferDM.opts.*')
+        fid = open(args.output_prefix+'.InferDM.opts.{0}'.format(len(existing_files)), 'a')
         # Write command line to results file
         fid.write('#{0}\n'.format(' '.join(sys.argv)))
         # Collect and process results
@@ -261,7 +264,7 @@ def main():
             fid.write('{0}\t{1}\t{2}\n'.format(result[0], '\t'.join(str(_) for _ in result[1]), result[2]))
             fid.flush()
             if args.check_convergence:
-                if get_bestfit_params(path=args.output+'.InferDM.opts.*', lbounds=args.lbounds, ubounds=args.ubounds, output=args.output+'.InferDM.bestfits'):
+                if get_bestfit_params(path=args.output_prefix+'.InferDM.opts.*', lbounds=args.lbounds, ubounds=args.ubounds, output=args.output_prefix+'.InferDM.bestfits'):
                     break
         fid.close()
 

@@ -15,8 +15,6 @@ def infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds,
     if cuda:
         dadi.cuda_enabled(True)
 
-    fs = dadi.Spectrum.from_file(fs)
-
     if misid:
         func = dadi.Numerics.make_anc_state_misid_func(func)
     func_ex = dadi.Numerics.make_extrap_func(func)
