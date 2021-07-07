@@ -246,8 +246,8 @@ def main():
             for worker in workers:
                 worker.start()
 
-        existing_files = glob.glob(args.output + '.InferDM*.')
-        fid = open(args.output+'.InferDM.{0}'.format(len(existing_files)), 'a')
+        existing_files = glob.glob(args.output + '.InferDM.opts.*')
+        fid = open(args.output+'.InferDM.opts.{0}'.format(len(existing_files)), 'a')
         # Write command line to results file
         fid.write('#{0}\n'.format(' '.join(sys.argv)))
         # Collect and process results
@@ -261,7 +261,7 @@ def main():
             fid.write('{0}\t{1}\t{2}\n'.format(result[0], '\t'.join(str(_) for _ in result[1]), result[2]))
             fid.flush()
             if args.check_convergence:
-                if get_bestfit_params(path=args.output+'.InferDM.*', lbounds=args.lbounds, ubounds=args.ubounds, output=args.output+'.InferDM.bestfits'):
+                if get_bestfit_params(path=args.output+'.InferDM.opts.*', lbounds=args.lbounds, ubounds=args.ubounds, output=args.output+'.InferDM.bestfits'):
                     break
         fid.close()
 
@@ -324,7 +324,7 @@ def main():
         #args.ubounds = check_params(args.ubounds)
 
         from src.BestFit import get_bestfit_params
-        get_bestfit_params(path=args.dir+'.*', lbounds=args.lbounds, ubounds=args.ubounds, output=args.dir+'.bestfits')
+        get_bestfit_params(path=args.dir+'.opts.*', lbounds=args.lbounds, ubounds=args.ubounds, output=args.dir+'.bestfits')
 
     elif args.subcommand == 'Model':
     
