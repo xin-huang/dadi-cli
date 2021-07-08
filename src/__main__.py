@@ -182,9 +182,6 @@ def main():
                     pop_ids=args.pop_ids, pop_info=args.pop_info, projections=args.projections, polarized=args.polarized)
 
     elif args.subcommand == 'GenerateCache':
-
-        if len(args.sample_sizes) > 2: raise Exception('Cannot generate cache with more than two populations')
-
         from src.GenerateCache import generate_cache
         args.demo_popt = _read_opt_params_from_file(args.demo_popt, args.model, '--model', False)
 
