@@ -2,6 +2,13 @@ import argparse, glob, os.path, sys
 import os.path
 import dadi
 
+from src.InferDM import infer_demography
+def worker_InferDM(in_queue, out_queue, args):
+    while True:
+        in_queue.get()
+        results = infer_demography(*args)
+        out_queue.put(results)
+
 def main():
     
     from src.Models import get_dadi_model_params
@@ -199,7 +206,6 @@ def main():
         else: 
             args.p0 = [float(_) for _ in args.p0]
 
-        from src.InferDM import infer_demography
         fs = dadi.Spectrum.from_file(args.fs)
 
         # Extract model function, from custom model_file if necessary
@@ -226,19 +232,13 @@ def main():
                 q.submit(t)
         else:
             import multiprocessing; from multiprocessing import Process, Queue
-            from src.InferDM import infer_demography
 
-            def todo(in_queue, out_queue):
-                while True:
-                    i = in_queue.get()
-                    results = infer_demography(fs, func, args.p0, args.grids,
-                                     args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
-                    out_queue.put(results)
+            worker_args = (fs, func, args.p0, args.grids, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
 
             # Queues to manage input and output
             in_queue, out_queue = Queue(), Queue()
             # Create workers
-            workers = [Process(target=todo, args=(in_queue, out_queue)) for ii in range(multiprocessing.cpu_count())]
+            workers = [Process(target=worker_InferDM, args=(in_queue, out_queue, worker_args)) for ii in range(multiprocessing.cpu_count())]
             # Put the tasks to be done in the queue. 
             for ii in range(args.jobs):
                 in_queue.put(ii)
@@ -257,7 +257,7 @@ def main():
                 result = q.wait().output
             else:
                 result = out_queue.get()
-            # Write latest result ot file
+            # Write latest result to file
             fid.write('{0}\t{1}\t{2}\n'.format(result[0], '\t'.join(str(_) for _ in result[1]), result[2]))
             fid.flush()
             if args.check_convergence:
@@ -270,6 +270,7 @@ def main():
             # Stop the workers
             for worker in workers:
                 worker.terminate()
+        # TODO: Stop the remaining work_queue workers
 
     elif args.subcommand == 'InferDFE':
    
