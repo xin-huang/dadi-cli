@@ -128,6 +128,8 @@ def main():
     infer_dfe_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='The upper bounds of the inferred parameters, please use -1 to indicate a parameter with no upper bound, please use -1 to indicate a parameter without upper bound')
     infer_dfe_parser.add_argument('--output', type=str, help='The name of the output file')
     infer_dfe_parser.add_argument('--jobs', default=1, type=_check_positive_int, help='The number of jobs to run optimization parrallelly')
+    infer_dfe_parser.add_argument('--model_file', type=str, required=False, help='Name of python module file (not including .py) that contains custom models to use. Default: None')
+    infer_dfe_parser.add_argument('--work_queue', nargs=2, default=[], action='store', help='Enable Work Queue. Additional arguments are the WorkQueue project name and the name of the password file.')
 
     # subparser for plotting
     plot_parser = subparsers.add_parser('Plot', help='Plot 1D/2D frequency spectrum')
@@ -273,25 +275,39 @@ def main():
         # TODO: Stop the remaining work_queue workers
 
     elif args.subcommand == 'InferDFE':
-   
-        if args.constants != None: args.constants = check_params(args.constants)
-        if args.lbounds != None: args.lbounds = check_params(args.lbounds)
-        if args.ubounds != None: args.ubounds = check_params(args.ubounds)
+        # Things need to be updated for these to work
+        #if args.constants != None: args.constants = _check_params(args.constants)
+        #if args.lbounds != None: args.lbounds = _check_params(args.lbounds)
+        #if args.ubounds != None: args.ubounds = _check_params(args.ubounds)
 
-        from multiprocessing import Manager, Process, Queue
         from src.InferDFE import infer_dfe
-        with Manager() as manager:
+        if args.work_queue:
+            import work_queue as wq
+            q = wq.WorkQueue(name = args.work_queue[0])
+            # Returns 1 for success, 0 for failure
+            if not q.specify_password_file(args.work_queue[1]):
+                raise ValueError('Work Queue password file "{0}" not found.'.format(args.work_queue[1]))
 
-            pool = []
-            for i in range(args.jobs):
-                p = Process(target=infer_dfe,
-                            args=(args.non_fs, args.output+'.run'+str(i), args.cache1d, args.cache2d, args.pdf1d, args.pdf2d, 
-                                  args.ratio, args.demo_popt, args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda))
-                p.start()
-                pool.append(p)
+            for ii in range(args.jobs): 
+                t = wq.PythonTask(infer_dfe, args.non_fs, args.output+'.run'+str(ii), args.cache1d, args.cache2d, args.pdf1d, args.pdf2d, 
+                                args.ratio, args.demo_popt, args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
+                # # If using a custom model, need to include the file from which it comes
+                # if args.model_file:
+                #     t.specify_input_file(args.model_file+'.py')
+                q.submit(t)
+        else:
+            from multiprocessing import Manager, Process, Queue
+            with Manager() as manager:
+                pool = []
+                for i in range(args.jobs):
+                    p = Process(target=infer_dfe,
+                                args=(args.non_fs, args.output+'.run'+str(i), args.cache1d, args.cache2d, args.pdf1d, args.pdf2d, 
+                                      args.ratio, args.demo_popt, args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda))
+                    p.start()
+                    pool.append(p)
 
-            for p in pool:
-                p.join()
+                for p in pool:
+                    p.join()
 
     elif args.subcommand == 'Plot':
 
