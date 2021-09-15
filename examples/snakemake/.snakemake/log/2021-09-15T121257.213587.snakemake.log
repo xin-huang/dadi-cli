@@ -1,0 +1,44 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job                 count    min threads    max threads
+----------------  -------  -------------  -------------
+all                     1              1              1
+dadi_infer_dm           1              1              1
+generate_dadi_fs        1              1              1
+total                   3              1              1
+
+Select jobs to execute...
+
+[Wed Sep 15 12:12:59 2021]
+rule generate_dadi_fs:
+    input: ../data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz
+    output: 1KG.YRI.CEU.synonymous.snps.unfold.fs
+    jobid: 2
+    wildcards: type=synonymous
+    resources: tmpdir=/tmp
+
+[Wed Sep 15 12:13:52 2021]
+Finished job 2.
+1 of 3 steps (33%) done
+Select jobs to execute...
+
+[Wed Sep 15 12:13:53 2021]
+rule dadi_infer_dm:
+    input: 1KG.YRI.CEU.synonymous.snps.unfold.fs
+    output: 1KG.YRI.CEU.IM_pre.demo.params
+    jobid: 1
+    resources: tmpdir=/tmp
+
+Terminating processes on user request, this might take some time.
+[Wed Sep 15 12:23:23 2021]
+Error in rule dadi_infer_dm:
+    jobid: 1
+    output: 1KG.YRI.CEU.IM_pre.demo.params
+    shell:
+        dadi-cli InferDM --fs 1KG.YRI.CEU.synonymous.snps.unfold.fs --model IM_pre --misid --p0 1 1 .5 1 1 1 1 1 .5 --ubounds 10 10 1 10 10 10 10 10 1 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5 --output 1KG.YRI.CEU.IM_pre.demo.params --jobs 1
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Complete log: /xdisk/rgutenk/xinhuang/projects/dadi-cli/examples/snakemake/.snakemake/log/2021-09-15T121257.213587.snakemake.log

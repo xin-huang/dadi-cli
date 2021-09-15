@@ -1,0 +1,2 @@
+#/xdisk/rgutenk/xinhuang/software/anaconda3/envs/snakemake/bin/dadi-cli InferDM --fs 1KG.YRI.synonymous.snps.unfold.fs --model three_epoch_1d --misid --p0 1 1 1 1 .5 --ubounds 10 10 10 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5 --output 1KG.YRI.three_epoch_1d.demo.params --jobs 1
+-1107.9295501041388	4.025137363261296	8.00268449351574	5.201575869624946	0.1900333856133001	0.020336257678859514	2526.463637921666

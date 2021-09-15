@@ -1,0 +1,6 @@
+# /xdisk/rgutenk/xinhuang/software/anaconda3/envs/snakemake/bin/dadi-cli BestFit --dir ./1KG.YRI.three_epoch_1d.demo.params.InferDM --output test --ubounds 10 10 10 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5
+#/xdisk/rgutenk/xinhuang/software/anaconda3/envs/snakemake/bin/dadi-cli InferDM --fs 1KG.YRI.synonymous.snps.unfold.fs --model three_epoch_1d --misid --p0 1 1 1 1 .5 --ubounds 10 10 10 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5 --output 1KG.YRI.three_epoch_1d.demo.params --jobs 1
+#
+# Top 100 results
+[-1.10792955e+03  4.02513736e+00  8.00268449e+00  5.20157587e+00
+  1.90033386e-01  2.03362577e-02  2.52646364e+03]

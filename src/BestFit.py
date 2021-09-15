@@ -3,6 +3,8 @@ import numpy as np
 
 def get_bestfit_params(path, lbounds, ubounds, output, delta=0.05, Nclose=3, Nbest=100):
     files = glob.glob(path)
+    print(path)
+    print(files)
     res, comments = [], []
     for f in files:
         for line in open(f, 'r').readlines():
