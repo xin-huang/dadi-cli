@@ -17,6 +17,8 @@ def generate_cache(model, grids, popt,
 
     if single_gamma:
        spectra = DFE.Cache1D(popt, sample_sizes, func, pts_l=grids, additional_gammas=additional_gammas, gamma_bounds=gamma_bounds, gamma_pts=gamma_pts, mp=mp) 
+    elif (model == 'equil') or (model == 'two_epoch') or (model == 'three_epoch'):
+       spectra = DFE.Cache1D(popt, sample_sizes, func, pts_l=grids, additional_gammas=additional_gammas, gamma_bounds=gamma_bounds, gamma_pts=gamma_pts, mp=mp) 
     else:
        spectra = DFE.Cache2D(popt, sample_sizes, func, pts=grids, additional_gammas=additional_gammas, gamma_bounds=gamma_bounds, gamma_pts=gamma_pts, mp=mp)
 

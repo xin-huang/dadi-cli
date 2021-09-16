@@ -6,7 +6,7 @@ types = ['synonymous', 'nonsynonymous']
 
 rule all:
     input:
-        "1KG.YRI.three_epoch_1d.demo.params.InferDM.bestfits"
+        "1KG.YRI.three_epoch.sel.spectra.bpkl"
 
 rule generate_dadi_fs:
     input:
@@ -21,10 +21,10 @@ rule dadi_infer_dm:
     input: 
         "1KG.YRI.synonymous.snps.unfold.fs"
     output:
-        "1KG.YRI.three_epoch_1d.demo.params.InferDM.opts.0"
-    threads: 1
+        "1KG.YRI.three_epoch_1d.demo.params.InferDM.opts.0",
+    threads: 8
     shell:
-        "dadi-cli InferDM --fs {input} --model three_epoch_1d --misid --p0 1 1 1 1 .5 --ubounds 10 10 10 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5 --output 1KG.YRI.three_epoch_1d.demo.params --jobs 1"
+        "dadi-cli InferDM --fs {input} --model three_epoch_1d --misid --p0 1 1 1 1 .5 --ubounds 10 10 10 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5 --output 1KG.YRI.three_epoch_1d.demo.params --jobs 30"
 
 rule dadi_bestfit_dm:
     input: rules.dadi_infer_dm.output
@@ -34,13 +34,13 @@ rule dadi_bestfit_dm:
     shell: 
         "dadi-cli BestFit --dir ./1KG.YRI.three_epoch_1d.demo.params.InferDM --output test --ubounds 10 10 10 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5"
 
-#rule dadi_generate_cache:
-#    input: rules.dadi_bestfit_dm.output
-#    output:
-#        "1KG.YRI.three_epoch.sel.spectra.bpkl"
-#    threads: 1
-#    shell:
-#        "dadi-cli GenerateCache --model three_epoch_sel --demo-popt {input} --misid --sample-size 216 --output {output}"
+rule dadi_generate_cache:
+    input: rules.dadi_bestfit_dm.output
+    output:
+        "1KG.YRI.three_epoch.sel.spectra.bpkl"
+    threads: 1
+    shell:
+        """dadi-cli GenerateCache --model three_epoch --demo-popt <(grep -v "#" 1KG.YRI.three_epoch_1d.demo.params.InferDM.bestfits | head -1 | awk '{{print $2"\t"$3"\t"$4"\t"$5}}') --sample-size 216 --output {output} --mp"""
 
 #rule dadi_infer_dfe:
 #    input: rules.generate_dadi_nonneu_fs.output

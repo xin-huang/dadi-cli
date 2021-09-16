@@ -1,0 +1,31 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 8
+Rules claiming more threads will be scaled down.
+Job stats:
+job                    count    min threads    max threads
+-------------------  -------  -------------  -------------
+all                        1              1              1
+dadi_generate_cache        1              1              1
+total                      2              1              1
+
+Select jobs to execute...
+
+[Thu Sep 16 23:00:40 2021]
+rule dadi_generate_cache:
+    input: 1KG.YRI.three_epoch_1d.demo.params.InferDM.bestfits
+    output: 1KG.YRI.three_epoch.sel.spectra.bpkl
+    jobid: 1
+    resources: tmpdir=/tmp
+
+[Thu Sep 16 23:00:41 2021]
+Error in rule dadi_generate_cache:
+    jobid: 1
+    output: 1KG.YRI.three_epoch.sel.spectra.bpkl
+    shell:
+        dadi-cli GenerateCache --model three_epoch --demo-popt <(grep -v "#" 1KG.YRI.three_epoch_1d.demo.params.InferDM.bestfits | head -1 | awk '{print $2"	"$3"	"$4"	"$5}') --sample-size 216 --output 1KG.YRI.three_epoch.sel.spectra.bpkl
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: /home/kaiser/Documents/projects/dadi-cli/examples/snakemake/.snakemake/log/2021-09-16T230040.298926.snakemake.log

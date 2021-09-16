@@ -1,0 +1,63 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 8
+Rules claiming more threads will be scaled down.
+Job stats:
+job                 count    min threads    max threads
+----------------  -------  -------------  -------------
+all                     1              1              1
+dadi_bestfit_dm         1              1              1
+dadi_infer_dm           1              8              8
+generate_dadi_fs        1              1              1
+total                   4              1              8
+
+Select jobs to execute...
+
+[Thu Sep 16 21:56:30 2021]
+rule generate_dadi_fs:
+    input: ../data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz
+    output: 1KG.YRI.synonymous.snps.unfold.fs
+    jobid: 3
+    wildcards: type=synonymous
+    resources: tmpdir=/tmp
+
+[Thu Sep 16 21:57:18 2021]
+Finished job 3.
+1 of 4 steps (25%) done
+Select jobs to execute...
+
+[Thu Sep 16 21:57:18 2021]
+rule dadi_infer_dm:
+    input: 1KG.YRI.synonymous.snps.unfold.fs
+    output: 1KG.YRI.three_epoch_1d.demo.params.InferDM.opts.0
+    jobid: 2
+    threads: 8
+    resources: tmpdir=/tmp
+
+[Thu Sep 16 21:59:18 2021]
+Finished job 2.
+2 of 4 steps (50%) done
+Select jobs to execute...
+
+[Thu Sep 16 21:59:18 2021]
+rule dadi_bestfit_dm:
+    input: 1KG.YRI.three_epoch_1d.demo.params.InferDM.opts.0
+    output: 1KG.YRI.three_epoch_1d.demo.params.InferDM.bestfits
+    jobid: 1
+    resources: tmpdir=/tmp
+
+[Thu Sep 16 21:59:19 2021]
+Finished job 1.
+3 of 4 steps (75%) done
+Select jobs to execute...
+
+[Thu Sep 16 21:59:19 2021]
+localrule all:
+    input: 1KG.YRI.three_epoch_1d.demo.params.InferDM.bestfits
+    jobid: 0
+    resources: tmpdir=/tmp
+
+[Thu Sep 16 21:59:19 2021]
+Finished job 0.
+4 of 4 steps (100%) done
+Complete log: /home/kaiser/Documents/projects/dadi-cli/examples/snakemake/.snakemake/log/2021-09-16T215630.512752.snakemake.log

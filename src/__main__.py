@@ -81,13 +81,13 @@ def main():
     generate_cache_parser = subparsers.add_parser('GenerateCache', help='Generate selection coefficient cache for inferring DFE')
     generate_cache_parser.add_argument('--additional-gammas', type=_check_positive_num, nargs='+', default=[], help='The additional positive population-scaled selection coefficients to cache for; Default: []', dest='additional_gammas')
     generate_cache_parser.add_argument('--cuda', default=False, action='store_true', help='Determine whether using GPUs to accelerate inference or not; Default: False')
-    generate_cache_parser.add_argument('--demo-popt', type=str, required=True, help='The bestfit parameters for the demographic model; Default: []', dest='demo_popt')
+    generate_cache_parser.add_argument('--demo-popt', type=float, required=True, nargs='+', default=[], help='The bestfit parameters for the demographic model; Default: []', dest='demo_popt')
     generate_cache_parser.add_argument('--gamma-bounds', type=_check_positive_num, nargs=2, default=[1e-4, 2000], help='The range of population-scaled selection coefficients to cache; Default: [1e-4, 2000]', dest='gamma_bounds')
     generate_cache_parser.add_argument('--gamma-pts', type=_check_positive_int, default=50, help='The number of gamma grid points over which to integrate; Default: 50', dest='gamma_pts')
     generate_cache_parser.add_argument('--grids', type=_check_positive_int, nargs=3, help='The sizes of grids; Default: None')
     generate_cache_parser.add_argument('--model', type=str, required=True, help='The name of the demographic model with selection; To check available demographic models, please use `dadi-cli Model`')
     generate_cache_parser.add_argument('--mp', default=False, action='store_true', help='Determine whether generating cache with multiprocess or not; Default: False')
-    generate_cache_parser.add_argument('--output', type=_check_dir, required=True, help='The name of the output file')
+    generate_cache_parser.add_argument('--output', type=str, required=True, help='The name of the output file')
     generate_cache_parser.add_argument('--sample-sizes', type=_check_positive_int, nargs='+', required=True, help='The sample sizes of populations', dest='sample_sizes')
     generate_cache_parser.add_argument('--single-gamma', default=False, action='store_true', help='Determine whether using demographic model plus selection with the same gamma in both the two populations or not; Default: False', dest='single_gamma')
 
@@ -169,9 +169,11 @@ def main():
     # subparser for getting the best fit parameters
     bestfit_parser = subparsers.add_parser('BestFit', help='Obtain the best fit parameters')
     bestfit_parser.add_argument('--dir', type=str, required=True, help='The directory containing the inferred demographic/dfe parameters')
+    bestfit_parser.add_argument('--model', type=str, required=True, help='The name of the model')
     bestfit_parser.add_argument('--output', type=str, required=True, help='The name of the ouput file')
     bestfit_parser.add_argument('--lbounds', type=float, nargs='+', required=True, help='The lower bounds of the optimized parameters, please use -1 to indicate a parameter without lower bound')
     bestfit_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='The upper bounds of the optimized parameters, please use -1 to indicate a parameter without upper bound')
+    bestfit_parser.add_argument('--misid', default=False, action='store_true', help='Determine whether adding a parameter for misidentifying ancestral alleles or not; Default: False')
 
     # subparser for getting the available demographic models in dadi
     model_parser = subparsers.add_parser('Model', help='Display available demographic models')
@@ -192,7 +194,7 @@ def main():
 
     elif args.subcommand == 'GenerateCache':
         from src.GenerateCache import generate_cache
-        args.demo_popt = _read_opt_params_from_file(args.demo_popt, args.model, '--model', False)
+        #args.demo_popt = _read_opt_params_from_file(args.demo_popt, args.model, '--model', False)
 
         generate_cache(model=args.model, grids=args.grids, popt=args.demo_popt,
                        gamma_bounds=args.gamma_bounds, gamma_pts=args.gamma_pts, additional_gammas=args.additional_gammas,
@@ -241,6 +243,7 @@ def main():
             in_queue, out_queue = Queue(), Queue()
             # Create workers
             workers = [Process(target=worker_InferDM, args=(in_queue, out_queue, worker_args)) for ii in range(multiprocessing.cpu_count())]
+            print(len(workers))
             # Put the tasks to be done in the queue. 
             for ii in range(args.jobs):
                 in_queue.put(ii)
@@ -251,7 +254,7 @@ def main():
         existing_files = glob.glob(args.output_prefix+'.InferDM.opts.*')
         fid = open(args.output_prefix+'.InferDM.opts.{0}'.format(len(existing_files)), 'a')
         # Write command line to results file
-        fid.write('#{0}\n'.format(' '.join(sys.argv)))
+        fid.write('# {0}\n'.format(' '.join(sys.argv)))
         # Collect and process results
         from src.BestFit import get_bestfit_params
         for _ in range(args.jobs):
@@ -342,7 +345,7 @@ def main():
         #args.ubounds = check_params(args.ubounds)
 
         from src.BestFit import get_bestfit_params
-        get_bestfit_params(path=args.dir+'.opts.*', lbounds=args.lbounds, ubounds=args.ubounds, output=args.dir+'.bestfits')
+        get_bestfit_params(path=args.dir+'.opts.*', model_name=args.model, misid=args.misid, lbounds=args.lbounds, ubounds=args.ubounds, output=args.dir+'.bestfits')
 
     elif args.subcommand == 'Model':
     
