@@ -10,7 +10,8 @@ def get_bestfit_params(path, model_name, misid, lbounds, ubounds, output, delta=
     else: params += '\ttheta\n'
 
     for f in files:
-        for line in open(f, 'r').readlines():
+        fid = open(f, 'r')
+        for line in fid.readlines():
             if line.startswith('#'):
                 comments.append(line.rstrip())
                 continue
@@ -20,6 +21,7 @@ def get_bestfit_params(path, model_name, misid, lbounds, ubounds, output, delta=
             except ValueError:
                 # Ignore lines with a parsing error
                 pass
+        fid.close()
 
     if len(res) == 0:
         print('No optimization results found')
