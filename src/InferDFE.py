@@ -8,7 +8,7 @@ from src.Pdfs import get_dadi_pdf
 
 
 def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
-              popt, p0, upper_bounds, lower_bounds, fixed_params, misid, cuda):
+              demo_popt, p0, upper_bounds, lower_bounds, fixed_params, misid, cuda):
 
     ts = time.time()
     seed = int(ts) + int(os.getpid())
@@ -16,8 +16,9 @@ def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
 
     fs = dadi.Spectrum.from_file(fs)
 
-    popt = np.array(open(popt, 'r').readline().rstrip().split(), dtype=float)
-    theta = ns_s * popt[-1]
+    theta = ns_s * _get_theta(demo_popt)
+    #popt = np.array(open(popt, 'r').readline().rstrip().split(), dtype=float)
+    #theta = ns_s * popt[-1]
 
     if cache1d != None:
         spectra1d = pickle.load(open(cache1d, 'rb'))
@@ -67,3 +68,25 @@ def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
             f.write("\t")
             f.write(str(p))
         f.write("\n")
+
+def _get_theta(demo_popt):
+
+    opts = []
+    fid = open(popt, 'r')
+    for line in fid.readlines():
+        if line.startswith('#'):
+            continue
+        else:
+            try:
+                opts.append([float(_) for _ in line.rstrip().split()])
+            except ValueError:
+                pass
+    fid.close()
+
+    if len(opts) == 0:
+        print('No optimization results found')
+        return
+
+    theta = opts[0][-1]
+
+    return theta

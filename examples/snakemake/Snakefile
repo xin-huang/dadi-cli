@@ -45,7 +45,8 @@ rule dadi_generate_cache:
 #rule dadi_infer_dfe:
 #    input:
 #        "1KG.YRI.nonsynonymous.snps.unfold.fs",
-#        "1KG.YRI.three_epoch.sel.spectra.bpkl"
+#        "1KG.YRI.three_epoch.sel.spectra.bpkl",
+#        "1KG.YRI.three_epoch_1d.demo.params.InferDM.bestfits"
 #    output:
 #        ""
 #    threads: 8
