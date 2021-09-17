@@ -40,7 +40,7 @@ rule dadi_generate_cache:
         "1KG.YRI.three_epoch.sel.spectra.bpkl"
     threads: 1
     shell:
-        """dadi-cli GenerateCache --model three_epoch --demo-popt <(grep -v "#" 1KG.YRI.three_epoch_1d.demo.params.InferDM.bestfits | head -1 | awk '{{print $2"\t"$3"\t"$4"\t"$5}}') --sample-size 216 --output {output} --mp"""
+        """dadi-cli GenerateCache --model three_epoch --demo-popt {input} --sample-size 216 --output {output} --mp --misid"""
 
 #rule dadi_infer_dfe:
 #    input: rules.generate_dadi_nonneu_fs.output
