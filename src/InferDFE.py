@@ -7,7 +7,7 @@ import numpy as np
 from src.Pdfs import get_dadi_pdf
 
 
-def infer_dfe(fs, output, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
+def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
               popt, p0, upper_bounds, lower_bounds, fixed_params, misid, cuda):
 
     ts = time.time()

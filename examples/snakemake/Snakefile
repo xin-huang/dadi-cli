@@ -24,7 +24,7 @@ rule dadi_infer_dm:
         "1KG.YRI.three_epoch_1d.demo.params.InferDM.opts.0",
     threads: 8
     shell:
-        "dadi-cli InferDM --fs {input} --model three_epoch_1d --misid --p0 1 1 1 1 .5 --ubounds 10 10 10 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5 --output 1KG.YRI.three_epoch_1d.demo.params --jobs 30"
+        "dadi-cli InferDM --fs {input} --model three_epoch_1d --misid --p0 1 1 1 1 .5 --ubounds 10 10 10 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5 --output-prefix 1KG.YRI.three_epoch_1d.demo.params --thread 30"
 
 rule dadi_bestfit_dm:
     input: rules.dadi_infer_dm.output
@@ -32,7 +32,7 @@ rule dadi_bestfit_dm:
         "1KG.YRI.three_epoch_1d.demo.params.InferDM.bestfits"
     threads: 1
     shell: 
-        "dadi-cli BestFit --dir ./1KG.YRI.three_epoch_1d.demo.params.InferDM --output test --ubounds 10 10 10 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5"
+        "dadi-cli BestFit --dir ./1KG.YRI.three_epoch_1d.demo.params.InferDM --output test --model three_epoch_1d --misid --ubounds 10 10 10 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5"
 
 rule dadi_generate_cache:
     input: rules.dadi_bestfit_dm.output

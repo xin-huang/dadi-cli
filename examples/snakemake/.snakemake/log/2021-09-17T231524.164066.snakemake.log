@@ -1,0 +1,48 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 8
+Rules claiming more threads will be scaled down.
+Job stats:
+job                    count    min threads    max threads
+-------------------  -------  -------------  -------------
+all                        1              1              1
+dadi_bestfit_dm            1              1              1
+dadi_generate_cache        1              8              8
+dadi_infer_dm              1              8              8
+generate_dadi_fs           1              1              1
+total                      5              1              8
+
+Select jobs to execute...
+
+[Fri Sep 17 23:15:24 2021]
+rule generate_dadi_fs:
+    input: ../data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz
+    output: 1KG.YRI.synonymous.snps.unfold.fs
+    jobid: 4
+    wildcards: type=synonymous
+    resources: tmpdir=/tmp
+
+[Fri Sep 17 23:16:08 2021]
+Finished job 4.
+1 of 5 steps (20%) done
+Select jobs to execute...
+
+[Fri Sep 17 23:16:08 2021]
+rule dadi_infer_dm:
+    input: 1KG.YRI.synonymous.snps.unfold.fs
+    output: 1KG.YRI.three_epoch_1d.demo.params.InferDM.opts.0
+    jobid: 3
+    threads: 8
+    resources: tmpdir=/tmp
+
+[Fri Sep 17 23:16:08 2021]
+Error in rule dadi_infer_dm:
+    jobid: 3
+    output: 1KG.YRI.three_epoch_1d.demo.params.InferDM.opts.0
+    shell:
+        dadi-cli InferDM --fs 1KG.YRI.synonymous.snps.unfold.fs --model three_epoch_1d --misid --p0 1 1 1 1 .5 --ubounds 10 10 10 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5 --output-prefix 1KG.YRI.three_epoch_1d.demo.params --thread 30
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: /home/kaiser/Documents/projects/dadi-cli/examples/snakemake/.snakemake/log/2021-09-17T231524.164066.snakemake.log
