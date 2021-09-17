@@ -8,6 +8,28 @@ def generate_cache(model, grids, popt, misid,
                    gamma_bounds, gamma_pts, additional_gammas,
                    output, sample_sizes, mp, cuda, single_gamma):
 
+    popt = _get_opt(popt, misid)
+
+    if cuda:
+        dadi.cuda_enabled(True)
+
+    func = get_dadi_model_func(model, True, single_gamma)
+    if grids == None:
+        grids = [sample_sizes[0]+10, sample_sizes[0]+20, sample_sizes[0]+30]
+
+    if single_gamma:
+       spectra = DFE.Cache1D(popt, sample_sizes, func, pts_l=grids, additional_gammas=additional_gammas, gamma_bounds=gamma_bounds, gamma_pts=gamma_pts, mp=mp) 
+    elif (model == 'equil') or (model == 'two_epoch') or (model == 'three_epoch'):
+       spectra = DFE.Cache1D(popt, sample_sizes, func, pts_l=grids, additional_gammas=additional_gammas, gamma_bounds=gamma_bounds, gamma_pts=gamma_pts, mp=mp) 
+    else:
+       spectra = DFE.Cache2D(popt, sample_sizes, func, pts=grids, additional_gammas=additional_gammas, gamma_bounds=gamma_bounds, gamma_pts=gamma_pts, mp=mp)
+
+    fid = open(output, 'wb')
+    pickle.dump(spectra, fid, protocol=2)
+    fid.close()
+
+def _get_opt(popt, misid):
+
     opts = []
     params = []
     fid = open(popt, 'r')
@@ -40,21 +62,5 @@ def generate_cache(model, grids, popt, misid,
     print('The demographic parameters for generating the cache:')
     print("\t".join([str(_) for _ in params]))
     print("\t".join([str(_) for _ in popt]))
-
-    if cuda:
-        dadi.cuda_enabled(True)
-
-    func = get_dadi_model_func(model, True, single_gamma)
-    if grids == None:
-        grids = [sample_sizes[0]+10, sample_sizes[0]+20, sample_sizes[0]+30]
-
-    if single_gamma:
-       spectra = DFE.Cache1D(popt, sample_sizes, func, pts_l=grids, additional_gammas=additional_gammas, gamma_bounds=gamma_bounds, gamma_pts=gamma_pts, mp=mp) 
-    elif (model == 'equil') or (model == 'two_epoch') or (model == 'three_epoch'):
-       spectra = DFE.Cache1D(popt, sample_sizes, func, pts_l=grids, additional_gammas=additional_gammas, gamma_bounds=gamma_bounds, gamma_pts=gamma_pts, mp=mp) 
-    else:
-       spectra = DFE.Cache2D(popt, sample_sizes, func, pts=grids, additional_gammas=additional_gammas, gamma_bounds=gamma_bounds, gamma_pts=gamma_pts, mp=mp)
-
-    fid = open(output, 'wb')
-    pickle.dump(spectra, fid, protocol=2)
-    fid.close()
+    
+    return popt

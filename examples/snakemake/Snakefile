@@ -38,12 +38,18 @@ rule dadi_generate_cache:
     input: rules.dadi_bestfit_dm.output
     output:
         "1KG.YRI.three_epoch.sel.spectra.bpkl"
-    threads: 1
+    threads: 8
     shell:
-        """dadi-cli GenerateCache --model three_epoch --demo-popt {input} --sample-size 216 --output {output} --mp --misid"""
+        "dadi-cli GenerateCache --model three_epoch --demo-popt {input} --sample-size 216 --output {output} --mp --misid"
 
 #rule dadi_infer_dfe:
-#    input: rules.generate_dadi_nonneu_fs.output
+#    input:
+#        "1KG.YRI.nonsynonymous.snps.unfold.fs",
+#        "1KG.YRI.three_epoch.sel.spectra.bpkl"
+#    output:
+#        ""
+#    threads: 8
+#    shell:
 
 #rule dadi_bestfit_dfe:
 #    input: rules.dadi_infer_dfe.output
