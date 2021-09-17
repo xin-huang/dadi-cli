@@ -69,7 +69,7 @@ def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
             f.write(str(p))
         f.write("\n")
 
-def _get_theta(demo_popt):
+def _get_theta(popt):
 
     opts = []
     fid = open(popt, 'r')
