@@ -1,0 +1,4 @@
+Building DAG of jobs...
+MissingInputException in line 7 of /xdisk/rgutenk/xinhuang/projects/dadi-cli/examples/snakemake/Snakefile:
+Missing input files for rule all:
+1KG.YRI.CEU.IM_pre.demo.params

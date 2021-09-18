@@ -1,11 +1,17 @@
 import glob, sys
 import numpy as np
+from src.Models import get_dadi_model_params
 
-def get_bestfit_params(path, lbounds, ubounds, output, delta=0.05, Nclose=3, Nbest=100):
+def get_bestfit_params(path, model_name, misid, lbounds, ubounds, output, delta=0.05, Nclose=3, Nbest=100):
     files = glob.glob(path)
     res, comments = [], []
+    params = '# Log(likelihood)\t' + "\t".join(get_dadi_model_params(model_name))
+    if misid: params += '\tmisid\ttheta\n'
+    else: params += '\ttheta\n'
+
     for f in files:
-        for line in open(f, 'r').readlines():
+        fid = open(f, 'r')
+        for line in fid.readlines():
             if line.startswith('#'):
                 comments.append(line.rstrip())
                 continue
@@ -15,6 +21,7 @@ def get_bestfit_params(path, lbounds, ubounds, output, delta=0.05, Nclose=3, Nbe
             except ValueError:
                 # Ignore lines with a parsing error
                 pass
+        fid.close()
 
     if len(res) == 0:
         print('No optimization results found')
@@ -35,14 +42,16 @@ def get_bestfit_params(path, lbounds, ubounds, output, delta=0.05, Nclose=3, Nbe
             print("Converged")
             # Spacer
             fid.write('#\n# Converged results\n')
+            fid.write(params)
             for result in close_enough:
-                fid.write('{0}\n'.format(result))
+                fid.write('{0}\n'.format("\t".join([str(_) for _ in result])))
         else:
             print("No convergence")
 
         fid.write('#\n# Top {0} results\n'.format(Nbest))
+        fid.write(params)
         for result in res[:Nbest]:
-            fid.write('{0}\n'.format(result))
+            fid.write('{0}\n'.format("\t".join([str(_) for _ in result])))
 
     if len(close_enough) >= Nclose:
         return close_enough

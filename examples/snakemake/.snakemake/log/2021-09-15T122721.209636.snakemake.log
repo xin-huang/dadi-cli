@@ -1,0 +1,43 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job                 count    min threads    max threads
+----------------  -------  -------------  -------------
+all                     1              1              1
+dadi_infer_dm           1              1              1
+generate_dadi_fs        1              1              1
+total                   3              1              1
+
+Select jobs to execute...
+
+[Wed Sep 15 12:27:21 2021]
+rule generate_dadi_fs:
+    input: ../data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz
+    output: 1KG.YRI.synonymous.snps.unfold.fs
+    jobid: 2
+    wildcards: type=synonymous
+    resources: tmpdir=/tmp
+
+[Wed Sep 15 12:28:12 2021]
+Finished job 2.
+1 of 3 steps (33%) done
+Select jobs to execute...
+
+[Wed Sep 15 12:28:12 2021]
+rule dadi_infer_dm:
+    input: 1KG.YRI.synonymous.snps.unfold.fs
+    output: 1KG.YRI.three_epoch_1d.demo.params
+    jobid: 1
+    resources: tmpdir=/tmp
+
+Waiting at most 5 seconds for missing files.
+MissingOutputException in line 20 of /xdisk/rgutenk/xinhuang/projects/dadi-cli/examples/snakemake/Snakefile:
+Job Missing files after 5 seconds:
+1KG.YRI.three_epoch_1d.demo.params
+This might be due to filesystem latency. If that is the case, consider to increase the wait time with --latency-wait.
+Job id: 1 completed successfully, but some output files are missing. 1
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: /xdisk/rgutenk/xinhuang/projects/dadi-cli/examples/snakemake/.snakemake/log/2021-09-15T122721.209636.snakemake.log

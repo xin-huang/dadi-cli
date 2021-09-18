@@ -1,0 +1,57 @@
+"""
+Snakefile for running dadi-cli pipeline.
+"""
+
+types = ['synonymous', 'nonsynonymous']
+
+rule all:
+    input:
+        "1KG.YRI.three_epoch.sel.spectra.bpkl"
+
+rule generate_dadi_fs:
+    input:
+        "../data/1KG.YRI.CEU.biallelic.{type}.snps.withanc.strict.vcf.gz"
+    output:
+        "1KG.YRI.{type}.snps.unfold.fs"
+    threads: 1
+    shell:
+        "dadi-cli GenerateFs --vcf {input} --pop-info ../data/1KG.YRI.CEU.popfile.txt --pop-ids YRI --projections 216 --polarized --output {output}"
+
+rule dadi_infer_dm:
+    input: 
+        "1KG.YRI.synonymous.snps.unfold.fs"
+    output:
+        "1KG.YRI.three_epoch_1d.demo.params.InferDM.opts.0",
+    threads: 8
+    shell:
+        "dadi-cli InferDM --fs {input} --model three_epoch_1d --misid --p0 1 1 1 1 .5 --ubounds 10 10 10 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5 --output-prefix 1KG.YRI.three_epoch_1d.demo.params --thread 30"
+
+rule dadi_bestfit_dm:
+    input: rules.dadi_infer_dm.output
+    output:
+        "1KG.YRI.three_epoch_1d.demo.params.InferDM.bestfits"
+    threads: 1
+    shell: 
+        "dadi-cli BestFit --dir ./1KG.YRI.three_epoch_1d.demo.params.InferDM --output test --model three_epoch_1d --misid --ubounds 10 10 10 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5"
+
+rule dadi_generate_cache:
+    input: rules.dadi_bestfit_dm.output
+    output:
+        "1KG.YRI.three_epoch.sel.spectra.bpkl"
+    threads: 8
+    shell:
+        "dadi-cli GenerateCache --model three_epoch --demo-popt {input} --sample-size 216 --output {output} --mp --misid"
+
+#rule dadi_infer_dfe:
+#    input:
+#        "1KG.YRI.nonsynonymous.snps.unfold.fs",
+#        "1KG.YRI.three_epoch.sel.spectra.bpkl",
+#        "1KG.YRI.three_epoch_1d.demo.params.InferDM.bestfits"
+#    output:
+#        ""
+#    threads: 8
+#    shell:
+
+#rule dadi_bestfit_dfe:
+#    input: rules.dadi_infer_dfe.output
+

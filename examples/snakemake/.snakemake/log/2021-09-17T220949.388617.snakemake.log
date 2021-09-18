@@ -1,0 +1,36 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 8
+Rules claiming more threads will be scaled down.
+Job stats:
+job                    count    min threads    max threads
+-------------------  -------  -------------  -------------
+all                        1              1              1
+dadi_generate_cache        1              8              8
+total                      2              1              8
+
+Select jobs to execute...
+
+[Fri Sep 17 22:09:49 2021]
+rule dadi_generate_cache:
+    input: 1KG.YRI.three_epoch_1d.demo.params.InferDM.bestfits
+    output: 1KG.YRI.three_epoch.sel.spectra.bpkl
+    jobid: 1
+    threads: 8
+    resources: tmpdir=/tmp
+
+[Fri Sep 17 22:09:57 2021]
+Finished job 1.
+1 of 2 steps (50%) done
+Select jobs to execute...
+
+[Fri Sep 17 22:09:57 2021]
+localrule all:
+    input: 1KG.YRI.three_epoch.sel.spectra.bpkl
+    jobid: 0
+    resources: tmpdir=/tmp
+
+[Fri Sep 17 22:09:57 2021]
+Finished job 0.
+2 of 2 steps (100%) done
+Complete log: /home/kaiser/Documents/projects/dadi-cli/examples/snakemake/.snakemake/log/2021-09-17T220949.388617.snakemake.log

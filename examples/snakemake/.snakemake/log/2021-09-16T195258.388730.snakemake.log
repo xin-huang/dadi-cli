@@ -1,0 +1,47 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Job stats:
+job                 count    min threads    max threads
+----------------  -------  -------------  -------------
+all                     1              1              1
+dadi_bestfit_dm         1              1              1
+dadi_infer_dm           1              2              2
+generate_dadi_fs        1              1              1
+total                   4              1              2
+
+Select jobs to execute...
+
+[Thu Sep 16 19:52:58 2021]
+rule generate_dadi_fs:
+    input: ../data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz
+    output: 1KG.YRI.synonymous.snps.unfold.fs
+    jobid: 3
+    wildcards: type=synonymous
+    resources: tmpdir=/tmp
+
+[Thu Sep 16 19:53:46 2021]
+Finished job 3.
+1 of 4 steps (25%) done
+Select jobs to execute...
+
+[Thu Sep 16 19:53:46 2021]
+rule dadi_infer_dm:
+    input: 1KG.YRI.synonymous.snps.unfold.fs
+    output: 1KG.YRI.three_epoch_1d.demo.params.InferDM.opts.0, 1KG.YRI.three_epoch_1d.demo.params.InferDM.opts.1
+    jobid: 2
+    threads: 2
+    resources: tmpdir=/tmp
+
+Waiting at most 5 seconds for missing files.
+MissingOutputException in line 20 of /home/kaiser/Documents/projects/dadi-cli/examples/snakemake/Snakefile:
+Job Missing files after 5 seconds:
+1KG.YRI.three_epoch_1d.demo.params.InferDM.opts.1
+This might be due to filesystem latency. If that is the case, consider to increase the wait time with --latency-wait.
+Job id: 2 completed successfully, but some output files are missing. 2
+Removing output files of failed job dadi_infer_dm since they might be corrupted:
+1KG.YRI.three_epoch_1d.demo.params.InferDM.opts.0
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: /home/kaiser/Documents/projects/dadi-cli/examples/snakemake/.snakemake/log/2021-09-16T195258.388730.snakemake.log

@@ -1,0 +1,28 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Job stats:
+job                count    min threads    max threads
+---------------  -------  -------------  -------------
+all                    1              1              1
+dadi_bestfit_dm        1              1              1
+total                  2              1              1
+
+Select jobs to execute...
+
+[Wed Sep 15 13:13:20 2021]
+rule dadi_bestfit_dm:
+    output: 1KG.YRI.three_epoch_1d.bestfit.demo.params
+    jobid: 1
+    resources: tmpdir=/tmp
+
+Waiting at most 5 seconds for missing files.
+MissingOutputException in line 29 of /xdisk/rgutenk/xinhuang/projects/dadi-cli/examples/snakemake/Snakefile:
+Job Missing files after 5 seconds:
+1KG.YRI.three_epoch_1d.bestfit.demo.params
+This might be due to filesystem latency. If that is the case, consider to increase the wait time with --latency-wait.
+Job id: 1 completed successfully, but some output files are missing. 1
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: /xdisk/rgutenk/xinhuang/projects/dadi-cli/examples/snakemake/.snakemake/log/2021-09-15T131319.649354.snakemake.log

@@ -1,0 +1,22 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 8
+Rules claiming more threads will be scaled down.
+Job stats:
+job                    count    min threads    max threads
+-------------------  -------  -------------  -------------
+all                        1              1              1
+dadi_generate_cache        1              1              1
+total                      2              1              1
+
+Select jobs to execute...
+
+[Thu Sep 16 22:44:48 2021]
+rule dadi_generate_cache:
+    input: 1KG.YRI.three_epoch_1d.demo.params.InferDM.bestfits
+    output: 1KG.YRI.three_epoch.sel.spectra.bpkl
+    jobid: 1
+    resources: tmpdir=/tmp
+
+RuleException in line 37 of /home/kaiser/Documents/projects/dadi-cli/examples/snakemake/Snakefile:
+NameError: The name 'print $2"\t"$3"\t"$4"\t"$5' is unknown in this context. Please make sure that you defined that variable. Also note that braces not used for variable access have to be escaped by repeating them, i.e. {{print $1}}
