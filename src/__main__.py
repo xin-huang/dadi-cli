@@ -250,7 +250,7 @@ def main():
             if not q.specify_password_file(args.work_queue[1]):
                 raise ValueError('Work Queue password file "{0}" not found.'.format(args.work_queue[1]))
 
-            for ii in range(args.jobs): 
+            for ii in range(args.thread): 
                 t = wq.PythonTask(infer_demography, fs, func, args.p0, args.grids, 
                                   args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
                 # If using a custom model, need to include the file from which it comes
@@ -314,7 +314,7 @@ def main():
             if not q.specify_password_file(args.work_queue[1]):
                 raise ValueError('Work Queue password file "{0}" not found.'.format(args.work_queue[1]))
 
-            for ii in range(args.jobs): 
+            for ii in range(args.thread): 
                 t = wq.PythonTask(infer_dfe, args.non_fs, args.output+'.run'+str(ii), args.cache1d, args.cache2d, args.pdf1d, args.pdf2d, 
                                 args.ratio, args.demo_popt, args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
                 # # If using a custom model, need to include the file from which it comes
@@ -367,7 +367,7 @@ def main():
             #from multiprocessing import Manager, Process, Queue
             #with Manager() as manager:
             #    pool = []
-            #    for i in range(args.jobs):
+            #    for i in range(args.thread):
             #        p = Process(target=infer_dfe,
             #                    args=(args.non_fs, args.output+'.run'+str(i), args.cache1d, args.cache2d, args.pdf1d, args.pdf2d, 
             #                          args.ratio, args.demo_popt, args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda))
