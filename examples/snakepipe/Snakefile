@@ -2,7 +2,8 @@
 Snakefile for running dadi-cli DFE inference pipeline.
 """
 
-types = ['synonymous', 'nonsynonymous']
+mut_types = ['synonymous', 'nonsynonymous']
+
 # Demographic model for inference
 # Use `dadi-cli Model --names two_epoch_1d` to find out the meaning of each parameter
 demo_model = 'two_epoch_1d'
@@ -37,9 +38,9 @@ rule all:
 
 rule generate_dadi_fs:
     input:
-        "../data/1KG.YRI.CEU.biallelic.{type}.snps.withanc.strict.vcf.gz"
+        "../data/1KG.YRI.CEU.biallelic.{mut_type}.snps.withanc.strict.vcf.gz"
     output:
-        "1KG.YRI.{type}.snps.unfold.fs"
+        "1KG.YRI.{mut_type}.snps.unfold.fs"
     threads: 1
     shell:
         "dadi-cli GenerateFs --vcf {input} --pop-info ../data/1KG.YRI.CEU.popfile.txt --pop-ids YRI --projections 216 --polarized --output {output}"
