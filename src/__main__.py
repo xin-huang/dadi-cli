@@ -186,23 +186,23 @@ def main():
 
 
     # subparser for getting the best fit parameters
-    bestfit_parser = subparsers.add_parser('BestFit', help='Obtain the best fit parameters')
-    bestfit_parser.add_argument('--dir', type=str, required=True, help='The directory containing the inferred demographic/dfe parameters')
-    bestfit_parser.add_argument('--model', type=str, required=True, help='The name of the model')
-    bestfit_parser.add_argument('--output', type=str, required=True, help='The name of the ouput file')
-    bestfit_parser.add_argument('--lbounds', type=float, nargs='+', required=True, help='The lower bounds of the optimized parameters, please use -1 to indicate a parameter without lower bound')
-    bestfit_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='The upper bounds of the optimized parameters, please use -1 to indicate a parameter without upper bound')
-    bestfit_parser.add_argument('--misid', default=False, action='store_true', help='Determine whether adding a parameter for misidentifying ancestral alleles or not; Default: False')
+    bestfit_parser = subparsers.add_parser('BestFit', help='obtain the best fit parameters')
+    bestfit_parser.add_argument('--input-prefix', type=str, required=True, dest='input_prefix', help='prefix for input files, which is named <input_prefix>.InferDM.opts.<N> or <input_prefix>.InferDFE.opts.<N>, containing the inferred demographic or DFE parameters')
+    bestfit_parser.add_argument('--model', type=str, help='name of the demographic model')
+    bestfit_parser.add_argument('--pdf', type=str, help='name of the DFE model')
+    bestfit_parser.add_argument('--lbounds', type=float, nargs='+', required=True, help='lower bounds of the optimized parameters, please use -1 to indicate a parameter without lower bound')
+    bestfit_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='upper bounds of the optimized parameters, please use -1 to indicate a parameter without upper bound')
+    bestfit_parser.add_argument('--misid', default=False, action='store_true', help='determine whether the parameter for misidentifying ancestral alleles is used or not; default: False')
 
 
     # subparser for getting the available demographic models in dadi
-    model_parser = subparsers.add_parser('Model', help='Display available demographic models')
-    model_parser.add_argument('--names', type=str, nargs='?', default=None, required=True, help='Show the details of a given model')
+    model_parser = subparsers.add_parser('Model', help='display available demographic models')
+    model_parser.add_argument('--names', type=str, nargs='?', default=None, required=True, help='display the details of a given model for demographic inference')
 
 
     # subparser for getting the available probability distribution for DFE in dadi
-    dist_parser = subparsers.add_parser('Pdf', help='Display available probability density functions for distribution of fitness effects')
-    dist_parser.add_argument('--names', type=str, nargs='?', default=None, required=True, help='Show the details of a given probability density distribution')
+    dist_parser = subparsers.add_parser('Pdf', help='display available probability density functions for distribution of fitness effects')
+    dist_parser.add_argument('--names', type=str, nargs='?', default=None, required=True, help='display the details of a given probability density distribution for DFE inference')
 
 
     args = parser.parse_args()
@@ -252,7 +252,7 @@ def main():
 
             for ii in range(args.jobs): 
                 t = wq.PythonTask(infer_demography, fs, func, args.p0, args.grids, 
-                               args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
+                                  args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
                 # If using a custom model, need to include the file from which it comes
                 if args.model_file:
                     t.specify_input_file(args.model_file+'.py')
@@ -410,7 +410,7 @@ def main():
         #args.ubounds = check_params(args.ubounds)
 
         from src.BestFit import get_bestfit_params
-        get_bestfit_params(path=args.dir+'.opts.*', model_name=args.model, misid=args.misid, lbounds=args.lbounds, ubounds=args.ubounds, output=args.dir+'.bestfits')
+        get_bestfit_params(path=args.input_prefix+'.opts.*', model_name=args.model, pdf_name=args.pdf, misid=args.misid, lbounds=args.lbounds, ubounds=args.ubounds, output=args.input_prefix+'.bestfits')
 
     elif args.subcommand == 'Model':
     

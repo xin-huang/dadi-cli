@@ -1,5 +1,5 @@
 """
-Snakefile for running dadi-cli DFE inference pipeline.
+Snakefile for running dadi-cli 1d DFE inference pipeline.
 """
 
 mut_types = ['synonymous', 'nonsynonymous']
@@ -34,7 +34,7 @@ dfe_ubounds = '1 50000 1'
 
 rule all:
     input:
-        "1KG.YRI.two_epoch_1d.gamma.InferDFE.opts.0"
+        "1KG.YRI.two_epoch_1d.gamma.InferDFE.bestfits"
 
 rule generate_dadi_fs:
     input:
@@ -60,7 +60,7 @@ rule dadi_bestfit_dm:
         "1KG.YRI.two_epoch_1d.InferDM.bestfits"
     threads: 1
     shell: 
-        "dadi-cli BestFit --dir ./1KG.YRI.two_epoch_1d.InferDM --output test --model {demo_model} --misid --ubounds {demo_ubounds} --lbounds {demo_lbounds}"
+        "dadi-cli BestFit --input-prefix ./1KG.YRI.two_epoch_1d.InferDM --model {demo_model} --misid --ubounds {demo_ubounds} --lbounds {demo_lbounds}"
 
 rule dadi_generate_cache:
     input: rules.dadi_bestfit_dm.output
@@ -81,6 +81,12 @@ rule dadi_infer_dfe:
     shell:
         "dadi-cli InferDFE --fs {input[0]} --cache1d {input[1]} --demo-popt {input[2]} --output-prefix 1KG.YRI.two_epoch_1d.gamma --pdf1d {dfe_model} --p0 {dfe_p0} --ubounds {dfe_ubounds} --lbounds {dfe_lbounds} --misid --ratio 2.31 --thread 100"
 
-#rule dadi_bestfit_dfe:
-#    input: rules.dadi_infer_dfe.output
+rule dadi_bestfit_dfe:
+    input: rules.dadi_infer_dfe.output
+    output:
+        "1KG.YRI.two_epoch_1d.gamma.InferDFE.bestfits"
+    threads: 1
+    shell:
+        "dadi-cli BestFit --input-prefix ./1KG.YRI.two_epoch_1d.gamma.InferDFE --pdf gamma --misid --ubounds {dfe_ubounds} --lbounds {dfe_lbounds}"
 
+# rule plot_dadi_results:
