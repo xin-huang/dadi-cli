@@ -88,7 +88,5 @@ def _get_theta(popt):
         return
 
     theta = opts[0][-1]
-    print('theta')
-    print(theta)
 
     return theta
