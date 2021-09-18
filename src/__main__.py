@@ -91,19 +91,19 @@ def main():
 
     # subparser for generating cache
     generate_cache_parser = subparsers.add_parser('GenerateCache', help='Generate selection coefficient cache for inferring DFE')
-    generate_cache_parser.add_argument('--additional-gammas', type=_check_positive_num, nargs='+', default=[], help='The additional positive population-scaled selection coefficients to cache for; Default: []', dest='additional_gammas')
-    generate_cache_parser.add_argument('--cuda', default=False, action='store_true', help='Determine whether using GPUs to accelerate inference or not; Default: False')
+    generate_cache_parser.add_argument('--additional-gammas', type=_check_positive_num, nargs='+', default=[], help='Additional positive population-scaled selection coefficients to cache for. Default: []', dest='additional_gammas')
+    generate_cache_parser.add_argument('--cuda', default=False, action='store_true', help='Determine whether using GPUs to accelerate inference or not. Default: False')
     #generate_cache_parser.add_argument('--demo-popt', type=float, required=True, nargs='+', default=[], help='The bestfit parameters for the demographic model; Default: []', dest='demo_popt')
-    generate_cache_parser.add_argument('--demo-popt', type=str, required=True, help='The file contains the bestfit parameters for the demographic model', dest='demo_popt')
-    generate_cache_parser.add_argument('--gamma-bounds', type=_check_positive_num, nargs=2, default=[1e-4, 2000], help='The range of population-scaled selection coefficients to cache; Default: [1e-4, 2000]', dest='gamma_bounds')
-    generate_cache_parser.add_argument('--gamma-pts', type=_check_positive_int, default=50, help='The number of gamma grid points over which to integrate; Default: 50', dest='gamma_pts')
-    generate_cache_parser.add_argument('--grids', type=_check_positive_int, nargs=3, help='The sizes of grids; Default: None')
+    generate_cache_parser.add_argument('--demo-popt', type=str, required=True, help='File contains the bestfit parameters for the demographic model', dest='demo_popt')
+    generate_cache_parser.add_argument('--gamma-bounds', type=_check_positive_num, nargs=2, default=[1e-4, 2000], help='Range of population-scaled selection coefficients to cache. Default: [1e-4, 2000]', dest='gamma_bounds')
+    generate_cache_parser.add_argument('--gamma-pts', type=_check_positive_int, default=50, help='Number of gamma grid points over which to integrate. Default: 50', dest='gamma_pts')
+    generate_cache_parser.add_argument('--grids', type=_check_positive_int, nargs=3, help='Sizes of grids. Default: None')
     generate_cache_parser.add_argument('--misid', default=False, action='store_true', help='Determine whether the parameter for ancestral state misidentification exists in the bestfit parameters. Default: False')
-    generate_cache_parser.add_argument('--model', type=str, required=True, help='The name of the demographic model with selection; To check available demographic models, please use `dadi-cli Model`')
+    generate_cache_parser.add_argument('--model', type=str, required=True, help='Name of the demographic model with selection. To check available demographic models, please use `dadi-cli Model`')
     generate_cache_parser.add_argument('--mp', default=False, action='store_true', help='Determine whether generating cache with multiprocess or not; Default: False')
-    generate_cache_parser.add_argument('--output', type=str, required=True, help='The name of the output file')
-    generate_cache_parser.add_argument('--sample-sizes', type=_check_positive_int, nargs='+', required=True, help='The sample sizes of populations', dest='sample_sizes')
-    generate_cache_parser.add_argument('--single-gamma', default=False, action='store_true', help='Determine whether using demographic model plus selection with the same gamma in both the two populations or not; Default: False', dest='single_gamma')
+    generate_cache_parser.add_argument('--output', type=str, required=True, help='Name of the output file')
+    generate_cache_parser.add_argument('--sample-sizes', type=_check_positive_int, nargs='+', required=True, help='Sample sizes of populations', dest='sample_sizes')
+    generate_cache_parser.add_argument('--single-gamma', default=False, action='store_true', help='Determine whether using demographic model plus selection with the same gamma in both the two populations or not. Default: False', dest='single_gamma')
 
 
     # subparser for inferring demography
@@ -131,18 +131,19 @@ def main():
     infer_dfe_parser.add_argument('--cache2d', type=str, help='File name of the 2D DFE cache. To generate the cache, please use `dadi-cli GenerateCache`')
     infer_dfe_parser.add_argument('--cuda', default=False, action='store_true', help='Determine whether using GPUs to accelerate inference or not. Default: False')
     infer_dfe_parser.add_argument('--constants', type=float, nargs='+', help='Fixed parameters during the inference. Use -1 to indicate a parameter is NOT fixed. Default: None')
-    infer_dfe_parser.add_argument('--demo-popt', type=str, help='The bestfit parameters for the demographic model', dest='demo_popt')
-    infer_dfe_parser.add_argument('--fs', type=str, required=True, help='Frequency spectrum of mutations used for inference. To generate the frequency spectrum, please use `dadi-cli GenerateFs`', dest='non_fs')
+    infer_dfe_parser.add_argument('--demo-popt', type=str, dest='demo_popt', help='The bestfit parameters for the demographic model')
+    infer_dfe_parser.add_argument('--fs', type=str, required=True, help='Frequency spectrum of mutations used for inference. To generate the frequency spectrum, please use `dadi-cli GenerateFs`')
     infer_dfe_parser.add_argument('--lbounds', type=float, nargs='+', required=True, help='Lower bounds of the inferred parameters, please use -1 to indicate a parameter without lower bound')
     infer_dfe_parser.add_argument('--misid', default=False, action='store_true', help='Determine whether adding a parameter for misidentifying ancestral alleles or not. Default: False')
     #infer_dfe_parser.add_argument('--nlopt', default=False, action='store_true', help='Determine whether using nlopt or not; Default: False')
     infer_dfe_parser.add_argument('--p0', type=float, nargs='+', required=True, help='Initial parameters for inference')
     infer_dfe_parser.add_argument('--pdf1d', type=str, help='1D probability density function for the DFE inference. To check available probability density functions, please use `dadi-cli Pdf`')
     infer_dfe_parser.add_argument('--pdf2d', type=str, help='2D probability density function for the joint DFE inference. To check available probability density functions, please use `dadi-cli Pdf`')
-    infer_dfe_parser.add_argument('--ratio', type=float, help='Ratio for the nonsynonymous mutations vs. the synonymous mutations')
+    infer_dfe_parser.add_argument('--ratio', type=float, required=True, help='Ratio for the nonsynonymous mutations vs. the synonymous mutations')
     infer_dfe_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='Upper bounds of the inferred parameters, please use -1 to indicate a parameter with no upper bound, please use -1 to indicate a parameter without upper bound')
     infer_dfe_parser.add_argument('--output-prefix', type=str, required=True, dest='output_prefix', help='Prefix for output files, which will be named <output_prefix>.InferDFE.opts.<N>, where N is an increasing integer (to avoid overwriting existing files).')
     infer_dfe_parser.add_argument('--thread', default=1, type=_check_positive_int, help='Number of thread to run optimization in parallel. Default: 1.')
+    infer_dfe_parser.add_argument('--check-convergence', default=False, action='store_true', dest='check_convergence', help='Stop optimization runs when convergence criteria are reached. BestFit results file will be call <output_prefix>.InferDFE.bestfits. Default: False')
     infer_dfe_parser.add_argument('--model-file', type=str, required=False, dest='model_file', help='Name of python module file (not including .py) that contains custom models to use. Default: None')
     infer_dfe_parser.add_argument('--work-queue', nargs=2, default=[], action='store', dest='work_queue', help='Enable Work Queue. Additional arguments are the WorkQueue project name and the name of the password file.')
 
@@ -185,23 +186,23 @@ def main():
 
 
     # subparser for getting the best fit parameters
-    bestfit_parser = subparsers.add_parser('BestFit', help='Obtain the best fit parameters')
-    bestfit_parser.add_argument('--dir', type=str, required=True, help='The directory containing the inferred demographic/dfe parameters')
-    bestfit_parser.add_argument('--model', type=str, required=True, help='The name of the model')
-    bestfit_parser.add_argument('--output', type=str, required=True, help='The name of the ouput file')
-    bestfit_parser.add_argument('--lbounds', type=float, nargs='+', required=True, help='The lower bounds of the optimized parameters, please use -1 to indicate a parameter without lower bound')
-    bestfit_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='The upper bounds of the optimized parameters, please use -1 to indicate a parameter without upper bound')
-    bestfit_parser.add_argument('--misid', default=False, action='store_true', help='Determine whether adding a parameter for misidentifying ancestral alleles or not; Default: False')
+    bestfit_parser = subparsers.add_parser('BestFit', help='obtain the best fit parameters')
+    bestfit_parser.add_argument('--input-prefix', type=str, required=True, dest='input_prefix', help='prefix for input files, which is named <input_prefix>.InferDM.opts.<N> or <input_prefix>.InferDFE.opts.<N>, containing the inferred demographic or DFE parameters')
+    bestfit_parser.add_argument('--model', type=str, help='name of the demographic model')
+    bestfit_parser.add_argument('--pdf', type=str, help='name of the DFE model')
+    bestfit_parser.add_argument('--lbounds', type=float, nargs='+', required=True, help='lower bounds of the optimized parameters, please use -1 to indicate a parameter without lower bound')
+    bestfit_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='upper bounds of the optimized parameters, please use -1 to indicate a parameter without upper bound')
+    bestfit_parser.add_argument('--misid', default=False, action='store_true', help='determine whether the parameter for misidentifying ancestral alleles is used or not; default: False')
 
 
     # subparser for getting the available demographic models in dadi
-    model_parser = subparsers.add_parser('Model', help='Display available demographic models')
-    model_parser.add_argument('--names', type=str, nargs='?', default=None, required=True, help='Show the details of a given model')
+    model_parser = subparsers.add_parser('Model', help='display available demographic models')
+    model_parser.add_argument('--names', type=str, nargs='?', default=None, required=True, help='display the details of a given model for demographic inference')
 
 
     # subparser for getting the available probability distribution for DFE in dadi
-    dist_parser = subparsers.add_parser('Pdf', help='Display available probability density functions for distribution of fitness effects')
-    dist_parser.add_argument('--names', type=str, nargs='?', default=None, required=True, help='Show the details of a given probability density distribution')
+    dist_parser = subparsers.add_parser('Pdf', help='display available probability density functions for distribution of fitness effects')
+    dist_parser.add_argument('--names', type=str, nargs='?', default=None, required=True, help='display the details of a given probability density distribution for DFE inference')
 
 
     args = parser.parse_args()
@@ -251,7 +252,7 @@ def main():
 
             for ii in range(args.jobs): 
                 t = wq.PythonTask(infer_demography, fs, func, args.p0, args.grids, 
-                               args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
+                                  args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
                 # If using a custom model, need to include the file from which it comes
                 if args.model_file:
                     t.specify_input_file(args.model_file+'.py')
@@ -287,7 +288,8 @@ def main():
             fid.write('{0}\t{1}\t{2}\n'.format(result[0], '\t'.join(str(_) for _ in result[1]), result[2]))
             fid.flush()
             if args.check_convergence:
-                result = get_bestfit_params(path=args.output_prefix+'.InferDM.opts.*', lbounds=args.lbounds, ubounds=args.ubounds, output=args.output_prefix+'.InferDM.bestfits')
+                result = get_bestfit_params(path=args.output_prefix+'.InferDM.opts.*', model_name=args.model, misid=args.misid,
+                                            lbounds=args.lbounds, ubounds=args.ubounds, output=args.output_prefix+'.InferDM.bestfits')
                 if result is not None:
                     break
         fid.close()
@@ -323,7 +325,7 @@ def main():
             import multiprocessing; from multiprocessing import Process, Queue
 
             #worker_args = (fs, func, args.p0, args.grids, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
-            worker_args = (fs, args.cache1d, args.cache2d, args.pdf1d, args.pdf2d, args.ratio, args.demo_popt, args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
+            worker_args = (args.fs, args.cache1d, args.cache2d, args.pdf1d, args.pdf2d, args.ratio, args.demo_popt, args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
 
             # Queues to manage input and output
             in_queue, out_queue = Queue(), Queue()
@@ -408,7 +410,7 @@ def main():
         #args.ubounds = check_params(args.ubounds)
 
         from src.BestFit import get_bestfit_params
-        get_bestfit_params(path=args.dir+'.opts.*', model_name=args.model, misid=args.misid, lbounds=args.lbounds, ubounds=args.ubounds, output=args.dir+'.bestfits')
+        get_bestfit_params(path=args.input_prefix+'.opts.*', model_name=args.model, pdf_name=args.pdf, misid=args.misid, lbounds=args.lbounds, ubounds=args.ubounds, output=args.input_prefix+'.bestfits')
 
     elif args.subcommand == 'Model':
     

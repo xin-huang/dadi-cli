@@ -1,13 +1,22 @@
 import glob, sys
 import numpy as np
 from src.Models import get_dadi_model_params
+from src.Pdfs import get_dadi_pdf_params
 
-def get_bestfit_params(path, model_name, misid, lbounds, ubounds, output, delta=0.05, Nclose=3, Nbest=100):
+def get_bestfit_params(path, misid, lbounds, ubounds, output, model_name=None, pdf_name=None, delta=0.05, Nclose=3, Nbest=100):
     files = glob.glob(path)
     res, comments = [], []
-    params = '# Log(likelihood)\t' + "\t".join(get_dadi_model_params(model_name))
-    if misid: params += '\tmisid\ttheta\n'
-    else: params += '\ttheta\n'
+    
+    if model_name != None:
+        params = '# Log(likelihood)\t' + "\t".join(get_dadi_model_params(model_name))
+    elif pdf_name != None:
+        params = '# Log(likelihood)\t' + "\t".join(get_dadi_pdf_params(pdf_name))
+    else:
+        params = ''
+
+    if params != '':
+        if misid: params += '\tmisid\ttheta\n'
+        else: params += '\ttheta\n'
 
     for f in files:
         fid = open(f, 'r')

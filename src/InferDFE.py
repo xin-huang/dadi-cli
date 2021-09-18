@@ -1,18 +1,17 @@
 import dadi
 import dadi.DFE
-import dadi.NLopt_mod
+#import dadi.NLopt_mod
 import pickle, glob, nlopt
-import os, time
+#import os, time
 import numpy as np
 from src.Pdfs import get_dadi_pdf
-
 
 def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
               demo_popt, p0, upper_bounds, lower_bounds, fixed_params, misid, cuda):
 
-    ts = time.time()
-    seed = int(ts) + int(os.getpid())
-    np.random.seed(seed)
+    #ts = time.time()
+    #seed = int(ts) + int(os.getpid())
+    #np.random.seed(seed)
 
     fs = dadi.Spectrum.from_file(fs)
 
@@ -45,11 +44,13 @@ def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
 
     # Fit a DFE to the data
     # Initial guess and bounds
+    #print(p0)
     p0 = dadi.Misc.perturb_params(p0, lower_bound=lower_bounds, upper_bound=upper_bounds)
     popt = dadi.Inference.optimize_log(p0, fs, func, pts=None,
                                        func_args=func_args, fixed_params=fixed_params,
                                        lower_bound=lower_bounds, upper_bound=upper_bounds,
-                                       verbose=0, maxiter=200, multinom=False)
+                                       verbose=0, maxiter=2000, multinom=False)
+    #print(popt)
 
     #print('Optimized parameters: {0}'.format(popt))
 
@@ -58,16 +59,18 @@ def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
         model = func(popt, None, spectra1d, spectra2d, sele_dist, sele_dist2, theta, None)
     else:
         model = func(popt, None, sele_dist, theta, None)
+    #print(model)
     # Likelihood of the data given the model AFS.
     ll_model = dadi.Inference.ll_multinom(model, fs)
     #print('Maximum log composite likelihood: {0}'.format(ll_model))
 
-    with open(output, 'w') as f:
-        f.write(str(ll_model))
-        for p in popt:
-            f.write("\t")
-            f.write(str(p))
-        f.write("\n")
+    #with open(output, 'w') as f:
+    #    f.write(str(ll_model))
+    #    for p in popt:
+    #        f.write("\t")
+    #        f.write(str(p))
+    #    f.write("\n")
+    return ll_model, popt, theta
 
 def _get_theta(popt):
 
