@@ -1,18 +1,17 @@
 import dadi
 import dadi.DFE
-import dadi.NLopt_mod
+#import dadi.NLopt_mod
 import pickle, glob, nlopt
-import os, time
+#import os, time
 import numpy as np
 from src.Pdfs import get_dadi_pdf
-
 
 def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
               demo_popt, p0, upper_bounds, lower_bounds, fixed_params, misid, cuda):
 
-    ts = time.time()
-    seed = int(ts) + int(os.getpid())
-    np.random.seed(seed)
+    #ts = time.time()
+    #seed = int(ts) + int(os.getpid())
+    #np.random.seed(seed)
 
     fs = dadi.Spectrum.from_file(fs)
 
@@ -62,12 +61,13 @@ def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
     ll_model = dadi.Inference.ll_multinom(model, fs)
     #print('Maximum log composite likelihood: {0}'.format(ll_model))
 
-    with open(output, 'w') as f:
-        f.write(str(ll_model))
-        for p in popt:
-            f.write("\t")
-            f.write(str(p))
-        f.write("\n")
+    #with open(output, 'w') as f:
+    #    f.write(str(ll_model))
+    #    for p in popt:
+    #        f.write("\t")
+    #        f.write(str(p))
+    #    f.write("\n")
+    return ll_model, popt, theta
 
 def _get_theta(popt):
 
@@ -88,5 +88,7 @@ def _get_theta(popt):
         return
 
     theta = opts[0][-1]
+    print('theta')
+    print(theta)
 
     return theta

@@ -131,18 +131,19 @@ def main():
     infer_dfe_parser.add_argument('--cache2d', type=str, help='File name of the 2D DFE cache. To generate the cache, please use `dadi-cli GenerateCache`')
     infer_dfe_parser.add_argument('--cuda', default=False, action='store_true', help='Determine whether using GPUs to accelerate inference or not. Default: False')
     infer_dfe_parser.add_argument('--constants', type=float, nargs='+', help='Fixed parameters during the inference. Use -1 to indicate a parameter is NOT fixed. Default: None')
-    infer_dfe_parser.add_argument('--demo-popt', type=str, help='The bestfit parameters for the demographic model', dest='demo_popt')
-    infer_dfe_parser.add_argument('--fs', type=str, required=True, help='Frequency spectrum of mutations used for inference. To generate the frequency spectrum, please use `dadi-cli GenerateFs`', dest='non_fs')
+    infer_dfe_parser.add_argument('--demo-popt', type=str, dest='demo_popt', help='The bestfit parameters for the demographic model')
+    infer_dfe_parser.add_argument('--fs', type=str, required=True, help='Frequency spectrum of mutations used for inference. To generate the frequency spectrum, please use `dadi-cli GenerateFs`')
     infer_dfe_parser.add_argument('--lbounds', type=float, nargs='+', required=True, help='Lower bounds of the inferred parameters, please use -1 to indicate a parameter without lower bound')
     infer_dfe_parser.add_argument('--misid', default=False, action='store_true', help='Determine whether adding a parameter for misidentifying ancestral alleles or not. Default: False')
     #infer_dfe_parser.add_argument('--nlopt', default=False, action='store_true', help='Determine whether using nlopt or not; Default: False')
     infer_dfe_parser.add_argument('--p0', type=float, nargs='+', required=True, help='Initial parameters for inference')
     infer_dfe_parser.add_argument('--pdf1d', type=str, help='1D probability density function for the DFE inference. To check available probability density functions, please use `dadi-cli Pdf`')
     infer_dfe_parser.add_argument('--pdf2d', type=str, help='2D probability density function for the joint DFE inference. To check available probability density functions, please use `dadi-cli Pdf`')
-    infer_dfe_parser.add_argument('--ratio', type=float, help='Ratio for the nonsynonymous mutations vs. the synonymous mutations')
+    infer_dfe_parser.add_argument('--ratio', type=float, required=True, help='Ratio for the nonsynonymous mutations vs. the synonymous mutations')
     infer_dfe_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='Upper bounds of the inferred parameters, please use -1 to indicate a parameter with no upper bound, please use -1 to indicate a parameter without upper bound')
     infer_dfe_parser.add_argument('--output-prefix', type=str, required=True, dest='output_prefix', help='Prefix for output files, which will be named <output_prefix>.InferDFE.opts.<N>, where N is an increasing integer (to avoid overwriting existing files).')
     infer_dfe_parser.add_argument('--thread', default=1, type=_check_positive_int, help='Number of thread to run optimization in parallel. Default: 1.')
+    infer_dfe_parser.add_argument('--check-convergence', default=False, action='store_true', dest='check_convergence', help='Stop optimization runs when convergence criteria are reached. BestFit results file will be call <output_prefix>.InferDFE.bestfits. Default: False')
     infer_dfe_parser.add_argument('--model-file', type=str, required=False, dest='model_file', help='Name of python module file (not including .py) that contains custom models to use. Default: None')
     infer_dfe_parser.add_argument('--work-queue', nargs=2, default=[], action='store', dest='work_queue', help='Enable Work Queue. Additional arguments are the WorkQueue project name and the name of the password file.')
 
@@ -287,7 +288,8 @@ def main():
             fid.write('{0}\t{1}\t{2}\n'.format(result[0], '\t'.join(str(_) for _ in result[1]), result[2]))
             fid.flush()
             if args.check_convergence:
-                result = get_bestfit_params(path=args.output_prefix+'.InferDM.opts.*', lbounds=args.lbounds, ubounds=args.ubounds, output=args.output_prefix+'.InferDM.bestfits')
+                result = get_bestfit_params(path=args.output_prefix+'.InferDM.opts.*', model_name=args.model, misid=args.misid,
+                                            lbounds=args.lbounds, ubounds=args.ubounds, output=args.output_prefix+'.InferDM.bestfits')
                 if result is not None:
                     break
         fid.close()
@@ -323,7 +325,7 @@ def main():
             import multiprocessing; from multiprocessing import Process, Queue
 
             #worker_args = (fs, func, args.p0, args.grids, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
-            worker_args = (fs, args.cache1d, args.cache2d, args.pdf1d, args.pdf2d, args.ratio, args.demo_popt, args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
+            worker_args = (args.fs, args.cache1d, args.cache2d, args.pdf1d, args.pdf2d, args.ratio, args.demo_popt, args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
 
             # Queues to manage input and output
             in_queue, out_queue = Queue(), Queue()

@@ -1,3 +1,5 @@
 build/*
 dadi_cli.egg-info/*
 dist/*
+examples/snakemake/.snakemake/*
+examples/snakemake/1KG.*
