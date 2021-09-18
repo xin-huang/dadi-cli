@@ -315,7 +315,7 @@ def main():
                 raise ValueError('Work Queue password file "{0}" not found.'.format(args.work_queue[1]))
 
             for ii in range(args.thread): 
-                t = wq.PythonTask(infer_dfe, args.non_fs, args.output+'.run'+str(ii), args.cache1d, args.cache2d, args.pdf1d, args.pdf2d, 
+                t = wq.PythonTask(infer_dfe, args.fs, args.cache1d, args.cache2d, args.pdf1d, args.pdf2d, 
                                 args.ratio, args.demo_popt, args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
                 # # If using a custom model, need to include the file from which it comes
                 # if args.model_file:
