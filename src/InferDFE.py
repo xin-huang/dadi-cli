@@ -44,11 +44,13 @@ def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
 
     # Fit a DFE to the data
     # Initial guess and bounds
+    #print(p0)
     p0 = dadi.Misc.perturb_params(p0, lower_bound=lower_bounds, upper_bound=upper_bounds)
     popt = dadi.Inference.optimize_log(p0, fs, func, pts=None,
                                        func_args=func_args, fixed_params=fixed_params,
                                        lower_bound=lower_bounds, upper_bound=upper_bounds,
-                                       verbose=0, maxiter=200, multinom=False)
+                                       verbose=0, maxiter=2000, multinom=False)
+    #print(popt)
 
     #print('Optimized parameters: {0}'.format(popt))
 
@@ -57,6 +59,7 @@ def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
         model = func(popt, None, spectra1d, spectra2d, sele_dist, sele_dist2, theta, None)
     else:
         model = func(popt, None, sele_dist, theta, None)
+    #print(model)
     # Likelihood of the data given the model AFS.
     ll_model = dadi.Inference.ll_multinom(model, fs)
     #print('Maximum log composite likelihood: {0}'.format(ll_model))

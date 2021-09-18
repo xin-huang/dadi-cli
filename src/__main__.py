@@ -91,19 +91,19 @@ def main():
 
     # subparser for generating cache
     generate_cache_parser = subparsers.add_parser('GenerateCache', help='Generate selection coefficient cache for inferring DFE')
-    generate_cache_parser.add_argument('--additional-gammas', type=_check_positive_num, nargs='+', default=[], help='The additional positive population-scaled selection coefficients to cache for; Default: []', dest='additional_gammas')
-    generate_cache_parser.add_argument('--cuda', default=False, action='store_true', help='Determine whether using GPUs to accelerate inference or not; Default: False')
+    generate_cache_parser.add_argument('--additional-gammas', type=_check_positive_num, nargs='+', default=[], help='Additional positive population-scaled selection coefficients to cache for. Default: []', dest='additional_gammas')
+    generate_cache_parser.add_argument('--cuda', default=False, action='store_true', help='Determine whether using GPUs to accelerate inference or not. Default: False')
     #generate_cache_parser.add_argument('--demo-popt', type=float, required=True, nargs='+', default=[], help='The bestfit parameters for the demographic model; Default: []', dest='demo_popt')
-    generate_cache_parser.add_argument('--demo-popt', type=str, required=True, help='The file contains the bestfit parameters for the demographic model', dest='demo_popt')
-    generate_cache_parser.add_argument('--gamma-bounds', type=_check_positive_num, nargs=2, default=[1e-4, 2000], help='The range of population-scaled selection coefficients to cache; Default: [1e-4, 2000]', dest='gamma_bounds')
-    generate_cache_parser.add_argument('--gamma-pts', type=_check_positive_int, default=50, help='The number of gamma grid points over which to integrate; Default: 50', dest='gamma_pts')
-    generate_cache_parser.add_argument('--grids', type=_check_positive_int, nargs=3, help='The sizes of grids; Default: None')
+    generate_cache_parser.add_argument('--demo-popt', type=str, required=True, help='File contains the bestfit parameters for the demographic model', dest='demo_popt')
+    generate_cache_parser.add_argument('--gamma-bounds', type=_check_positive_num, nargs=2, default=[1e-4, 2000], help='Range of population-scaled selection coefficients to cache. Default: [1e-4, 2000]', dest='gamma_bounds')
+    generate_cache_parser.add_argument('--gamma-pts', type=_check_positive_int, default=50, help='Number of gamma grid points over which to integrate. Default: 50', dest='gamma_pts')
+    generate_cache_parser.add_argument('--grids', type=_check_positive_int, nargs=3, help='Sizes of grids. Default: None')
     generate_cache_parser.add_argument('--misid', default=False, action='store_true', help='Determine whether the parameter for ancestral state misidentification exists in the bestfit parameters. Default: False')
-    generate_cache_parser.add_argument('--model', type=str, required=True, help='The name of the demographic model with selection; To check available demographic models, please use `dadi-cli Model`')
+    generate_cache_parser.add_argument('--model', type=str, required=True, help='Name of the demographic model with selection. To check available demographic models, please use `dadi-cli Model`')
     generate_cache_parser.add_argument('--mp', default=False, action='store_true', help='Determine whether generating cache with multiprocess or not; Default: False')
-    generate_cache_parser.add_argument('--output', type=str, required=True, help='The name of the output file')
-    generate_cache_parser.add_argument('--sample-sizes', type=_check_positive_int, nargs='+', required=True, help='The sample sizes of populations', dest='sample_sizes')
-    generate_cache_parser.add_argument('--single-gamma', default=False, action='store_true', help='Determine whether using demographic model plus selection with the same gamma in both the two populations or not; Default: False', dest='single_gamma')
+    generate_cache_parser.add_argument('--output', type=str, required=True, help='Name of the output file')
+    generate_cache_parser.add_argument('--sample-sizes', type=_check_positive_int, nargs='+', required=True, help='Sample sizes of populations', dest='sample_sizes')
+    generate_cache_parser.add_argument('--single-gamma', default=False, action='store_true', help='Determine whether using demographic model plus selection with the same gamma in both the two populations or not. Default: False', dest='single_gamma')
 
 
     # subparser for inferring demography

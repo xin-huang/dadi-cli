@@ -20,21 +20,21 @@ demo_ubounds = '10 10 1'
 
 # DFE model for inference
 # Use `dadi-cli Pdf --names lognormal` to find out the meaning of each parameter
-dfe_model = 'lognormal'
+dfe_model = 'gamma'
 
 # Initial parameters for DFE inference
 # The last parameter is the misidentification for ancestral allele ranging from 0 to 1
-dfe_p0 = '5 5 0.5'
+dfe_p0 = '0.5 1000 0.5'
 
 # Lower bounds for DFE parameters (-1 indicates no boundary)
-dfe_lbounds = '-1 -1 10e-5'
+dfe_lbounds = '0 0 0'
 
 # Upper bounds for DFE parameters
-dfe_ubounds = '-1 -1 1'
+dfe_ubounds = '1 50000 1'
 
 rule all:
     input:
-        "1KG.YRI.two_epoch_1d.lognormal.InferDFE.opts.0"
+        "1KG.YRI.two_epoch_1d.gamma.InferDFE.opts.0"
 
 rule generate_dadi_fs:
     input:
@@ -68,7 +68,7 @@ rule dadi_generate_cache:
         "1KG.YRI.two_epoch.sel.spectra.bpkl"
     threads: 8
     shell:
-        "dadi-cli GenerateCache --model two_epoch --demo-popt {input} --sample-size 216 --output {output} --mp --misid"
+        "dadi-cli GenerateCache --model two_epoch --demo-popt {input} --sample-size 216 --output {output} --mp --misid --grids 800 1000 1200 --gamma-pts 500"
 
 rule dadi_infer_dfe:
     input:
@@ -76,10 +76,10 @@ rule dadi_infer_dfe:
         "1KG.YRI.two_epoch.sel.spectra.bpkl",
         "1KG.YRI.two_epoch_1d.InferDM.bestfits"
     output:
-        "1KG.YRI.two_epoch_1d.lognormal.InferDFE.opts.0"
+        "1KG.YRI.two_epoch_1d.gamma.InferDFE.opts.0"
     threads: 8
     shell:
-        "dadi-cli InferDFE --fs {input[0]} --cache1d {input[1]} --demo-popt {input[2]} --output-prefix 1KG.YRI.two_epoch_1d.lognormal --pdf1d {dfe_model} --p0 {dfe_p0} --ubounds {dfe_ubounds} --lbounds {dfe_lbounds} --misid --ratio 2.31 --thread 100"
+        "dadi-cli InferDFE --fs {input[0]} --cache1d {input[1]} --demo-popt {input[2]} --output-prefix 1KG.YRI.two_epoch_1d.gamma --pdf1d {dfe_model} --p0 {dfe_p0} --ubounds {dfe_ubounds} --lbounds {dfe_lbounds} --misid --ratio 2.31 --thread 100"
 
 #rule dadi_bestfit_dfe:
 #    input: rules.dadi_infer_dfe.output
