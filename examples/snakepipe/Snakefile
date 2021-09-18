@@ -3,13 +3,32 @@ Snakefile for running dadi-cli DFE inference pipeline.
 """
 
 types = ['synonymous', 'nonsynonymous']
+# Demographic model for inference
+# Use `dadi-cli Model --names two_epoch_1d` to find out the meaning of each parameter
 demo_model = 'two_epoch_1d'
+
+# Initial parameters for demographic inference
+# The last parameter is the misidentification for ancestral allele ranging from 0 to 1
 demo_p0 = '5 5 0.5'
+
+# Lower bounds for demographic parameters
 demo_lbounds = '10e-3 10e-3 10e-5' 
+
+# Upper bounds for demographic parameters
 demo_ubounds = '10 10 1'
+
+# DFE model for inference
+# Use `dadi-cli Pdf --names lognormal` to find out the meaning of each parameter
 dfe_model = 'lognormal'
+
+# Initial parameters for DFE inference
+# The last parameter is the misidentification for ancestral allele ranging from 0 to 1
 dfe_p0 = '5 5 0.5'
+
+# Lower bounds for DFE parameters (-1 indicates no boundary)
 dfe_lbounds = '-1 -1 10e-5'
+
+# Upper bounds for DFE parameters
 dfe_ubounds = '-1 -1 1'
 
 rule all:
