@@ -19,7 +19,7 @@ demo_lbounds = '10e-3 10e-3 10e-5'
 demo_ubounds = '10 10 1'
 
 # DFE model for inference
-# Use `dadi-cli Pdf --names lognormal` to find out the meaning of each parameter
+# Use `dadi-cli Pdf --names gamma` to find out the meaning of each parameter
 dfe_model = 'gamma'
 
 # Initial parameters for DFE inference
