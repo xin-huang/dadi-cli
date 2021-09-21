@@ -108,3 +108,57 @@ def plot_fitted_dfe(fs, cache1d, cache2d, demo_popt, sele_popt, ns_s, projection
         model = model.project(projections)
         dadi.Plotting.plot_2d_comp_multinom(model, fs, vmin=vmin, resid_range=resid_range)
     fig.savefig(output)
+
+def plot_mut_prop(dfe_popt, pdf1d, misid, mut_rate, seq_len, ratio, output):
+
+    from src.Pdfs import get_dadi_pdf
+
+    dfe_params, theta = _get_bestfit_params(dfe_popt, misid)
+
+    Na = theta/(4*mut_rate*seq_len*(ratio/(1+ratio)))
+
+    def mut_prop(shape, scale, Na):
+        from scipy import stats
+        scale = scale / (2*Na)
+        p1 = stats.gamma.cdf(1e-5, a=shape, scale=scale)
+        p2 = stats.gamma.cdf(1e-4, a=shape, scale=scale)
+        p3 = stats.gamma.cdf(1e-3, a=shape, scale=scale)
+        p4 = stats.gamma.cdf(1e-2, a=shape, scale=scale)
+
+        return p1, p2-p1, p3-p2, p4-p3, 1-p4
+
+    props = mut_prop(dfe_params[0], dfe_params[1], Na)
+
+    fig = plt.figure(219033)
+    plt.bar([0,1,2,3,4],props,alpha=0.7)
+    plt.ylabel('Proportion')
+    plt.xlabel('Selection coefficient')
+    plt.xticks([0,1,2,3,4],
+               ['0<=|s|<1e-5', '1e-5<=|s|<1e-4', '1e-4<=|s|<1e-3', '1e-3<=|s|<1e-2', '1e-2<=|s|'], rotation=45)
+    plt.grid(alpha=0.3)
+    fig.savefig(output, bbox_inches='tight')
+
+def _get_bestfit_params(filename, misid):
+
+    opts = []
+    fid = open(filename, 'r')
+    for line in fid.readlines():
+        if line.startswith('#'):
+            continue
+        elif line.startswith('# T'):
+            break
+        else:
+            try:
+                opts.append([float(_) for _ in line.rstrip().split()])
+            except ValueError:
+                pass
+    fid.close()
+
+    if len(opts) == 0:
+        print('No optimization results found')
+        return
+
+    if misid:
+        return opts[0][1:-2], opts[0][-1]
+    else:
+        return opts[0][1:-1], opts[0][-1]
