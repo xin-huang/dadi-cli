@@ -34,7 +34,7 @@ dfe_ubounds = '1 50000 1'
 
 rule all:
     input:
-        "1KG.YRI.two_epoch_1d.gamma.InferDFE.bestfits"
+        "1KG.YRI.two_epoch_1d.gamma.mut.prop.pdf"
 
 rule generate_dadi_fs:
     input:
@@ -89,4 +89,12 @@ rule dadi_bestfit_dfe:
     shell:
         "dadi-cli BestFit --input-prefix ./1KG.YRI.two_epoch_1d.gamma.InferDFE --pdf gamma --misid --ubounds {dfe_ubounds} --lbounds {dfe_lbounds}"
 
-# rule plot_dadi_results:
+rule plot_dadi_dfe_results:
+    input: rules.dadi_bestfit_dfe.output
+    output:
+        "1KG.YRI.two_epoch_1d.gamma.mut.prop.pdf"
+    threads: 1
+    shell:
+        "dadi-cli Plot --dfe-popt {input} --pdf1d gamma --output {output}"
+
+# rule clean
