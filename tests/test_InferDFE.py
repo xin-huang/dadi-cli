@@ -11,7 +11,7 @@ try:
 except:
     pass
 
-def test_InferDM(capsys):
+def test_InferDFE(capsys):
     threads = 3
     try:
         fits_fid = glob.glob("./test_results/simulation.two_epoch.demo.params.InferDM.bestfits")[0]

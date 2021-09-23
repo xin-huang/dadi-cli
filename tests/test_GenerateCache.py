@@ -5,7 +5,7 @@ from os.path import exists
 import numpy as np
 import pickle
 
-def test_BestFit(capsys):
+def test_GenerateCache(capsys):
     min_gamma_bound = -2000
     gamma_pts = 50
     subprocess.run(
