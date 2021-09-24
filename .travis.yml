@@ -7,6 +7,9 @@ python:
     - "3.8"
     - "3.9"
 install:
-    - pip install dadi==2.1.0
+    - pip install scipy
+    - pip install numpy
+    - pip install matplotlib
+    - pip install dadi
     - python setup.py install
 script: pytest
