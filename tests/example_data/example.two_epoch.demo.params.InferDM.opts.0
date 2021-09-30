@@ -1,0 +1,4 @@
+# /Users/tjstruck/opt/anaconda3/envs/dadicli2/bin/dadi-cli InferDM --fs ./example_data/two_epoch_syn.fs --model two_epoch_1d --grids 120 140 160 --p0 1 .5 --ubounds 10 10 --lbounds 10e-3 10e-3 --output-prefix ./test_results/simulation.two_epoch.demo.params --thread 3
+-63.45388661121092	1.5069747594935339	0.015583007587093268	999.6797138035407
+-63.4554163856271	1.3749554469034302	0.02019762273118489	999.2499594823701
+-63.45356258883234	1.5823497324324773	0.014051813436713129	999.7851183485503
