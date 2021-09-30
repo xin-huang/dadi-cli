@@ -6,7 +6,7 @@ import numpy as np
 import pickle
 
 def test_GenerateCache(capsys):
-    min_gamma_bound = -2000
+    min_gamma_bound = 2000
     gamma_pts = 50
     subprocess.run(
         "dadi-cli GenerateCache --demo-popt ./example_data/example.two_epoch.demo.params.InferDM.bestfits " +
@@ -16,7 +16,7 @@ def test_GenerateCache(capsys):
     )
     assert exists("./test_results/cache_large_two_epoch.bpkl")
     s = pickle.load(open('./test_results/cache_large_two_epoch.bpkl','rb'))
-    assert int(np.min(s.gammas)) == min_gamma_bound
+    assert int(np.min(s.gammas)) == -1*min_gamma_bound
     assert len(s.gammas) == gamma_pts
 
 
