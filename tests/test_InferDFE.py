@@ -30,7 +30,7 @@ def test_InferDFE(capsys):
     number_of_fits = sum([ele.startswith('#') != True for ele in open(fits[-1]).readlines()])
     assert threads == number_of_fits
 
-def test_InferDM_wq(capsys):
+def test_InferDFE_wq(capsys):
     threads = 3
     subprocess.run(
         "dadi-cli InferDFE " + 
