@@ -12,6 +12,7 @@ before_install:
     - pip install -U pytest
     - pip install codecov
     - pip install pytest-cov
+    - pip install ndcctools
 install:
     - pip install scipy
     - pip install numpy
