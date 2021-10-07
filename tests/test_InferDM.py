@@ -14,7 +14,7 @@ def test_InferDM(capsys):
     threads = 3
     subprocess.run(
         "dadi-cli InferDM " + 
-        "--fs ./tests/example_data/two_epoch_syn.fs --model two_epoch_1d " +
+        "--fs ./tests/example_data/two_epoch_syn.fs --model two_epoch " +
         "--grids 120 140 160 --p0 1 .5 --ubounds 10 10 --lbounds 10e-3 10e-3 " + 
         "--output-prefix ./tests/test_results/simulation.two_epoch.demo.params --thread " + str(threads), shell=True
     )
@@ -31,7 +31,7 @@ def test_InferDM_wq(capsys):
     threads = 3
     subprocess.run(
         "dadi-cli InferDM " +
-        "--fs ./tests/example_data/two_epoch_syn.fs --model two_epoch_1d " +
+        "--fs ./tests/example_data/two_epoch_syn.fs --model two_epoch " +
         "--grids 120 140 160 --p0 1 .5 --ubounds 10 10 --lbounds 10e-3 10e-3 " +
         "--output-prefix ./tests/test_results/simulation.two_epoch.demo.params.wq --thread " + str(threads) + ' ' +
         "--work-queue test-dm-two-epoch ./tests/mypwfile " +
