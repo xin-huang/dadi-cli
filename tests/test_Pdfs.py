@@ -38,31 +38,31 @@ def test_print_available_pdfs(capfd):
 def test_print_pdf_details(capfd):
     print_pdf_details('beta')
     out, err = capfd.readouterr()
-    assert out == '- beta:\n' + 'Beta probability density function.\n\nparams = [alpha, beta]'
+    assert out == '- beta:\n' + '    Beta probability density function.\n\n    params = [alpha, beta]\n'
 
     print_pdf_details('biv_ind_gamma')
     out, err = capfd.readouterr()
-    assert out == '- biv_ind_gamma:\n' + 'Bivariate independent gamma probability density function.\n\nIf len(params) == 2, then params = [alpha, beta] by assuming alpha and beta are equal in the two populations\nIf len(params) == 4, then params = [alpha1, alpha2, beta1, beta2]\nIf len(params) == 3 or 5, then the last parameter is ignored'
+    assert out == '- biv_ind_gamma:\n' + '    Bivariate independent gamma probability density function.\n\n    If len(params) == 2, then params = [alpha, beta] by assuming alpha and beta are equal in the two populations\n    If len(params) == 4, then params = [alpha1, alpha2, beta1, beta2]\n    If len(params) == 3 or 5, then the last parameter is ignored\n'
 
     print_pdf_details('biv_lognormal')
     out, err = capfd.readouterr()
-    assert out == '- biv_lognormal:\n' + 'Bivariate lognormal probability density function.\n\nIf len(params) == 3, then params = [mu, sigma, rho] by assuming mu and sigma are equal in the two populations\nIf len(params) == 5, then params = [mu1, mu2, sigma1, sigma2, rho]'
+    assert out == '- biv_lognormal:\n' + '    Bivariate lognormal probability density function.\n\n    If len(params) == 3, then params = [mu, sigma, rho] by assuming mu and sigma are equal in the two populations\n    If len(params) == 5, then params = [mu1, mu2, sigma1, sigma2, rho]\n'
 
     print_pdf_details('exponential')
     out, err = capfd.readouterr()
-    assert out == '- exponential:\n' + 'Exponential probability density function.\n\nparams = [scale]'
+    assert out == '- exponential:\n' + '    Exponential probability density function.\n\n    params = [scale]\n'
 
     print_pdf_details('gamma')
     out, err = capfd.readouterr()
-    assert out == '- gamma:\n' + 'Gamma probability density function.\n\nparams = [alpha, beta] = [shape, scale]'
+    assert out == '- gamma:\n' + '    Gamma probability density function.\n\n    params = [alpha, beta] = [shape, scale]\n'
 
     print_pdf_details('lognormal')
     out, err = capfd.readouterr()
-    assert out == '- lognormal:\n' + 'Lognormal probability density function.\n\nparams = [log(mu), log(sigma)]'
+    assert out == '- lognormal:\n' + '    Lognormal probability density function.\n\n    params = [log(mu), log(sigma)]\n'
 
     print_pdf_details('normal')
     out, err = capfd.readouterr()
-    assert out == '- normal:\n' + 'Normal probability density function.\n\nparams = [mu, sigma]'
+    assert out == '- normal:\n' + '    Normal probability density function.\n\n    params = [mu, sigma]\n'
 
     with pytest.raises(Exception) as e_info:
         print_pdf_details('haha')
