@@ -20,8 +20,12 @@ def test_get_dadi_pdf_params():
     with pytest.raises(Exception) as e_info:
         get_dadi_pdf_params('haha')
 
-def test_print_available_pdfs():
-    pass
+def test_print_available_pdfs(capfd):
+    print_available_pdfs()
 
-def test_print_pdf_details():
+    out, err = capfd.readouterr()
+
+    assert out == 'Available probability density functions:\n' + '- beta\n' + '- biv_ind_gamma\n' + '- biv_lognormal\n' + '- exponential\n' + '- gamma\n' + '- lognormal\n' + '- normal\n'
+
+def test_print_pdf_details(capfd):
     pass
