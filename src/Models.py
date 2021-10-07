@@ -22,13 +22,13 @@ def get_dadi_model_func(model_name, withSelection=False, single_gamma=False):
         import dadi
         if model_name == 'bottlegrowth_1d':
             return dadi.Demographics1D.bottlegrowth
-        elif model_name == 'growth_1d':
+        elif model_name == 'growth':
             return dadi.Demographics1D.growth
         elif model_name == 'snm_1d':
             return dadi.Demographics1D.snm
-        elif model_name == 'three_epoch_1d':
+        elif model_name == 'three_epoch':
             return dadi.Demographics1D.three_epoch
-        elif model_name == 'two_epoch_1d':
+        elif model_name == 'two_epoch':
             return dadi.Demographics1D.two_epoch
         elif model_name == 'bottlegrowth_2d':
             return dadi.Demographics2D.bottlegrowth
@@ -52,13 +52,13 @@ def get_dadi_model_func(model_name, withSelection=False, single_gamma=False):
 def get_dadi_model_params(model_name):
     if model_name == 'bottlegrowth_1d':
         return ['nuB', 'nuF', 'T']
-    elif model_name == 'growth_1d':
+    elif model_name == 'growth':
         return ['nu', 'T']
     elif model_name == 'snm_1d':
         return []
-    elif model_name == 'three_epoch_1d':
+    elif model_name == 'three_epoch':
         return ['nuB', 'nuF', 'TB', 'TF']
-    elif model_name == 'two_epoch_1d':
+    elif model_name == 'two_epoch':
         return ['nu', 'T']
     elif model_name == 'bottlegrowth_2d':
         return ['nuB', 'nuF', 'T']
@@ -83,10 +83,10 @@ def print_available_models():
     
     print('Available 1D demographic models:')
     print('- bottlegrowth_1d')
-    print('- growth_1d')
+    print('- growth')
     print('- snm_1d')
-    print('- three_epoch_1d')
-    print('- two_epoch_1d')
+    print('- three_epoch')
+    print('- two_epoch')
     print()
 
     print('Available 2D demographic models:')
@@ -131,7 +131,7 @@ def print_model_details(model_name):
               T: Time in the past at which instantaneous change happened and growth began
                  (in units of 2*Na generations) 
     '''
-    growth_1d = '''
+    growth = '''
         Exponential growth beginning some time ago.
         Only one population in this model.
 
@@ -144,7 +144,7 @@ def print_model_details(model_name):
         Standard neutral model.
         Only one population in this model.
     '''
-    three_epoch_1d = '''
+    three_epoch = '''
         Two instantaneous size changes some time ago. 
         Only one population in this model.
 
@@ -155,7 +155,7 @@ def print_model_details(model_name):
              TB: Length of bottleneck (in units of 2*Na generations) 
              TF: Time since bottleneck recovery (in units of 2*Na generations) 
     '''
-    two_epoch_1d = '''
+    two_epoch = '''
         One instantaneous size change some time ago.
         Only one population in this model.
 
@@ -404,10 +404,10 @@ def print_model_details(model_name):
     elif model_name == 'two_epoch_sel': print('- two_epoch_sel:\n' + two_epoch_sel)
     elif model_name == 'three_epoch_sel': print('- three_epoch_sel:\n' + three_epoch_sel)
     elif model_name == 'bottlegrowth_1d': print('- bottlegrowth_1d:\n' + bottlegrowth_1d)
-    elif model_name == 'growth_1d': print('- growth_1d:\n' + growth_1d)
+    elif model_name == 'growth': print('- growth:\n' + growth)
     elif model_name == 'snm_1d': print('- snm_1d:\n' + snm_1d)
-    elif model_name == 'three_epoch_1d': print('- three_epoch_1d:\n' + three_epoch_1d)
-    elif model_name == 'two_epoch_1d': print('- two_epoch_1d:\n' + two_epoch_1d)
+    elif model_name == 'three_epoch': print('- three_epoch:\n' + three_epoch)
+    elif model_name == 'two_epoch': print('- two_epoch:\n' + two_epoch)
     elif model_name == 'bottlegrowth_2d': print('- bottlegrowth_2d:\n' + bottlegrowth_2d)
     elif model_name == 'bottlegrowth_split': print('- bottlegrowth_split:\n' + bottlegrowth_split)
     elif model_name == 'bottlegrowth_split_mig': print('- bottlegrowth_split_mig:\n' + bottlegrowth_split_mig)
