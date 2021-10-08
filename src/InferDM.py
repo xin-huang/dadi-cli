@@ -39,6 +39,9 @@ def infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds,
     # Now local optimization
     if pts_l is None:
         pts_l = pts_l_func(fs)
+    # If global optimization ended on boundary, this will pull parameters back into domain
+    p0 = dadi.Misc.perturb_params(popt_global, fold=0, upper_bound=upper_bounds,
+                                  lower_bound=lower_bounds)
     popt, _ = dadi.Inference.opt(popt_global, fs, func_ex, pts_l,
                                  lower_bound=lower_bounds,
                                  upper_bound=upper_bounds, fixed_params=fixed_params,
