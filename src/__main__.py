@@ -402,7 +402,7 @@ def main():
             plot_comparison(fs=args.fs, fs2=args.fs2, projections=args.projections, output=args.output, vmin=args.vmin, resid_range=args.resid_range)
 
     elif args.subcommand == 'Stat':
-
+        # XXX: Need to automatically try different eps settings.
         from src.Stat import godambe_stat
         godambe_stat(fs=args.fs, model=args.model, bootstrap_dir=args.bootstrapping_dir, grids=args.grids,
                      cache1d=args.cache1d, cache2d=args.cache2d, sele_dist=args.pdf1d, ns_s=args.ratio,
