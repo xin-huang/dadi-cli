@@ -55,7 +55,7 @@ def print_pdf_details(pdf_name):
     
     beta = '''
         Beta probability density function.
-  
+
         params = [alpha, beta]
     '''
     biv_ind_gamma = '''
