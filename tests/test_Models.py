@@ -33,6 +33,13 @@ def test_get_dadi_model_func():
     assert get_dadi_model_func('split_mig', withSelection=False, single_gamma=False) == dadi.Demographics2D.split_mig
     assert get_dadi_model_func('split_asym_mig', withSelection=False, single_gamma=False) == dadi.Demographics2D.split_asym_mig
     assert get_dadi_model_func('snm_2d', withSelection=False, single_gamma=False) == dadi.Demographics2D.snm
+    #Cover error message
+    with pytest.raises(Exception) as e_info:
+        get_dadi_model_func('haha', withSelection=False, single_gamma=False)
+    with pytest.raises(Exception) as e_info:
+        get_dadi_model_func('haha', withSelection=True, single_gamma=False)
+    with pytest.raises(Exception) as e_info:
+        get_dadi_model_func('haha', withSelection=True, single_gamma=True)
 
 def test_get_dadi_model_params():
     #1D demographic models
@@ -50,6 +57,9 @@ def test_get_dadi_model_params():
     assert get_dadi_model_params('split_mig') == ['nu1', 'nu2', 'T', 'm']
     assert get_dadi_model_params('split_asym_mig') == ['nu1', 'nu2', 'T', 'm12', 'm21']
     assert get_dadi_model_params('snm_2d') == []
+    #Cover error message
+    with pytest.raises(Exception) as e_info:
+        get_dadi_model_params('haha')
 
 def test_print_available_models(capfd):
     print_available_models()
