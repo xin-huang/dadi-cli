@@ -130,7 +130,7 @@ def main():
     infer_demo_parser.add_argument('--model-file', type=str, required=False, dest='model_file', help='Name of python module file (not including .py) that contains custom models to use. Default: None')
     infer_demo_parser.add_argument('--p0', type=str, nargs='+', required=True, help='Initial parameter values for inference.')
     infer_demo_parser.add_argument('--output-prefix', type=str, required=True, dest='output_prefix', help='Prefix for output files, which will be named <output_prefix>.InferDM.opts.<N>, where N is an increasing integer (to avoid overwriting existing files).')
-    infer_demo_parser.add_argument('--thread', default=1, type=_check_positive_int, help='Number of thread to run optimization in parallel. Default: 1.')
+    infer_demo_parser.add_argument('--optimization', default=1, type=_check_positive_int, help='Number of optimizations to run in parallel. Default: 1.')
     infer_demo_parser.add_argument('--check-convergence', default=False, action='store_true', dest='check_convergence', help='Stop optimization runs when convergence criteria are reached. BestFit results file will be call <output_prefix>.InferDM.bestfits. Default: False')
     infer_demo_parser.add_argument('--work-queue', nargs=2, default=[], action='store', dest='work_queue', help='Enable Work Queue. Additional arguments are the WorkQueue project name and the name of the password file.')
 
@@ -152,7 +152,7 @@ def main():
     infer_dfe_parser.add_argument('--ratio', type=float, required=True, help='Ratio for the nonsynonymous mutations to the synonymous mutations')
     infer_dfe_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='Upper bounds of the inferred parameters, please use -1 to indicate a parameter with no upper bound, please use -1 to indicate a parameter without upper bound')
     infer_dfe_parser.add_argument('--output-prefix', type=str, required=True, dest='output_prefix', help='Prefix for output files, which will be named <output_prefix>.InferDFE.opts.<N>, where N is an increasing integer (to avoid overwriting existing files).')
-    infer_dfe_parser.add_argument('--thread', default=1, type=_check_positive_int, help='Number of thread to run optimization in parallel. Default: 1.')
+    infer_dfe_parser.add_argument('--optimization', default=1, type=_check_positive_int, help='Number of optimizations to run in parallel. Default: 1.')
     infer_dfe_parser.add_argument('--check-convergence', default=False, action='store_true', dest='check_convergence', help='Stop optimization runs when convergence criteria are reached. BestFit results file will be call <output_prefix>.InferDFE.bestfits. Default: False')
     infer_dfe_parser.add_argument('--pdf-file', type=str, required=False, dest='pdf_file', help='Name of python probability density function module file (not including .py) that contains custom probability density functions to use. Default: None')
     infer_dfe_parser.add_argument('--work-queue', nargs=2, default=[], action='store', dest='work_queue', help='Enable Work Queue. Additional arguments are the WorkQueue project name and the name of the password file.')
@@ -262,7 +262,7 @@ def main():
             if not q.specify_password_file(args.work_queue[1]):
                 raise ValueError('Work Queue password file "{0}" not found.'.format(args.work_queue[1]))
 
-            for ii in range(args.thread): 
+            for ii in range(args.optimization): 
                 t = wq.PythonTask(infer_demography, fs, func, args.p0, args.grids, 
                                   args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
                 # If using a custom model, need to include the file from which it comes
@@ -279,7 +279,7 @@ def main():
             # Create workers
             workers = [Process(target=worker_InferDM, args=(in_queue, out_queue, worker_args)) for ii in range(multiprocessing.cpu_count())]
             # Put the tasks to be done in the queue. 
-            for ii in range(args.thread):
+            for ii in range(args.optimization):
                 in_queue.put(ii)
             # Start the workers
             for worker in workers:
@@ -291,7 +291,7 @@ def main():
         fid.write('# {0}\n'.format(' '.join(sys.argv)))
         # Collect and process results
         from src.BestFit import get_bestfit_params
-        for _ in range(args.thread):
+        for _ in range(args.optimization):
             if args.work_queue: 
                 result = q.wait().output
             else:
@@ -328,7 +328,7 @@ def main():
             if not q.specify_password_file(args.work_queue[1]):
                 raise ValueError('Work Queue password file "{0}" not found.'.format(args.work_queue[1]))
 
-            for ii in range(args.thread): 
+            for ii in range(args.optimization): 
                 t = wq.PythonTask(infer_dfe, args.fs, args.cache1d, args.cache2d, args.pdf1d, args.pdf2d, 
                                 args.ratio, args.demo_popt, args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
                 # # If using a custom model, need to include the file from which it comes
@@ -346,7 +346,7 @@ def main():
             # Create workers
             workers = [Process(target=worker_InferDFE, args=(in_queue, out_queue, worker_args)) for ii in range(multiprocessing.cpu_count())]
             # Put the tasks to be done in the queue. 
-            for ii in range(args.thread):
+            for ii in range(args.optimization):
                 in_queue.put(ii)
             # Start the workers
             for worker in workers:
@@ -358,7 +358,7 @@ def main():
         fid.write('# {0}\n'.format(' '.join(sys.argv)))
         # Collect and process results
         from src.BestFit import get_bestfit_params
-        for _ in range(args.thread):
+        for _ in range(args.optimization):
             if args.work_queue: 
                 result = q.wait().output
             else:
@@ -381,7 +381,7 @@ def main():
             #from multiprocessing import Manager, Process, Queue
             #with Manager() as manager:
             #    pool = []
-            #    for i in range(args.thread):
+            #    for i in range(args.optimization):
             #        p = Process(target=infer_dfe,
             #                    args=(args.non_fs, args.output+'.run'+str(i), args.cache1d, args.cache2d, args.pdf1d, args.pdf2d, 
             #                          args.ratio, args.demo_popt, args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda))
