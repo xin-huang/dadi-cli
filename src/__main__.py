@@ -5,6 +5,7 @@ import dadi
 from src.InferDM import infer_demography
 from src.InferDFE import infer_dfe
 from src.Models import get_dadi_model_params
+from src.Pdfs import get_dadi_pdf_params
 
 # Worker functions for multiprocessing with demography/DFE inference
 def worker_InferDM(in_queue, out_queue, args):
@@ -31,6 +32,15 @@ def main():
         if input_params_len != model_params_len:
             raise Exception("Found " + str(input_params_len) + " demographic parameters from the option " + option + 
                             "; however, " + str(model_params_len) + " demographic parameters are required from the " + model + " model")
+        return params
+
+    def _check_pdf_params(params, pdf, option, misid):
+        input_params_len = len(params)
+        model_params_len = len(get_dadi_pdf_params(pdf))
+        if misid: input_params_len = input_params_len - 1
+        if input_params_len != model_params_len:
+            raise Exception("Found " + str(input_params_len) + " pdf parameters from the option " + option + 
+                            "; however, " + str(model_params_len) + " pdf parameters are required from the " + pdf + " pdf")
         return params
 
     def _read_opt_params_from_file(path, model, option, misid):
@@ -144,7 +154,7 @@ def main():
     infer_dfe_parser.add_argument('--output-prefix', type=str, required=True, dest='output_prefix', help='Prefix for output files, which will be named <output_prefix>.InferDFE.opts.<N>, where N is an increasing integer (to avoid overwriting existing files).')
     infer_dfe_parser.add_argument('--thread', default=1, type=_check_positive_int, help='Number of thread to run optimization in parallel. Default: 1.')
     infer_dfe_parser.add_argument('--check-convergence', default=False, action='store_true', dest='check_convergence', help='Stop optimization runs when convergence criteria are reached. BestFit results file will be call <output_prefix>.InferDFE.bestfits. Default: False')
-    infer_dfe_parser.add_argument('--model-file', type=str, required=False, dest='model_file', help='Name of python module file (not including .py) that contains custom models to use. Default: None')
+    infer_dfe_parser.add_argument('--pdf-file', type=str, required=False, dest='pdf_file', help='Name of python probability density function module file (not including .py) that contains custom probability density functions to use. Default: None')
     infer_dfe_parser.add_argument('--work-queue', nargs=2, default=[], action='store', dest='work_queue', help='Enable Work Queue. Additional arguments are the WorkQueue project name and the name of the password file.')
 
 
@@ -304,9 +314,11 @@ def main():
 
     elif args.subcommand == 'InferDFE':
         # Things need to be updated for these to work
-        #if args.constants != None: args.constants = _check_params(args.constants)
-        #if args.lbounds != None: args.lbounds = _check_params(args.lbounds)
-        #if args.ubounds != None: args.ubounds = _check_params(args.ubounds)
+        for pdf in [args.pdf1d, args.pdf2d]:
+            if pdf !=  None:
+                if not args.pdf_file and args.constants != None: args.constants = _check_pdf_params(args.constants, pdf, '--constant', args.misid)
+                if not args.pdf_file and args.lbounds != None: args.lbounds = _check_pdf_params(args.lbounds, pdf, '--lbounds', args.misid)
+                if not args.pdf_file and args.ubounds != None: args.ubounds = _check_pdf_params(args.ubounds, pdf, '--ubounds', args.misid)
 
         from src.InferDFE import infer_dfe
         if args.work_queue:
@@ -320,8 +332,8 @@ def main():
                 t = wq.PythonTask(infer_dfe, args.fs, args.cache1d, args.cache2d, args.pdf1d, args.pdf2d, 
                                 args.ratio, args.demo_popt, args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
                 # # If using a custom model, need to include the file from which it comes
-                # if args.model_file:
-                #     t.specify_input_file(args.model_file+'.py')
+                # if args.pdf_file:
+                #     t.specify_input_file(args.pdf_file+'.py')
                 q.submit(t)
         else:
             import multiprocessing; from multiprocessing import Process, Queue
