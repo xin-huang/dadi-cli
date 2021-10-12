@@ -262,7 +262,7 @@ def main():
             if not q.specify_password_file(args.work_queue[1]):
                 raise ValueError('Work Queue password file "{0}" not found.'.format(args.work_queue[1]))
 
-            for ii in range(args.optimization): 
+            for ii in range(args.optimizations): 
                 t = wq.PythonTask(infer_demography, fs, func, args.p0, args.grids, 
                                   args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
                 # If using a custom model, need to include the file from which it comes
@@ -279,7 +279,7 @@ def main():
             # Create workers
             workers = [Process(target=worker_InferDM, args=(in_queue, out_queue, worker_args)) for ii in range(multiprocessing.cpu_count())]
             # Put the tasks to be done in the queue. 
-            for ii in range(args.optimization):
+            for ii in range(args.optimizations):
                 in_queue.put(ii)
             # Start the workers
             for worker in workers:
@@ -291,7 +291,7 @@ def main():
         fid.write('# {0}\n'.format(' '.join(sys.argv)))
         # Collect and process results
         from src.BestFit import get_bestfit_params
-        for _ in range(args.optimization):
+        for _ in range(args.optimizations):
             if args.work_queue: 
                 result = q.wait().output
             else:
@@ -328,7 +328,7 @@ def main():
             if not q.specify_password_file(args.work_queue[1]):
                 raise ValueError('Work Queue password file "{0}" not found.'.format(args.work_queue[1]))
 
-            for ii in range(args.optimization): 
+            for ii in range(args.optimizations): 
                 t = wq.PythonTask(infer_dfe, args.fs, args.cache1d, args.cache2d, args.pdf1d, args.pdf2d, 
                                 args.ratio, args.demo_popt, args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
                 # # If using a custom model, need to include the file from which it comes
@@ -346,7 +346,7 @@ def main():
             # Create workers
             workers = [Process(target=worker_InferDFE, args=(in_queue, out_queue, worker_args)) for ii in range(multiprocessing.cpu_count())]
             # Put the tasks to be done in the queue. 
-            for ii in range(args.optimization):
+            for ii in range(args.optimizations):
                 in_queue.put(ii)
             # Start the workers
             for worker in workers:
@@ -358,7 +358,7 @@ def main():
         fid.write('# {0}\n'.format(' '.join(sys.argv)))
         # Collect and process results
         from src.BestFit import get_bestfit_params
-        for _ in range(args.optimization):
+        for _ in range(args.optimizations):
             if args.work_queue: 
                 result = q.wait().output
             else:
@@ -381,7 +381,7 @@ def main():
             #from multiprocessing import Manager, Process, Queue
             #with Manager() as manager:
             #    pool = []
-            #    for i in range(args.optimization):
+            #    for i in range(args.optimizations):
             #        p = Process(target=infer_dfe,
             #                    args=(args.non_fs, args.output+'.run'+str(i), args.cache1d, args.cache2d, args.pdf1d, args.pdf2d, 
             #                          args.ratio, args.demo_popt, args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda))
