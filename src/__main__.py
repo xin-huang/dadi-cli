@@ -257,7 +257,7 @@ def main():
 
         if args.work_queue:
             import work_queue as wq
-            q = wq.WorkQueue(name = args.work_queue[0])
+            q = wq.WorkQueue(name = args.work_queue[0], port = 0)
             # Returns 1 for success, 0 for failure
             if not q.specify_password_file(args.work_queue[1]):
                 raise ValueError('Work Queue password file "{0}" not found.'.format(args.work_queue[1]))
@@ -323,7 +323,7 @@ def main():
         from src.InferDFE import infer_dfe
         if args.work_queue:
             import work_queue as wq
-            q = wq.WorkQueue(name = args.work_queue[0])
+            q = wq.WorkQueue(name = args.work_queue[0], port = 0)
             # Returns 1 for success, 0 for failure
             if not q.specify_password_file(args.work_queue[1]):
                 raise ValueError('Work Queue password file "{0}" not found.'.format(args.work_queue[1]))
