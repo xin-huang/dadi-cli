@@ -3,6 +3,7 @@ import pytest
 import subprocess
 import glob
 import os
+import signal
 
 try:
     if not os.path.exists("./tests/test_results"):
