@@ -14,8 +14,9 @@ before_install:
     - conda info -a
 install:
     # Replace dep1 dep2 ... with your dependencies
-    - conda create -y -q -n test-environment python=$TRAVIS_PYTHON_VERSION pip pytest codecov pytest-cov ndcctools scipy numpy matplotlib
+    - conda create -y -q -n test-environment python=$TRAVIS_PYTHON_VERSION pip pytest codecov pytest-cov scipy numpy matplotlib
     - conda activate test-environment
+    - conda install -y -c conda-forge ndcctools
     # - conda install conda install -y -c conda-forge 
     # - conda install -y scipy
     # - conda install -y numpy
