@@ -10,17 +10,11 @@ before_install:
     - hash -r
     - conda config --set always_yes yes --set changeps1 no
     - conda update -q conda
-    # Useful for debugging any issues with conda
     - conda info -a
 install:
-    # Replace dep1 dep2 ... with your dependencies
     - conda create -y -q -n test-environment python=$TRAVIS_PYTHON_VERSION pip pytest codecov pytest-cov scipy numpy matplotlib
     - conda activate test-environment
     - conda install -y -c conda-forge ndcctools
-    # - conda install conda install -y -c conda-forge 
-    # - conda install -y scipy
-    # - conda install -y numpy
-    # - conda install -y matplotlib
     - cd ..
     - git clone https://tjstruck@bitbucket.org/gutenkunstlab/dadi.git
     - cd dadi
