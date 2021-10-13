@@ -1,21 +1,27 @@
 language: python
 python:
-    - "3.4"
-    - "3.5"
-    - "3.6"
-    - "3.7"
     - "3.8"
     - "3.9"
 before_install:
     - python --version
-    - pip install -U pip
-    - pip install -U pytest
-    - pip install codecov
-    - pip install pytest-cov
+    - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+    - bash miniconda.sh -b -p $HOME/miniconda
+    - source "$HOME/miniconda/etc/profile.d/conda.sh"
+    - hash -r
+    - conda config --set always_yes yes --set changeps1 no
+    - conda update -q conda
+    # Useful for debugging any issues with conda
+    - conda info -a
+
+    # Replace dep1 dep2 ... with your dependencies
+    - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION pip pytest codecov pytest-cov
+    - conda activate test-environment
+    - python -m pip install .
 install:
-    - pip install scipy
-    - pip install numpy
-    - pip install matplotlib
+    - conda install conda install -y -c conda-forge ndcctools
+    - conda install -y scipy
+    - conda install -y numpy
+    - conda install -y matplotlib
     - cd ..
     - git clone https://tjstruck@bitbucket.org/gutenkunstlab/dadi.git
     - cd dadi
