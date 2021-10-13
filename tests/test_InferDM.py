@@ -32,7 +32,8 @@ def test_InferDM_wq(capsys):
     threads = 3
     fits_fid = "./tests/example_data/example.two_epoch.demo.params.InferDM.bestfits"
     wq = subprocess.Popen(
-        "work_queue_factory -T local -M test-dm-two-epoch -P ./tests/mypwfile --workers-per-cycle=0 --cores=1  -w " + str(threads) + " &", shell=True
+        "work_queue_factory -T local -M test-dm-two-epoch -P ./tests/mypwfile --workers-per-cycle=0 --cores=1  -w " + str(threads) + " &", 
+        shell=True, preexec_fn=os.setsid
         )
     subprocess.run(
         "dadi-cli InferDM " +
