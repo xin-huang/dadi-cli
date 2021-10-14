@@ -320,6 +320,11 @@ def main():
                 if not args.pdf_file and args.lbounds != None: args.lbounds = _check_pdf_params(args.lbounds, pdf, '--lbounds', args.misid)
                 if not args.pdf_file and args.ubounds != None: args.ubounds = _check_pdf_params(args.ubounds, pdf, '--ubounds', args.misid)
 
+        if len(args.p0) == 1: 
+            args.p0 = float(args.p0)
+        else: 
+            args.p0 = [float(_) for _ in args.p0]
+
         from src.InferDFE import infer_dfe
         if args.work_queue:
             import work_queue as wq
