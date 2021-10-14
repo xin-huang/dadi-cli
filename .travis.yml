@@ -15,6 +15,7 @@ install:
     - conda create -y -q -n test-environment python=$TRAVIS_PYTHON_VERSION pip pytest codecov pytest-cov scipy numpy matplotlib
     - conda activate test-environment
     - conda install -y -c conda-forge ndcctools
+    - conda install -c anaconda dill
     - cd ..
     - git clone https://tjstruck@bitbucket.org/gutenkunstlab/dadi.git
     - cd dadi
