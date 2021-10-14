@@ -4,3 +4,6 @@ dist/*
 examples/snakepipe/.snakemake/*
 examples/snakepipe/1KG.*
 */.DS_Store
+*/__pycache__/*
+.coverage
+tests/test_results/*.opts.*

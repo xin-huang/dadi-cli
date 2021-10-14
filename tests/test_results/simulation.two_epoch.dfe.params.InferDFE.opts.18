@@ -1,6 +1,0 @@
-# /xdisk/rgutenk/xinhuang/software/anaconda3/bin/dadi-cli InferDFE --fs ./tests/example_data/two_epoch_non.fs --cache1d ./tests/example_data/cache_two_epoch_1d.bpkl --demo-popt ./tests/example_data/example.two_epoch.demo.params.InferDM.bestfits --pdf1d lognormal --ratio 2.31 --p0 1 1 --ubounds 10 10 --lbounds 10e-3 10e-3 --output-prefix ./tests/test_results/simulation.two_epoch.dfe.params --optimizations 5
--58.29797839396349	2.9874174167986807	3.9777634662687325	2309.5036233851515
--58.29797839396349	2.9874174167986807	3.9777634662687325	2309.5036233851515
--58.29797839396349	2.9874174167986807	3.9777634662687325	2309.5036233851515
--58.29797839396349	2.9874174167986807	3.9777634662687325	2309.5036233851515
--58.29589458860782	2.9973444221735543	3.9961854893586826	2309.5036233851515
