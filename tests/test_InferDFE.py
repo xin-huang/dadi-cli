@@ -25,7 +25,7 @@ def test_InferDFE(capsys):
     number_of_fits = sum([ele.startswith('#') != True for ele in open(fits[-1]).readlines()])
     assert threads == number_of_fits
 
-#@pytest.mark.skip(reason="no way of currently testing this")
+@pytest.mark.skip(reason="no way of currently testing this")
 def test_InferDFE_wq(capsys):
     threads = 3
     fits_fid = "./tests/example_data/example.two_epoch.demo.params.InferDM.bestfits"
