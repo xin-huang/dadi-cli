@@ -1,0 +1,4 @@
+# /xdisk/rgutenk/xinhuang/software/anaconda3/bin/dadi-cli InferDM --fs ./tests/example_data/two_epoch_syn.fs --model two_epoch --grids 120 140 160 --p0 1 .5 --ubounds 10 10 --lbounds 10e-3 10e-3 --output-prefix ./tests/test_results/simulation.two_epoch.demo.params --optimizations 3
+-63.4532411048379	1.7234256179447462	0.012213033658471805	999.7957523474984
+-63.45473222834917	1.4162569400886396	0.01829171374381133	999.4880539787779
+-63.453588914070366	1.56794451746473	0.014345756335357184	999.7325818219865
