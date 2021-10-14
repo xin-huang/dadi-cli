@@ -97,7 +97,7 @@ def main():
     generate_fs_parser.add_argument('--vcf', type=str, required=True, help='The VCF file for generating frequency spectrum')
     generate_fs_parser.add_argument('--bootstrap', type=_check_positive_int, help='The times to perform bootstrapping')
     generate_fs_parser.add_argument('--chunk-size', type=_check_positive_int, help='The chunk size to divide the genomes for bootstrapping', dest='chunk_size')
-
+    generate_fs_parser.add_argument('--seed', type=_check_positive_int, help='random seed for bootstrapping')
 
     # subparser for generating cache
     generate_cache_parser = subparsers.add_parser('GenerateCache', help='Generate selection coefficient cache for inferring DFE')
@@ -224,7 +224,7 @@ def main():
     if args.subcommand == 'GenerateFs':
 
         from src.GenerateFs import generate_fs
-        generate_fs(vcf=args.vcf, output=args.output, bootstrap=args.bootstrap, chunk_size=args.chunk_size,
+        generate_fs(vcf=args.vcf, output=args.output, bootstrap=args.bootstrap, chunk_size=args.chunk_size, seed=args.seed,
                     pop_ids=args.pop_ids, pop_info=args.pop_info, projections=args.projections, polarized=args.polarized)
 
     elif args.subcommand == 'GenerateCache':

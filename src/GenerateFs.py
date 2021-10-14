@@ -1,6 +1,6 @@
 import dadi
 
-def generate_fs(vcf, output, pop_ids, pop_info, projections, polarized, bootstrap, chunk_size):
+def generate_fs(vcf, output, pop_ids, pop_info, projections, polarized, bootstrap, chunk_size, seed):
    
     dd = dadi.Misc.make_data_dict_vcf(vcf_filename=vcf, popinfo_filename=pop_info)
     if bootstrap == None: 
@@ -8,11 +8,12 @@ def generate_fs(vcf, output, pop_ids, pop_info, projections, polarized, bootstra
         fs.to_file(output)
     else:
         for b in range(bootstrap):
-            fs = generate_bootstrap_fs(dd, chunk_size, pop_ids, projections, polarized)
+            fs = generate_bootstrap_fs(dd, chunk_size, pop_ids, projections, polarized, seed)
             fs.to_file(output + '.bootstrapping.' + str(b) + '.fs')
 
-def generate_bootstrap_fs(dd, chunk_size, pop_ids, projections, polarized):
+def generate_bootstrap_fs(dd, chunk_size, pop_ids, projections, polarized, seed):
     import random
+    if seed != None: random.seed(seed)
     # split the dictionary by chromosome name
     ndd = {}
     for k in dd.keys():
