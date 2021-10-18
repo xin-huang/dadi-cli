@@ -1,4 +1,4 @@
-import os, time
+import os, time, inspect
 import numpy as np
 import dadi, nlopt
 
@@ -11,12 +11,18 @@ def pts_l_func(fs):
 
 def infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds, 
                      fixed_params, misid, cuda):
+    # Check if demographic function uses inbreeding, need to be done before wrapping
+    if 'from_phi_inbreeding' in  inspect.getsource(func):
+        inbreeding = True
+    else:
+        inbreeding = False
     # TODO: Need to consider appropriate rtol & atol values, and whether these maxeval are appropriate
     if cuda:
         dadi.cuda_enabled(True)
 
     if misid:
         func = dadi.Numerics.make_anc_state_misid_func(func)
+    
     func_ex = dadi.Numerics.make_extrap_func(func)
 
     # Randomize starting parameter values
@@ -25,17 +31,19 @@ def infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds,
     p0 = dadi.Misc.perturb_params(p0, fold=1, upper_bound=upper_bounds,
                                   lower_bound=lower_bounds)
 
-    # First, global optimization in which sample sizes are at most 20 per axis
-    # TODO: Need option to disable this if modeling inbreeding
-    proj_ns = np.minimum(fs.sample_sizes, 20)
-    fs_proj = fs.project(proj_ns)
-    pts_l_proj = pts_l_func(fs_proj)
-    popt_global, _ = dadi.Inference.opt(p0, fs_proj, func_ex, pts_l_proj,
-                                        lower_bound=lower_bounds,
-                                        upper_bound=upper_bounds, fixed_params=fixed_params,
-                                        algorithm=nlopt.GN_MLSL,
-                                        local_optimizer=nlopt.LN_BOBYQA, maxeval=100)
-
+    if not inbreeding:
+        # First, global optimization in which sample sizes are at most 20 per axis
+        # TODO: Need option to disable this if modeling inbreeding
+        proj_ns = np.minimum(fs.sample_sizes, 20)
+        fs_proj = fs.project(proj_ns)
+        pts_l_proj = pts_l_func(fs_proj)
+        popt_global, _ = dadi.Inference.opt(p0, fs_proj, func_ex, pts_l_proj,
+                                            lower_bound=lower_bounds,
+                                            upper_bound=upper_bounds, fixed_params=fixed_params,
+                                            algorithm=nlopt.GN_MLSL,
+                                            local_optimizer=nlopt.LN_BOBYQA, maxeval=100)
+    else:
+        popt_global = p0
     # Now local optimization
     if pts_l is None:
         pts_l = pts_l_func(fs)
