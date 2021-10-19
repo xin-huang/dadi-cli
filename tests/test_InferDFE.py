@@ -6,8 +6,8 @@ import glob
 import os
 
 try:
-    if not os.path.exists("test_results"):
-        os.makedirs("test_results")
+    if not os.path.exists("./tests/test_results"):
+        os.makedirs("./tests/test_results")
 except:
     pass
 
@@ -33,10 +33,10 @@ def test_InferDFE_seed(capsys):
         "--fs ./tests/example_data/two_epoch_non.fs --cache1d ./tests/example_data/cache_two_epoch_1d.bpkl " +
         "--demo-popt " + fits_fid + " --pdf1d lognormal --ratio 2.31 " +
         "--p0 1 1 --ubounds 10 10 --lbounds 10e-3 10e-3 " + 
-        "--output-prefix ./tests/test_results/simulation.two_epoch.dfe.params " +
+        "--output-prefix ./tests/test_results/simulation.two_epoch.dfe.seeded.params " +
         "--seed 12345 --optimizations " + str(threads), shell=True
     )
-    fits = open(glob.glob("./tests/test_results/simulation.two_epoch.dfe.params.InferDFE.opts.*")[-1],'r').readlines()
+    fits = open(glob.glob("./tests/test_results/simulation.two_epoch.dfe.seeded.params.InferDFE.opts.*")[-1],'r').readlines()
     assert fits[1] == fits[2] == fits[3]
 
 @pytest.mark.skip(reason="no way of currently testing this")

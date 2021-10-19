@@ -29,10 +29,10 @@ def test_InferDM_seed(capsys):
         "dadi-cli InferDM " + 
         "--fs ./tests/example_data/two_epoch_syn.fs --model two_epoch " +
         "--grids 120 140 160 --p0 1 .5 --ubounds 10 10 --lbounds 10e-3 10e-3 " + 
-        "--output-prefix ./tests/test_results/simulation.two_epoch.demo.params " +
+        "--output-prefix ./tests/test_results/simulation.two_epoch.demo.seeded.params " +
         "--seed 12345 --optimizations " + str(threads), shell=True
     )
-    fits = open(glob.glob("./tests/test_results/simulation.two_epoch.demo.params.InferDM.opts.*")[-1],'r').readlines()
+    fits = open(glob.glob("./tests/test_results/simulation.two_epoch.demo.seeded.params.InferDM.opts.*")[-1],'r').readlines()
     assert fits[1] == fits[2] == fits[3]
 
 # dadi-cli InferDM --fs ./example_data/two_epoch_syn.fs --model two_epoch_1d --grids 120 140 160 --p0 1 .5 --ubounds 10 10 --lbounds 10e-3 10e-3 \
