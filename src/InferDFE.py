@@ -2,18 +2,18 @@ import dadi
 import dadi.DFE
 #import dadi.NLopt_mod
 import pickle, glob, nlopt
-#import os, time
+import os, time
 import numpy as np
 from src.Pdfs import get_dadi_pdf
 
 def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
               demo_popt, p0, upper_bounds, lower_bounds, fixed_params, misid, cuda, seed):
 
-    #ts = time.time()
     # Randomize starting parameter values
     if seed != None: 
         np.random.seed(seed)
     else:
+        ts = time.time()
         seed = int(time.time()) + int(os.getpid())
         np.random.seed(seed)
 
