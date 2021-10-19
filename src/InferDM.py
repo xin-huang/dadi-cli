@@ -28,9 +28,11 @@ def infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds,
     # Randomize starting parameter values
     if seed != None: 
         np.random.seed(seed)
+        global_algorithm = nlopt.GN_MLSL_LDS
     else:
         seed = int(time.time()) + int(os.getpid())
         np.random.seed(seed)
+        global_algorithm = nlopt.GN_MLSL
     p0 = dadi.Misc.perturb_params(p0, fold=1, upper_bound=upper_bounds,
                                   lower_bound=lower_bounds)
 
@@ -43,7 +45,7 @@ def infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds,
         popt_global, _ = dadi.Inference.opt(p0, fs_proj, func_ex, pts_l_proj,
                                             lower_bound=lower_bounds,
                                             upper_bound=upper_bounds, fixed_params=fixed_params,
-                                            algorithm=nlopt.GN_MLSL,
+                                            algorithm=global_algorithm,
                                             local_optimizer=nlopt.LN_BOBYQA, maxeval=100)
     else:
         popt_global = p0
