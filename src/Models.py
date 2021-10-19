@@ -3,51 +3,27 @@ def get_dadi_model_func(model_name, withSelection=False, single_gamma=False):
     if withSelection:
         import dadi.DFE as DFE
         if single_gamma:
-            if model_name == 'IM': return DFE.DemogSelModels.IM_single_gamma
-            elif model_name == 'IM_pre': return DFE.DemogSelModels.IM_pre_single_gamma
-            elif model_name == 'split_mig': return DFE.DemogSelModels.split_mig_single_gamma
-            elif model_name == 'split_asym_mig': return DFE.DemogSelModels.split_asym_mig_single_gamma
-            else: raise Exception('Cannot find mode: ' + model_name + ' plus selection with single gamma')
+            try:
+                return getattr(DFE.DemogSelModels, model_name+'_single_gamma')
+            except:
+                raise Exception('Cannot find mode: ' + model_name + ' plus selection with single gamma')
         else:
-            if model_name == 'IM': return DFE.DemogSelModels.IM
-            elif model_name == 'IM_pre': return DFE.DemogSelModels.IM_pre
-            elif model_name == 'split_mig': return DFE.DemogSelModels.split_mig
-            elif model_name == 'split_asym_mig': return DFE.DemogSelModels.split_asym_mig
-            elif model_name == 'equil': return DFE.DemogSelModels.equil 
-            elif model_name == 'two_epoch': return DFE.DemogSelModels.two_epoch
-            elif model_name == 'three_epoch': return DFE.DemogSelModels.three_epoch 
-            elif model_name == 'mixture': return DFE.mixture
-            else: raise Exception('Cannot find model: ' + model_name + ' plus selection')
+            if model_name == 'mixture': 
+                return DFE.mixture
+            else:
+                try:
+                    return getattr(DFE.DemogSelModels, model_name)
+                except:
+                    raise Exception('Cannot find model: ' + model_name + ' plus selection')
     else:
         import dadi
-        if model_name == 'bottlegrowth_1d':
-            return dadi.Demographics1D.bottlegrowth
-        elif model_name == 'growth':
-            return dadi.Demographics1D.growth
-        elif model_name == 'snm_1d':
-            return dadi.Demographics1D.snm
-        elif model_name == 'three_epoch':
-            return dadi.Demographics1D.three_epoch
-        elif model_name == 'two_epoch':
-            return dadi.Demographics1D.two_epoch
-        elif model_name == 'bottlegrowth_2d':
-            return dadi.Demographics2D.bottlegrowth
-        elif model_name == 'bottlegrowth_split':
-            return dadi.Demographics2D.bottlegrowth_split
-        elif model_name == 'bottlegrowth_split_mig':
-            return dadi.Demographics2D.bottlegrowth_split_mig
-        elif model_name == 'IM':
-            return dadi.Demographics2D.IM
-        elif model_name == 'split_asym_mig':
-            return dadi.Demographics2D.split_asym_mig
-        elif model_name == 'IM_pre':
-            return dadi.Demographics2D.IM_pre
-        elif model_name == 'split_mig':
-            return dadi.Demographics2D.split_mig
-        elif model_name == 'snm_2d':
-            return dadi.Demographics2D.snm
-        else:
-            raise Exception('Demographic model ' + model_name + ' is not available!')
+        try:
+            return getattr(dadi.Demographics1D, model_name.replace('_1d',''))
+        except:
+            try:
+                return getattr(dadi.Demographics2D, model_name.replace('_2d',''))
+            except:
+                raise Exception('Demographic model ' + model_name + ' is not available!')
             
 def get_dadi_model_params(model_name):
     if model_name == 'bottlegrowth_1d':
