@@ -157,6 +157,7 @@ def main():
     infer_dfe_parser.add_argument('--check-convergence', default=False, action='store_true', dest='check_convergence', help='Stop optimization runs when convergence criteria are reached. BestFit results file will be call <output_prefix>.InferDFE.bestfits. Default: False')
     infer_dfe_parser.add_argument('--pdf-file', type=str, required=False, dest='pdf_file', help='Name of python probability density function module file (not including .py) that contains custom probability density functions to use. Default: None')
     infer_dfe_parser.add_argument('--work-queue', nargs=2, default=[], action='store', dest='work_queue', help='Enable Work Queue. Additional arguments are the WorkQueue project name and the name of the password file.')
+    infer_dfe_parser.add_argument('--seed', type=_check_positive_int, default=None, help='random seed for inferring DFE')
 
 
     # subparser for plotting
@@ -336,7 +337,8 @@ def main():
 
             for ii in range(args.optimizations): 
                 t = wq.PythonTask(infer_dfe, args.fs, args.cache1d, args.cache2d, args.pdf1d, args.pdf2d, 
-                                args.ratio, args.demo_popt, args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
+                                args.ratio, args.demo_popt, args.p0, args.ubounds, args.lbounds, args.constants, 
+                                args.misid, args.cuda, args.seed)
                 # # If using a custom model, need to include the file from which it comes
                 # if args.pdf_file:
                 #     t.specify_input_file(args.pdf_file+'.py')
@@ -345,7 +347,8 @@ def main():
             import multiprocessing; from multiprocessing import Process, Queue
 
             #worker_args = (fs, func, args.p0, args.grids, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
-            worker_args = (args.fs, args.cache1d, args.cache2d, args.pdf1d, args.pdf2d, args.ratio, args.demo_popt, args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
+            worker_args = (args.fs, args.cache1d, args.cache2d, args.pdf1d, args.pdf2d, args.ratio, args.demo_popt, 
+                args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, args.seed)
 
             # Queues to manage input and output
             in_queue, out_queue = Queue(), Queue()

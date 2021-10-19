@@ -7,11 +7,15 @@ import numpy as np
 from src.Pdfs import get_dadi_pdf
 
 def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
-              demo_popt, p0, upper_bounds, lower_bounds, fixed_params, misid, cuda):
+              demo_popt, p0, upper_bounds, lower_bounds, fixed_params, misid, cuda, seed):
 
     #ts = time.time()
-    #seed = int(ts) + int(os.getpid())
-    #np.random.seed(seed)
+    # Randomize starting parameter values
+    if seed != None: 
+        np.random.seed(seed)
+    else:
+        seed = int(time.time()) + int(os.getpid())
+        np.random.seed(seed)
 
     fs = dadi.Spectrum.from_file(fs)
 
