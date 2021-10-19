@@ -25,6 +25,20 @@ def test_InferDFE(capsys):
     number_of_fits = sum([ele.startswith('#') != True for ele in open(fits[-1]).readlines()])
     assert threads == number_of_fits
 
+def test_InferDFE_seed(capsys):
+    threads = 3
+    fits_fid = "./tests/example_data/example.two_epoch.demo.params.InferDM.bestfits"
+    subprocess.run(
+        "dadi-cli InferDFE " + 
+        "--fs ./tests/example_data/two_epoch_non.fs --cache1d ./tests/example_data/cache_two_epoch_1d.bpkl " +
+        "--demo-popt " + fits_fid + " --pdf1d lognormal --ratio 2.31 " +
+        "--p0 1 1 --ubounds 10 10 --lbounds 10e-3 10e-3 " + 
+        "--output-prefix ./tests/test_results/simulation.two_epoch.dfe.params " +
+        "--seed 12345 --optimizations " + str(threads), shell=True
+    )
+    fits = open(glob.glob("./tests/test_results/simulation.two_epoch.dfe.params.InferDFE.opts.*")[-1],'r').readlines()
+    assert fits[1] == fits[2] == fits[3]
+
 @pytest.mark.skip(reason="no way of currently testing this")
 def test_InferDFE_wq(capsys):
     threads = 3
