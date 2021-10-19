@@ -10,7 +10,7 @@ def pts_l_func(fs):
     return (int(n*1.1)+2, int(n*1.2)+4, int(n*1.3)+6)
 
 def infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds, 
-                     fixed_params, misid, cuda):
+                     fixed_params, misid, cuda, seed):
     # Check if demographic function uses inbreeding, need to be done before wrapping
     if 'from_phi_inbreeding' in  inspect.getsource(func):
         inbreeding = True
@@ -26,8 +26,11 @@ def infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds,
     func_ex = dadi.Numerics.make_extrap_func(func)
 
     # Randomize starting parameter values
-    seed = int(time.time()) + int(os.getpid())
-    np.random.seed(seed)
+    if seed != None: 
+        np.random.seed(seed)
+    else:
+        seed = int(time.time()) + int(os.getpid())
+        np.random.seed(seed)
     p0 = dadi.Misc.perturb_params(p0, fold=1, upper_bound=upper_bounds,
                                   lower_bound=lower_bounds)
 
