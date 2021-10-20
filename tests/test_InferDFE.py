@@ -54,7 +54,8 @@ def test_InferDFE_wq(capsys):
         "--output-prefix ./tests/test_results/simulation.two_epoch.dfe.workqueue.params --optimizations " + str(optimizations) + ' ' +
         "--work-queue test-dfe-two-epoch ./tests/mypwfile", shell=True
     )
-    factory.kill()
+    os.killpg(os.getpgid(factory.pid), signal.SIGTERM)
+    # factory.kill()
     fits = glob.glob("./tests/test_results/simulation.two_epoch.dfe.workqueue.params.InferDFE.opts.*")
     number_of_fits = sum([ele.startswith('#') != True for ele in open(fits[-1]).readlines()])
     assert optimizations == number_of_fits
