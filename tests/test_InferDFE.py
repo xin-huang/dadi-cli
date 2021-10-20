@@ -1,9 +1,9 @@
 import dadi
 import pytest
-import numpy as np
 import subprocess
 import glob
 import os
+import signal
 
 try:
     if not os.path.exists("./tests/test_results"):
