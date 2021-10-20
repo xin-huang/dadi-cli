@@ -1,13 +1,13 @@
 import dadi
 import dadi.DFE
 #import dadi.NLopt_mod
-import pickle, glob, nlopt
+import nlopt
 import os, time
 import numpy as np
 from src.Pdfs import get_dadi_pdf
 
-def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
-              demo_popt, p0, upper_bounds, lower_bounds, fixed_params, misid, cuda, seed):
+def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, theta,
+              p0, upper_bounds, lower_bounds, fixed_params, misid, cuda, seed):
 
     # Randomize starting parameter values
     if seed != None: 
@@ -17,18 +17,18 @@ def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
         seed = int(time.time()) + int(os.getpid())
         np.random.seed(seed)
 
-    fs = dadi.Spectrum.from_file(fs)
+    # fs = dadi.Spectrum.from_file(fs)
 
-    theta = ns_s * _get_theta(demo_popt)
-    #popt = np.array(open(popt, 'r').readline().rstrip().split(), dtype=float)
-    #theta = ns_s * popt[-1]
+    # theta = ns_s * theta
+    # #popt = np.array(open(popt, 'r').readline().rstrip().split(), dtype=float)
+    # #theta = ns_s * popt[-1]
 
     if cache1d != None:
-        spectra1d = pickle.load(open(cache1d, 'rb'))
-        func = spectra1d.integrate
+        # spectra1d = pickle.load(open(cache1d, 'rb'))
+        func = cache1d.integrate
     if cache2d != None:
-        spectra2d = pickle.load(open(cache2d, 'rb'))
-        func = spectra2d.integrate
+        # spectra2d = pickle.load(open(cache2d, 'rb'))
+        func = cache2d.integrate
    
     if sele_dist != None: 
         sele_dist = get_dadi_pdf(sele_dist)
@@ -39,7 +39,7 @@ def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
     
     if (cache1d != None) and (cache2d != None):
         func = dadi.DFE.Cache2D_mod.mixture
-        func_args = [spectra1d, spectra2d, sele_dist, sele_dist2, theta]
+        func_args = [cache1d, cache2d, sele_dist, sele_dist2, theta]
     else:
         func_args = [sele_dist, theta]
         
@@ -53,14 +53,14 @@ def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, ns_s,
     popt = dadi.Inference.optimize_log(p0, fs, func, pts=None,
                                        func_args=func_args, fixed_params=fixed_params,
                                        lower_bound=lower_bounds, upper_bound=upper_bounds,
-                                       verbose=0, maxiter=2000, multinom=False)
+                                       verbose=0, maxiter=10, multinom=False)
     #print(popt)
 
     #print('Optimized parameters: {0}'.format(popt))
 
     # Get expected SFS for MLE
     if (cache1d != None) and (cache2d != None):
-        model = func(popt, None, spectra1d, spectra2d, sele_dist, sele_dist2, theta, None)
+        model = func(popt, None, cache1d, cache2d, sele_dist, sele_dist2, theta, None)
     else:
         model = func(popt, None, sele_dist, theta, None)
     #print(model)

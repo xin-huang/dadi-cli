@@ -327,6 +327,18 @@ def main():
         else: 
             args.p0 = [float(_) for _ in args.p0]
 
+        fs = dadi.Spectrum.from_file(args.fs)
+        from src.InferDFE import _get_theta
+        theta = _get_theta(args.demo_popt) * args.ratio
+
+        import pickle
+        if args.cache1d != None:
+            cache1d = pickle.load(open(args.cache1d, 'rb'))
+        else: cache1d = args.cache1d
+        if args.cache2d != None:
+            cache2d = pickle.load(open(args.cache2d, 'rb'))
+        else: cache2d = args.cache2d
+
         from src.InferDFE import infer_dfe
         if args.work_queue:
             import work_queue as wq
@@ -336,9 +348,8 @@ def main():
                 raise ValueError('Work Queue password file "{0}" not found.'.format(args.work_queue[1]))
 
             for ii in range(args.optimizations): 
-                t = wq.PythonTask(infer_dfe, args.fs, args.cache1d, args.cache2d, args.pdf1d, args.pdf2d, 
-                                args.ratio, args.demo_popt, args.p0, args.ubounds, args.lbounds, args.constants, 
-                                args.misid, args.cuda, args.seed)
+                t = wq.PythonTask(infer_dfe, fs, cache1d, cache2d, args.pdf1d, args.pdf2d, theta, 
+                args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, args.seed)
                 # # If using a custom model, need to include the file from which it comes
                 # if args.pdf_file:
                 #     t.specify_input_file(args.pdf_file+'.py')
@@ -347,8 +358,8 @@ def main():
             import multiprocessing; from multiprocessing import Process, Queue
 
             #worker_args = (fs, func, args.p0, args.grids, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
-            worker_args = (args.fs, args.cache1d, args.cache2d, args.pdf1d, args.pdf2d, args.ratio, args.demo_popt, 
-                args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, args.seed)
+            worker_args = (fs, cache1d, cache2d, args.pdf1d, args.pdf2d, theta, 
+            args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, args.seed)
 
             # Queues to manage input and output
             in_queue, out_queue = Queue(), Queue()
