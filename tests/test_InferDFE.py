@@ -39,7 +39,6 @@ def test_InferDFE_seed(capsys):
     fits = open(glob.glob("./tests/test_results/simulation.two_epoch.dfe.seeded.params.InferDFE.opts.*")[-1],'r').readlines()
     assert fits[1] == fits[2] == fits[3]
 
-#@pytest.mark.skip(reason="no way of currently testing this")
 def test_InferDFE_wq(capsys):
     optimizations = 3
     fits_fid = "./tests/example_data/example.two_epoch.demo.params.InferDM.bestfits"
