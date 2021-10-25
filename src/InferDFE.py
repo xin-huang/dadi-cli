@@ -7,7 +7,7 @@ import numpy as np
 from src.Pdfs import get_dadi_pdf
 
 def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, theta,
-              p0, upper_bounds, lower_bounds, fixed_params, misid, cuda, seed):
+              p0, upper_bounds, lower_bounds, fixed_params, misid, cuda, maxeval, seed):
 
     # Randomize starting parameter values
     if seed != None: 
@@ -53,7 +53,7 @@ def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, theta,
     popt, _ = dadi.Inference.opt(p0, fs, func, pts=None, 
                                 func_args=func_args, fixed_params=fixed_params,
                                 lower_bound=lower_bounds, upper_bound=upper_bounds,
-                                maxeval=100, multinom=False)
+                                maxeval=maxeval, multinom=False)
     #print(popt)
 
     #print('Optimized parameters: {0}'.format(popt))
