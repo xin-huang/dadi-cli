@@ -133,6 +133,7 @@ def main():
     infer_demo_parser.add_argument('--optimizations', default=1, type=_check_positive_int, help='Number of optimizations to run in parallel. Default: 1.')
     infer_demo_parser.add_argument('--check-convergence', default=False, action='store_true', dest='check_convergence', help='Stop optimization runs when convergence criteria are reached. BestFit results file will be call <output_prefix>.InferDM.bestfits. Default: False')
     infer_demo_parser.add_argument('--work-queue', nargs=2, default=[], action='store', dest='work_queue', help='Enable Work Queue. Additional arguments are the WorkQueue project name and the name of the password file.')
+    infer_demo_parser.add_argument('--maxeval', type=_check_positive_int, default=100, help='number of parameter evaluations tried for optimizing demography. Default: 100')
     infer_demo_parser.add_argument('--seed', type=_check_positive_int, default=None, help='random seed for inferring demography')
 
 
@@ -157,6 +158,7 @@ def main():
     infer_dfe_parser.add_argument('--check-convergence', default=False, action='store_true', dest='check_convergence', help='Stop optimization runs when convergence criteria are reached. BestFit results file will be call <output_prefix>.InferDFE.bestfits. Default: False')
     infer_dfe_parser.add_argument('--pdf-file', type=str, required=False, dest='pdf_file', help='Name of python probability density function module file (not including .py) that contains custom probability density functions to use. Default: None')
     infer_dfe_parser.add_argument('--work-queue', nargs=2, default=[], action='store', dest='work_queue', help='Enable Work Queue. Additional arguments are the WorkQueue project name and the name of the password file.')
+    infer_dfe_parser.add_argument('--maxeval', type=_check_positive_int, default=100, help='number of parameter evaluations tried for optimizing demography. Default: 100')
     infer_dfe_parser.add_argument('--seed', type=_check_positive_int, default=None, help='random seed for inferring DFE')
 
 
@@ -266,7 +268,7 @@ def main():
 
             for ii in range(args.optimizations): 
                 t = wq.PythonTask(infer_demography, fs, func, args.p0, args.grids, 
-                                  args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, args.seed)
+                                  args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, args.maxeval, args.seed)
                 # If using a custom model, need to include the file from which it comes
                 if args.model_file:
                     t.specify_input_file(args.model_file+'.py')
@@ -274,7 +276,7 @@ def main():
         else:
             import multiprocessing; from multiprocessing import Process, Queue
 
-            worker_args = (fs, func, args.p0, args.grids, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, args.seed)
+            worker_args = (fs, func, args.p0, args.grids, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, args.maxeval, args.seed)
 
             # Queues to manage input and output
             in_queue, out_queue = Queue(), Queue()
@@ -349,7 +351,7 @@ def main():
 
             for ii in range(args.optimizations): 
                 t = wq.PythonTask(infer_dfe, fs, cache1d, cache2d, args.pdf1d, args.pdf2d, theta, 
-                args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, args.seed)
+                args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, args.maxeval, args.seed)
                 # # If using a custom model, need to include the file from which it comes
                 # if args.pdf_file:
                 #     t.specify_input_file(args.pdf_file+'.py')
@@ -359,7 +361,7 @@ def main():
 
             #worker_args = (fs, func, args.p0, args.grids, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
             worker_args = (fs, cache1d, cache2d, args.pdf1d, args.pdf2d, theta, 
-            args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, args.seed)
+            args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, args.maxeval, args.seed)
 
             # Queues to manage input and output
             in_queue, out_queue = Queue(), Queue()
