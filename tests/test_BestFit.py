@@ -36,6 +36,14 @@ def test_get_bestfit_params():
     assert ll_delta >= max(ll_converged_list) - min(ll_converged_list)
     assert len(top_list) == num_top
 
+def test_get_bestfit_params_no_convergence(capfd):
+    ll_delta = 1e-20
+    BestFit.get_bestfit_params(path='./tests/example_data/example.bestfit.two_epoch.demo.params.InferDM.opts.0', misid=True, lbounds=None, 
+        ubounds=None, output='./tests/test_results/example.bestfit.two_epoch.demo.params.InferDM.bestfits', 
+        model_name='two_epoch', pdf_name=None, delta=ll_delta, Nclose=3, Nbest=10)
+    out, err = capfd.readouterr()
+    assert out.strip() == "No convergence"
+
 def test_opt_params_converged():
     pass
 
