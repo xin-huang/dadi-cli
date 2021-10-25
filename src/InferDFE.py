@@ -50,10 +50,10 @@ def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, theta,
     # Initial guess and bounds
     #print(p0)
     p0 = dadi.Misc.perturb_params(p0, lower_bound=lower_bounds, upper_bound=upper_bounds)
-    popt = dadi.Inference.optimize_log(p0, fs, func, pts=None,
-                                       func_args=func_args, fixed_params=fixed_params,
-                                       lower_bound=lower_bounds, upper_bound=upper_bounds,
-                                       verbose=0, maxiter=10, multinom=False)
+    popt, _ = dadi.Inference.opt(p0, fs, func, pts=None, 
+                                func_args=func_args, fixed_params=fixed_params,
+                                lower_bound=lower_bounds, upper_bound=upper_bounds,
+                                maxeval=100, multinom=False)
     #print(popt)
 
     #print('Optimized parameters: {0}'.format(popt))
