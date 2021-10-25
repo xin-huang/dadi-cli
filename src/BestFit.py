@@ -3,7 +3,7 @@ import numpy as np
 from src.Models import get_dadi_model_params
 from src.Pdfs import get_dadi_pdf_params
 
-def get_bestfit_params(path, misid, lbounds, ubounds, output, model_name=None, pdf_name=None, delta=0.05, Nclose=3, Nbest=100):
+def get_bestfit_params(path, misid, lbounds, ubounds, output, delta, model_name=None, pdf_name=None, Nclose=3, Nbest=100):
     files = glob.glob(path)
     res, comments = [], []
     
