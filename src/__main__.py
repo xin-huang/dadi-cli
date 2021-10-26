@@ -209,7 +209,7 @@ def main():
     bestfit_parser.add_argument('--lbounds', type=float, nargs='+', required=True, help='lower bounds of the optimized parameters, please use -1 to indicate a parameter without lower bound')
     bestfit_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='upper bounds of the optimized parameters, please use -1 to indicate a parameter without upper bound')
     bestfit_parser.add_argument('--misid', default=False, action='store_true', help='determine whether the parameter for misidentifying ancestral alleles is used or not; default: False')
-    bestfit_parser.add_argument('--delta-ll', type=float, required=False, dest='delta_ll', default=0.05, help='difference in log-likelihood from best optimization to consider an optimization convergent. Default: 0.05')
+    bestfit_parser.add_argument('--delta-ll', type=_check_positive_num, required=False, dest='delta_ll', default=0.05, help='difference in log-likelihood from best optimization to consider an optimization convergent. Default: 0.05')
 
     # subparser for getting the available demographic models in dadi
     model_parser = subparsers.add_parser('Model', help='display available demographic models')
