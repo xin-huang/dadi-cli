@@ -305,7 +305,8 @@ def main():
             fid.flush()
             if args.check_convergence:
                 result = get_bestfit_params(path=args.output_prefix+'.InferDM.opts.*', model_name=args.model, misid=args.misid,
-                                            lbounds=args.lbounds, ubounds=args.ubounds, output=args.output_prefix+'.InferDM.bestfits')
+                                            lbounds=args.lbounds, ubounds=args.ubounds, output=args.output_prefix+'.InferDM.bestfits',
+                                            delta=0.05)
                 if result is not None:
                     break
         fid.close()
@@ -389,7 +390,8 @@ def main():
             fid.write('{0}\t{1}\t{2}\n'.format(result[0], '\t'.join(str(_) for _ in result[1]), result[2]))
             fid.flush()
             if args.check_convergence:
-                result = get_bestfit_params(path=args.output_prefix+'.InferDFE.opts.*', lbounds=args.lbounds, ubounds=args.ubounds, output=args.output_prefix+'.InferDFE.bestfits')
+                result = get_bestfit_params(path=args.output_prefix+'.InferDFE.opts.*', lbounds=args.lbounds, ubounds=args.ubounds, 
+                    output=args.output_prefix+'.InferDFE.bestfits', delta=0.05)
                 if result is not None:
                     break
         fid.close()
