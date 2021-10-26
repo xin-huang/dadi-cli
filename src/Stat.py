@@ -57,32 +57,32 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, grids
             sfunc = dadi.Numerics.make_anc_state_misid_func(sfunc)
         def func(params, ns, pts):
             return sfunc(params, None, sele_dist, theta, None, exterior_int=True)
-
-    if model != None:
-        popt = np.array(demo_popt)#[1:-1]
-        func_ex = dadi.Numerics.make_extrap_func(func)
-        uncerts_adj = dadi.Godambe.GIM_uncert(func_ex, grids, all_boot, popt,
-                                              fs, multinom=True, log=logscale)
-        uncerts_adj = uncerts_adj[:-1]
-    else:
-        if (cache1d != None) and (cache2d != None):
-            popt = np.array([dfe_popt[1], dfe_popt[2], dfe_popt[4], dfe_popt[5]])
+    f = open(output, 'w')
+    for eps in [0.01, 0.001, 0.0001]:
+        if model != None:
+            popt = np.array(demo_popt)#[1:-1]
+            func_ex = dadi.Numerics.make_extrap_func(func)
+            uncerts_adj = dadi.Godambe.GIM_uncert(func_ex, grids, all_boot, popt,
+                                                  fs, multinom=True, log=logscale, eps=eps)
+            uncerts_adj = uncerts_adj[:-1]
         else:
-            popt = np.array(dfe_popt)#[1:]
-        boot_theta_adjusts = [b.sum()/fs.sum() for b in all_boot]
-        uncerts_adj = dadi.Godambe.GIM_uncert(func, [], all_boot, popt,
-                                              fs, multinom=False, log=logscale,
-                                              boot_theta_adjusts=boot_theta_adjusts)
+            if (cache1d != None) and (cache2d != None):
+                popt = np.array([dfe_popt[1], dfe_popt[2], dfe_popt[4], dfe_popt[5]])
+            else:
+                popt = np.array(dfe_popt)#[1:]
+            boot_theta_adjusts = [b.sum()/fs.sum() for b in all_boot]
+            uncerts_adj = dadi.Godambe.GIM_uncert(func, [], all_boot, popt,
+                                                  fs, multinom=False, log=logscale, eps=eps,
+                                                  boot_theta_adjusts=boot_theta_adjusts)
 
-    with open(output, 'w') as f:
-        f.write('Estimated 95% uncerts (theta adj): {0}'.format(1.96*uncerts_adj) + '\n')
+        f.write('Estimated 95% uncerts (theta adj), with step size '+str(eps)+'): {0}'.format(1.96*uncerts_adj) + '\n')
         if logscale:
             f.write('Lower bounds of 95% confidence interval : {0}'.format(np.exp(np.log(popt)-1.96*uncerts_adj)) + '\n')
-            f.write('Upper bounds of 95% confidence interval : {0}'.format(np.exp(np.log(popt)+1.96*uncerts_adj)) + '\n')
+            f.write('Upper bounds of 95% confidence interval : {0}'.format(np.exp(np.log(popt)+1.96*uncerts_adj)) + '\n\n')
         else:
             f.write('Lower bounds of 95% confidence interval : {0}'.format(popt-1.96*uncerts_adj) + '\n')
-            f.write('Upper bounds of 95% confidence interval : {0}'.format(popt+1.96*uncerts_adj) + '\n')
-
+            f.write('Upper bounds of 95% confidence interval : {0}'.format(popt+1.96*uncerts_adj) + '\n\n')
+    f.close()
 
 def _get_theta(popt):
 
