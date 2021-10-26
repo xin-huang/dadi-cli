@@ -79,3 +79,26 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, grids
         else:
             f.write('Lower bounds of 95% confidence interval : {0}'.format(popt-1.96*uncerts_adj) + '\n')
             f.write('Upper bounds of 95% confidence interval : {0}'.format(popt+1.96*uncerts_adj) + '\n')
+
+
+def _get_theta(popt):
+
+    opts = []
+    fid = open(popt, 'r')
+    for line in fid.readlines():
+        if line.startswith('#'):
+            continue
+        else:
+            try:
+                opts.append([float(_) for _ in line.rstrip().split()])
+            except ValueError:
+                pass
+    fid.close()
+
+    if len(opts) == 0:
+        print('No optimization results found')
+        return
+
+    theta = opts[0][-1]
+
+    return theta

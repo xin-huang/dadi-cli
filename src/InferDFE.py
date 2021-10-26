@@ -76,24 +76,4 @@ def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, theta,
     #    f.write("\n")
     return ll_model, popt, theta
 
-def _get_theta(popt):
 
-    opts = []
-    fid = open(popt, 'r')
-    for line in fid.readlines():
-        if line.startswith('#'):
-            continue
-        else:
-            try:
-                opts.append([float(_) for _ in line.rstrip().split()])
-            except ValueError:
-                pass
-    fid.close()
-
-    if len(opts) == 0:
-        print('No optimization results found')
-        return
-
-    theta = opts[0][-1]
-
-    return theta
