@@ -4,6 +4,11 @@ import subprocess
 from os.path import exists
 from src import BestFit
 
+@pytest.fixture
+def files():
+    pytest.example_input = "./tests/example_data/example.bestfit.two_epoch.demo.params.InferDM.opts.0"
+    pytest.example_output = "./tests/test_results/example.bestfit.two_epoch.demo.params.InferDM.bestfits"
+
 def test_BestFit(capsys):
     subprocess.run(
         "dadi-cli BestFit --input-prefix ./tests/example_data/example.two_epoch.demo.params.InferDM " +
@@ -11,13 +16,13 @@ def test_BestFit(capsys):
     )
     assert exists("./tests/example_data/example.two_epoch.demo.params.InferDM.bestfits")
 
-def test_get_bestfit_params():
+def test_get_bestfit_params(files):
     ll_delta = 0.01
     num_top = 10
-    BestFit.get_bestfit_params(path='./tests/example_data/example.bestfit.two_epoch.demo.params.InferDM.opts.0', misid=True, lbounds=None, 
-        ubounds=None, output='./tests/test_results/example.bestfit.two_epoch.demo.params.InferDM.bestfits', 
+    BestFit.get_bestfit_params(path=pytest.example_input, misid=True, lbounds=None, 
+        ubounds=None, output=pytest.example_output, 
         model_name='two_epoch', pdf_name=None, delta=ll_delta, Nclose=3, Nbest=num_top)
-    fid = open('./tests/test_results/example.bestfit.two_epoch.demo.params.InferDM.bestfits').readlines()
+    fid = open(pytest.example_output).readlines()
     converged_res = False
     ll_converged_list = []
     top_res = False
@@ -37,10 +42,9 @@ def test_get_bestfit_params():
     assert len(top_list) == num_top
 
 def test_get_bestfit_params_no_convergence(capfd):
-    ll_delta = 1e-20
-    BestFit.get_bestfit_params(path='./tests/example_data/example.bestfit.two_epoch.demo.params.InferDM.opts.0', misid=True, lbounds=None, 
-        ubounds=None, output='./tests/test_results/example.bestfit.two_epoch.demo.params.InferDM.bestfits', 
-        model_name='two_epoch', pdf_name=None, delta=ll_delta, Nclose=3, Nbest=10)
+    BestFit.get_bestfit_params(path=pytest.example_input, misid=True, lbounds=None, 
+        ubounds=None, output=pytest.example_output, 
+        model_name='two_epoch', pdf_name=None, delta=1e-20, Nclose=3, Nbest=10)
     out, err = capfd.readouterr()
     assert out.strip() == "No convergence"
 
