@@ -5,14 +5,19 @@ import glob, pickle
 import numpy as np
 from src.Models import get_dadi_model_func
 from src.Pdfs import get_dadi_pdf
+from src.GenerateCache import _get_opt
 
 def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, grids,
                  output, bootstrap_dir, demo_popt, dfe_popt, misid, logscale):
-
-    demo_popt = np.array(open(demo_popt, 'r').readline().rstrip().split(), dtype=float)
+    print('\n'.join([str(ele) for ele in [fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, grids,
+              output, bootstrap_dir, demo_popt, dfe_popt, misid, logscale]]))
+    if demo_popt != None:
+        demo_popt = _get_opt(demo_popt, False)
+        print('\n'.join([str(ele) for ele in demo_popt]))
     if dfe_popt != None:
-        dfe_popt = np.array(open(dfe_popt, 'r').readline().rstrip().split(), dtype=float)
-        theta = ns_s * demo_popt[-1]
+        dfe_popt = _get_opt(dfe_popt, False)
+        #Make sure the BestFit from InferDFE inference always 
+        theta = _get_theta(dfe_popt)
 
     fs = dadi.Spectrum.from_file(fs)
     fs_files = glob.glob(bootstrap_dir + '/*.fs')
@@ -49,14 +54,14 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, grids
             params = np.concatenate([pin[0:2], [0], pin[2:]])
             return mfunc(params, None, s1, s2, sele_dist, 
                          sele_dist2, theta, None, exterior_int=True)
-    else:
+    elif (cache1d != None) or (cache2d != None):
         if misid:
             sfunc = dadi.Numerics.make_anc_state_misid_func(sfunc)
         def func(params, ns, pts):
             return sfunc(params, None, sele_dist, theta, None, exterior_int=True)
 
     if model != None:
-        popt = demo_popt[1:-1]
+        popt = np.array(demo_popt)#[1:-1]
         func_ex = dadi.Numerics.make_extrap_func(func)
         uncerts_adj = dadi.Godambe.GIM_uncert(func_ex, grids, all_boot, popt,
                                               fs, multinom=True, log=logscale)
@@ -71,6 +76,7 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, grids
                                               fs, multinom=False, log=logscale,
                                               boot_theta_adjusts=boot_theta_adjusts)
 
+    print(uncerts_adj)
     with open(output, 'w') as f:
         f.write('Estimated 95% uncerts (theta adj): {0}'.format(1.96*uncerts_adj) + '\n')
         if logscale:
