@@ -30,7 +30,7 @@ def test_InferDM(files):
     number_of_fits = sum([ele.startswith('#') != True for ele in open(fits[-1]).readlines()])
     assert optimizations == number_of_fits
 
-def test_InferDM_seed(capsys):
+def test_InferDM_seed(files):
     optimizations = 3
     subprocess.run(
         pytest.bash_command.replace('.demo.','.demo.seeded.') + str(optimizations) + " --seed 12345" , shell=True
@@ -38,15 +38,14 @@ def test_InferDM_seed(capsys):
     fits = open(glob.glob("./tests/test_results/simulation.two_epoch.demo.seeded.params.InferDM.opts.*")[-1],'r').readlines()
     assert fits[1] == fits[2] == fits[3]
 
-def test_InferDM_wq(capsys):
+def test_InferDM_wq(files):
     optimizations = 3
-    fits_fid = "./tests/example_data/example.two_epoch.demo.params.InferDM.bestfits"
     factory = subprocess.Popen(
         "work_queue_factory -T local -M test-dm-two-epoch -P ./tests/mypwfile --workers-per-cycle=0 -t 10 --cores=1  -w " + str(optimizations), 
         shell=True
         )
     subprocess.run(
-        pytest.bash_command.replace('.demo.','.demo.workqueue.') + " --optimizations " + str(optimizations) + ' ' +
+        pytest.bash_command.replace('.demo.','.demo.workqueue.') + str(optimizations) + ' ' +
         "--work-queue test-dm-two-epoch ./tests/mypwfile", shell=True
         )
     factory.kill()
