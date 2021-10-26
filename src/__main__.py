@@ -330,7 +330,7 @@ def main():
             args.p0 = [float(_) for _ in args.p0]
 
         fs = dadi.Spectrum.from_file(args.fs)
-        from src.InferDFE import _get_theta
+        from src.Stat import _get_theta
         theta = _get_theta(args.demo_popt) * args.ratio
 
         import pickle
