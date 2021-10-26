@@ -9,15 +9,13 @@ from src.GenerateCache import _get_opt
 
 def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, grids,
                  output, bootstrap_dir, demo_popt, dfe_popt, misid, logscale):
-    print('\n'.join([str(ele) for ele in [fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, grids,
-              output, bootstrap_dir, demo_popt, dfe_popt, misid, logscale]]))
+
     if demo_popt != None:
         demo_popt = _get_opt(demo_popt, False)
-        print('\n'.join([str(ele) for ele in demo_popt]))
     if dfe_popt != None:
-        dfe_popt = _get_opt(dfe_popt, False)
         #Make sure the BestFit from InferDFE inference always 
         theta = _get_theta(dfe_popt)
+        dfe_popt = _get_opt(dfe_popt, False)
 
     fs = dadi.Spectrum.from_file(fs)
     fs_files = glob.glob(bootstrap_dir + '/*.fs')
@@ -70,13 +68,12 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, grids
         if (cache1d != None) and (cache2d != None):
             popt = np.array([dfe_popt[1], dfe_popt[2], dfe_popt[4], dfe_popt[5]])
         else:
-            popt = dfe_popt[1:]
+            popt = np.array(dfe_popt)#[1:]
         boot_theta_adjusts = [b.sum()/fs.sum() for b in all_boot]
         uncerts_adj = dadi.Godambe.GIM_uncert(func, [], all_boot, popt,
                                               fs, multinom=False, log=logscale,
                                               boot_theta_adjusts=boot_theta_adjusts)
 
-    print(uncerts_adj)
     with open(output, 'w') as f:
         f.write('Estimated 95% uncerts (theta adj): {0}'.format(1.96*uncerts_adj) + '\n')
         if logscale:
