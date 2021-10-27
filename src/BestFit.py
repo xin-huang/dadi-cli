@@ -90,19 +90,19 @@ def get_bestfit_params(path, misid, lbounds, ubounds, output, delta, model_name=
 #        with open(output, 'w') as f:
 #            f.write(str(opt_ll) + "\t" + "\t".join(opt_params[0]) + '\n')
 
-def opt_params_converged(params):
-    for i in range(len(params)):
-        for j in range(len(params[0])):
-            if abs(float(params[0][j]) - float(params[i][j])) > 1: return False
+# def opt_params_converged(params):
+#     for i in range(len(params)):
+#         for j in range(len(params[0])):
+#             if abs(float(params[0][j]) - float(params[i][j])) > 1: return False
     
-    return True
+#     return True
 
 
-def close2boundaries(params, lbounds, ubounds):
-    for i in range(len(params)):
-        if ubounds[i] != None:
-            if (ubounds[i] - float(params[i])) < 1: return True
-        if lbounds[i] != None:
-            if (float(params[i]) - lbounds[i]) < 1: return True
+# def close2boundaries(params, lbounds, ubounds):
+#     for i in range(len(params)):
+#         if ubounds[i] != None:
+#             if (ubounds[i] - float(params[i])) < 1: return True
+#         if lbounds[i] != None:
+#             if (float(params[i]) - lbounds[i]) < 1: return True
 
-    return False
+#     return False
