@@ -134,7 +134,9 @@ def main():
     infer_demo_parser.add_argument('--check-convergence', default=False, action='store_true', dest='check_convergence', help='Stop optimization runs when convergence criteria are reached. BestFit results file will be call <output_prefix>.InferDM.bestfits. Default: False')
     infer_demo_parser.add_argument('--work-queue', nargs=2, default=[], action='store', dest='work_queue', help='Enable Work Queue. Additional arguments are the WorkQueue project name and the name of the password file.')
     infer_demo_parser.add_argument('--maxeval', type=_check_positive_int, default=100, help='max number of parameter set evaluations tried for optimizing demography. Default: 100')
-    infer_demo_parser.add_argument('--seed', type=_check_positive_int, default=None, help='random seed for inferring demography')
+    infer_demo_parser.add_argument('--seed', type=_check_positive_int, default=None, help='random seed for inferring demography. Default: None')
+    infer_demo_parser.add_argument('--global-optimization', default=False, action='store_true', dest='global_optimization', help='Use global optimization before doing local optimization. Default: False')
+
 
 
     # subparser for inferring DFE
@@ -268,7 +270,7 @@ def main():
 
             for ii in range(args.optimizations): 
                 t = wq.PythonTask(infer_demography, fs, func, args.p0, args.grids, 
-                                  args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, args.maxeval, args.seed)
+                                  args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, args.global_optimization, args.maxeval, args.seed)
                 # If using a custom model, need to include the file from which it comes
                 if args.model_file:
                     t.specify_input_file(args.model_file+'.py')
@@ -276,7 +278,8 @@ def main():
         else:
             import multiprocessing; from multiprocessing import Process, Queue
 
-            worker_args = (fs, func, args.p0, args.grids, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, args.maxeval, args.seed)
+            worker_args = (fs, func, args.p0, args.grids, args.ubounds, args.lbounds, args.constants, args.misid, 
+                args.cuda, args.global_optimization, args.maxeval, args.seed)
 
             # Queues to manage input and output
             in_queue, out_queue = Queue(), Queue()
