@@ -1,10 +1,12 @@
 import dadi
+import pickle
 import pytest
 import subprocess
 import glob
 import os
 import signal
 import time
+from src.InferDFE import infer_dfe
 
 try:
     if not os.path.exists("./tests/test_results"):
@@ -12,7 +14,25 @@ try:
 except:
     pass
 
-def test_InferDFE(capsys):
+def test_infer_dfe_code():
+    fs = dadi.Spectrum.from_file("./tests/example_data/two_epoch_non.fs")
+    cache1d = pickle.load(open("./tests/example_data/cache_two_epoch_1d.bpkl","rb"))
+    cache2d = None
+    sele_dist = "lognormal"
+    sele_dist2 = None
+    theta = 1000*2.31
+    p0 = [1, 1]
+    upper_bounds = [10, 10]
+    lower_bounds = [1e-3, 1e-3]
+    fixed_params = None
+    misid = False
+    cuda = False
+    maxeval = 100
+    seed = None
+    infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, theta,
+              p0, upper_bounds, lower_bounds, fixed_params, misid, cuda, maxeval, seed)
+
+def test_InferDFE_bash(capsys):
     optimizations = 3
     fits_fid = "./tests/example_data/example.two_epoch.demo.params.InferDM.bestfits"
     subprocess.run(
