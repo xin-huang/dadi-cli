@@ -132,6 +132,7 @@ def main():
     infer_demo_parser.add_argument('--output-prefix', type=str, required=True, dest='output_prefix', help='Prefix for output files, which will be named <output_prefix>.InferDM.opts.<N>, where N is an increasing integer (to avoid overwriting existing files).')
     infer_demo_parser.add_argument('--optimizations', default=3, type=_check_positive_int, help='Number of optimizations to run in parallel. Default: 3.')
     infer_demo_parser.add_argument('--check-convergence', default=False, action='store_true', dest='check_convergence', help='Stop optimization runs when convergence criteria are reached. BestFit results file will be call <output_prefix>.InferDM.bestfits. Default: False')
+    infer_demo_parser.add_argument('--delta-ll', type=_check_positive_num, required=False, dest='delta_ll', default=0.05, help='When using --check-convergence, set the difference in log-likelihood from best optimization to consider an optimization convergent. Default: 0.05')
     infer_demo_parser.add_argument('--work-queue', nargs=2, default=[], action='store', dest='work_queue', help='Enable Work Queue. Additional arguments are the WorkQueue project name and the name of the password file.')
     infer_demo_parser.add_argument('--maxeval', type=_check_positive_int, default=100, help='max number of parameter set evaluations tried for optimizing demography. Default: 100')
     infer_demo_parser.add_argument('--seed', type=_check_positive_int, default=None, help='random seed for inferring demography. Default: None')
@@ -158,6 +159,7 @@ def main():
     infer_dfe_parser.add_argument('--output-prefix', type=str, required=True, dest='output_prefix', help='Prefix for output files, which will be named <output_prefix>.InferDFE.opts.<N>, where N is an increasing integer (to avoid overwriting existing files).')
     infer_dfe_parser.add_argument('--optimizations', default=3, type=_check_positive_int, help='Number of optimizations to run in parallel. Default: 3.')
     infer_dfe_parser.add_argument('--check-convergence', default=False, action='store_true', dest='check_convergence', help='Stop optimization runs when convergence criteria are reached. BestFit results file will be call <output_prefix>.InferDFE.bestfits. Default: False')
+    infer_dfe_parser.add_argument('--delta-ll', type=_check_positive_num, required=False, dest='delta_ll', default=0.05, help='When using --check-convergence, set the difference in log-likelihood from best optimization to consider an optimization convergent. Default: 0.05')
     infer_dfe_parser.add_argument('--pdf-file', type=str, required=False, dest='pdf_file', help='Name of python probability density function module file (not including .py) that contains custom probability density functions to use. Default: None')
     infer_dfe_parser.add_argument('--work-queue', nargs=2, default=[], action='store', dest='work_queue', help='Enable Work Queue. Additional arguments are the WorkQueue project name and the name of the password file.')
     infer_dfe_parser.add_argument('--maxeval', type=_check_positive_int, default=100, help='max number of parameter set evaluations tried for optimizing demography. Default: 100')
@@ -309,7 +311,7 @@ def main():
             if args.check_convergence:
                 result = get_bestfit_params(path=args.output_prefix+'.InferDM.opts.*', model_name=args.model, misid=args.misid,
                                             lbounds=args.lbounds, ubounds=args.ubounds, output=args.output_prefix+'.InferDM.bestfits',
-                                            delta=0.05)
+                                            delta=args.delta_ll)
                 if result is not None:
                     break
         fid.close()
@@ -394,7 +396,7 @@ def main():
             fid.flush()
             if args.check_convergence:
                 result = get_bestfit_params(path=args.output_prefix+'.InferDFE.opts.*', lbounds=args.lbounds, ubounds=args.ubounds, 
-                    output=args.output_prefix+'.InferDFE.bestfits', delta=0.05)
+                    output=args.output_prefix+'.InferDFE.bestfits', delta=args.delta_ll)
                 if result is not None:
                     break
         fid.close()
