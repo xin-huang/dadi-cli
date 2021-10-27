@@ -5,6 +5,7 @@ import glob
 import os
 import signal
 import time
+from src.InferDM import infer_demography
 
 try:
     if not os.path.exists("./tests/test_results"):
@@ -21,7 +22,23 @@ def files():
         "--output-prefix ./tests/test_results/simulation.two_epoch.demo.params --optimizations "
         )
 
-def test_InferDM(files):
+def test_InferDM_code():
+    fs = dadi.Spectrum.from_file("./tests/example_data/two_epoch_syn.fs")
+    func = dadi.Demographics1D.two_epoch
+    p0 = [1, 0.5]
+    pts_l = [120, 140, 160]
+    upper_bounds = [10, 10]
+    lower_bounds = [1e-3, 1e-3]
+    fixed_params = None
+    misid = False
+    cuda = False
+    global_optimization = True
+    maxeval = 50
+    seed = None
+    infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds, 
+                     fixed_params, misid, cuda, global_optimization, maxeval, seed)
+
+def test_InferDM_bash(files):
     optimizations = 3
     subprocess.run(
         pytest.bash_command + str(optimizations), shell=True
