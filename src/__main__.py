@@ -210,8 +210,8 @@ def main():
     bestfit_parser.add_argument('--input-prefix', type=str, required=True, dest='input_prefix', help='prefix for input files, which is named <input_prefix>.InferDM.opts.<N> or <input_prefix>.InferDFE.opts.<N>, containing the inferred demographic or DFE parameters')
     bestfit_parser.add_argument('--model', type=str, help='name of the demographic model')
     bestfit_parser.add_argument('--pdf', type=str, help='name of the DFE model')
-    bestfit_parser.add_argument('--lbounds', type=float, nargs='+', required=True, help='lower bounds of the optimized parameters, please use -1 to indicate a parameter without lower bound')
-    bestfit_parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='upper bounds of the optimized parameters, please use -1 to indicate a parameter without upper bound')
+    bestfit_parser.add_argument('--lbounds', default=-1, type=float, nargs='+', required=False, help='lower bounds of the optimized parameters, please use -1 to indicate a parameter without lower bound')
+    bestfit_parser.add_argument('--ubounds', default=-1, type=float, nargs='+', required=False, help='upper bounds of the optimized parameters, please use -1 to indicate a parameter without upper bound')
     bestfit_parser.add_argument('--misid', default=False, action='store_true', help='determine whether the parameter for misidentifying ancestral alleles is used or not; default: False')
     bestfit_parser.add_argument('--delta-ll', type=_check_positive_num, required=False, dest='delta_ll', default=0.05, help='difference in log-likelihood from best optimization to consider an optimization convergent. Default: 0.05')
 
