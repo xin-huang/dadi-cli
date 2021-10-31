@@ -13,3 +13,30 @@ def test_generate_fs_args():
     assert args.pop_ids == ['YRI']
     assert args.projections == [216]
     assert args.output == output
+
+def test_generate_cache_args():
+    pass
+
+def test_infer_dm_args():
+    pass
+
+def test_infer_dfe_args():
+    pass
+
+def test_bestfit_args():
+    pass
+
+def test_plot_args():
+    pass
+
+def test_stat_args():
+    pass
+
+def test_model_args():
+    parser = cli.dadi_cli_parser()
+    cmd = "Model"
+    args = parser.parse_args([cmd, "--names", "two_epoch"])
+    assert args.names == "two_epoch"
+
+def test_pdf_args():
+    pass
