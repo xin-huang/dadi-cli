@@ -1,4 +1,4 @@
-# /xdisk/rgutenk/xinhuang/software/anaconda3/bin/dadi-cli BestFit --input-prefix ./tests/example_data/example.two_epoch.demo.params.InferDM --model two_epoch_1d --lbounds 10e-3 10e-3 --ubounds 10 10
+# /home/kaixa/Software/anaconda3/bin/dadi-cli BestFit --input-prefix ./tests/example_data/example.two_epoch.demo.params.InferDM --model two_epoch --lbounds 10e-3 10e-3 --ubounds 10 10
 # /Users/tjstruck/opt/anaconda3/envs/dadicli2/bin/dadi-cli InferDM --fs ./example_data/two_epoch_syn.fs --model two_epoch_1d --grids 120 140 160 --p0 1 .5 --ubounds 10 10 --lbounds 10e-3 10e-3 --output-prefix ./test_results/simulation.two_epoch.demo.params --thread 3
 #
 # Converged results
