@@ -20,6 +20,29 @@ def worker_InferDFE(in_queue, out_queue, args):
         results = infer_dfe(*args)
         out_queue.put(results)
 
+def run_generate_fs():
+    pass
+
+def run_generate_cache():
+    pass
+
+def run_infer_dm():
+    pass
+
+def run_infer_dfe():
+    pass
+
+def run_bestfit():
+    pass
+
+def run_stat():
+    pass
+
+def run_plot():
+    pass
+
+def dadi_cli_parser():
+    pass
 
 # Main function
 def main():
