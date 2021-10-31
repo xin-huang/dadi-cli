@@ -1,0 +1,101 @@
+"""
+Snakefile for running dadi-cli 1d DFE inference pipeline.
+"""
+
+mut_types = ['synonymous', 'nonsynonymous']
+
+# Demographic model for inference
+# Use `dadi-cli Model --names two_epoch_1d` to find out the meaning of each parameter
+demo_model = 'two_epoch'
+
+# Initial parameters for demographic inference
+# The last parameter is the misidentification for ancestral allele ranging from 0 to 1
+demo_p0 = '5 5 0.5'
+
+# Lower bounds for demographic parameters
+demo_lbounds = '10e-3 10e-3 10e-5' 
+
+# Upper bounds for demographic parameters
+demo_ubounds = '10 10 1'
+
+# DFE model for inference
+# Use `dadi-cli Pdf --names gamma` to find out the meaning of each parameter
+dfe_model = 'gamma'
+
+# Initial parameters for DFE inference
+# The last parameter is the misidentification for ancestral allele ranging from 0 to 1
+dfe_p0 = '0.5 1000 0.5'
+
+# Lower bounds for DFE parameters (-1 indicates no boundary)
+dfe_lbounds = '0 0 0'
+
+# Upper bounds for DFE parameters
+dfe_ubounds = '1 50000 1'
+
+rule all:
+    input:
+        "1KG.YRI.two_epoch.gamma.InferDFE.bestfits"
+
+rule generate_dadi_fs:
+    input:
+        "../../data/1KG.YRI.CEU.biallelic.{mut_type}.snps.withanc.strict.vcf.gz",
+        "../../data/1KG.YRI.CEU.popfile.txt"
+    output:
+        "1KG.YRI.{mut_type}.snps.unfold.fs"
+    threads: 1
+    shell:
+        "dadi-cli GenerateFs --vcf {input[0]} --pop-info {input[1]} --pop-ids YRI --projections 216 --polarized --output {output}"
+
+rule dadi_infer_dm:
+    input: 
+        "1KG.YRI.synonymous.snps.unfold.fs"
+    output:
+        "1KG.YRI.two_epoch.InferDM.opts.0",
+    threads: 8
+    shell:
+        "dadi-cli InferDM --fs {input} --model {demo_model} --misid --p0 {demo_p0} --ubounds {demo_ubounds} --lbounds {demo_lbounds} --output-prefix 1KG.YRI.two_epoch --optimizations 1000"
+
+rule dadi_bestfit_dm:
+    input: rules.dadi_infer_dm.output
+    output:
+        "1KG.YRI.two_epoch.InferDM.bestfits"
+    threads: 1
+    shell: 
+        "dadi-cli BestFit --input-prefix ./1KG.YRI.two_epoch.InferDM --model {demo_model} --misid --ubounds {demo_ubounds} --lbounds {demo_lbounds}"
+
+rule dadi_generate_cache:
+    input: rules.dadi_bestfit_dm.output
+    output:
+        "1KG.YRI.two_epoch.spectra.bpkl"
+    threads: 8
+    shell:
+        "dadi-cli GenerateCache --model two_epoch --demo-popt {input} --sample-size 216 --output {output} --mp --misid --grids 800 1000 1200 --gamma-pts 5000"
+
+rule dadi_infer_dfe:
+    input:
+        "1KG.YRI.nonsynonymous.snps.unfold.fs",
+        "1KG.YRI.two_epoch.spectra.bpkl",
+        "1KG.YRI.two_epoch.InferDM.bestfits"
+    output:
+        "1KG.YRI.two_epoch.gamma.InferDFE.opts.0"
+    threads: 8
+    shell:
+        "dadi-cli InferDFE --fs {input[0]} --cache1d {input[1]} --demo-popt {input[2]} --output-prefix 1KG.YRI.two_epoch.gamma --pdf1d {dfe_model} --p0 {dfe_p0} --ubounds {dfe_ubounds} --lbounds {dfe_lbounds} --misid --ratio 2.31 --optimizations 1000"
+
+rule dadi_bestfit_dfe:
+    input: rules.dadi_infer_dfe.output
+    output:
+        "1KG.YRI.two_epoch.gamma.InferDFE.bestfits"
+    threads: 1
+    shell:
+        "dadi-cli BestFit --input-prefix ./1KG.YRI.two_epoch.gamma.InferDFE --pdf gamma --misid --ubounds {dfe_ubounds} --lbounds {dfe_lbounds}"
+
+#rule plot_dadi_dfe_results:
+#    input: rules.dadi_bestfit_dfe.output
+#    output:
+#        "1KG.YRI.two_epoch_1d.gamma.mut.prop.pdf"
+#    threads: 1
+#    shell:
+#        "dadi-cli Plot --dfe-popt {input} --pdf1d gamma --output {output}"
+
+# rule clean
