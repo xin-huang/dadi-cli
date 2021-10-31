@@ -46,9 +46,9 @@ Here we use the data from the 1000 Genomes Project to demonstrate how to apply `
 
 `dadi-cli` only accepts VCF files to generate allele frequency spectrum. To generate the spectrum, users can use
 
-    dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --polarized --output ./examples/results/1KG.YRI.CEU.synonymous.snps.unfold.fs
+    dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 50 50 --polarized --output ./examples/results/1KG.YRI.CEU.50.synonymous.snps.unfold.fs
     
-    dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.nonsynonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 216 198 --polarized --output ./examples/results/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs
+    dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.nonsynonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 50 50 --polarized --output ./examples/results/1KG.YRI.CEU.50.nonsynonymous.snps.unfold.fs
 
 Here `./examples/data/1KG.YRI.CEU.popfile.txt` is a file providing the population information for each individual. In the population information file, each line contains two fields. The first field is the name of the individual, and the second field is the name of the population that the individual belongs to. For example,
 
@@ -61,50 +61,51 @@ Here `./examples/data/1KG.YRI.CEU.popfile.txt` is a file providing the populatio
 
 `--pop-ids` specifies the ID of the population. Here we have two populations YRI and CEU. The population IDs should match those listed in the population information file above.
 
-`--projections` specifies the sample size of the population. Here we have 108 YRI individuals and 99 CEU individuals. Therefore, we have 216 and 198 haploidtypes for YRI and CEU respectively. 
+`--projections` specifies the sample size of the population. Here we have 108 YRI individuals and 99 CEU individuals. Therefore, we have 216 and 198 haploidtypes for YRI and CEU respectively. We use a lower projection here, because it allows us to speed up examples.
 
 By default, `dadi-cli` generates folded spectrum. To generate unfold spectrum, users should add `--polarized` and the VCF files should have the `AA` in the `INFO` field to specify the ancestral allele for each SNP.
 
 ### Inferring demographic models
 
-For inferring demographic models, we use the spectrum from the synonymous SNPs. Here, we use the `IM_pre` model. In this model, the ancestral population had an instantaneous change of population size before it diverged into two populations. After divergence, the two populations experienced exponential expansion. To find out the parameters of the `IM_pre` model, users can use `dadi-cli Model --names IM_pre`.
+For inferring demographic models, we use the spectrum from the synonymous SNPs. Here, we use the `split_mig` model. In this model, the ancestral population diverges into two populations, which then have an instantaneous change of population size with migration between the two populations overtime. To find out the parameters of the `split_mig` model, users can use `dadi-cli Model --names split_mig`.
 
-To start the inference, users should choose the initial value for each parameters with `--p0`, and specify the lower bounds and upper bounds for these parameters with `--lbounds` and `--ubounds`. Beside the eight parameters in the `IM_pre` model, we also use `--misid` to include a parameter measuring the proportion of alleles that their ancestral states are misidentified as the last parameter. Therefore, we have nine parameters in total. Because we need to run optimization several times to find out a coverged result with maximum likelihood, users can use `--jobs` to specify how many times of optimization will run parallelly.
+To start the inference, users should choose the initial value for each of the parameters with `--p0`, and specify the lower bounds and upper bounds for these parameters with `--lbounds` and `--ubounds`. Beside the four parameters in the `split_mig` model, we also use `--misid` to include a parameter measuring the proportion of alleles that their ancestral states are misidentified as the last parameter. Therefore, we have five parameters in total. Because we need to run optimization several times to find out a coverged result with maximum likelihood, users can use `--optimizations` to specify how many times the optimization will run, which is done parallel. As well, we can increase the maximum number of parameter sets each optimization will use with `--maxeval` because our 1000 Genomes data is fairly large.
 
-    dadi-cli InferDM --syn-fs ./examples/results/1KG.YRI.CEU.synonymous.snps.unfold.fs --model IM_pre --misid --p0 1 1 .5 1 1 1 1 1 .5 --ubounds 10 10 1 10 10 10 10 10 1 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5 --output ./examples/results/demo/optimization1/1KG.YRI.CEU.IM_pre.demo.params --jobs 28
+    dadi-cli InferDM --fs ./examples/results/1KG.YRI.CEU.50.synonymous.snps.unfold.fs --model split_mig --misid --p0 1 1 .5 1 .5 --ubounds 10 10 1 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5 --output ./examples/results/demo/optimization1/1KG.YRI.CEU.50.split_mig.demo.params --optimizations 50 --maxeval 200
+
+After the optimization, a file `./examples/results/demo/optimization1/1KG.YRI.CEU.50.split_mig.demo.params.InferDM.opt1` will be made. Users can use `BestFit` to obtain the best fit parameters.
+
+    dadi-cli BestFit --input-prefix ./examples/results/demo/optimization1/1KG.YRI.CEU.50.split_mig.demo.params.InferDM
     
-After the optimization, users can use `BestFit` to obtain the best fit parameters.
+The result is in a file `./examples/results/demo/optimization1/1KG.YRI.CEU.50.split_mig.demo.params.InferDM.bestfits`, which contains the convergent results and Top 100 results (though the previous example will have 50)
+The results look like:
 
-    dadi-cli BestFit --dir ./examples/results/demo/optimization1/ --output ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ubounds 10 10 1 10 10 10 10 10 1 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5
+    # /home/u25/tjstruck/anaconda3/envs/dadicli/bin/dadi-cli InferDM --fs ./examples/results/1KG.YRI.CEU.50.synonymous.snps.unfold.fs --model split_mig --misid --p0 1 1 .5 1 .5 --ubounds 10 10 1 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5 --output ./examples/results/demo/optimization1/1KG.YRI.CEU.50.split_mig.demo.params --optimizations 50 --maxeval 200
+    #
+    # Converged results
+    -5256.497420750247	2.228860256926072	0.6108203633107568	0.24035688267684766	0.8155149040521631	0.018598653624160102	6926.31574610221
+    -5256.506391799175	2.2355713111956685	0.6108283239069959	0.23930712815692726	0.8107431852959477	0.018542627868296295	6927.002935227271
+    -5256.510561170369	2.2338687866248623	0.6127856032197797	0.24005386203375031	0.8082129227728075	0.01866136360717148	6920.850180803427
+    #
+    # Top 100 results
+    -5256.497420750247	2.228860256926072	0.6108203633107568	0.24035688267684766	0.8155149040521631	0.018598653624160102	6926.31574610221
+    -5256.529194448397	2.223884874814425	0.6107343981588284	0.24017702570696048	0.8161272212077513	0.01859352572219784	6930.906872393411
+    [...]
+    -6851.557642668979	1.4784651666827264	0.3932958549613372	0.9068191217716736	2.230490842800757	0.019478100388863117	7244.17344812743
     
-The result is
+Because there is randomness built into dadi-cli for where the starting parameters are for each optimization, it is possible the results could have not converged. Some things that can be done when using `InferDM` are increasing the max number of parameter sets each optimization will attempt with the `--maxeval` option. Users can increase the number of optimizations with `--optimizations`.
 
-    NO CONVERGENCE: Likelihoods are not converged
-    The maximum likelihood: -29932.010892115122
-    The parameters with the maximum likelihood:
-    1.8631877349945314      0.548573103499551       0.9612911219579375      3.438145697001221       4.391082674816054       0.09972864053502319  0.2939414026578067       0.2547625062911173      0.015493918178101734    6302.264966655559
-    
-As the result suggests, our optimization is not converged. Therefore, we need further optimization using the parameters with the maximum likelihood as the initial parameters.
+Using `BestFit`, users can adjust the criteria for convergence. By default optimizations are considered convergent if there are two other optimizations with a log-likelihood within 0.05 units of the optimization with the best log-likelihood. This criteria can be adjusted using the `--delta-ll` option. Generally a higher `--delta-ll` can result in a false positive convergence, but this is dependent on the data being used. Optimizations in the bestfit file should be examined closely for similar parameters in convergent fits.
 
-    dadi-cli InferDM --syn-fs ./examples/results/1KG.YRI.CEU.synonymous.snps.unfold.fs --model IM_pre --misid --p0 ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ubounds 10 10 1 10 10 10 10 10 1 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5 --output ./examples/results/demo/optimization2/1KG.YRI.CEU.IM_pre.demo.params --jobs 28
-    
-After the optimization, we use `BestFit` again.
+Finally, if you have experience with the data you are using, you can use the `--check-convergence` option in `InferDM`. This option will run `BestFit` after each optimization to check fo convergence and stop running optimizations once convergence is reached. When using `--check-convergence` you can pass in a `--delta-ll` as well to change the convergence criteria.
 
-    dadi-cli BestFit --dir ./examples/results/demo/optimization2/ --output ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ubounds 10 10 1 10 10 10 10 10 1 --lbounds 10e-3 0 10e-3 10e-3 10e-3 0 0 0 10e-5
-    
-The result is
+    dadi-cli InferDM --fs ./examples/results/1KG.YRI.CEU.50.synonymous.snps.unfold.fs --model split_mig --misid --p0 1 1 .5 1 .5 --ubounds 10 10 1 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5 --output ./examples/results/demo/optimization1/1KG.YRI.CEU.50.split_mig.demo.params --optimizations 200 --maxeval 200 --check-convergence --delta-ll 0.01
 
-    WARNING: The optimized parameters are close to the boundaries
-    CONVERGED RESULT FOUND!
-    The maximum likelihood: -29931.941978000257
-    The best fit parameters:
-    1.8597907391800936      0.5364664703406542      0.961215941903285       3.4123989204975254      4.3523495145830795      0.09951499748102086  0.2985451283565041       0.2564721142886847      0.015434829254785003    6328.564611583578
-    
-As the result suggests, our optimization is converged, and the best fit parameters are in `./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params`. However, some parameters may be close to the boundaries. Users should be cautious and may increase the boundaries to examine whether these boundaries would affect the results significantly. The best fit parameters are shown in below. The first column is the likelihood corresponding to these parameters, and the last column is the population-scaled mutation rate of the synonymous SNPs.
+As the result suggests, our optimization is converged, and the best fit parameters are in `./examples/results/demo/optimization1/1KG.YRI.CEU.50.split_mig.demo.params.InferDM.bestfits`. However, some parameters may be close to the boundaries. Users should be cautious and may increase the boundaries to examine whether these boundaries would affect the results significantly. The best fit parameters are shown in below. The first column is the likelihood corresponding to these parameters, and the last column is the population-scaled mutation rate of the synonymous SNPs.
 
-| likelihood | nuPre | TPre | s | nu1 | nu2 | T | m12 | m21 | misid | theta |
-| - | - | - | - | - | - | - | - | - | - | - |
-| -29931.942 | 1.860 | 0.536 | 0.961 | 3.412 | 4.352 | 0.100 | 0.299 | 0.256 | 0.015 | 6328.565 |
+| likelihood | nu1 | nu2 | T | m | misid | theta |
+| - | - | - | - | - | - | - |
+| -5256.5 | 2.23 | 0.61 | 0.24 | 0.82 | 0.019 | 6926.32 |
 
 ### Generating caches for DFE inference
 
