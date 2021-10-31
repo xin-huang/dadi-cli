@@ -53,7 +53,7 @@ rule dadi_infer_dm:
         "1KG.YRI.CEU.IM_pre.InferDM.opts.0",
     threads: 8
     shell:
-        "dadi-cli InferDM --fs {input} --model {demo_model} --misid --p0 {demo_p0} --ubounds {demo_ubounds} --lbounds {demo_lbounds} --output-prefix 1KG.YRI.two_epoch --optimizations 50"
+        "dadi-cli InferDM --fs {input} --model {demo_model} --misid --p0 {demo_p0} --ubounds {demo_ubounds} --lbounds {demo_lbounds} --output-prefix 1KG.YRI.CEU.IM_pre --optimizations 50"
 
 rule dadi_bestfit_dm:
     input: rules.dadi_infer_dm.output
