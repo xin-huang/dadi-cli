@@ -7,10 +7,10 @@ def get_bestfit_params(path, misid, lbounds, ubounds, output, delta, model_name=
     files = glob.glob(path)
     res, comments = [], []
     
-    if model_name != None:
-        params = '# Log(likelihood)\t' + "\t".join(get_dadi_model_params(model_name))
-    elif pdf_name != None:
+    if pdf_name != None:
         params = '# Log(likelihood)\t' + "\t".join(get_dadi_pdf_params(pdf_name))
+    elif model_name != None:
+        params = '# Log(likelihood)\t' + "\t".join(get_dadi_model_params(model_name))
     else:
         params = ''
 
