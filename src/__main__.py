@@ -192,7 +192,7 @@ def run_infer_dfe(args):
         fid.flush()
         if args.check_convergence:
             result = get_bestfit_params(path=args.output_prefix+'.InferDFE.opts.*', lbounds=args.lbounds, ubounds=args.ubounds, 
-                                        output=args.output_prefix+'.InferDFE.bestfits', delta=args.delta_ll)
+                                        output=args.output_prefix+'.InferDFE.bestfits', delta=args.delta_ll, pdf_name=args.pdf)
             if result is not None:
                 break
     fid.close()
