@@ -26,6 +26,12 @@ def generate_cache(model, grids, popt, misid,
     else:
        spectra = DFE.Cache2D(popt, sample_sizes, func, pts=grids, additional_gammas=additional_gammas, gamma_bounds=gamma_bounds, gamma_pts=gamma_pts, mp=mp)
 
+    if (s.spectra<0).sum() > 0:
+        print(
+            '!!!WARNING!!!\nPotentially large negative values!\nMost negative value is: '+str(s.spectra.min())+
+            '\nIf negative values are very negative (<-1), rerun with larger values for --grids'
+            )
+
     fid = open(output, 'wb')
     pickle.dump(spectra, fid, protocol=2)
     fid.close()
