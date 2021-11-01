@@ -120,11 +120,14 @@ def run_infer_dm(args):
 
 def run_infer_dfe(args):
     # Things need to be updated for these to work
-    for pdf in [args.pdf1d, args.pdf2d]:
-        if pdf !=  None:
-            if not args.pdf_file and args.constants != None: args.constants = _check_pdf_params(args.constants, pdf, '--constant', args.misid)
-            if not args.pdf_file and args.lbounds != None: args.lbounds = _check_pdf_params(args.lbounds, pdf, '--lbounds', args.misid)
-            if not args.pdf_file and args.ubounds != None: args.ubounds = _check_pdf_params(args.ubounds, pdf, '--ubounds', args.misid)
+    if None not in [args.pdf1d, args.pdf2d]:
+        pass
+    else:
+        for pdf in [args.pdf1d, args.pdf2d]:
+            if pdf !=  None:
+                if not args.pdf_file and args.constants != None: args.constants = _check_pdf_params(args.constants, pdf, '--constant', args.misid)
+                if not args.pdf_file and args.lbounds != None: args.lbounds = _check_pdf_params(args.lbounds, pdf, '--lbounds', args.misid)
+                if not args.pdf_file and args.ubounds != None: args.ubounds = _check_pdf_params(args.ubounds, pdf, '--ubounds', args.misid)
 
     if len(args.p0) == 1: 
         args.p0 = float(args.p0)
@@ -194,6 +197,7 @@ def run_infer_dfe(args):
             if args.pdf1d != None and args.pdf2d != None: pdf_var = 'mixture'
             elif args.pdf1d != None: pdf_var = args.pdf1d
             else: pdf_var = args.pdf2d
+            print(pdf_var)
             result = get_bestfit_params(path=args.output_prefix+'.InferDFE.opts.*', misid=args.misid, lbounds=args.lbounds, ubounds=args.ubounds, 
                                         output=args.output_prefix+'.InferDFE.bestfits', delta=args.delta_ll, pdf_name=pdf_var)
             if result is not None:
@@ -442,8 +446,18 @@ def _check_params(params, model, option, misid):
 
 def _check_pdf_params(params, pdf, option, misid):
     input_params_len = len(params)
-    model_params_len = len(get_dadi_pdf_params(pdf))
     if misid: input_params_len = input_params_len - 1
+    print('\n\nchecking:',pdf)
+    print('\n\nchecking:pdf == biv_lognormal',pdf, 'biv_lognormal',pdf == 'biv_lognormal','\n\n')
+    # mod=''
+    if pdf == 'biv_lognormal' or pdf == 'biv_ind_gamma': 
+        if input_params_len == 2: 
+            mod='_sym'
+        else: 
+            mod='_asym'
+        pdf=pdf.replace('biv','biv'+mod)
+    print('\n\nchecking:',pdf,'\n\n')
+    model_params_len = len(get_dadi_pdf_params(pdf))
     if input_params_len != model_params_len:
         raise Exception("Found " + str(input_params_len) + " pdf parameters from the option " + option + 
                         "; however, " + str(model_params_len) + " pdf parameters are required from the " + pdf + " pdf")
