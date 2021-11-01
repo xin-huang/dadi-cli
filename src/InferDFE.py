@@ -46,15 +46,23 @@ def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, theta,
     if misid:
         func = dadi.Numerics.make_anc_state_misid_func(func)
 
+    # print('Inputs\n',p0,'\n',lower_bounds,'\n',upper_bounds,'\n',fixed_params,'\n\n')
+    p0_len = len(p0)
+    p0 = _convert_to_None(p0, p0_len)
+    lower_bounds = _convert_to_None(lower_bounds, p0_len)
+    upper_bounds = _convert_to_None(upper_bounds, p0_len)
+    fixed_params = _convert_to_None(fixed_params, p0_len)
+
     # Fit a DFE to the data
     # Initial guess and bounds
     #print(p0)
+    # print('Inputs\n',p0,'\n',lower_bounds,'\n',upper_bounds,'\n',fixed_params,'\n\n')
     p0 = dadi.Misc.perturb_params(p0, lower_bound=lower_bounds, upper_bound=upper_bounds)
     popt, _ = dadi.Inference.opt(p0, fs, func, pts=None, 
                                 func_args=func_args, fixed_params=fixed_params,
                                 lower_bound=lower_bounds, upper_bound=upper_bounds,
                                 maxeval=maxeval, multinom=False)
-    #print(popt)
+    print(popt)
 
     #print('Optimized parameters: {0}'.format(popt))
 
@@ -76,4 +84,8 @@ def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, theta,
     #    f.write("\n")
     return ll_model, popt, theta
 
+def _convert_to_None(inference_input, p0_len):
+    if inference_input == -1: inference_input = [inference_input]*p0_len
+    inference_input = list(np.where(np.array(inference_input) == -1, None, np.array(inference_input)))
+    return inference_input
 

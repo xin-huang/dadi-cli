@@ -33,9 +33,16 @@ def infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds,
         seed = int(time.time()) + int(os.getpid())
         np.random.seed(seed)
         global_algorithm = nlopt.GN_MLSL
+
+    p0_len = len(p0)
+    p0 = _convert_to_None(p0, p0_len)
+    lower_bounds = _convert_to_None(lower_bounds, p0_len)
+    upper_bounds = _convert_to_None(upper_bounds, p0_len)
+    fixed_params = _convert_to_None(fixed_params, p0_len)
+
     p0 = dadi.Misc.perturb_params(p0, fold=1, upper_bound=upper_bounds,
                                   lower_bound=lower_bounds)
-
+    print('\n'.join([str(ele) for ele in [p0, upper_bounds, lower_bounds, fixed_params]]))
     if not inbreeding and global_optimization:
         # First, global optimization in which sample sizes are at most 20 per axis
         proj_ns = np.minimum(fs.sample_sizes, 20)
@@ -65,3 +72,8 @@ def infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds,
     theta = dadi.Inference.optimal_sfs_scaling(model, fs)
 
     return ll_model, popt, theta
+
+def _convert_to_None(inference_input, p0_len):
+    if inference_input == -1: inference_input = [inference_input]*p0_len
+    inference_input = list(np.where(np.array(inference_input) == -1, None, np.array(inference_input)))
+    return inference_input
