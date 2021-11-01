@@ -185,6 +185,13 @@ def run_infer_dfe(args):
     fid.write('# {0}\n'.format(' '.join(sys.argv)))
     # Collect and process results
     from src.BestFit import get_bestfit_params
+    # If fitting two population DFE, 
+    # determine if Pdf is symetrical or asymetrical
+    if 'biv_' in pdf:
+        len_params = len(args.p0)
+        if args.misid: len_params - 1
+        if len_params == 3: independent_selection = False
+        else: independent_selection = True
     for _ in range(args.optimizations):
         if args.work_queue: 
             result = q.wait().output
@@ -199,7 +206,7 @@ def run_infer_dfe(args):
             else: pdf_var = args.pdf2d
             # print(pdf_var)
             result = get_bestfit_params(path=args.output_prefix+'.InferDFE.opts.*', misid=args.misid, lbounds=args.lbounds, ubounds=args.ubounds, 
-                                        output=args.output_prefix+'.InferDFE.bestfits', delta=args.delta_ll, pdf_name=pdf_var)
+                                        output=args.output_prefix+'.InferDFE.bestfits', delta=args.delta_ll, pdf2d_asym=independent_selection)
             if result is not None:
                 break
     fid.close()
@@ -418,6 +425,7 @@ def dadi_cli_parser():
     parser = subparsers.add_parser('BestFit', help='Obtain the best fit parameters')
     parser.add_argument('--input-prefix', type=str, required=True, dest='input_prefix', help='Prefix for input files, which is named <input_prefix>.InferDM.opts.<N> or <input_prefix>.InferDFE.opts.<N>, containing the inferred demographic or DFE parameters')
     parser.add_argument('--pdf', type=str, help='Name of the DFE model')
+    parser.add_argument('--independent-selection', default=False, action='store_true', dest='independent_selection', help='Include if selection is independant for the bivariate Pdf. Default: False')
     add_bounds_argument(parser)
     add_misid_argument(parser)
     add_model_argument(parser)
@@ -447,16 +455,17 @@ def _check_params(params, model, option, misid):
 def _check_pdf_params(params, pdf, option, misid):
     input_params_len = len(params)
     if misid: input_params_len = input_params_len - 1
-    print('\n\nchecking:',pdf)
-    print('\n\nchecking:pdf == biv_lognormal',pdf, 'biv_lognormal',pdf == 'biv_lognormal','\n\n')
+    # print(input_params_len)
+    # print('\n\nchecking:',pdf)
+    # print('\n\nchecking:pdf == biv_lognormal',pdf, 'biv_lognormal',pdf == 'biv_lognormal','\n\n')
     # mod=''
     if pdf == 'biv_lognormal' or pdf == 'biv_ind_gamma': 
-        if input_params_len == 2: 
+        if input_params_len == 3: 
             mod='_sym'
         else: 
             mod='_asym'
         pdf=pdf.replace('biv','biv'+mod)
-    print('\n\nchecking:',pdf,'\n\n')
+    # print('\n\nchecking:',pdf,'\n\n')
     model_params_len = len(get_dadi_pdf_params(pdf))
     if input_params_len != model_params_len:
         raise Exception("Found " + str(input_params_len) + " pdf parameters from the option " + option + 

@@ -3,11 +3,14 @@ import numpy as np
 from src.Models import get_dadi_model_params
 from src.Pdfs import get_dadi_pdf_params
 
-def get_bestfit_params(path, misid, lbounds, ubounds, output, delta, model_name=None, pdf_name=None, Nclose=3, Nbest=100):
+def get_bestfit_params(path, misid, lbounds, ubounds, output, delta, model_name=None, pdf_name=None, pdf2d_asym=None, Nclose=3, Nbest=100):
     files = glob.glob(path)
     res, comments = [], []
     
     if pdf_name != None:
+        if 'biv_' in pdf_name:
+            if pdf2d_asym: pdf_name = pdf_name.replace('biv', 'biv_asym')
+            else: pdf_name = pdf_name.replace('biv', 'biv_sym')
         params = '# Log(likelihood)\t' + "\t".join(get_dadi_pdf_params(pdf_name))
     elif model_name != None:
         params = '# Log(likelihood)\t' + "\t".join(get_dadi_model_params(model_name))
