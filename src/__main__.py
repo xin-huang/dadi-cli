@@ -40,9 +40,9 @@ def run_generate_cache(args):
                    output=args.output, sample_sizes=args.sample_sizes, mp=args.mp, cuda=args.cuda, single_gamma=args.single_gamma)
 
 def run_infer_dm(args):
-    if not args.model_file and args.constants != None: args.constants = _check_params(args.constants, args.model, '--constant', args.misid)
-    if not args.model_file and args.lbounds != None: args.lbounds = _check_params(args.lbounds, args.model, '--lbounds', args.misid)
-    if not args.model_file and args.ubounds != None: args.ubounds = _check_params(args.ubounds, args.model, '--ubounds', args.misid)
+    if not args.model_file and args.constants != -1: args.constants = _check_params(args.constants, args.model, '--constant', args.misid)
+    if not args.model_file and args.lbounds != -1: args.lbounds = _check_params(args.lbounds, args.model, '--lbounds', args.misid)
+    if not args.model_file and args.ubounds != -1: args.ubounds = _check_params(args.ubounds, args.model, '--ubounds', args.misid)
 
     if len(args.p0) == 1: 
         args.p0 = float(args.p0)
@@ -119,15 +119,15 @@ def run_infer_dm(args):
     # TODO: Stop the remaining work_queue workers
 
 def run_infer_dfe(args):
-    # Things need to be updated for these to work
+    # # Things need to be updated for these to work
     if None not in [args.pdf1d, args.pdf2d]:
         pass
     else:
         for pdf in [args.pdf1d, args.pdf2d]:
             if pdf !=  None:
-                if not args.pdf_file and args.constants != None: args.constants = _check_pdf_params(args.constants, pdf, '--constant', args.misid)
-                if not args.pdf_file and args.lbounds != None: args.lbounds = _check_pdf_params(args.lbounds, pdf, '--lbounds', args.misid)
-                if not args.pdf_file and args.ubounds != None: args.ubounds = _check_pdf_params(args.ubounds, pdf, '--ubounds', args.misid)
+                if not args.pdf_file and args.constants != -1: args.constants = _check_pdf_params(args.constants, pdf, '--constant', args.misid)
+                if not args.pdf_file and args.lbounds != -1: args.lbounds = _check_pdf_params(args.lbounds, pdf, '--lbounds', args.misid)
+                if not args.pdf_file and args.ubounds != -1: args.ubounds = _check_pdf_params(args.ubounds, pdf, '--ubounds', args.misid)
 
     if len(args.p0) == 1: 
         args.p0 = float(args.p0)
@@ -197,7 +197,7 @@ def run_infer_dfe(args):
             if args.pdf1d != None and args.pdf2d != None: pdf_var = 'mixture'
             elif args.pdf1d != None: pdf_var = args.pdf1d
             else: pdf_var = args.pdf2d
-            print(pdf_var)
+            # print(pdf_var)
             result = get_bestfit_params(path=args.output_prefix+'.InferDFE.opts.*', misid=args.misid, lbounds=args.lbounds, ubounds=args.ubounds, 
                                         output=args.output_prefix+'.InferDFE.bestfits', delta=args.delta_ll, pdf_name=pdf_var)
             if result is not None:
@@ -302,7 +302,7 @@ def add_seed_argument(parser):
     parser.add_argument('--seed', type=_check_positive_int, help='Random seed')
 
 def add_constant_argument(parser):
-    parser.add_argument('--constants', type=float, nargs='+', help='Fixed parameters during the inference. Use -1 to indicate a parameter is NOT fixed. Default: None')
+    parser.add_argument('--constants', default=-1, type=float, nargs='+', help='Fixed parameters during the inference. Use -1 to indicate a parameter is NOT fixed. Default: None')
 
 def add_delta_ll_argument(parser):
     parser.add_argument('--delta-ll', type=_check_positive_num, required=False, dest='delta_ll', default=0.05, help='When using --check-convergence, set the difference in log-likelihood from best optimization to consider an optimization convergent. Default: 0.05')
