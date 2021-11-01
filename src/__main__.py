@@ -191,8 +191,11 @@ def run_infer_dfe(args):
         fid.write('{0}\t{1}\t{2}\n'.format(result[0], '\t'.join(str(_) for _ in result[1]), result[2]))
         fid.flush()
         if args.check_convergence:
-            result = get_bestfit_params(path=args.output_prefix+'.InferDFE.opts.*', lbounds=args.lbounds, ubounds=args.ubounds, 
-                                        output=args.output_prefix+'.InferDFE.bestfits', delta=args.delta_ll, pdf_name=args.pdf)
+            if args.pdf1d != None and args.pdf2d != None: pdf_var = 'mixture'
+            elif args.pdf1d != None: pdf_var = args.pdf1d
+            else: pdf_var = args.pdf2d
+            result = get_bestfit_params(path=args.output_prefix+'.InferDFE.opts.*', misid=args.misid, lbounds=args.lbounds, ubounds=args.ubounds, 
+                                        output=args.output_prefix+'.InferDFE.bestfits', delta=args.delta_ll, pdf_name=pdf_var)
             if result is not None:
                 break
     fid.close()
