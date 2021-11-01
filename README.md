@@ -75,7 +75,7 @@ To start the inference, users should choose the initial value for each of the pa
 
 After the optimization, a file `./examples/results/demo/optimization1/1KG.YRI.CEU.50.split_mig.demo.params.InferDM.opt1` will be made. Users can use `BestFit` to obtain the best fit parameters.
 
-    dadi-cli BestFit --input-prefix ./examples/results/demo/optimization1/1KG.YRI.CEU.50.split_mig.demo.params.InferDM
+    dadi-cli BestFit --input-prefix ./examples/results/demo/optimization1/1KG.YRI.CEU.50.split_mig.demo.params.InferDM --model split_mig --misid
     
 The result is in a file `./examples/results/demo/optimization1/1KG.YRI.CEU.50.split_mig.demo.params.InferDM.bestfits`, which contains the convergent results and Top 100 results (though the previous example will have 50)
 The results look like:
@@ -83,11 +83,13 @@ The results look like:
     # /home/u25/tjstruck/anaconda3/envs/dadicli/bin/dadi-cli InferDM --fs ./examples/results/1KG.YRI.CEU.50.synonymous.snps.unfold.fs --model split_mig --misid --p0 1 1 .5 1 .5 --ubounds 10 10 1 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5 --output ./examples/results/demo/optimization1/1KG.YRI.CEU.50.split_mig.demo.params --optimizations 50 --maxeval 200
     #
     # Converged results
+    # Log(likelihood)	nu1	nu2	T	m	misid	theta
     -5256.497420750247	2.228860256926072	0.6108203633107568	0.24035688267684766	0.8155149040521631	0.018598653624160102	6926.31574610221
     -5256.506391799175	2.2355713111956685	0.6108283239069959	0.23930712815692726	0.8107431852959477	0.018542627868296295	6927.002935227271
     -5256.510561170369	2.2338687866248623	0.6127856032197797	0.24005386203375031	0.8082129227728075	0.01866136360717148	6920.850180803427
     #
     # Top 100 results
+    # Log(likelihood)	nu1	nu2	T	m	misid	theta
     -5256.497420750247	2.228860256926072	0.6108203633107568	0.24035688267684766	0.8155149040521631	0.018598653624160102	6926.31574610221
     -5256.529194448397	2.223884874814425	0.6107343981588284	0.24017702570696048	0.8161272212077513	0.01859352572219784	6930.906872393411
     [...]
@@ -109,23 +111,23 @@ As the result suggests, our optimization is converged, and the best fit paramete
 
 ### Generating caches for DFE inference
 
-After inferring the best fit demographic model, users may also infer DFE from data. To perform DFE inference, users need to generate caches at first. Because we use the `IM_pre` model in the demographic inference, we need to use the same demographic model plus selection, the `IM_pre_sel_single_gamma` model or the `IM_pre_sel` model. The `IM_pre_sel` model is used for inferring DFE from two populations by assuming the population-scaled selection coefficients are different in the two populations, while the `IM_pre_sel_single_gamma` model assumes the population-scaled selection coefficients are the same in the two populations. The `IM_pre_sel_single_gamma` model can also be used for inferring DFE from a single population.
+After inferring the best fit demographic model, users may also infer DFE from data. To perform DFE inference, users need to generate caches at first. Because we use the `split_mig` model in the demographic inference, we need to use the same demographic model plus selection, the `split_mig_sel_single_gamma` model or the `split_mig_sel` model. The `split_mig_sel` model is used for inferring DFE from two populations by assuming the population-scaled selection coefficients are different in the two populations, while the `split_mig_sel_single_gamma` model assumes the population-scaled selection coefficients are the same in the two populations. The `split_mig_sel_single_gamma` model can also be used for inferring DFE from a single population.
 
-Here, `--model` specifies the demographic model plus selection used in the inference. `--demo-popt` specifies the demographic parameters, which are stored in `./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params`. `--sample-size` defines the population size of each population. `--mp` indicates using multiprocess to accelerate the computation. The output is pickled and can access through the `pickle` module in `Python`.
+Here, `--model` specifies the demographic model plus selection used in the inference. `--demo-popt` specifies the demographic parameters, which are stored in `./examples/results/demo/optimization1/1KG.YRI.CEU.50.split_mig.demo.params.InferDM.bestfits`. `--sample-size` defines the population size of each population. `--mp` indicates using multiprocess to accelerate the computation. The output is pickled and can access through the `pickle` module in `Python`. By default `GenerateCache` will make the cache for the situation where the selection coefficients are different in the two populations. If you want to to make the cache for the situation where the selection coefficients is the same in the two populations, use the `--single-gamma` option.
 
-    dadi-cli GenerateCache --model IM_pre_sel_single_gamma --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --misid --sample-size 216 198 --output ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --mp
+    dadi-cli GenerateCache --model split_mig --single-gamma --demo-popt ./examples/results/demo/optimization1/1KG.YRI.CEU.50.split_mig.demo.params.InferDM.bestfits --misid --sample-size 50 50 --output ./examples/results/caches/1KG.YRI.CEU.50.split_mig.sel.single.gamma.spectra.bpkl --mp
     
-    dadi-cli GenerateCache --model IM_pre_sel --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --misid --sample-sizes 216 198 --output ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --mp
+    dadi-cli GenerateCache --model split_mig --demo-popt ./examples/results/demo/optimization1/1KG.YRI.CEU.50.split_mig.demo.params.InferDM.bestfits --misid --sample-size 50 50 --output ./examples/results/caches/1KG.YRI.CEU.50.split_mig.sel.spectra.bpkl --mp
 
 ### Inferring DFE
 
 For inferring DFE, we use the spectrum from the nonsynonymous SNPs and an example from inferring joint DFE<sup>2</sup>. In joint DFE inference, we need two caches. `--cache1d` accepts the cache that assumes the population-scaled selection coefficients are the same in the two populations. `--cache2d` accepts the cache that assumes the population-scaled selection coefficients are different in the two populations. Here, we define the marginal DFE is a lognormal distribution with `--pdf1d` and the joint DFE is a bivariate lognormal distribution with `--pdf2d`. In total, we have five parameters: the mean of the lognormal distribution, the standard deviation of the lognormal distribution, the correlation coefficient of the bivariate lognormal distribution, one minus the DFE correlation coefficienct, and the misidentification for the ancestral states. We fix the correlation coefficient in the bivariate lognormal distribution (the third parameter) to be zero with `--constants`. `-1` indicates there is no boundary or not fixed for a parameter. We use `--ratio` to specify the ratio of the nonsynonymous SNPs to the synonymous SNPs to calculate the population-scaled mutation rate of the nonsynonymous SNPs. 
 
-    dadi-cli InferDFE --non-fs ./examples/results/fs/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --misid --pdf1d lognormal --pdf2d biv_lognormal --p0 1 1 0 .5 .5 --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1 --constants -1 -1 0 -1 -1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --ratio 2.31 --output ./examples/results/dfe/optimization1/1KG.YRI.CEU.IM_pre.dfe.params --jobs 28
+    dadi-cli InferDFE --fs ./examples/results/1KG.YRI.CEU.50.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.50.split_mig.sel.single.gamma.spectra.bpkl --misid --pdf1d lognormal --p0 1 1 .5 --lbounds 0 0.01 0 --ubounds 10 10 1 --demo-popt ./examples/results/demo/optimization1/1KG.YRI.CEU.50.split_mig.demo.params.InferDM.bestfits --ratio 2.31 --output ./examples/results/dfe/optimization1/1KG.YRI.CEU.50.split_mig.dfe.params --optimizations 50
 
-After the optimization, users can use `BestFit` to obtain the best fit parameters and save it in `./examples/results/dfe/varied_w/1KG.YRI.CEU.IM_pre.bestfit.dfe.params`.
+After the optimization, users can use `BestFit` to obtain the best fit parameters and save it in `./examples/results/dfe/optimization1/1KG.YRI.CEU.50.split_mig.dfe.params.InferDFE.bestfit`.
 
-    dadi-cli BestFit --dir ./examples/results/dfe/optimization1/ --output ./examples/results/dfe/varied_w/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --lbounds -1 0.01 0 0 0 --ubounds -1 -1 1 1 1
+    dadi-cli BestFit --input-prefix ./examples/results/dfe/optimization1/1KG.YRI.CEU.50.split_mig.dfe.params.InferDFE --pdf lognormal --model split_mig --misid
     
 The result is
 
