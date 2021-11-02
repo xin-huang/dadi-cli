@@ -24,7 +24,7 @@ def test_infer_dfe_code():
     p0 = [1, 1]
     upper_bounds = [10, 10]
     lower_bounds = [1e-3, 1e-3]
-    fixed_params = None
+    fixed_params = -1
     misid = False
     cuda = False
     maxeval = 100
