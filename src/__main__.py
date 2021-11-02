@@ -187,11 +187,12 @@ def run_infer_dfe(args):
     from src.BestFit import get_bestfit_params
     # If fitting two population DFE, 
     # determine if Pdf is symetrical or asymetrical
-    if 'biv_' in pdf:
-        len_params = len(args.p0)
-        if args.misid: len_params - 1
-        if len_params == 3: independent_selection = False
-        else: independent_selection = True
+    if args.pdf2d != None:
+        if 'biv_' in args.pdf2d:
+            len_params = len(args.p0)
+            if args.misid: len_params - 1
+            if len_params == 3: independent_selection = False
+            else: independent_selection = True
     for _ in range(args.optimizations):
         if args.work_queue: 
             result = q.wait().output
