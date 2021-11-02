@@ -206,7 +206,8 @@ def run_infer_dfe(args):
             elif args.pdf1d != None: pdf_var = args.pdf1d
             else: pdf_var = args.pdf2d
             # print(pdf_var)
-            result = get_bestfit_params(path=args.output_prefix+'.InferDFE.opts.*', misid=args.misid, lbounds=args.lbounds, ubounds=args.ubounds, 
+            result = get_bestfit_params(path=args.output_prefix+'.InferDFE.opts.*',
+                                        misid=args.misid, lbounds=args.lbounds, ubounds=args.ubounds, 
                                         output=args.output_prefix+'.InferDFE.bestfits', delta=args.delta_ll, pdf2d_asym=independent_selection)
             if result is not None:
                 break
@@ -461,7 +462,7 @@ def _check_pdf_params(params, pdf, option, misid):
     # print('\n\nchecking:pdf == biv_lognormal',pdf, 'biv_lognormal',pdf == 'biv_lognormal','\n\n')
     # mod=''
     if pdf == 'biv_lognormal' or pdf == 'biv_ind_gamma': 
-        if input_params_len == 3: 
+        if input_params_len in [2,3]: 
             mod='_sym'
         else: 
             mod='_asym'
