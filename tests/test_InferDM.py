@@ -29,7 +29,7 @@ def test_InferDM_code():
     pts_l = [120, 140, 160]
     upper_bounds = [10, 10]
     lower_bounds = [1e-3, 1e-3]
-    fixed_params = None
+    fixed_params = -1
     misid = False
     cuda = False
     global_optimization = True
