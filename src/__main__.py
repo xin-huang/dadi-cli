@@ -38,11 +38,6 @@ def run_infer_dm(args):
     if not args.model_file and args.lbounds != -1: args.lbounds = _check_params(args.lbounds, args.model, '--lbounds', args.misid)
     if not args.model_file and args.ubounds != -1: args.ubounds = _check_params(args.ubounds, args.model, '--ubounds', args.misid)
 
-    if len(args.p0) == 1: 
-        args.p0 = float(args.p0)
-    else: 
-        args.p0 = [float(_) for _ in args.p0]
-
     fs = dadi.Spectrum.from_file(args.fs)
 
     # Extract model function, from custom model_file if necessary
@@ -122,11 +117,6 @@ def run_infer_dfe(args):
                 if not args.pdf_file and args.constants != -1: args.constants = _check_pdf_params(args.constants, pdf, '--constant', args.misid)
                 if not args.pdf_file and args.lbounds != -1: args.lbounds = _check_pdf_params(args.lbounds, pdf, '--lbounds', args.misid)
                 if not args.pdf_file and args.ubounds != -1: args.ubounds = _check_pdf_params(args.ubounds, pdf, '--ubounds', args.misid)
-
-    if len(args.p0) == 1: 
-        args.p0 = float(args.p0)
-    else: 
-        args.p0 = [float(_) for _ in args.p0]
 
     fs = dadi.Spectrum.from_file(args.fs)
     from src.Stat import _get_theta
@@ -322,7 +312,7 @@ def add_dfe_argument(parser):
     parser.add_argument('--pdf2d', type=str, help='2D probability density function for the joint DFE inference. To check available probability density functions, please use `dadi-cli Pdf`')
 
 def add_inference_argument(parser):
-    parser.add_argument('--p0', type=str, nargs='+', required=True, help='Initial parameter values for inference.')
+    parser.add_argument('--p0', type=float, nargs='+', required=True, help='Initial parameter values for inference.')
     parser.add_argument('--output-prefix', type=str, required=True, dest='output_prefix', help='Prefix for output files, which will be named <output_prefix>.InferDM.opts.<N>, where N is an increasing integer (to avoid overwriting existing files).')
     parser.add_argument('--optimizations', default=3, type=_check_positive_int, help='Number of optimizations to run in parallel. Default: 3.')
     parser.add_argument('--check-convergence', default=False, action='store_true', dest='check_convergence', help='Stop optimization runs when convergence criteria are reached. BestFit results file will be call <output_prefix>.InferDM.bestfits. Default: False')
