@@ -15,16 +15,10 @@ def sys_exit(message):
     sys.exit(message)
 
 # Worker functions for multiprocessing with demography/DFE inference
-def worker_InferDM(in_queue, out_queue, args):
+def _worker_func(func, in_queue, out_queue, args):
     while True:
         in_queue.get()
-        results = infer_demography(*args)
-        out_queue.put(results)
-
-def worker_InferDFE(in_queue, out_queue, args):
-    while True:
-        in_queue.get()
-        results = infer_dfe(*args)
+        results = func(*args)
         out_queue.put(results)
 
 def run_generate_fs(args):
@@ -82,7 +76,7 @@ def run_infer_dm(args):
         # Queues to manage input and output
         in_queue, out_queue = Queue(), Queue()
         # Create workers
-        workers = [Process(target=worker_InferDM, args=(in_queue, out_queue, worker_args)) for ii in range(multiprocessing.cpu_count())]
+        workers = [Process(target=_worker_func, args=(infer_demography, in_queue, out_queue, worker_args)) for ii in range(multiprocessing.cpu_count())]
         # Put the tasks to be done in the queue. 
         for ii in range(args.optimizations):
             in_queue.put(ii)
@@ -171,7 +165,7 @@ def run_infer_dfe(args):
         # Queues to manage input and output
         in_queue, out_queue = Queue(), Queue()
         # Create workers
-        workers = [Process(target=worker_InferDFE, args=(in_queue, out_queue, worker_args)) for ii in range(multiprocessing.cpu_count())]
+        workers = [Process(target=_worker_func, args=(infer_dfe, in_queue, out_queue, worker_args)) for ii in range(multiprocessing.cpu_count())]
         # Put the tasks to be done in the queue. 
         for ii in range(args.optimizations):
             in_queue.put(ii)
