@@ -3,6 +3,7 @@ import dadi
 
 from src.InferDM import infer_demography
 from src.InferDFE import infer_dfe
+from src.BestFit import get_bestfit_params
 from src.Models import get_dadi_model_params
 from src.Pdfs import get_dadi_pdf_params
 
@@ -63,48 +64,74 @@ def run_infer_dm(args):
                 t.specify_input_file(args.model_file+'.py')
             q.submit(t)
     else:
-        import multiprocessing; from multiprocessing import Process, Queue
-
-        worker_args = (fs, func, args.p0, args.grids, args.ubounds, args.lbounds, args.constants, args.misid, 
-                       args.cuda, args.global_optimization, args.maxeval, args.seed)
+        import multiprocessing; from multiprocessing import Manager, Process, Queue
 
         # Queues to manage input and output
         in_queue, out_queue = Queue(), Queue()
+        worker_args = (fs, func, args.p0, args.grids, args.ubounds, args.lbounds, args.constants, args.misid, 
+                       args.cuda, args.global_optimization, args.maxeval, args.seed, out_queue)
+        with Manager() as manager:
+            pool = []
+            is_converged = False
+            while is_converged == False:
+                for i in range(args.optimizations):
+                    in_queue.put(i)
+                for i in range(args.optimizations):
+                    p = Process(target=infer_demography, args=(worker_args))
+                    p.start()
+                    pool.append(p)
+                for p in pool:
+                    p.join()
+                existing_files = glob.glob(args.output_prefix+'.InferDM.opts.*')
+                with open(args.output_prefix+'.InferDM.opts.{0}'.format(len(existing_files)), 'a') as fid:
+                    # Write command line to results file
+                    fid.write('# {0}\n'.format(' '.join(sys.argv)))
+                    for _ in range(args.optimizations):
+                        #result = out_queue.get()
+                        ll_model, popt, theta = out_queue.get()
+                        fid.write('{0}\t{1}\t{2}\n'.format(ll_model, '\t'.join(str(_) for _ in popt), theta))
+                        fid.flush()
+                is_converged = get_bestfit_params(path=args.output_prefix+'.InferDM.opts.*', model_name=args.model, misid=args.misid,
+                                                  lbounds=args.lbounds, ubounds=args.ubounds, output=args.output_prefix+'.InferDM.bestfits',
+                                                  delta=args.delta_ll)
+                if is_converged == False: print('No convergence. Running more optimizations.')
+                else: break
+
+
         # Create workers
-        workers = [Process(target=_worker_func, args=(infer_demography, in_queue, out_queue, worker_args)) for ii in range(multiprocessing.cpu_count())]
+        #workers = [Process(target=_worker_func, args=(infer_demography, in_queue, out_queue, worker_args)) for ii in range(multiprocessing.cpu_count())]
         # Put the tasks to be done in the queue. 
-        for ii in range(args.optimizations):
-            in_queue.put(ii)
+        #for ii in range(args.optimizations):
+        #    in_queue.put(ii)
         # Start the workers
-        for worker in workers:
-            worker.start()
+        #for worker in workers:
+        #    worker.start()
 
-    existing_files = glob.glob(args.output_prefix+'.InferDM.opts.*')
-    fid = open(args.output_prefix+'.InferDM.opts.{0}'.format(len(existing_files)), 'a')
+    #existing_files = glob.glob(args.output_prefix+'.InferDM.opts.*')
+    #fid = open(args.output_prefix+'.InferDM.opts.{0}'.format(len(existing_files)), 'a')
     # Write command line to results file
-    fid.write('# {0}\n'.format(' '.join(sys.argv)))
+    #fid.write('# {0}\n'.format(' '.join(sys.argv)))
     # Collect and process results
-    from src.BestFit import get_bestfit_params
-    for _ in range(args.optimizations):
-        if args.work_queue: 
-            result = q.wait().output
-        else:
-            result = out_queue.get()
+    #for _ in range(args.optimizations):
+    #    if args.work_queue: 
+    #        result = q.wait().output
+    #    else:
+    #        result = out_queue.get()
         # Write latest result to file
-        fid.write('{0}\t{1}\t{2}\n'.format(result[0], '\t'.join(str(_) for _ in result[1]), result[2]))
-        fid.flush()
-        if args.check_convergence:
-            result = get_bestfit_params(path=args.output_prefix+'.InferDM.opts.*', model_name=args.model, misid=args.misid,
-                                        lbounds=args.lbounds, ubounds=args.ubounds, output=args.output_prefix+'.InferDM.bestfits',
-                                        delta=args.delta_ll)
-            if result is not None:
-                break
-    fid.close()
+   #     fid.write('{0}\t{1}\t{2}\n'.format(result[0], '\t'.join(str(_) for _ in result[1]), result[2]))
+   #     fid.flush()
+   #     if args.check_convergence:
+    #        result = get_bestfit_params(path=args.output_prefix+'.InferDM.opts.*', model_name=args.model, misid=args.misid,
+    #                                    lbounds=args.lbounds, ubounds=args.ubounds, output=args.output_prefix+'.InferDM.bestfits',
+    #                                    delta=args.delta_ll)
+    #        if result is not None:
+    #            break
+    #fid.close()
 
-    if not args.work_queue:
+    #if not args.work_queue:
         # Stop the workers
-        for worker in workers:
-            worker.terminate()
+    #    for worker in workers:
+    #        worker.terminate()
     # TODO: Stop the remaining work_queue workers
 
 def run_infer_dfe(args):
@@ -168,7 +195,6 @@ def run_infer_dfe(args):
     # Write command line to results file
     fid.write('# {0}\n'.format(' '.join(sys.argv)))
     # Collect and process results
-    from src.BestFit import get_bestfit_params
     # If fitting two population DFE, 
     # determine if Pdf is symetrical or asymetrical
     if args.pdf2d != None:

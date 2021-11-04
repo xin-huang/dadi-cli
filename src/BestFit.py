@@ -37,7 +37,7 @@ def get_bestfit_params(path, misid, lbounds, ubounds, output, delta, model_name=
 
     if len(res) == 0:
         print('No optimization results found')
-        return
+        return False
 
     res = np.array(sorted(res, reverse=True))
     opt_ll = res[0][0]
@@ -65,8 +65,8 @@ def get_bestfit_params(path, misid, lbounds, ubounds, output, delta, model_name=
         for result in res[:Nbest]:
             fid.write('{0}\n'.format("\t".join([str(_) for _ in result])))
 
-    if len(close_enough) >= Nclose:
-        return close_enough
+    if len(close_enough) >= Nclose: return True
+    else: return False
 
 #    if d < 0.05:
 #        if opt_params_converged(opt_params):

@@ -10,7 +10,7 @@ def pts_l_func(fs):
     return (int(n*1.1)+2, int(n*1.2)+4, int(n*1.3)+6)
 
 def infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds, 
-                     fixed_params, misid, cuda, global_optimization, maxeval, seed):
+                     fixed_params, misid, cuda, global_optimization, maxeval, seed, out_queue):
     # Check if demographic function uses inbreeding, need to be done before wrapping
     if 'from_phi_inbreeding' in  inspect.getsource(func):
         inbreeding = True
@@ -71,7 +71,8 @@ def infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds,
     ll_model = dadi.Inference.ll_multinom(model, fs)
     theta = dadi.Inference.optimal_sfs_scaling(model, fs)
 
-    return ll_model, popt, theta
+    #return ll_model, popt, theta
+    out_queue.put([ll_model, popt, theta])
 
 def _convert_to_None(inference_input, p0_len):
     if inference_input == -1: inference_input = [inference_input]*p0_len
