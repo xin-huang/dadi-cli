@@ -171,6 +171,7 @@ def run_infer_dfe(args):
     from src.BestFit import get_bestfit_params
     # If fitting two population DFE, 
     # determine if Pdf is symetrical or asymetrical
+    independent_selection = None
     if args.pdf2d != None:
         if 'biv_' in args.pdf2d:
             len_params = len(args.p0)
@@ -186,12 +187,12 @@ def run_infer_dfe(args):
         fid.write('{0}\t{1}\t{2}\n'.format(result[0], '\t'.join(str(_) for _ in result[1]), result[2]))
         fid.flush()
         if args.check_convergence:
-            if args.pdf1d != None and args.pdf2d != None: pdf_var = 'mixture'
+            if args.pdf1d != None and args.pdf2d != None: pdf_var = 'mixture' + '_' + args.pdf1d
             elif args.pdf1d != None: pdf_var = args.pdf1d
             else: pdf_var = args.pdf2d
             # print(pdf_var)
             result = get_bestfit_params(path=args.output_prefix+'.InferDFE.opts.*',
-                                        misid=args.misid, lbounds=args.lbounds, ubounds=args.ubounds, 
+                                        misid=args.misid, lbounds=args.lbounds, ubounds=args.ubounds, pdf_name=pdf_var,
                                         output=args.output_prefix+'.InferDFE.bestfits', delta=args.delta_ll, pdf2d_asym=independent_selection)
             if result is not None:
                 break
