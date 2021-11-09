@@ -12,6 +12,7 @@ def test_get_dadi_pdf():
     assert get_dadi_pdf('gamma') == DFE.PDFs.gamma
     assert get_dadi_pdf('lognormal') == DFE.PDFs.lognormal
     assert get_dadi_pdf('normal') == DFE.PDFs.normal
+    assert get_dadi_pdf('mixture') == DFE.mixture
 
     with pytest.raises(Exception) as e_info:
         get_dadi_pdf('haha')
@@ -20,12 +21,14 @@ def test_get_dadi_pdf_params():
     assert np.array_equal(get_dadi_pdf_params('beta'), ['alpha', 'beta'])
     assert np.array_equal(get_dadi_pdf_params('biv_sym_ind_gamma'), ['shape', 'scale'])
     assert np.array_equal(get_dadi_pdf_params('biv_asym_ind_gamma'), ['shape1', 'scale1', 'shape2', 'scale2'])
-    assert np.array_equal(get_dadi_pdf_params('biv_sym_lognormal'), ['log(mu)', 'log(sigma)', 'rho'])
-    assert np.array_equal(get_dadi_pdf_params('biv_asym_lognormal'), ['log(mu1)', 'log(sigma1)', 'log(mu2)', 'log(sigma2)', 'rho'])
+    assert np.array_equal(get_dadi_pdf_params('biv_sym_lognormal'), ['log_mu', 'log_sigma', 'rho'])
+    assert np.array_equal(get_dadi_pdf_params('biv_asym_lognormal'), ['log_mu1', 'log_sigma1', 'log_mu2', 'log_sigma2', 'rho'])
     assert np.array_equal(get_dadi_pdf_params('exponential'), ['scale'])
     assert np.array_equal(get_dadi_pdf_params('gamma'), ['shape', 'scale'])
-    assert np.array_equal(get_dadi_pdf_params('lognormal'), ['log(mu)', 'log(sigma)'])
+    assert np.array_equal(get_dadi_pdf_params('lognormal'), ['log_mu', 'log_sigma'])
     assert np.array_equal(get_dadi_pdf_params('normal'), ['mu', 'sigma'])
+    assert np.array_equal(get_dadi_pdf_params('mixture_lognormal'), ['log_mu', 'log_sigma', 'rho', 'w'])
+    assert np.array_equal(get_dadi_pdf_params('mixture_gamma'), ['shape', 'scale', 'w'])
 
     with pytest.raises(Exception) as e_info:
         get_dadi_pdf_params('haha')
@@ -33,7 +36,7 @@ def test_get_dadi_pdf_params():
 def test_print_available_pdfs(capfd):
     print_available_pdfs()
     out, err = capfd.readouterr()
-    assert out == 'Available probability density functions:\n' + '- beta\n' + '- biv_ind_gamma\n' + '- biv_lognormal\n' + '- exponential\n' + '- gamma\n' + '- lognormal\n' + '- normal\n'
+    assert out == 'Available probability density functions:\n' + '- beta\n' + '- biv_ind_gamma\n' + '- biv_lognormal\n' + '- exponential\n' + '- gamma\n' + '- lognormal\n' + '- normal\n' + '- mixture\n'
 
 def test_print_pdf_details(capfd):
     print_pdf_details('beta')
@@ -58,7 +61,7 @@ def test_print_pdf_details(capfd):
 
     print_pdf_details('lognormal')
     out, err = capfd.readouterr()
-    assert out == '- lognormal:\n\n' + '        Lognormal probability density function.\n\n        params = [log(mu), log(sigma)]\n' + '    \n'
+    assert out == '- lognormal:\n\n' + '        Lognormal probability density function.\n\n        params = [log_mu, log_sigma]\n' + '    \n'
 
     print_pdf_details('normal')
     out, err = capfd.readouterr()
