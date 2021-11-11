@@ -1,4 +1,5 @@
 import argparse, glob, os.path, sys, signal
+import numpy as np
 import dadi
 
 from src.InferDM import infer_demography
@@ -57,7 +58,8 @@ def run_infer_dm(args):
 
         for ii in range(args.optimizations): 
             t = wq.PythonTask(infer_demography, fs, func, args.p0, args.grids, 
-                              args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, args.global_optimization, args.maxeval, args.seed)
+                              args.ubounds, args.lbounds, args.constants, args.misid, 
+                              args.cuda, args.global_optimization, args.maxeval, args.maxtime, args.seed)
             # If using a custom model, need to include the file from which it comes
             if args.model_file:
                 t.specify_input_file(args.model_file+'.py')
@@ -66,7 +68,7 @@ def run_infer_dm(args):
         import multiprocessing; from multiprocessing import Process, Queue
 
         worker_args = (fs, func, args.p0, args.grids, args.ubounds, args.lbounds, args.constants, args.misid, 
-                       args.cuda, args.global_optimization, args.maxeval, args.seed)
+                       args.cuda, args.global_optimization, args.maxeval, args.maxtime, args.seed)
 
         # Queues to manage input and output
         in_queue, out_queue = Queue(), Queue()
@@ -140,7 +142,8 @@ def run_infer_dfe(args):
 
         for ii in range(args.optimizations): 
             t = wq.PythonTask(infer_dfe, fs, cache1d, cache2d, args.pdf1d, args.pdf2d, theta, 
-            args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, args.maxeval, args.seed)
+            args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, 
+            args.maxeval, args.maxtime, args.seed)
             # # If using a custom model, need to include the file from which it comes
             # if args.pdf_file:
             #     t.specify_input_file(args.pdf_file+'.py')
@@ -150,7 +153,7 @@ def run_infer_dfe(args):
 
         #worker_args = (fs, func, args.p0, args.grids, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
         worker_args = (fs, cache1d, cache2d, args.pdf1d, args.pdf2d, theta, 
-        args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, args.maxeval, args.seed)
+        args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, args.maxeval, args.maxtime, args.seed)
 
         # Queues to manage input and output
         in_queue, out_queue = Queue(), Queue()
@@ -319,7 +322,7 @@ def add_inference_argument(parser):
     parser.add_argument('--check-convergence', default=False, action='store_true', dest='check_convergence', help='Stop optimization runs when convergence criteria are reached. BestFit results file will be call <output_prefix>.InferDM.bestfits. Default: False')
     parser.add_argument('--work-queue', nargs=2, default=[], action='store', dest='work_queue', help='Enable Work Queue. Additional arguments are the WorkQueue project name and the name of the password file.')
     parser.add_argument('--maxeval', type=_check_positive_int, default=100, help='max number of parameter set evaluations tried for optimizing demography. Default: 100')
-
+    parser.add_argument('--maxtime', type=_check_positive_int, default=np.inf, help='max amount of time for optimizing demography. Default: infinite')
 
 def dadi_cli_parser():
     top_parser = argparse.ArgumentParser()

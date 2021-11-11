@@ -10,7 +10,7 @@ def pts_l_func(fs):
     return (int(n*1.1)+2, int(n*1.2)+4, int(n*1.3)+6)
 
 def infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds, 
-                     fixed_params, misid, cuda, global_optimization, maxeval, seed):
+                     fixed_params, misid, cuda, global_optimization, maxeval, maxtime, seed):
     # Check if demographic function uses inbreeding, need to be done before wrapping
     if 'from_phi_inbreeding' in  inspect.getsource(func):
         inbreeding = True
@@ -42,7 +42,7 @@ def infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds,
 
     p0 = dadi.Misc.perturb_params(p0, fold=1, upper_bound=upper_bounds,
                                   lower_bound=lower_bounds)
-    print('\n'.join([str(ele) for ele in [p0, upper_bounds, lower_bounds, fixed_params]]))
+    # print('\n'.join([str(ele) for ele in [p0, upper_bounds, lower_bounds, fixed_params]]))
     if not inbreeding and global_optimization:
         # First, global optimization in which sample sizes are at most 20 per axis
         proj_ns = np.minimum(fs.sample_sizes, 20)
@@ -52,7 +52,7 @@ def infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds,
                                             lower_bound=lower_bounds,
                                             upper_bound=upper_bounds, fixed_params=fixed_params,
                                             algorithm=global_algorithm,
-                                            local_optimizer=nlopt.LN_BOBYQA, maxeval=maxeval)
+                                            local_optimizer=nlopt.LN_BOBYQA, maxeval=maxeval, maxtime=maxtime, verbose=0)
     else:
         popt_global = p0
     # Now local optimization
@@ -64,7 +64,7 @@ def infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds,
     popt, _ = dadi.Inference.opt(popt_global, fs, func_ex, pts_l,
                                  lower_bound=lower_bounds,
                                  upper_bound=upper_bounds, fixed_params=fixed_params,
-                                 algorithm=nlopt.LN_BOBYQA, maxeval=maxeval)
+                                 algorithm=nlopt.LN_BOBYQA, maxeval=maxeval, maxtime=maxtime, verbose=0)
 
     # Calculate the best-fit model to get ll and theta
     model = func_ex(popt, fs.sample_sizes, pts_l)

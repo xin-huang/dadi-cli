@@ -7,7 +7,7 @@ import numpy as np
 from src.Pdfs import get_dadi_pdf
 
 def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, theta,
-              p0, upper_bounds, lower_bounds, fixed_params, misid, cuda, maxeval, seed):
+              p0, upper_bounds, lower_bounds, fixed_params, misid, cuda, maxeval, maxtime, seed):
 
     # Randomize starting parameter values
     if seed != None: 
@@ -57,12 +57,13 @@ def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, theta,
     # Initial guess and bounds
     #print(p0)
     # print('Inputs\n',p0,'\n',lower_bounds,'\n',upper_bounds,'\n',fixed_params,'\n\n')
+    print(func)
     p0 = dadi.Misc.perturb_params(p0, lower_bound=lower_bounds, upper_bound=upper_bounds)
     popt, _ = dadi.Inference.opt(p0, fs, func, pts=None, 
                                 func_args=func_args, fixed_params=fixed_params,
                                 lower_bound=lower_bounds, upper_bound=upper_bounds,
-                                maxeval=maxeval, multinom=False)
-    print(popt)
+                                maxeval=maxeval, maxtime=maxtime, multinom=False, verbose=0)
+    # print(popt)
 
     #print('Optimized parameters: {0}'.format(popt))
 
