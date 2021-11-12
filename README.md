@@ -9,7 +9,7 @@
 
 ## Installation
 
-To install `dadi-cli`, users can should clone this repo and use the following command
+To install `dadi-cli`, users should clone this repo and use the following command
 
     python setup.py install
 
