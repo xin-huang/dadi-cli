@@ -9,9 +9,9 @@
 
 ## Installation
 
-To install `dadi-cli`, users can use `pip`.
+To install `dadi-cli`, users should clone this repo and use the following command
 
-    pip install -i https://test.pypi.org/simple/ dadi-cli==0.8.1
+    python setup.py install
 
 To get help information, users can use
 
