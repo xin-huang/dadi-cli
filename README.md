@@ -208,11 +208,11 @@ Then the available demographic models will be displayed in the screen:
 
     Available 1D demographic models:
     - bottlegrowth_1d
-    - growth_1d
+    - growth
     - snm_1d
-    - three_epoch_1d
-    - two_epoch_1d
-
+    - three_epoch
+    - two_epoch
+    
     Available 2D demographic models:
     - bottlegrowth_2d
     - bottlegrowth_split
@@ -222,7 +222,7 @@ Then the available demographic models will be displayed in the screen:
     - split_mig
     - split_asym_mig
     - snm_2d
-
+    
     Available demographic models with selection:
     - equil
     - equil_X
@@ -235,30 +235,25 @@ Then the available demographic models will be displayed in the screen:
     - split_asym_mig_sel
     - split_asym_mig_sel_single_gamma
     - two_epoch_sel
-    - mixture
+    - three_epoch_sel
 
 To find out the parameters and detail of a specific model, users can use the name of the demograpic model as the parameter after `--names`. For example,
 
-    dadi-cli Model --names IM
+    dadi-cli Model --names split_mig
     
 Then the detail of the model will be displayed in the screen:
 
-    - IM_pre:
-
-        Isolation-with-migration model with exponential pop growth and a size change
-        prior to split.
-        Two populations in this model.
-
-        params = [nuPre,TPre,s,nu1,nu2,T,m12,m21]
-
-            nuPre: Size after first size change (in units of Na)
-             TPre: Time before split of first size change (in units of 2*Na generations)
-                s: Fraction of nuPre that goes to pop1 (Pop 2 has size nuPre*(1-s))
-              nu1: Final size of pop 1 (in units of Na)
-              nu2: Final size of pop 2 (in units of Na)
-                T: Time in the past of split (in units of 2*Na generations)
-              m12: Migration from pop 2 to pop 1 (2*Na*m12)
-              m21: Migration from pop 1 to pop 2 (2*Na*m21)
+    - split_mig:
+    
+            Split into two populations of specifed size, with symmetric migration.
+            Two populations in this model.
+    
+            params = [nu1,nu2,T,m]
+        
+                nu1: Size of population 1 after split (in units of Na)
+                nu2: Size of population 2 after split (in units of Na)
+                  T: Time in the past of split (in units of 2*Na generations) 
+                  m: Migration rate between populations (2*Na*m)
 
 ### Available DFE distributions
 
@@ -278,18 +273,19 @@ Then the availalbe functions will be displayed in the screen:
     - gamma
     - lognormal
     - normal
+    - mixture
 
 To find out the parameters and the detail of a specific function, users can use the name of the function as the parameter after `--names`. For example,
 
-    dadi-cli Pdf --names beta
+    dadi-cli Pdf --names lognormal
     
 Then the detail of the function will be displayed in the screen:
 
-    - beta:
-
-            Beta probability density function.
-
-            params = [alpha, beta]
+    - lognormal:
+    
+            Lognormal probability density function.
+    
+            params = [log_mu, log_sigma]
 
 ## Dependencies
 
