@@ -8,13 +8,10 @@ def get_dadi_model_func(model_name, withSelection=False, single_gamma=False):
             except:
                 raise Exception('Cannot find mode: ' + model_name + ' plus selection with single gamma')
         else:
-            if model_name == 'mixture': 
-                return DFE.mixture
-            else:
-                try:
-                    return getattr(DFE.DemogSelModels, model_name)
-                except:
-                    raise Exception('Cannot find model: ' + model_name + ' plus selection')
+             try:
+                return getattr(DFE.DemogSelModels, model_name)
+            except:
+                raise Exception('Cannot find model: ' + model_name + ' plus selection')
     else:
         import dadi
         try:
@@ -89,7 +86,6 @@ def print_available_models():
     print('- split_asym_mig_sel_single_gamma')
     print('- two_epoch_sel')
     print('- three_epoch_sel')
-    print('- mixture')
 
 def print_model_details(model_name):
 
@@ -364,8 +360,6 @@ def print_model_details(model_name):
              TB: Length of bottleneck (in units of 2*Na generations) 
              TF: Time since bottleneck recovery (in units of 2*Na generations)
           gamma: Population-scaled selection coefficient
-    '''
-    mixture = '''
     '''
 
     if model_name == 'equil': print('- equil:\n' + equil)
