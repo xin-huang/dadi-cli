@@ -59,13 +59,7 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, grids
             return sfunc(params, None, sele_dist, theta, None, exterior_int=True)
     f = open(output, 'w')
     for eps in [0.01, 0.001, 0.0001]:
-        if model != None:
-            popt = np.array(demo_popt)#[1:-1]
-            func_ex = dadi.Numerics.make_extrap_func(func)
-            uncerts_adj = dadi.Godambe.GIM_uncert(func_ex, grids, all_boot, popt,
-                                                  fs, multinom=True, log=logscale, eps=eps)
-            uncerts_adj = uncerts_adj[:-1]
-        else:
+        if dfe_popt != None:
             if (cache1d != None) and (cache2d != None):
                 popt = np.array([dfe_popt[1], dfe_popt[2], dfe_popt[4], dfe_popt[5]])
             else:
@@ -74,6 +68,12 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, grids
             uncerts_adj = dadi.Godambe.GIM_uncert(func, [], all_boot, popt,
                                                   fs, multinom=False, log=logscale, eps=eps,
                                                   boot_theta_adjusts=boot_theta_adjusts)
+        else:
+            popt = np.array(demo_popt)#[1:-1]
+            func_ex = dadi.Numerics.make_extrap_func(func)
+            uncerts_adj = dadi.Godambe.GIM_uncert(func_ex, grids, all_boot, popt,
+                                                  fs, multinom=True, log=logscale, eps=eps)
+            uncerts_adj = uncerts_adj[:-1]
 
         f.write('Estimated 95% uncerts (theta adj), with step size '+str(eps)+'): {0}'.format(1.96*uncerts_adj) + '\n')
         if logscale:
