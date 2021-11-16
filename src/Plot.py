@@ -42,6 +42,9 @@ def plot_fitted_demography(fs, model, popt, projections, misid, output, vmin, re
     from src.Models import get_dadi_model_func
     func = get_dadi_model_func(model)
 
+    from src.GenerateCache import _get_opt
+    popt = _get_opt(popt, False)
+
     fs = dadi.Spectrum.from_file(fs)
     if misid:
         func = dadi.Numerics.make_anc_state_misid_func(func)
@@ -70,12 +73,20 @@ def plot_fitted_dfe(fs, cache1d, cache2d, demo_popt, sele_popt, ns_s, projection
     import dadi.DFE
     from src.Pdfs import get_dadi_pdf
     
+    from src.Stat import _get_theta
+    theta = _get_theta(sele_popt)
+
+    from src.GenerateCache import _get_opt
+    sele_popt = _get_opt(sele_popt, False)
+
     fs = dadi.Spectrum.from_file(fs)
-    theta = ns_s * float(open(demo_popt, 'r').readline().rstrip().split()[-1])
-    sele_popt = np.array(open(sele_popt, 'r').readline().rstrip().split()[1:], dtype=float)
-    pdf = get_dadi_pdf(pdf)
+
+    if pdf != None:
+        pdf = get_dadi_pdf(pdf)
     if pdf2 != None:
         pdf2 = get_dadi_pdf(pdf2)
+        if pdf == None:
+            pdf=pdf2
 
     ns = fs.sample_sizes
     # Integrate over a range of gammas
@@ -89,7 +100,7 @@ def plot_fitted_dfe(fs, cache1d, cache2d, demo_popt, sele_popt, ns_s, projection
     if (cache1d != None) and (cache2d != None): 
         func = dadi.DFE.mixture
     
-    if misid: func = dadi.Numerics.make_anc_state_misid_func(func) 
+    if misid: func = dadi.Numerics.make_anc_state_misid_func(func)
     # Get expected SFS for MLE
     if (cache1d != None) and (cache2d != None):
         model = func(sele_popt, None, spectra1d, spectra2d, pdf, pdf2, theta, None)
