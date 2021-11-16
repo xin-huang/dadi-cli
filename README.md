@@ -136,20 +136,20 @@ The result is
     # /home/u25/tjstruck/anaconda3/envs/dadicli/bin/dadi-cli InferDFE --fs ./examples/results/1KG.YRI.CEU.100.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.100.split_mig.sel.single.gamma.spectra.bpkl --misid --pdf1d lognormal --p0 1 1 .5 --lbounds 0 0.01 0 --ubounds 10 10 1 --demo-popt ./examples/results/demo/optimization1/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits --ratio 2.31 --output ./examples/results/dfe/optimization1/1KG.YRI.CEU.100.split_mig.dfe.params --optimizations 100 --maxeval 500
     #
     # Converged results
-    # Log(likelihood)	log(mu)	log(sigma)	misid	theta
+    # Log(likelihood)	log_mu	log_sigma	misid	theta
     -15043.4631087791	0.44761577504254146	1.186665070205059	0.012629375151270475	15926.683036368815
     -15043.4631087791	0.44761577504254146	1.186665070205059	0.012629375151270475	15926.683036368815
     -15043.4631087791	0.44761577504254146	1.186665070205059	0.012629375151270475	15926.683036368815
     #
     # Top 100 results
-    # Log(likelihood)	log(mu)	log(sigma)	misid	theta
+    # Log(likelihood)	log_mu	log_sigma	misid	theta
     -15043.4631087791	0.44761577504254146	1.186665070205059	0.012629375151270475	15926.683036368815
     -15043.4631087791	0.44761577504254146	1.186665070205059	0.012629375151270475	15926.683036368815
     -15043.4631087791	0.44761577504254146	1.186665070205059	0.012629375151270475	15926.683036368815
     [...]
     -15309.798890938577	0.6485327848469901	1.1493883082058935	0.01651677445440453	15926.683036368815
 
-Similar to the best fit parameters in `./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params`, the first column is the likelihood.
+Similar to the best fit parameters in `./examples/results/demo/1KG.YRI.CEU.split_mig.bestfit.demo.params`, the first column is the likelihood.
 
 | likelihood | mu | sigma | misidentification |
 | - | - | - | - | - | - |
@@ -165,11 +165,12 @@ To performing statistical testing with the Godambe Information Matrix, users sho
     
 To estimate the confidence intervals for the demographic parameters, users can use
 
-    dadi-cli Stat --fs ./examples/results/fs/1KG.YRI.CEU.synonymous.snps.unfold.fs --demo-model IM_pre --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --misid --bootstrapping-dir ./examples/results/fs/bootstrapping_syn/ --output ./examples/results/stat/1KG.YRI.CEU.IM_pre.bestfit.demo.params.godambe.ci
+    dadi-cli Stat --fs ./examples/results/fs/1KG.YRI.CEU.100.synonymous.snps.unfold.fs --model split_mig --demo-popt ./examples/results/demo/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits --grids 120 140 160 --misid --ratio 2.31 --bootstrapping-dir ./examples/results/fs/bootstrapping_syn/ --output ./examples/results/stat/1KG.YRI.CEU.100.split_mig.bestfit.demo.params.godambe.ci
     
 To estimate the confidence intervals for the joint DFE parameters, users can use
 
-    dadi-cli Stat --fs ./examples/results/fs/1KG.YRI.CEU.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.IM_pre.sel.spectra.bpkl --pdf1d lognormal --pdf2d biv_lognormal --demo-popt ./examples/results/demo/1KG.YRI.CEU.IM_pre.bestfit.demo.params --misid --dfe-popt ./examples/results/dfe/1KG.YRI.CEU.IM_pre.bestfit.dfe.params --bootstrapping-dir ./examples/results/fs/bootstrapping_non/ --ratio 2.31 --output ./examples/results/stat/1KG.YRI.CEU.IM_pre.bestfit.dfe.params.godambe.ci
+    dadi-cli Stat --fs ./examples/results/fs/1KG.YRI.CEU.100.nonsynonymous.snps.unfold.fs --model split_mig --dfe-popt ./examples/results/dfe/1KG.YRI.CEU.100.split_mig.dfe.lognormal.params.InferDFE.bestfits --cache1d ./examples/results/caches/1KG.YRI.CEU.100.split_mig.sel.single.gamma.spectra.bpkl --pdf1d lognormal --grids 120 140 160 --misid --ratio 2.31 --bootstrapping-dir ./examples/results/fs/bootstrapping_non/ --output ./examples/results/stat/1KG.YRI.CEU.100.split_mig.bestfit.dfe.lognormal.params.godambe.ci
+
 
 ### Plotting
 
