@@ -152,7 +152,7 @@ The result is
 Similar to the best fit parameters in `./examples/results/demo/1KG.YRI.CEU.split_mig.bestfit.demo.params`, the first column is the likelihood.
 
 | likelihood | mu | sigma | misidentification |
-| - | - | - | - | - | - |
+| - | - | - | - |
 | -27880.309 | 0.447  | 1.186  | 0.0126 |
 
 ### Performing statistical testing
