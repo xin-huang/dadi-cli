@@ -67,7 +67,7 @@ def _get_opt(popt, misid):
         popt = opts[0][1:-1]
         params = params[0][1:-1]
 
-    print('The demographic parameters for generating the cache:')
+    print('The optimal parameters are:')
     print("\t".join([str(_) for _ in params]))
     print("\t".join([str(_) for _ in popt]))
     
