@@ -47,7 +47,7 @@ def plot_fitted_demography(fs, model, popt, projections, misid, output, vmin, re
         func = dadi.Numerics.make_anc_state_misid_func(func)
     func_ex = dadi.Numerics.make_extrap_func(func)
     ns = fs.sample_sizes
-    pts_l = [int(ns[0]+10), int(ns[0]+20), int(ns[0]+30)]
+    pts_l = [int(max(ns)+10), int(max(ns)+20), int(max(ns)+30)]
 
     model = func_ex(popt, ns, pts_l)    
    
@@ -79,7 +79,7 @@ def plot_fitted_dfe(fs, cache1d, cache2d, demo_popt, sele_popt, ns_s, projection
 
     ns = fs.sample_sizes
     # Integrate over a range of gammas
-    pts_l = [ns[0]+10, ns[0]+20, ns[0]+30]
+    pts_l = [max(ns)+10, max(ns)+20, max(ns)+30]
     if cache1d != None:
         spectra1d = pickle.load(open(cache1d, 'rb'))
         func = spectra1d.integrate
