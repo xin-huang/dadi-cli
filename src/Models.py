@@ -8,7 +8,7 @@ def get_dadi_model_func(model_name, withSelection=False, single_gamma=False):
             except:
                 raise Exception('Cannot find mode: ' + model_name + ' plus selection with single gamma')
         else:
-             try:
+            try:
                 return getattr(DFE.DemogSelModels, model_name)
             except:
                 raise Exception('Cannot find model: ' + model_name + ' plus selection')
