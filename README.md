@@ -46,9 +46,9 @@ Here we use the data from the 1000 Genomes Project to demonstrate how to apply `
 
 `dadi-cli` only accepts VCF files to generate allele frequency spectrum. To generate the spectrum, users can use
 
-    dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 50 50 --polarized --output ./examples/results/1KG.YRI.CEU.100.synonymous.snps.unfold.fs
+    dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 100 100 --polarized --output ./examples/results/fs/1KG.YRI.CEU.100.synonymous.snps.unfold.fs
     
-    dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.nonsynonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 50 50 --polarized --output ./examples/results/1KG.YRI.CEU.100.nonsynonymous.snps.unfold.fs
+    dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.nonsynonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 100 100 --polarized --output ./examples/results/fs/1KG.YRI.CEU.100.nonsynonymous.snps.unfold.fs
 
 Here `./examples/data/1KG.YRI.CEU.popfile.txt` is a file providing the population information for each individual. In the population information file, each line contains two fields. The first field is the name of the individual, and the second field is the name of the population that the individual belongs to. For example,
 
@@ -71,16 +71,16 @@ For inferring demographic models, we use the spectrum from the synonymous SNPs. 
 
 To start the inference, users should choose the initial value for each of the parameters with `--p0`, and specify the lower bounds and upper bounds for these parameters with `--lbounds` and `--ubounds`. Beside the four parameters in the `split_mig` model, we also use `--misid` to include a parameter measuring the proportion of alleles that their ancestral states are misidentified as the last parameter. Therefore, we have five parameters in total. Because we need to run optimization several times to find out a converged result with maximum likelihood, users can use `--optimizations` to specify how many times the optimization will run, which is done parallel. As well, because our 1000 Genomes data is fairly large we can increase the maximum number of parameter sets each optimization will use with `--maxeval` and use our own grid points with `--grids`.
 
-    dadi-cli InferDM --fs ./examples/results/1KG.YRI.CEU.100.synonymous.snps.unfold.fs --model split_mig --misid --p0 1 1 .5 1 .5 --ubounds 10 10 1 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5 --constants 1 1 .5 1 .5 --grids 100 120 140 --output ./examples/results/demo/optimization1/1KG.YRI.CEU.100.split_mig.demo.params --optimizations 5 --maxeval 200
+    dadi-cli InferDM --fs ./examples/results/fs/1KG.YRI.CEU.100.synonymous.snps.unfold.fs --model split_mig --misid --p0 1 1 .5 1 .5 --ubounds 10 10 1 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5 --constants 1 1 .5 1 .5 --grids 100 120 140 --output ./examples/results/demo/1KG.YRI.CEU.100.split_mig.demo.params --optimizations 5 --maxeval 200
 
-After the optimization, a file `./examples/results/demo/optimization1/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.opt1` will be made. Users can use `BestFit` to obtain the best fit parameters.
+After the optimization, a file `./examples/results/demo/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.opt1` will be made. Users can use `BestFit` to obtain the best fit parameters.
 
-    dadi-cli BestFit --input-prefix ./examples/results/demo/optimization1/1KG.YRI.CEU.100.split_mig.demo.params.InferDM --model split_mig --misid
+    dadi-cli BestFit --input-prefix ./examples/results/demo/1KG.YRI.CEU.100.split_mig.demo.params.InferDM --model split_mig --misid
     
-The result is in a file `./examples/results/demo/optimization1/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits`, which contains the convergent results and Top 100 results (though the previous example will have 50)
+The result is in a file `./examples/results/demo/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits`, which contains the convergent results and Top 100 results (though the previous example will have 50)
 The results look like:
 
-    # /home/u25/tjstruck/anaconda3/envs/dadicli/bin/dadi-cli InferDM --fs ./examples/results/1KG.YRI.CEU.100.synonymous.snps.unfold.fs --model split_mig --misid --p0 1 1 .5 1 .5 --ubounds -1 -1 -1 -1 -1 --lbounds -1 -1 -1 -1 -1 --grids 100 120 140 --output ./examples/results/demo/optimization1/1KG.YRI.CEU.100.split_mig.demo.params --optimizations 50 --maxeval 200
+    # /home/u25/tjstruck/anaconda3/envs/dadicli/bin/dadi-cli InferDM --fs ./examples/results/fs/1KG.YRI.CEU.100.synonymous.snps.unfold.fs --model split_mig --misid --p0 1 1 .5 1 .5 --ubounds -1 -1 -1 -1 -1 --lbounds -1 -1 -1 -1 -1 --grids 100 120 140 --output ./examples/results/demo/1KG.YRI.CEU.100.split_mig.demo.params --optimizations 50 --maxeval 200
     #
     # Converged results
     # Log(likelihood)	nu1	nu2	T	m	misid	theta
@@ -103,9 +103,9 @@ Using `BestFit`, users can adjust the criteria for convergence. By default optim
 
 Finally, if you have experience with the data you are using, you can use the `--check-convergence` option in `InferDM`. This option will run `BestFit` after each optimization to check fo convergence and stop running optimizations once convergence is reached. When using `--check-convergence` you can pass in a `--delta-ll` as well to change the convergence criteria.
 
-    dadi-cli InferDM --fs ./examples/results/1KG.YRI.CEU.100.synonymous.snps.unfold.fs --model split_mig --misid --p0 1 1 .5 1 .5 --ubounds 10 10 1 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5 --grids 100 120 140 --output ./examples/results/demo/optimization1/1KG.YRI.CEU.100.split_mig.demo.params --optimizations 300 --maxeval 200 --check-convergence --delta-ll 0.01
+    dadi-cli InferDM --fs ./examples/results/fs/1KG.YRI.CEU.100.synonymous.snps.unfold.fs --model split_mig --misid --p0 1 1 .5 1 .5 --ubounds 10 10 1 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5 --grids 100 120 140 --output ./examples/results/demo/1KG.YRI.CEU.100.split_mig.demo.params --optimizations 300 --maxeval 200 --check-convergence --delta-ll 0.01
 
-As the result suggests, our optimization is converged, and the best fit parameters are in `./examples/results/demo/optimization1/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits`. However, some parameters may be close to the boundaries. Users should be cautious and may increase the boundaries to examine whether these boundaries would affect the results significantly. The best fit parameters are shown in below. The first column is the likelihood corresponding to these parameters, and the last column is the population-scaled mutation rate of the synonymous SNPs.
+As the result suggests, our optimization is converged, and the best fit parameters are in `./examples/results/demo/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits`. However, some parameters may be close to the boundaries. Users should be cautious and may increase the boundaries to examine whether these boundaries would affect the results significantly. The best fit parameters are shown in below. The first column is the likelihood corresponding to these parameters, and the last column is the population-scaled mutation rate of the synonymous SNPs.
 
 | likelihood | nu1 | nu2 | T | m | misid | theta |
 | - | - | - | - | - | - | - |
@@ -115,25 +115,25 @@ As the result suggests, our optimization is converged, and the best fit paramete
 
 After inferring the best fit demographic model, users may also infer DFE from data. To perform DFE inference, users need to generate caches at first. Because we use the `split_mig` model in the demographic inference, we need to use the same demographic model plus selection, the `split_mig_sel_single_gamma` model or the `split_mig_sel` model. The `split_mig_sel` model is used for inferring DFE from two populations by assuming the population-scaled selection coefficients are different in the two populations, while the `split_mig_sel_single_gamma` model assumes the population-scaled selection coefficients are the same in the two populations. The `split_mig_sel_single_gamma` model can also be used for inferring DFE from a single population.
 
-Here, `--model` specifies the demographic model plus selection used in the inference. `--demo-popt` specifies the demographic parameters, which are stored in `./examples/results/demo/optimization1/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits`. `--sample-size` defines the population size of each population. `--mp` indicates using multiprocess to accelerate the computation. The output is pickled and can access through the `pickle` module in `Python`. By default `GenerateCache` will make the cache for the situation where the selection coefficients are different in the two populations. If you want to to make the cache for the situation where the selection coefficients is the same in the two populations, use the `--single-gamma` option.
+Here, `--model` specifies the demographic model plus selection used in the inference. `--demo-popt` specifies the demographic parameters, which are stored in `./examples/results/demo/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits`. `--sample-size` defines the population size of each population. `--mp` indicates using multiprocess to accelerate the computation. The output is pickled and can access through the `pickle` module in `Python`. By default `GenerateCache` will make the cache for the situation where the selection coefficients are different in the two populations. If you want to to make the cache for the situation where the selection coefficients is the same in the two populations, use the `--single-gamma` option.
 
-    dadi-cli GenerateCache --model split_mig --single-gamma --demo-popt ./examples/results/demo/optimization1/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits --misid --sample-size 100 100 --grids 120 140 160 --output ./examples/results/caches/1KG.YRI.CEU.100.split_mig.sel.single.gamma.spectra.bpkl --mp
+    dadi-cli GenerateCache --model split_mig --single-gamma --demo-popt ./examples/results/demo/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits --misid --sample-size 100 100 --grids 120 140 160 --output ./examples/results/caches/1KG.YRI.CEU.100.split_mig.sel.single.gamma.spectra.bpkl --mp
     
-    dadi-cli GenerateCache --model split_mig --demo-popt ./examples/results/demo/optimization1/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits --misid --sample-size 100 100 --grids 120 140 160 --output ./examples/results/caches/1KG.YRI.CEU.100.split_mig.sel.spectra.bpkl --mp
+    dadi-cli GenerateCache --model split_mig --demo-popt ./examples/results/demo/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits --misid --sample-size 100 100 --grids 120 140 160 --output ./examples/results/caches/1KG.YRI.CEU.100.split_mig.sel.spectra.bpkl --mp
 
 ### Inferring DFE
 
 For inferring DFE, we use the spectrum from the nonsynonymous SNPs and an example from inferring joint DFE<sup>2</sup>. In joint DFE inference, we need two caches. `--cache1d` accepts the cache that assumes the population-scaled selection coefficients are the same in the two populations. `--cache2d` accepts the cache that assumes the population-scaled selection coefficients are different in the two populations. Here, we define the marginal DFE is a lognormal distribution with `--pdf1d` and the joint DFE is a bivariate lognormal distribution with `--pdf2d`. In total, we have five parameters: the mean of the lognormal distribution, the standard deviation of the lognormal distribution, the correlation coefficient of the bivariate lognormal distribution, one minus the DFE correlation coefficienct, and the misidentification for the ancestral states. We fix the correlation coefficient in the bivariate lognormal distribution (the third parameter) to be zero with `--constants`. `-1` indicates there is no boundary or not fixed for a parameter. We use `--ratio` to specify the ratio of the nonsynonymous SNPs to the synonymous SNPs to calculate the population-scaled mutation rate of the nonsynonymous SNPs. Here is an example of running with `--pdf1d lognormal`, which just uses `mu`, `sigma`, and `misid` for parameters.
 
-    dadi-cli InferDFE --fs ./examples/results/1KG.YRI.CEU.100.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.100.split_mig.sel.single.gamma.spectra.bpkl --misid --pdf1d lognormal --p0 1 1 .5 --lbounds 0 0.01 0 --ubounds 10 10 1 --demo-popt ./examples/results/demo/optimization1/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits --ratio 2.31 --output ./examples/results/dfe/optimization1/1KG.YRI.CEU.100.split_mig.dfe.params --optimizations 100 --maxeval 500
+    dadi-cli InferDFE --fs ./examples/results/fs/1KG.YRI.CEU.100.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.100.split_mig.sel.single.gamma.spectra.bpkl --misid --pdf1d lognormal --p0 1 1 .5 --lbounds 0 0.01 0 --ubounds 10 10 1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits --ratio 2.31 --output ./examples/results/dfe/1KG.YRI.CEU.100.split_mig.dfe.params --optimizations 100 --maxeval 500
 
-After the optimization, users can use `BestFit` to obtain the best fit parameters and save it in `./examples/results/dfe/optimization1/1KG.YRI.CEU.100.split_mig.dfe.params.InferDFE.bestfit`.
+After the optimization, users can use `BestFit` to obtain the best fit parameters and save it in `./examples/results/dfe/1KG.YRI.CEU.100.split_mig.dfe.params.InferDFE.bestfit`.
 
-    dadi-cli BestFit --input-prefix ./examples/results/dfe/optimization1/1KG.YRI.CEU.100.split_mig.dfe.params.InferDFE --pdf lognormal --model split_mig --misid
+    dadi-cli BestFit --input-prefix ./examples/results/dfe/1KG.YRI.CEU.100.split_mig.dfe.params.InferDFE --pdf lognormal --model split_mig --misid
     
 The result is
 
-    # /home/u25/tjstruck/anaconda3/envs/dadicli/bin/dadi-cli InferDFE --fs ./examples/results/1KG.YRI.CEU.100.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.100.split_mig.sel.single.gamma.spectra.bpkl --misid --pdf1d lognormal --p0 1 1 .5 --lbounds 0 0.01 0 --ubounds 10 10 1 --demo-popt ./examples/results/demo/optimization1/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits --ratio 2.31 --output ./examples/results/dfe/optimization1/1KG.YRI.CEU.100.split_mig.dfe.params --optimizations 100 --maxeval 500
+    # /home/u25/tjstruck/anaconda3/envs/dadicli/bin/dadi-cli InferDFE --fs ./examples/results/fs/1KG.YRI.CEU.100.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.100.split_mig.sel.single.gamma.spectra.bpkl --misid --pdf1d lognormal --p0 1 1 .5 --lbounds 0 0.01 0 --ubounds 10 10 1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits --ratio 2.31 --output ./examples/results/dfe/1KG.YRI.CEU.100.split_mig.dfe.params --optimizations 100 --maxeval 500
     #
     # Converged results
     # Log(likelihood)	log_mu	log_sigma	misid	theta
