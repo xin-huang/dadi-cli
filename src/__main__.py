@@ -231,7 +231,7 @@ def run_stat(args):
     # XXX: Need to automatically try different eps settings.
     from src.Stat import godambe_stat
     godambe_stat(fs=args.fs, model=args.model, bootstrap_dir=args.bootstrapping_dir, grids=args.grids,
-                 cache1d=args.cache1d, cache2d=args.cache2d, sele_dist=args.pdf1d, ns_s=args.ratio,
+                 cache1d=args.cache1d, cache2d=args.cache2d, sele_dist=args.pdf1d,
                  sele_dist2=args.pdf2d, dfe_popt=args.dfe_popt, misid=args.misid, demo_popt=args.demo_popt,
                  logscale=args.logscale, output=args.output)
 
@@ -239,11 +239,13 @@ def run_plot(args):
     from src.Plot import plot_comparison, plot_fitted_demography, plot_fitted_dfe, plot_single_sfs, plot_mut_prop
    
     if args.fs == None:
+        if args.ratio == False:
+            raise Exception("Need to pass value to --ratio option")
         plot_mut_prop(dfe_popt=args.dfe_popt, pdf1d=args.pdf1d, misid=args.misid, mut_rate=args.mut_rate, seq_len=args.seq_len, ratio=args.ratio, output=args.output)
     elif args.dfe_popt != None:
         plot_fitted_dfe(fs=args.fs, cache1d=args.cache1d, cache2d=args.cache2d, pdf=args.pdf1d, pdf2=args.pdf2d, misid=args.misid,
                         demo_popt=args.demo_popt, sele_popt=args.dfe_popt, vmin=args.vmin, resid_range=args.resid_range,
-                        ns_s=args.ratio, projections=args.projections, output=args.output)
+                        projections=args.projections, output=args.output)
     elif args.demo_popt != None:
         plot_fitted_demography(fs=args.fs, model=args.model, popt=args.demo_popt, vmin=args.vmin,
                                projections=args.projections, misid=args.misid, resid_range=args.resid_range, output=args.output)
@@ -307,7 +309,6 @@ def add_popt_argument(parser):
 def add_dfe_argument(parser):
     parser.add_argument('--cache1d', type=str, help='File name of the 1D DFE cache. To generate the cache, please use `dadi-cli GenerateCache`')
     parser.add_argument('--cache2d', type=str, help='File name of the 2D DFE cache. To generate the cache, please use `dadi-cli GenerateCache`')
-    parser.add_argument('--ratio', type=float, required=True, help='Ratio for the nonsynonymous mutations to the synonymous mutations')
     parser.add_argument('--pdf1d', type=str, help='1D probability density function for the DFE inference. To check available probability density functions, please use `dadi-cli Pdf`')
     parser.add_argument('--pdf2d', type=str, help='2D probability density function for the joint DFE inference. To check available probability density functions, please use `dadi-cli Pdf`')
 
@@ -371,6 +372,7 @@ def dadi_cli_parser():
     add_fs_argument(parser)
     parser.add_argument('--demo-popt', type=str, dest='demo_popt', help='File contains the bestfit parameters for the demographic model')
     add_dfe_argument(parser)
+    parser.add_argument('--ratio', type=float, required=True, help='Ratio for the nonsynonymous mutations to the synonymous mutations')
     parser.add_argument('--pdf-file', type=str, required=False, dest='pdf_file', help='Name of python probability density function module file (not including .py) that contains custom probability density functions to use. Default: None')
     add_inference_argument(parser)
     add_delta_ll_argument(parser)
@@ -394,6 +396,7 @@ def dadi_cli_parser():
     parser.add_argument('--projections', type=int, nargs='+', help='Sample sizes after projection')
     parser.add_argument('--resid-range', type=float, dest='resid_range', help='Ranges of the residual plots')
     parser.add_argument('--vmin', type=float, default=0.1, help='Minimum value to be plotted in the frequency spectrum, default: 0.1')
+    parser.add_argument('--ratio', type=float, default=False, required=False, help='Ratio for the nonsynonymous mutations to the synonymous mutations')
     parser.set_defaults(runner=run_plot)
 
     parser = subparsers.add_parser('Stat', help='Perform statistical tests using Godambe Information Matrix')

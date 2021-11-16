@@ -68,7 +68,7 @@ def plot_fitted_demography(fs, model, popt, projections, misid, output, vmin, re
     fig.savefig(output) 
 
 
-def plot_fitted_dfe(fs, cache1d, cache2d, demo_popt, sele_popt, ns_s, projections, pdf, pdf2, misid, output, vmin, resid_range):
+def plot_fitted_dfe(fs, cache1d, cache2d, demo_popt, sele_popt, projections, pdf, pdf2, misid, output, vmin, resid_range):
 
     import dadi.DFE
     from src.Pdfs import get_dadi_pdf

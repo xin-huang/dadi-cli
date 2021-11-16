@@ -7,7 +7,7 @@ from src.Models import get_dadi_model_func
 from src.Pdfs import get_dadi_pdf
 from src.GenerateCache import _get_opt
 
-def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, ns_s, grids,
+def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, grids,
                  output, bootstrap_dir, demo_popt, dfe_popt, misid, logscale):
 
     if demo_popt != None:
