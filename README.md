@@ -166,11 +166,11 @@ To performing statistical testing with the Godambe Information Matrix, users sho
     
 To estimate the confidence intervals for the demographic parameters, users can use
 
-    dadi-cli Stat --fs ./examples/results/fs/1KG.YRI.CEU.100.synonymous.snps.unfold.fs --model split_mig --demo-popt ./examples/results/demo/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits --grids 120 140 160 --misid --ratio 2.31 --bootstrapping-dir ./examples/results/fs/bootstrapping_syn/ --output ./examples/results/stat/1KG.YRI.CEU.100.split_mig.bestfit.demo.params.godambe.ci
+    dadi-cli Stat --fs ./examples/results/fs/1KG.YRI.CEU.100.synonymous.snps.unfold.fs --model split_mig --demo-popt ./examples/results/demo/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits --grids 120 140 160 --misid --bootstrapping-dir ./examples/results/fs/bootstrapping_syn/ --output ./examples/results/stat/1KG.YRI.CEU.100.split_mig.bestfit.demo.params.godambe.ci
     
 To estimate the confidence intervals for the joint DFE parameters, users can use
 
-    dadi-cli Stat --fs ./examples/results/fs/1KG.YRI.CEU.100.nonsynonymous.snps.unfold.fs --model split_mig --dfe-popt ./examples/results/dfe/1KG.YRI.CEU.100.split_mig.dfe.lognormal.params.InferDFE.bestfits --cache1d ./examples/results/caches/1KG.YRI.CEU.100.split_mig.sel.single.gamma.spectra.bpkl --pdf1d lognormal --grids 120 140 160 --misid --ratio 2.31 --bootstrapping-dir ./examples/results/fs/bootstrapping_non/ --output ./examples/results/stat/1KG.YRI.CEU.100.split_mig.bestfit.dfe.lognormal.params.godambe.ci
+    dadi-cli Stat --fs ./examples/results/fs/1KG.YRI.CEU.100.nonsynonymous.snps.unfold.fs --model split_mig --dfe-popt ./examples/results/dfe/1KG.YRI.CEU.100.split_mig.dfe.lognormal.params.InferDFE.bestfits --cache1d ./examples/results/caches/1KG.YRI.CEU.100.split_mig.sel.single.gamma.spectra.bpkl --pdf1d lognormal --grids 120 140 160 --misid --bootstrapping-dir ./examples/results/fs/bootstrapping_non/ --output ./examples/results/stat/1KG.YRI.CEU.100.split_mig.bestfit.dfe.lognormal.params.godambe.ci
 
 
 ### Plotting
@@ -179,21 +179,21 @@ To estimate the confidence intervals for the joint DFE parameters, users can use
 
 To plot frequency spectrum from data, users can use
 
-    dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.100.synonymous.snps.unfold.fs --output ./examples/results/plots/1KG.YRI.CEU.100.synonymous.snps.unfold.fs.pdf --model split_mig --ratio 2.31
+    dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.100.synonymous.snps.unfold.fs --output ./examples/results/plots/1KG.YRI.CEU.100.synonymous.snps.unfold.fs.pdf --model split_mig
     
-    dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.100.nonsynonymous.snps.unfold.fs --output ./examples/results/plots/1KG.YRI.CEU.100.nonsynonymous.snps.unfold.fs.pdf --model split_mig --ratio 2.31
+    dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.100.nonsynonymous.snps.unfold.fs --output ./examples/results/plots/1KG.YRI.CEU.100.nonsynonymous.snps.unfold.fs.pdf --model split_mig
     
 To compare two frequency spectra from data, users can use
 
-    dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.100.synonymous.snps.unfold.fs --fs2 ./examples/results/fs/1KG.YRI.CEU.100.nonsynonymous.snps.unfold.fs --output ./examples/results/plots/1KG.YRI.CEU.100.synonymous.vs.nonsynonymous.snps.unfold.fs.pdf --model None --ratio 0
+    dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.100.synonymous.snps.unfold.fs --fs2 ./examples/results/fs/1KG.YRI.CEU.100.nonsynonymous.snps.unfold.fs --output ./examples/results/plots/1KG.YRI.CEU.100.synonymous.vs.nonsynonymous.snps.unfold.fs.pdf --model None
     
 To compare frequency spectra between a demographic model without selection and data, users can use
 
-    dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.100.synonymous.snps.unfold.fs --demo-popt ./examples/results/demo/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits --misid --output ./examples/results/plots/1KG.YRI.CEU.100.synonymous.snps.vs.split_mig.pdf --model split_mig --ratio 2.31
+    dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.100.synonymous.snps.unfold.fs --demo-popt ./examples/results/demo/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits --misid --output ./examples/results/plots/1KG.YRI.CEU.100.synonymous.snps.vs.split_mig.pdf --model split_mig
     
 To compare frequency spectra between a demographic model with selection and data, users can use
 
-    dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.100.nonsynonymous.snps.unfold.fs --misid --ratio 2.31 --model split_mig --pdf1d lognormal --dfe-popt ./examples/results/dfe/1KG.YRI.CEU.100.split_mig.dfe.lognormal.params.InferDFE.bestfits --cache1d ./examples/results/caches/1KG.YRI.CEU.100.split_mig.sel.single.gamma.spectra.bpkl --output ./examples/results/plots/1KG.YRI.CEU.100.nonsynonymous.snps.vs.lognormal.pdf
+    dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.100.nonsynonymous.snps.unfold.fs --misid --model split_mig --pdf1d lognormal --dfe-popt ./examples/results/dfe/1KG.YRI.CEU.100.split_mig.dfe.lognormal.params.InferDFE.bestfits --cache1d ./examples/results/caches/1KG.YRI.CEU.100.split_mig.sel.single.gamma.spectra.bpkl --output ./examples/results/plots/1KG.YRI.CEU.100.nonsynonymous.snps.vs.lognormal.pdf
     
 By default, `dadi-cli` projects the sample size down to 20 for each population. Users can use `--projections` to change the sample size.
     
