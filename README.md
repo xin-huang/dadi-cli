@@ -133,27 +133,27 @@ After the optimization, users can use `BestFit` to obtain the best fit parameter
     
 The result is
 
-    # /home/u25/tjstruck/anaconda3/envs/dadicli/bin/dadi-cli InferDFE --fs ./examples/results/fs/1KG.YRI.CEU.100.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.100.split_mig.sel.single.gamma.spectra.bpkl --misid --pdf1d lognormal --p0 1 1 .5 --lbounds 0 0.01 0 --ubounds 10 10 1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits --ratio 2.31 --output ./examples/results/dfe/1KG.YRI.CEU.100.split_mig.dfe.params --optimizations 100 --maxeval 500
+    # /home/u25/tjstruck/anaconda3/envs/dadicli/bin/dadi-cli InferDFE --fs ./examples/results/fs/1KG.YRI.CEU.100.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.100.split_mig.sel.single.gamma.spectra.bpkl --misid --pdf1d lognormal --p0 1 1 .5 --lbounds 0 0 0 --demo-popt ./examples/results/demo/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits --ratio 2.31 --output ./examples/results/dfe/1KG.YRI.CEU.100.split_mig.dfe.lognormal.params --optimizations 94 --maxeval 100 --check-convergence
     #
     # Converged results
     # Log(likelihood)	log_mu	log_sigma	misid	theta
-    -15043.4631087791	0.44761577504254146	1.186665070205059	0.012629375151270475	15926.683036368815
-    -15043.4631087791	0.44761577504254146	1.186665070205059	0.012629375151270475	15926.683036368815
-    -15043.4631087791	0.44761577504254146	1.186665070205059	0.012629375151270475	15926.683036368815
+    -14861.315515965818	0.21838931108471316	1.2300823062287314	0.012393098789341682	15927.169929887443
+    -14861.315515965818	0.21838931108471316	1.2300823062287314	0.012393098789341682	15927.169929887443
+    -14861.315515965818	0.21838931108471316	1.2300823062287314	0.012393098789341682	15927.169929887443
     #
     # Top 100 results
     # Log(likelihood)	log_mu	log_sigma	misid	theta
-    -15043.4631087791	0.44761577504254146	1.186665070205059	0.012629375151270475	15926.683036368815
-    -15043.4631087791	0.44761577504254146	1.186665070205059	0.012629375151270475	15926.683036368815
-    -15043.4631087791	0.44761577504254146	1.186665070205059	0.012629375151270475	15926.683036368815
+    -14861.315515965818	0.21838931108471316	1.2300823062287314	0.012393098789341682	15927.169929887443
+    -14861.315515965818	0.21838931108471316	1.2300823062287314	0.012393098789341682	15927.169929887443
+    -14861.315515965818	0.21838931108471316	1.2300823062287314	0.012393098789341682	15927.169929887443
     [...]
-    -15309.798890938577	0.6485327848469901	1.1493883082058935	0.01651677445440453	15926.683036368815
+    -16898.958437994756	1.1418850482413296	1.062963555142121	0.017861017201488274	15927.169929887443
 
 Similar to the best fit parameters in `./examples/results/demo/1KG.YRI.CEU.split_mig.bestfit.demo.params`, the first column is the likelihood.
 
 | likelihood | mu | sigma | misidentification |
 | - | - | - | - |
-| -27880.309 | 0.447  | 1.186  | 0.0126 |
+| -14861.3155 | 0.218  | 1.23  | 0.0124 |
 
 ### Performing statistical testing
 
