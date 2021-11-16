@@ -28,9 +28,10 @@ def test_infer_dfe_code():
     misid = False
     cuda = False
     maxeval = 100
+    maxtime = 300
     seed = None
     infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, theta,
-              p0, upper_bounds, lower_bounds, fixed_params, misid, cuda, maxeval, seed)
+              p0, upper_bounds, lower_bounds, fixed_params, misid, cuda, maxeval, maxtime, seed)
 
 def test_InferDFE_bash(capsys):
     optimizations = 3

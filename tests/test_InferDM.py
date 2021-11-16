@@ -33,7 +33,8 @@ def test_InferDM_code():
     misid = False
     cuda = False
     global_optimization = True
-    maxeval = 50
+    maxeval = 100
+    maxtime = 300
     seed = None
     infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds, 
                      fixed_params, misid, cuda, global_optimization, maxeval, seed)
