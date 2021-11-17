@@ -37,7 +37,7 @@ def test_InferDM_code():
     maxtime = 300
     seed = None
     infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds, 
-                     fixed_params, misid, cuda, global_optimization, maxeval, seed)
+                     fixed_params, misid, cuda, global_optimization, maxeval, maxtime, seed)
 
 def test_InferDM_bash(files):
     optimizations = 3
