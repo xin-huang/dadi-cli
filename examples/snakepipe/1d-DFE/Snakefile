@@ -51,9 +51,9 @@ rule dadi_infer_dm:
         "1KG.YRI.synonymous.snps.unfold.fs"
     output:
         "1KG.YRI.two_epoch.InferDM.opts.0",
-    threads: 8
+    threads: 4
     shell:
-        "dadi-cli InferDM --fs {input} --model {demo_model} --misid --p0 {demo_p0} --ubounds {demo_ubounds} --lbounds {demo_lbounds} --output-prefix 1KG.YRI.two_epoch --optimizations 1000"
+        "dadi-cli InferDM --fs {input} --model {demo_model} --misid --p0 {demo_p0} --ubounds {demo_ubounds} --lbounds {demo_lbounds} --output-prefix 1KG.YRI.two_epoch --optimizations 1000 --threads {threads}"
 
 rule dadi_bestfit_dm:
     input: rules.dadi_infer_dm.output

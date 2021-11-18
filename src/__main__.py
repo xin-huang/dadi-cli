@@ -73,7 +73,7 @@ def run_infer_dm(args):
         # Queues to manage input and output
         in_queue, out_queue = Queue(), Queue()
         # Create workers
-        workers = [Process(target=_worker_func, args=(infer_demography, in_queue, out_queue, worker_args)) for ii in range(multiprocessing.cpu_count())]
+        workers = [Process(target=_worker_func, args=(infer_demography, in_queue, out_queue, worker_args)) for ii in range(args.threads)]
         # Put the tasks to be done in the queue. 
         for ii in range(args.optimizations):
             in_queue.put(ii)
@@ -158,7 +158,7 @@ def run_infer_dfe(args):
         # Queues to manage input and output
         in_queue, out_queue = Queue(), Queue()
         # Create workers
-        workers = [Process(target=_worker_func, args=(infer_dfe, in_queue, out_queue, worker_args)) for ii in range(multiprocessing.cpu_count())]
+        workers = [Process(target=_worker_func, args=(infer_dfe, in_queue, out_queue, worker_args)) for ii in range(args.threads)]
         # Put the tasks to be done in the queue. 
         for ii in range(args.optimizations):
             in_queue.put(ii)
@@ -320,6 +320,7 @@ def add_inference_argument(parser):
     parser.add_argument('--work-queue', nargs=2, default=[], action='store', dest='work_queue', help='Enable Work Queue. Additional arguments are the WorkQueue project name and the name of the password file.')
     parser.add_argument('--maxeval', type=_check_positive_int, default=100, help='max number of parameter set evaluations tried for optimizing demography. Default: 100')
     parser.add_argument('--maxtime', type=_check_positive_int, default=np.inf, help='max amount of time for optimizing demography. Default: infinite')
+    parser.add_argument('--threads', type=_check_positive_int, default=1, help='number of threads using in multiprocessing. Default: 1')
 
 def dadi_cli_parser():
     top_parser = argparse.ArgumentParser()
