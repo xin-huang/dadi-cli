@@ -138,78 +138,83 @@ def run_infer_dfe(args):
     else: cache2d = args.cache2d
 
     from src.InferDFE import infer_dfe
-    if args.work_queue:
-        import work_queue as wq
-        q = wq.WorkQueue(name = args.work_queue[0], port = 0)
-        # Returns 1 for success, 0 for failure
-        if not q.specify_password_file(args.work_queue[1]):
-            raise ValueError('Work Queue password file "{0}" not found.'.format(args.work_queue[1]))
-
-        for ii in range(args.optimizations): 
-            t = wq.PythonTask(infer_dfe, fs, cache1d, cache2d, args.pdf1d, args.pdf2d, theta, 
-            args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, 
-            args.maxeval, args.maxtime, args.seed)
-            # # If using a custom model, need to include the file from which it comes
-            # if args.pdf_file:
-            #     t.specify_input_file(args.pdf_file+'.py')
-            q.submit(t)
-    else:
-        import multiprocessing; from multiprocessing import Process, Queue
-
-        #worker_args = (fs, func, args.p0, args.grids, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
-        worker_args = (fs, cache1d, cache2d, args.pdf1d, args.pdf2d, theta, 
-        args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, args.maxeval, args.maxtime, args.seed)
-
-        # Queues to manage input and output
-        in_queue, out_queue = Queue(), Queue()
-        # Create workers
-        workers = [Process(target=_worker_func, args=(infer_dfe, in_queue, out_queue, worker_args)) for ii in range(args.threads)]
-        # Put the tasks to be done in the queue. 
-        for ii in range(args.optimizations):
-            in_queue.put(ii)
-        # Start the workers
-        for worker in workers:
-            worker.start()
-        
     existing_files = glob.glob(args.output_prefix+'.InferDFE.opts.*')
     fid = open(args.output_prefix+'.InferDFE.opts.{0}'.format(len(existing_files)), 'a')
     # Write command line to results file
     fid.write('# {0}\n'.format(' '.join(sys.argv)))
-    # Collect and process results
-    from src.BestFit import get_bestfit_params
-    # If fitting two population DFE, 
-    # determine if Pdf is symetrical or asymetrical
-    independent_selection = None
-    if args.pdf2d != None:
-        if 'biv_' in args.pdf2d:
-            len_params = len(args.p0)
-            if args.misid: len_params - 1
-            if len_params == 3: independent_selection = False
-            else: independent_selection = True
-    for _ in range(args.optimizations):
-        if args.work_queue: 
-            result = q.wait().output
+    converged = False
+    while not converged:
+        if not args.force_convergence:
+            converged = True
+        if args.work_queue:
+            import work_queue as wq
+            q = wq.WorkQueue(name = args.work_queue[0], port = 0)
+            # Returns 1 for success, 0 for failure
+            if not q.specify_password_file(args.work_queue[1]):
+                raise ValueError('Work Queue password file "{0}" not found.'.format(args.work_queue[1]))
+
+            for ii in range(args.optimizations): 
+                t = wq.PythonTask(infer_dfe, fs, cache1d, cache2d, args.pdf1d, args.pdf2d, theta, 
+                args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, 
+                args.maxeval, args.maxtime, args.seed)
+                # # If using a custom model, need to include the file from which it comes
+                # if args.pdf_file:
+                #     t.specify_input_file(args.pdf_file+'.py')
+                q.submit(t)
         else:
-            result = out_queue.get()
-        # Write latest result to file
-        fid.write('{0}\t{1}\t{2}\n'.format(result[0], '\t'.join(str(_) for _ in result[1]), result[2]))
-        fid.flush()
-        if args.check_convergence:
-            if args.pdf1d != None and args.pdf2d != None: pdf_var = 'mixture' + '_' + args.pdf1d
-            elif args.pdf1d != None: pdf_var = args.pdf1d
-            else: pdf_var = args.pdf2d
-            # print(pdf_var)
-            result = get_bestfit_params(path=args.output_prefix+'.InferDFE.opts.*',
-                                        misid=args.misid, lbounds=args.lbounds, ubounds=args.ubounds, pdf_name=pdf_var,
-                                        output=args.output_prefix+'.InferDFE.bestfits', delta=args.delta_ll, pdf2d_asym=independent_selection)
-            if result is not None:
-                break
+            import multiprocessing; from multiprocessing import Process, Queue
+
+            #worker_args = (fs, func, args.p0, args.grids, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
+            worker_args = (fs, cache1d, cache2d, args.pdf1d, args.pdf2d, theta, 
+            args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, args.maxeval, args.maxtime, args.seed)
+
+            # Queues to manage input and output
+            in_queue, out_queue = Queue(), Queue()
+            # Create workers
+            workers = [Process(target=_worker_func, args=(infer_dfe, in_queue, out_queue, worker_args)) for ii in range(args.threads)]
+            # Put the tasks to be done in the queue. 
+            for ii in range(args.optimizations):
+                in_queue.put(ii)
+            # Start the workers
+            for worker in workers:
+                worker.start()
+
+        # Collect and process results
+        from src.BestFit import get_bestfit_params
+        # If fitting two population DFE, 
+        # determine if Pdf is symetrical or asymetrical
+        independent_selection = None
+        if args.pdf2d != None:
+            if 'biv_' in args.pdf2d:
+                len_params = len(args.p0)
+                if args.misid: len_params - 1
+                if len_params == 3: independent_selection = False
+                else: independent_selection = True
+        for _ in range(args.optimizations):
+            if args.work_queue: 
+                result = q.wait().output
+            else:
+                result = out_queue.get()
+            # Write latest result to file
+            fid.write('{0}\t{1}\t{2}\n'.format(result[0], '\t'.join(str(_) for _ in result[1]), result[2]))
+            fid.flush()
+            if args.check_convergence or args.force_convergence:
+                if args.pdf1d != None and args.pdf2d != None: pdf_var = 'mixture' + '_' + args.pdf1d
+                elif args.pdf1d != None: pdf_var = args.pdf1d
+                else: pdf_var = args.pdf2d
+                # print(pdf_var)
+                result = get_bestfit_params(path=args.output_prefix+'.InferDFE.opts.*',
+                                            misid=args.misid, lbounds=args.lbounds, ubounds=args.ubounds, pdf_name=pdf_var,
+                                            output=args.output_prefix+'.InferDFE.bestfits', delta=args.delta_ll, pdf2d_asym=independent_selection)
+                if result is not None:
+                    converged = True
+                    break
+        if not args.work_queue:
+            # Stop the workers
+            for worker in workers:
+                worker.terminate()
     fid.close()
 
-    if not args.work_queue:
-        # Stop the workers
-        for worker in workers:
-            worker.terminate()
         # TODO: Stop the remaining work_queue workers
             
             #from multiprocessing import Manager, Process, Queue
@@ -305,7 +310,7 @@ def add_constant_argument(parser):
     parser.add_argument('--constants', default=-1, type=float, nargs='+', help='Fixed parameters during the inference. Use -1 to indicate a parameter is NOT fixed. Default: None')
 
 def add_delta_ll_argument(parser):
-    parser.add_argument('--delta-ll', type=_check_positive_num, required=False, dest='delta_ll', default=0.05, help='When using --check-convergence, set the difference in log-likelihood from best optimization to consider an optimization convergent. Default: 0.05')
+    parser.add_argument('--delta-ll', type=_check_positive_num, required=False, dest='delta_ll', default=0.9999, help='When using --check-convergence, set the percentage similarity for log-likliehoods to the best optimization to consider convergent (with 1 being 100%% similar to the best optimization\'s log-likelihood). Default: 0.9999')
 
 def add_popt_argument(parser):
     parser.add_argument('--demo-popt', type=str, dest='demo_popt', help='File contains the bestfit demographic parameters, generated by `dadi-cli BestFit`')
