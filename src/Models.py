@@ -401,6 +401,6 @@ def print_model_details(model_name):
     elif model_name == 'IM_pre': print('- IM_pre:\n' + IM_pre)
     elif model_name == 'split_mig': print('- split_mig:\n' + split_mig)
     elif model_name == 'split_asym_mig': print('- split_asym_mig:\n' + split_asym_mig)
-elif model_name == 'split_delay_mig': print('- split_delay_mig:\n' + split_delay_mig)
+    elif model_name == 'split_delay_mig': print('- split_delay_mig:\n' + split_delay_mig)
     elif model_name == 'snm_2d': print('- snm_2d:\n' + snm_2d)
     else: raise Exception('Demographic model ' + model_name + ' is not available!') 
