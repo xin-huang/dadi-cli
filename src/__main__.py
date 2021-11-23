@@ -49,6 +49,8 @@ def run_infer_dm(args):
         import importlib
         func = getattr(importlib.import_module(args.model_file), args.model)
 
+    if args.maxeval == False: args.maxeval = max(len(args.p0)*100,1)
+
     existing_files = glob.glob(args.output_prefix+'.InferDM.opts.*')
     fid = open(args.output_prefix+'.InferDM.opts.{0}'.format(len(existing_files)), 'a')
     # Write command line to results file
@@ -136,6 +138,8 @@ def run_infer_dfe(args):
     if args.cache2d != None:
         cache2d = pickle.load(open(args.cache2d, 'rb'))
     else: cache2d = args.cache2d
+
+    if args.maxeval == False: args.maxeval = max(len(args.p0)*100,1)
 
     from src.InferDFE import infer_dfe
     existing_files = glob.glob(args.output_prefix+'.InferDFE.opts.*')
@@ -329,7 +333,7 @@ def add_inference_argument(parser):
     parser.add_argument('--check-convergence', default=False, action='store_true', dest='check_convergence', help='Stop optimization runs when convergence criteria are reached. BestFit results file will be call <output_prefix>.InferDM.bestfits. Default: False')
     parser.add_argument('--force-convergence', default=False, action='store_true', dest='force_convergence', help='Only stop optimization once convergence criteria is reached. BestFit results file will be call <output_prefix>.InferDM.bestfits. Default: False')
     parser.add_argument('--work-queue', nargs=2, default=[], action='store', dest='work_queue', help='Enable Work Queue. Additional arguments are the WorkQueue project name and the name of the password file.')
-    parser.add_argument('--maxeval', type=_check_positive_int, default=100, help='max number of parameter set evaluations tried for optimizing demography. Default: 100')
+    parser.add_argument('--maxeval', type=_check_positive_int, default=False, help='Max number of parameter set evaluations tried for optimizing demography. Default: Number of parameters multiplied by 100')
     parser.add_argument('--maxtime', type=_check_positive_int, default=np.inf, help='max amount of time for optimizing demography. Default: infinite')
     parser.add_argument('--threads', type=_check_positive_int, default=1, help='number of threads using in multiprocessing. Default: 1')
 
