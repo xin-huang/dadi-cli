@@ -43,6 +43,8 @@ def get_dadi_model_params(model_name):
         return ['s', 'nu1', 'nu2', 'T', 'm12', 'm21']
     elif model_name == 'split_asym_mig':
         return ['nu1', 'nu2', 'T', 'm12', 'm21']
+    elif model_name == 'split_delay_mig':
+        return ['nu1', 'nu2', 'Tpre', 'Tmig', 'm12', 'm21']
     elif model_name == 'IM_pre':
         return ['nuPre', 'TPre', 's', 'nu1', 'nu2', 'T', 'm12', 'm21']
     elif model_name == 'split_mig':
@@ -70,6 +72,7 @@ def print_available_models():
     print('- IM_pre')
     print('- split_mig')
     print('- split_asym_mig')
+    print('- split_delay_mig')
     print('- snm_2d')
     print()
 
@@ -233,6 +236,18 @@ def print_model_details(model_name):
             m12: Migration from pop 2 to pop 1 (2*Na*m12)
             m21: Migration from pop 1 to pop 2 (2*Na*m21)
     '''
+    split_delay_mig = '''
+        Split into two populations of specifed size, with migration after some time has passed post split.
+
+        params = [nu1,nu2,Tpre,Tmig,m12,m21]
+
+            nu1: Size of population 1 after split.
+            nu2: Size of population 2 after split.
+            Tpre: Time in the past after split but before migration (in units of 2*Na generations) 
+            Tmig: Time in the past after migration starts (in units of 2*Na generations) 
+            m12: Migration from pop 2 to pop 1 (2*Na*m12)
+            m21: Migration from pop 1 to pop 2 (2*Na*m21)
+    '''
     snm_2d = '''
         Standard neutral model, populations never diverge.
         Two populations in this model.
@@ -386,5 +401,6 @@ def print_model_details(model_name):
     elif model_name == 'IM_pre': print('- IM_pre:\n' + IM_pre)
     elif model_name == 'split_mig': print('- split_mig:\n' + split_mig)
     elif model_name == 'split_asym_mig': print('- split_asym_mig:\n' + split_asym_mig)
+elif model_name == 'split_delay_mig': print('- split_delay_mig:\n' + split_delay_mig)
     elif model_name == 'snm_2d': print('- snm_2d:\n' + snm_2d)
     else: raise Exception('Demographic model ' + model_name + ' is not available!') 
