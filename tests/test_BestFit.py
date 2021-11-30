@@ -44,7 +44,7 @@ def test_get_bestfit_params(files):
 def test_get_bestfit_params_no_convergence(capfd):
     BestFit.get_bestfit_params(path=pytest.example_input, misid=True, lbounds=None, 
         ubounds=None, output=pytest.example_output, 
-        model_name='two_epoch', pdf_name=None, delta=1.1, Nclose=3, Nbest=10)
+        model_name='two_epoch', pdf_name=None, delta=0, Nclose=3, Nbest=10)
     out, err = capfd.readouterr()
     assert out.strip() == "No convergence"
 
