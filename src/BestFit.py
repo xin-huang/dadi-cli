@@ -42,7 +42,7 @@ def get_bestfit_params(path, misid, lbounds, ubounds, output, delta, model_name=
     res = np.array(sorted(res, reverse=True))
     opt_ll = res[0][0]
     # Filter out those results within delta threshold
-    close_enough = res[opt_ll / res[:,0] >= 1 - delta]
+    close_enough = res[1 - (opt_ll / res[:,0]) <= delta]
 
     with open(output, 'w') as fid:
         # Output command line
