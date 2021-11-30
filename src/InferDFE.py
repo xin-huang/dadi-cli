@@ -74,7 +74,7 @@ def infer_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2, theta,
         model = func(popt, None, sele_dist, theta, None)
     #print(model)
     # Likelihood of the data given the model AFS.
-    ll_model = dadi.Inference.ll_multinom(model, fs)
+    ll_model = dadi.Inference.ll(model, fs)
     #print('Maximum log composite likelihood: {0}'.format(ll_model))
 
     #with open(output, 'w') as f:
