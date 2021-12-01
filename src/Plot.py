@@ -112,12 +112,12 @@ def plot_fitted_dfe(fs, cache1d, cache2d, demo_popt, sele_popt, projections, pdf
         if projections == None: projections = [20]
         fs = fs.project(projections)
         model = model.project(projections)
-        dadi.Plotting.plot_1d_comp_multinom(model, fs)
+        dadi.Plotting.plot_2d_comp_Poisson(model, fs)
     if len(ns) == 2:
         if projections == None: projections = [20, 20]
         fs = fs.project(projections)
         model = model.project(projections)
-        dadi.Plotting.plot_2d_comp_multinom(model, fs, vmin=vmin, resid_range=resid_range)
+        dadi.Plotting.plot_2d_comp_Poisson(model, fs, vmin=vmin, resid_range=resid_range)
     fig.savefig(output)
 
 def plot_mut_prop(dfe_popt, pdf1d, misid, mut_rate, seq_len, ratio, output):
