@@ -111,7 +111,7 @@ Sometimes parameters may be close to the boundaries. Users should be cautious an
 
 ### Generating caches for DFE inference
 
-After inferring the best fit demographic model, users may also infer DFE from data. To perform DFE inference, users need to generate caches at first. Because we use the `split_mig` model in the demographic inference, we need to use the same demographic model plus selection, the `split_mig_sel_single_gamma` model or the `split_mig_sel` model. The `split_mig_sel` model is used for inferring DFE from two populations by assuming the population-scaled selection coefficients are different in the two populations, while the `split_mig_sel_single_gamma` model assumes the population-scaled selection coefficients are the same in the two populations.
+After inferring the best fit demographic model, users may also infer DFE from data. To perform DFE inference, users need to generate caches at first. Because we use the `split_mig` model in the demographic inference, we need to use the same demographic model plus selection, the `split_mig_sel` model or the `split_mig_sel_single_gamma` model. The `split_mig_sel` model is used for inferring the DFE from two populations by assuming the population-scaled selection coefficients are different in the two populations, while the `split_mig_sel_single_gamma` model assumes the population-scaled selection coefficients are the same in the two populations.
 
 Here, `--model` specifies the demographic model plus selection used in the inference. `--demo-popt` specifies the demographic parameters, which are stored in `./examples/results/demo/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits`. `--sample-size` defines the population size of each population. `--mp` indicates using multiprocess to accelerate the computation. The output is pickled and can access through the `pickle` module in `Python`. By default `GenerateCache` will make the cache for the situation where the selection coefficients are different in the two populations. If you want to to make the cache for the situation where the selection coefficients is the same in the two populations, use the `--single-gamma` option.
 
@@ -121,37 +121,31 @@ Here, `--model` specifies the demographic model plus selection used in the infer
 
 ### Inferring DFE
 
-For inferring DFE, we use the spectrum from the nonsynonymous SNPs and an example from inferring joint DFE<sup>2</sup>. In joint DFE inference, we can use a 1D and/or 2D caches depending on the DFE we want to use. `--cache1d` accepts the cache that assumes the population-scaled selection coefficients are the same in the two populations. `--cache2d` accepts the cache that assumes the population-scaled selection coefficients are different in the two populations. Here, we define the marginal DFE is a lognormal distribution with `--pdf1d`. If we wanted to, we could define the joint DFE is a bivariate lognormal distribution with `--pdf2d`. As well, `dadi-cli` supports a mixture model for the regular lognormal and bivariate lognormal. We use `--ratio` to specify the ratio of the nonsynonymous SNPs to the synonymous SNPs to calculate the population-scaled mutation rate of the nonsynonymous SNPs. Here is an example of running with `--pdf1d lognormal` with the `--misid` option, so our parameters are the mean of the lognormal distribution, the standard deviation of the lognormal distribution, and the misidentification for the ancestral states
+For inferring the DFE, we use the spectrum from the nonsynonymous SNPs and an example from inferring joint DFE<sup>2</sup>. In joint DFE inference, we can use a 1D and/or 2D caches depending on the DFE we want to use. `--cache1d` accepts the cache that assumes the population-scaled selection coefficients are the same in the two populations. `--cache2d` accepts the cache that assumes the population-scaled selection coefficients are different in the two populations. Here, we will use a mixture of lognormal distributions. We define the marginal DFE as a lognormal distribution with `--pdf1d` and we define the joint DFE as a bivariate lognormal distribution with `--pdf2d`. We use `--ratio` to specify the ratio of the nonsynonymous SNPs to the synonymous SNPs to calculate the population-scaled mutation rate of the nonsynonymous SNPs. Here is an example of running with `--pdf1d lognormal` and `--pdf2d biv_lognormal` with the `--misid` option, so our parameters are `log_mu` the mean of the lognormal distribution, `log_sigma` the standard deviation of the lognormal distribution, `rho` the correlation coefficient for the bivariate lognormal, and `w` the weight of the bivariate distribution (1-w is the weight of the lognormal distribution), and `misid` the misidentification for the ancestral states. Here we fix `rho` to 0 with the `--constants` option.
 
-    dadi-cli InferDFE --fs ./examples/results/fs/1KG.YRI.CEU.100.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.100.split_mig.sel.single.gamma.spectra.bpkl --misid --pdf1d lognormal --p0 1 1 .5 --lbounds 0 0.01 0 --ubounds 10 10 1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits --ratio 2.31 --output ./examples/results/dfe/1KG.YRI.CEU.100.split_mig.dfe.params --optimizations 90 --threads 90 --maxeval 500 --check-convergence
+    dadi-cli InferDFE --fs ./examples/results/fs/1KG.YRI.CEU.100.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.100.split_mig.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.100.split_mig.sel.spectra.bpkl --misid --pdf1d lognormal --pdf2d biv_lognormal --p0 1 1 0 .5 .5 --lbounds 0 0.01 -1 0 0 --ubounds 10 10 -1 0 1 --constants -1 -1 0 -1 -1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits --ratio 2.31 --output ./examples/results/dfe/1KG.YRI.CEU.100.split_mig.dfe.lognormal_mixture.params --optimizations 5 --threads 5 --maxeval 400 --check-convergence
 
-After the optimization, users can use `BestFit` to obtain the best fit parameters and save it in `./examples/results/dfe/1KG.YRI.CEU.100.split_mig.dfe.params.InferDFE.bestfit`.
-
-    dadi-cli BestFit --input-prefix ./examples/results/dfe/1KG.YRI.CEU.100.split_mig.dfe.params.InferDFE --pdf lognormal --model split_mig --misid
-    
 The result is
 
-    # /home/u25/tjstruck/anaconda3/envs/dadicli/bin/dadi-cli InferDFE --fs ./examples/results/fs/1KG.YRI.CEU.100.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.100.split_mig.sel.single.gamma.spectra.bpkl --misid --pdf1d lognormal --p0 1 1 .5 --lbounds 0 0.01 0 --ubounds 10 10 1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits --ratio 2.31 --output ./examples/results/dfe/1KG.YRI.CEU.100.split_mig.dfe.params --optimizations 90 --threads 90 --maxeval 500 --check-convergence
+    # /home/u25/tjstruck/anaconda3/envs/dadicli/bin/dadi-cli InferDFE --fs ./examples/results/fs/1KG.YRI.CEU.100.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.100.split_mig.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.100.split_mig.sel.spectra.bpkl --misid --pdf1d lognormal --pdf2d biv_lognormal --p0 1 1 0 .5 .5 --lbounds 0 0.01 -1 0 0 --ubounds 10 10 -1 0 1 --constants -1 -1 0 -1 -1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.100.split_mig.demo.params.InferDM.bestfits --ratio 2.31 --output ./examples/results/dfe/1KG.YRI.CEU.100.split_mig.dfe.lognormal_mixture.params --optimizations 20 --threads 10 --maxeval 400 --force-convergence
     #
     # Converged results
-    # Log(likelihood)	log_mu	log_sigma	misid	theta
-    -14861.315515965818	0.21838931108471316	1.2300823062287314	0.012393098789341682	15927.169929887443
-    -14861.315515965818	0.21838931108471316	1.2300823062287314	0.012393098789341682	15927.169929887443
-    -14861.315515965818	0.21838931108471316	1.2300823062287314	0.012393098789341682	15927.169929887443
+    # Log(likelihood)	log_mu	log_sigma	rho	w	misid	theta
+    -13256.61108936973	2.2305168477940738	4.2743477044322296	0.0	0.0	0.011616109073834592	16037.834951340008
+    -13256.61758577463	2.230439697200394	4.273469888150792	0.0	0.0	0.011614738184195932	16037.834951340008
+    -13256.625614584696	2.230412957619967	4.273782157759427	0.0	0.0	0.011616615627266364	16037.834951340008
     #
     # Top 100 results
-    # Log(likelihood)	log_mu	log_sigma	misid	theta
-    -14861.315515965818	0.21838931108471316	1.2300823062287314	0.012393098789341682	15927.169929887443
-    -14861.315515965818	0.21838931108471316	1.2300823062287314	0.012393098789341682	15927.169929887443
-    -14861.315515965818	0.21838931108471316	1.2300823062287314	0.012393098789341682	15927.169929887443
-    [...]
-    -16898.958437994756	1.1418850482413296	1.062963555142121	0.017861017201488274	15927.169929887443
+    # Log(likelihood)	log_mu	log_sigma	rho	w	misid	theta
+    -13256.61108936973	2.2305168477940738	4.2743477044322296	0.0	0.0	0.011616109073834592	16037.834951340008
+    -13256.61758577463	2.230439697200394	4.273469888150792	0.0	0.0	0.011614738184195932	16037.834951340008
+    -13256.625614584696	2.230412957619967	4.273782157759427	0.0	0.0	0.011616615627266364	16037.834951340008
 
 Similar to the best fit parameters in `./examples/results/demo/1KG.YRI.CEU.split_mig.bestfit.demo.params`, the first column is the likelihood.
 
-| likelihood | mu | sigma | misidentification |
+| likelihood | mu | sigma | rho | w | misidentification |
 | - | - | - | - |
-| -14861.3155 | 0.218  | 1.23  | 0.0124 |
+| -13256.61108936973 | 2.2305168477940738  | 4.2743477044322296 | 0 | 0 | 0.0116 |
 
 ### Performing statistical testing
 
