@@ -1,0 +1,15 @@
+# /home/u25/tjstruck/anaconda3/envs/dadicli/bin/dadi-cli InferDFE --fs ./examples/results/fs/1KG.YRI.CEU.20.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.spectra.bpkl --misid --pdf1d lognormal --pdf2d biv_lognormal --p0 1 1 0 .5 .5 --lbounds 0 0.01 -1 0 0 --ubounds 10 10 -1 0 1 --constants -1 -1 0 -1 -1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params.InferDM.bestfits --ratio 2.31 --output ./examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.lognormal_mixture.params --optimizations 5 --threads 5 --maxeval 400 --force-convergence
+# /home/u25/tjstruck/anaconda3/envs/dadicli/bin/dadi-cli InferDFE --fs ./examples/results/fs/1KG.YRI.CEU.20.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.spectra.bpkl --misid --pdf1d lognormal --pdf2d biv_lognormal --p0 1 1 0 .5 .5 --lbounds 0 0.01 -1 0 0 --ubounds 10 10 -1 0 1 --constants -1 -1 0 -1 -1 --demo-popt ./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params.InferDM.bestfits --ratio 2.31 --output ./examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.lognormal_mixture.params --optimizations 5 --threads 5 --maxeval 400 --force-convergence
+#
+# Converged results
+# Log(likelihood)	log_mu	log_sigma	rho	w	misid	theta
+-1388.9783697999487	5.508927732043908	7.654086541996892	0.0	0.0	0.01654293421125699	15644.25126286839
+-1388.9785536049772	5.509044464904789	7.652783862354717	0.0	0.0	0.016563830198126888	15644.25126286839
+-1388.978715739256	5.507014007582351	7.649376164773611	0.0	0.0	0.01652802148251414	15644.25126286839
+#
+# Top 100 results
+# Log(likelihood)	log_mu	log_sigma	rho	w	misid	theta
+-1388.9783697999487	5.508927732043908	7.654086541996892	0.0	0.0	0.01654293421125699	15644.25126286839
+-1388.9785536049772	5.509044464904789	7.652783862354717	0.0	0.0	0.016563830198126888	15644.25126286839
+-1388.978715739256	5.507014007582351	7.649376164773611	0.0	0.0	0.01652802148251414	15644.25126286839
+-2807.955859125291	0.9151823457507116	0.23378097038602033	0.0	0.0	0.03923288724961618	15644.25126286839
