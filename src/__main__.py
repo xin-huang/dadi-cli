@@ -128,8 +128,9 @@ def run_infer_dfe(args):
                 if not args.pdf_file and args.ubounds != -1: args.ubounds = _check_pdf_params(args.ubounds, pdf, '--ubounds', args.misid)
 
     fs = dadi.Spectrum.from_file(args.fs)
-    from src.Stat import _get_theta
-    theta = _get_theta(args.demo_popt) * args.ratio
+    from src.Plot import _get_opts_and_theta
+    _, theta = _get_opts_and_theta(args.demo_popt, False) 
+    theta *= args.ratio
 
     import pickle
     if args.cache1d != None:

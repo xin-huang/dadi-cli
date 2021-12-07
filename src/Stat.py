@@ -5,17 +5,17 @@ import glob, pickle
 import numpy as np
 from src.Models import get_dadi_model_func
 from src.Pdfs import get_dadi_pdf
-from src.GenerateCache import _get_opt
+from src.Plot import _get_opts_and_theta
 
 def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, grids,
                  output, bootstrap_dir, demo_popt, dfe_popt, misid, logscale):
 
     if demo_popt != None:
-        demo_popt = _get_opt(demo_popt, False)
+        demo_popt, _ = _get_opts_and_theta(demo_popt, False)
     if dfe_popt != None:
         #Make sure the BestFit from InferDFE inference always 
-        theta = _get_theta(dfe_popt)
-        dfe_popt = _get_opt(dfe_popt, False)
+        # theta = _get_theta(dfe_popt)
+        dfe_popt, theta = _get_opts_and_theta(dfe_popt, False)
 
     fs = dadi.Spectrum.from_file(fs)
     fs_files = glob.glob(bootstrap_dir + '/*.fs')
@@ -61,7 +61,7 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, grids,
     for eps in [0.01, 0.001, 0.0001]:
         if dfe_popt != None:
             if (cache1d != None) and (cache2d != None):
-                popt = np.array([dfe_popt[1], dfe_popt[2], dfe_popt[4], dfe_popt[5]])
+                popt = np.array([dfe_popt[0], dfe_popt[1], dfe_popt[3], dfe_popt[4]])
             else:
                 popt = np.array(dfe_popt)#[1:]
             boot_theta_adjusts = [b.sum()/fs.sum() for b in all_boot]
@@ -84,24 +84,24 @@ def godambe_stat(fs, model, cache1d, cache2d, sele_dist, sele_dist2, grids,
             f.write('Upper bounds of 95% confidence interval : {0}'.format(popt+1.96*uncerts_adj) + '\n\n')
     f.close()
 
-def _get_theta(popt):
+# def _get_theta(popt):
 
-    opts = []
-    fid = open(popt, 'r')
-    for line in fid.readlines():
-        if line.startswith('#'):
-            continue
-        else:
-            try:
-                opts.append([float(_) for _ in line.rstrip().split()])
-            except ValueError:
-                pass
-    fid.close()
+#     opts = []
+#     fid = open(popt, 'r')
+#     for line in fid.readlines():
+#         if line.startswith('#'):
+#             continue
+#         else:
+#             try:
+#                 opts.append([float(_) for _ in line.rstrip().split()])
+#             except ValueError:
+#                 pass
+#     fid.close()
 
-    if len(opts) == 0:
-        print('No optimization results found')
-        return
+#     if len(opts) == 0:
+#         print('No optimization results found')
+#         return
 
-    theta = opts[0][-1]
+#     theta = opts[0][-1]
 
-    return theta
+#     return theta

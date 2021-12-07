@@ -42,8 +42,7 @@ def plot_fitted_demography(fs, model, popt, projections, misid, output, vmin, re
     from src.Models import get_dadi_model_func
     func = get_dadi_model_func(model)
 
-    from src.GenerateCache import _get_opt
-    popt = _get_opt(popt, False)
+    popt, _ = _get_opts_and_theta(popt, False)
 
     fs = dadi.Spectrum.from_file(fs)
     if misid:
@@ -73,11 +72,7 @@ def plot_fitted_dfe(fs, cache1d, cache2d, demo_popt, sele_popt, projections, pdf
     import dadi.DFE
     from src.Pdfs import get_dadi_pdf
     
-    from src.Stat import _get_theta
-    theta = _get_theta(sele_popt)
-
-    from src.GenerateCache import _get_opt
-    sele_popt = _get_opt(sele_popt, False)
+    sele_popt, theta = _get_opts_and_theta(sele_popt, False)
 
     fs = dadi.Spectrum.from_file(fs)
 
@@ -124,7 +119,7 @@ def plot_mut_prop(dfe_popt, pdf1d, misid, mut_rate, seq_len, ratio, output):
 
     from src.Pdfs import get_dadi_pdf
 
-    dfe_params, theta = _get_bestfit_params(dfe_popt, misid)
+    dfe_params, theta = _get_opts_and_theta(dfe_popt, misid)
 
     Na = theta/(4*mut_rate*seq_len*(ratio/(1+ratio)))
 
@@ -149,7 +144,7 @@ def plot_mut_prop(dfe_popt, pdf1d, misid, mut_rate, seq_len, ratio, output):
     plt.grid(alpha=0.3)
     fig.savefig(output, bbox_inches='tight')
 
-def _get_bestfit_params(filename, misid):
+def _get_opts_and_theta(filename, misid):
 
     opts = []
     fid = open(filename, 'r')
