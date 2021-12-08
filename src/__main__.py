@@ -1,6 +1,7 @@
 import argparse, glob, os.path, sys, signal
 import numpy as np
 import dadi
+import multiprocessing
 
 from src.InferDM import infer_demography
 from src.InferDFE import infer_dfe
@@ -168,8 +169,6 @@ def run_infer_dfe(args):
                 q.submit(t)
         else:
             import multiprocessing; from multiprocessing import Process, Queue
-
-            #worker_args = (fs, func, args.p0, args.grids, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
             worker_args = (fs, cache1d, cache2d, args.pdf1d, args.pdf2d, theta, 
             args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, args.maxeval, args.maxtime, args.seed)
 
@@ -207,7 +206,6 @@ def run_infer_dfe(args):
                 if args.pdf1d != None and args.pdf2d != None: pdf_var = 'mixture' + '_' + args.pdf1d
                 elif args.pdf1d != None: pdf_var = args.pdf1d
                 else: pdf_var = args.pdf2d
-                # print(pdf_var)
                 result = get_bestfit_params(path=args.output_prefix+'.InferDFE.opts.*',
                                             misid=args.misid, lbounds=args.lbounds, ubounds=args.ubounds, pdf_name=pdf_var,
                                             output=args.output_prefix+'.InferDFE.bestfits', delta=args.delta_ll, pdf2d_asym=independent_selection)
@@ -336,7 +334,7 @@ def add_inference_argument(parser):
     parser.add_argument('--work-queue', nargs=2, default=[], action='store', dest='work_queue', help='Enable Work Queue. Additional arguments are the WorkQueue project name and the name of the password file.')
     parser.add_argument('--maxeval', type=_check_positive_int, default=False, help='Max number of parameter set evaluations tried for optimizing demography. Default: Number of parameters multiplied by 100')
     parser.add_argument('--maxtime', type=_check_positive_int, default=np.inf, help='max amount of time for optimizing demography. Default: infinite')
-    parser.add_argument('--threads', type=_check_positive_int, default=1, help='number of threads using in multiprocessing. Default: 1')
+    parser.add_argument('--threads', type=_check_positive_int, default=multiprocessing.cpu_count(), help='number of threads using in multiprocessing. Default: All available threads')
 
 def dadi_cli_parser():
     top_parser = argparse.ArgumentParser()
@@ -461,17 +459,12 @@ def _check_params(params, model, option, misid):
 def _check_pdf_params(params, pdf, option, misid):
     input_params_len = len(params)
     if misid: input_params_len = input_params_len - 1
-    # print(input_params_len)
-    # print('\n\nchecking:',pdf)
-    # print('\n\nchecking:pdf == biv_lognormal',pdf, 'biv_lognormal',pdf == 'biv_lognormal','\n\n')
-    # mod=''
     if pdf == 'biv_lognormal' or pdf == 'biv_ind_gamma': 
         if input_params_len in [2,3]: 
             mod='_sym'
         else: 
             mod='_asym'
         pdf=pdf.replace('biv','biv'+mod)
-    # print('\n\nchecking:',pdf,'\n\n')
     model_params_len = len(get_dadi_pdf_params(pdf))
     if input_params_len != model_params_len:
         raise Exception("Found " + str(input_params_len) + " pdf parameters from the option " + option + 
