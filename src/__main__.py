@@ -77,7 +77,7 @@ def run_infer_dm(args):
                     t.specify_input_file(args.model_file+'.py')
                 q.submit(t)
         else:
-            import multiprocessing; from multiprocessing import Process, Queue
+            from multiprocessing import Process, Queue
 
             worker_args = (fs, func, args.p0, args.grids, args.ubounds, args.lbounds, args.constants, args.misid, 
                            args.cuda, args.global_optimization, args.maxeval, args.maxtime, args.seed)
@@ -168,7 +168,7 @@ def run_infer_dfe(args):
                 #     t.specify_input_file(args.pdf_file+'.py')
                 q.submit(t)
         else:
-            import multiprocessing; from multiprocessing import Process, Queue
+            from multiprocessing import Process, Queue
             worker_args = (fs, cache1d, cache2d, args.pdf1d, args.pdf2d, theta, 
             args.p0, args.ubounds, args.lbounds, args.constants, args.misid, args.cuda, args.maxeval, args.maxtime, args.seed)
 
