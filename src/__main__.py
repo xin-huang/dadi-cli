@@ -4,6 +4,7 @@ import dadi
 import multiprocessing
 
 from src.InferDM import infer_demography
+from src.InferDM import infer_global_opt
 from src.InferDFE import infer_dfe
 from src.Models import get_dadi_model_params
 from src.Pdfs import get_dadi_pdf_params
@@ -50,12 +51,91 @@ def run_infer_dm(args):
         import importlib
         func = getattr(importlib.import_module(args.model_file), args.model)
 
-    if args.maxeval == False: args.maxeval = max(len(args.p0)*100,1)
+    if args.maxeval == False: args.maxeval = max(len(args.p0)*50,1)
 
     existing_files = glob.glob(args.output_prefix+'.InferDM.opts.*')
     fid = open(args.output_prefix+'.InferDM.opts.{0}'.format(len(existing_files)), 'a')
     # Write command line to results file
     fid.write('# {0}\n'.format(' '.join(sys.argv)))
+
+    # Check if demographic function uses inbreeding, need to be done before wrapping
+    import inspect
+    if 'from_phi_inbreeding' in  inspect.getsource(func):
+        inbreeding = True
+    else:
+        inbreeding = False
+
+    if args.global_optimization:
+        if inbreeding:
+            print("Warning: can't down project inbreeding data for global optimization")
+        else:
+            existing_files = glob.glob(args.output_prefix+'.global_temp.InferDM.opts.*')
+            fid = open(args.output_prefix+'.global_temp.InferDM.opts.{0}'.format(len(existing_files)), 'a')
+            # Write command line to results file
+            fid.write('# {0}\n'.format(' '.join(sys.argv)))
+            global_optimizations = round(args.optimizations*.25)
+            args.optimizations -= global_optimizations
+            if args.work_queue:
+                import work_queue as wq
+                q = wq.WorkQueue(name = args.work_queue[0], port = 0)
+                # Returns 1 for success, 0 for failure
+                if not q.specify_password_file(args.work_queue[1]):
+                    raise ValueError('Work Queue password file "{0}" not found.'.format(args.work_queue[1]))
+
+                for ii in range(args.optimizations): 
+                    t = wq.PythonTask(infer_global_opt, fs, func, args.p0, args.grids, 
+                                      args.ubounds, args.lbounds, args.constants, args.misid, 
+                                      args.cuda, args.global_optimization, args.maxeval, args.maxtime, args.seed)
+                    # If using a custom model, need to include the file from which it comes
+                    if args.model_file:
+                        t.specify_input_file(args.model_file+'.py')
+                    q.submit(t)
+            else:
+                from multiprocessing import Process, Queue
+
+                worker_args = (fs, func, args.p0, args.grids, args.ubounds, args.lbounds, args.constants, args.misid, 
+                               args.cuda, args.global_optimization, args.maxeval, args.maxtime, args.seed)
+
+                # Queues to manage input and output
+                in_queue, out_queue = Queue(), Queue()
+                # Create workers
+                workers = [Process(target=_worker_func, args=(infer_global_opt, in_queue, out_queue, worker_args)) for ii in range(args.threads)]
+                # Put the tasks to be done in the queue. 
+                for ii in range(args.optimizations):
+                    in_queue.put(ii)
+                # Start the workers
+                for worker in workers:
+                    worker.start()
+            # Collect and process results
+            from src.BestFit import get_bestfit_params
+            for _ in range(args.optimizations):
+                if args.work_queue: 
+                    result = q.wait().output
+                else:
+                    result = out_queue.get()
+                # Write latest result to file
+                print(result)
+                fid.write('{0}\t{1}\t{2}\n'.format(result[0], '\t'.join(str(_) for _ in result[1]), result[2]))
+                fid.flush()
+                result = get_bestfit_params(path=args.output_prefix+'.global_temp.InferDM.opts.*', model_name=args.model, misid=args.misid,
+                                            lbounds=args.lbounds, ubounds=args.ubounds, output=args.output_prefix+'.global_temp.InferDM.bestfits',
+                                            delta=args.delta_ll)
+                if result is not None:
+                    args.force_convergence = False
+                    break
+            if not args.work_queue:
+                # Stop the workers
+                for worker in workers:
+                    worker.terminate()
+            from src.Plot import _get_opts_and_theta
+            import os
+            args.p0, _ = _get_opts_and_theta(args.output_prefix+'.global_temp.InferDM.bestfits', False)
+            print(args.p0)
+            # os.remove(args.output_prefix+'.global_temp.InferDM.bestfits')
+            existing_files = glob.glob(args.output_prefix+'.global_temp.InferDM.opts.*')
+            for existing_file in existing_files:
+                os.remove(existing_file)
+
 
     converged = False
     while not converged:
