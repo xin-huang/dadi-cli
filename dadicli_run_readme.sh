@@ -38,7 +38,8 @@ echo Infer split migration demographic model
 #
 time dadi-cli InferDM --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfold.fs --model split_mig --misid \
 --p0 1 1 .5 1 .5 --ubounds 10 10 1 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5 --grids 60 70 80 \
---output ./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params --optimizations 10 --threads 5 --maxeval 200
+--output ./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params --optimizations 100 --maxeval 200 \
+--global-optimization
 
 #
 echo Command to make .bestfits file
@@ -72,7 +73,7 @@ time dadi-cli InferDFE --fs ./examples/results/fs/1KG.YRI.CEU.20.nonsynonymous.s
 --lbounds 0 0.01 -1 0 0 --ubounds 10 10 -1 0 1 --constants -1 -1 0 -1 -1 \
 --demo-popt ./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params.InferDM.bestfits \
 --ratio 2.31 --output ./examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.lognormal_mixture.params \
---optimizations 10 --threads 5 --maxeval 400 --check-convergence
+--optimizations 10 --maxeval 400 --check-convergence
 
 #
 echo Bootstrapping
@@ -146,7 +147,7 @@ time dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.20.nonsynonymous.snps.
 # work_queue_factory -T local -M test-dm-two-epoch -P ./tests/mypwfile --workers-per-cycle=0 -t 10 --cores=1  -w 5 &
 # dadi-cli InferDM --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfold.fs --model split_mig --misid \
 # --p0 1 1 .5 1 .5 --ubounds 10 10 1 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5 --grids 60 80 100 \
-# --output ./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params --optimizations 5 --threads 5 --maxeval 200 \
+# --output ./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params --optimizations 5 --maxeval 200 \
 # --force-convergence \
 # --work-queue test-dm-two-epoch ./tests/mypwfile
 
@@ -159,7 +160,7 @@ time dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.20.nonsynonymous.snps.
 # --lbounds 0 0.01 -1 0 0 --ubounds 10 10 -1 0 1 --constants -1 -1 0 -1 -1 \
 # --demo-popt ./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params.InferDM.bestfits \
 # --ratio 2.31 --output ./examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.lognormal_mixture.params \
-# --optimizations 5 --threads 5 --maxeval 400 \
+# --optimizations 5 --maxeval 400 \
 # --force-convergence --delta-ll 0.1 \
 # --work-queue test-dfe-two-epoch ./tests/mypwfile
 
