@@ -24,7 +24,7 @@ jobs:
         environment-file: conda-env.yml
     - name: Test with pytest
       run: |
-        micromamba run -n dadi-cli pytest --cov=. --cov-report term-missing
+        micromamba run -n dadi-cli pytest --cov=. --cov-report term-missing -vv
         micromamba run -n dadi-cli coverage xml
     - name: upload coverage report to codecov
       uses: codecov/codecov-action@v3

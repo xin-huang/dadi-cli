@@ -1,0 +1,17 @@
+# /Users/tjstruck/anaconda3/bin/dadi-cli InferDFE --fs tests/example_data/split_mig_non_mix.fs --cache1d tests/example_data/cache_split_mig_1d.bpkl --cache2d tests/example_data/cache_split_mig_2d.bpkl --pdf1d lognormal --pdf2d biv_lognormal --mix-pdf mixture_lognormal --p0 2.5 3 0 .9 --lbounds 0 0.01 -1 0.001 --ubounds 10 10 -1 0.999 --constants -1 -1 0 -1 --nomisid --demo-popt tests/example_data/example.split_mig.demo.params.InferDM.bestfits --ratio 2.31 --output tests/example_data/example.split_mig.dfe.lognormal_mixture.params --optimizations 15 --maxeval 400 --check-convergence
+# /Users/tjstruck/anaconda3/bin/dadi-cli InferDFE --fs tests/example_data/split_mig_non_mix.fs --cache1d tests/example_data/cache_split_mig_1d.bpkl --cache2d tests/example_data/cache_split_mig_2d.bpkl --pdf1d lognormal --pdf2d biv_lognormal --mix-pdf mixture_lognormal --p0 2.5 3 0 .9 --lbounds 0 0.01 -1 0.001 --ubounds 10 10 -1 0.999 --constants -1 -1 0 -1 --nomisid --demo-popt tests/example_data/example.split_mig.demo.params.InferDM.bestfits --ratio 2.31 --output tests/example_data/example.split_mig.dfe.lognormal_mixture.params --optimizations 15 --maxeval 400 --check-convergence
+#
+# Converged results
+# Log(likelihood)	log_mu	log_sigma	rho	w	theta
+-1350.9973898130613	2.4973725272000378	2.9984996032944875	0.0	0.9014155385474799	230793.11576029443
+-1350.9973904256287	2.497369943102004	2.9985030952252294	0.0	0.9014040676996073	230793.11576029443
+-1350.997390733171	2.4973681747624754	2.998485123471279	0.0	0.9014225920250167	230793.11576029443
+#
+# Top 100 results
+# Log(likelihood)	log_mu	log_sigma	rho	w	theta
+-1350.9973898130613	2.4973725272000378	2.9984996032944875	0.0	0.9014155385474799	230793.11576029443
+-1350.9973904256287	2.497369943102004	2.9985030952252294	0.0	0.9014040676996073	230793.11576029443
+-1350.997390733171	2.4973681747624754	2.998485123471279	0.0	0.9014225920250167	230793.11576029443
+-1440.9012827036531	2.4800452955607875	2.9113732688490384	0.0	0.9829002566342783	230793.11576029443
+-1452.8479289389538	2.482355530253234	2.9220795360361347	0.0	0.9888697239645076	230793.11576029443
+-1461.1486544858421	2.4800524368242103	2.9114686545164097	0.0	0.9923578903285802	230793.11576029443

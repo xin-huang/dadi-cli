@@ -1,17 +1,22 @@
 name: dadi-cli
 channels:
-        - conda-forge
-        - bioconda
+  - conda-forge
+  - bioconda
 dependencies:
-        - dill==0.3.4
-        - codecov
-        - matplotlib
-        - ndcctools==7.4.3
-        - numpy
-        - pip
-        - pytest-cov
-        - python==3.8
-        - scipy
-        - snakemake==7.1.1
-        - pip:
-            - .
+  - codecov
+  - gcc
+  - gfortran
+  - demes
+  - dill==0.3.4
+  - matplotlib
+  - ndcctools==7.4.3
+  - nlopt
+  - numpy
+  - pip
+  - pytest-cov
+  - python==3.8
+  - scipy
+  - snakemake==7.1.1
+  - pip:
+      - git+https://bitbucket.org/gutenkunstlab/dadi@devel
+      - .

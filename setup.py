@@ -24,10 +24,10 @@ setup(
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
     ],
-    packages=["src"],
+    packages=["dadi_cli"],
     include_package_data=True,
-    install_requires=[
-        "dadi"
-    ],
-    entry_points={"console_scripts": ["dadi-cli=src.__main__:main"]},
+    #install_requires=[
+    #    "dadi"
+    #],
+    entry_points={"console_scripts": ["dadi-cli=dadi_cli.__main__:main"]},
 )

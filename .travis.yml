@@ -23,6 +23,7 @@ install:
     - python setup.py install
     - cd ../dadi-cli
     - python setup.py install
+    - conda install -y -c conda-forge nlopt
 script: pytest -vv --cov=. --cov-report term-missing
 after_success:
     - codecov
