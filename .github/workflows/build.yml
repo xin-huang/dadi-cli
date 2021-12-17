@@ -18,13 +18,13 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Add micromamba to system path
       uses: mamba-org/provision-with-micromamba@main
-      with: 
+      with:
         environment-name: dadi-cli
         activate-environment: dadi-cli
         environment-file: conda-env.yml
     - name: Test with pytest
       run: |
-        micromamba run -n dadi-cli pytest --cov=. --cov-report term-missing
+        micromamba run -n dadi-cli pytest --cov=. --cov-report term-missing -vv
         micromamba run -n dadi-cli coverage xml
     - name: upload coverage report to codecov
       uses: codecov/codecov-action@v3

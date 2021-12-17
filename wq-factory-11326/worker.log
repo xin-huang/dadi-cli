@@ -957,3 +957,291 @@ User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.
 2022/06/30 13:25:04.88 work_queue_worker[1324270] tcp: disconnected from 20.245.202.192 port 9123
 2022/06/30 13:25:04.88 work_queue_worker[1324271] notice: stopping: abort signal received
 2022/06/30 13:25:04.88 work_queue_worker[1324270] notice: stopping: abort signal received
+2022/06/30 14:27:59.62 work_queue_worker[1332186] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/06/30 14:27:59.62 work_queue_worker[1332186] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/06/30 14:27:59.62 work_queue_worker[1332184] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/06/30 14:27:59.63 work_queue_worker[1332186] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/06/30 14:27:59.63 work_queue_worker[1332184] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/06/30 14:27:59.63 work_queue_worker[1332185] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/06/30 14:27:59.63 work_queue_worker[1332186] debug: Configuration: --debug --prefix /home/user2/huangxin/dadi-cli --with-base-dir /home/user2/huangxin/dadi-cli --with-python3-path /home/user2/huangxin/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/06/30 14:27:59.63 work_queue_worker[1332184] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/06/30 14:27:59.63 work_queue_worker[1332185] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/06/30 14:27:59.63 work_queue_worker[1332184] debug: Configuration: --debug --prefix /home/user2/huangxin/dadi-cli --with-base-dir /home/user2/huangxin/dadi-cli --with-python3-path /home/user2/huangxin/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/06/30 14:27:59.63 work_queue_worker[1332185] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/06/30 14:27:59.63 work_queue_worker[1332185] debug: Configuration: --debug --prefix /home/user2/huangxin/dadi-cli --with-base-dir /home/user2/huangxin/dadi-cli --with-python3-path /home/user2/huangxin/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/06/30 14:27:59.64 work_queue_worker[1332185] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-1332185.
+2022/06/30 14:27:59.64 work_queue_worker[1332186] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-1332186.
+2022/06/30 14:27:59.65 work_queue_worker[1332185] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:27:59.65 work_queue_worker[1332186] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:27:59.65 work_queue_worker[1332185] wq: querying catalog for managers with project=test-dm-seed-two-epoch
+2022/06/30 14:27:59.65 work_queue_worker[1332186] wq: querying catalog for managers with project=test-dm-seed-two-epoch
+2022/06/30 14:27:59.65 work_queue_worker[1332185] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/06/30 14:27:59.65 work_queue_worker[1332184] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-1332184.
+2022/06/30 14:27:59.65 work_queue_worker[1332186] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/06/30 14:27:59.65 work_queue_worker[1332185] http: connect catalog.cse.nd.edu port 9097
+2022/06/30 14:27:59.65 work_queue_worker[1332184] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:27:59.65 work_queue_worker[1332186] http: connect catalog.cse.nd.edu port 9097
+2022/06/30 14:27:59.65 work_queue_worker[1332185] dns: looking up name catalog.cse.nd.edu
+2022/06/30 14:27:59.65 work_queue_worker[1332184] wq: querying catalog for managers with project=test-dm-seed-two-epoch
+2022/06/30 14:27:59.65 work_queue_worker[1332186] dns: looking up name catalog.cse.nd.edu
+2022/06/30 14:27:59.65 work_queue_worker[1332184] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/06/30 14:27:59.65 work_queue_worker[1332184] http: connect catalog.cse.nd.edu port 9097
+2022/06/30 14:27:59.65 work_queue_worker[1332184] dns: looking up name catalog.cse.nd.edu
+2022/06/30 14:27:59.65 work_queue_worker[1332186] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/06/30 14:27:59.65 work_queue_worker[1332185] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/06/30 14:27:59.65 work_queue_worker[1332186] tcp: connecting to 129.74.152.177 port 9097
+2022/06/30 14:27:59.65 work_queue_worker[1332185] tcp: connecting to 129.74.152.177 port 9097
+2022/06/30 14:27:59.66 work_queue_worker[1332184] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/06/30 14:27:59.66 work_queue_worker[1332184] tcp: connecting to 129.74.152.177 port 9097
+2022/06/30 14:27:59.79 work_queue_worker[1332186] tcp: made connection to 129.74.152.177 port 9097
+2022/06/30 14:27:59.79 work_queue_worker[1332186] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/06/30 14:27:59.79 work_queue_worker[1332185] tcp: made connection to 129.74.152.177 port 9097
+2022/06/30 14:27:59.79 work_queue_worker[1332184] tcp: made connection to 129.74.152.177 port 9097
+2022/06/30 14:27:59.79 work_queue_worker[1332185] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/06/30 14:27:59.79 work_queue_worker[1332184] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/06/30 14:27:59.92 work_queue_worker[1332186] http: HTTP/1.1 200 OK
+2022/06/30 14:27:59.92 work_queue_worker[1332186] http: Date: Thu Jun 30 08:27:59 2022
+2022/06/30 14:27:59.92 work_queue_worker[1332186] http: Server: catalog_server
+2022/06/30 14:27:59.92 work_queue_worker[1332186] http: Connection: close
+2022/06/30 14:27:59.92 work_queue_worker[1332185] http: HTTP/1.1 200 OK
+2022/06/30 14:27:59.92 work_queue_worker[1332184] http: HTTP/1.1 200 OK
+2022/06/30 14:27:59.92 work_queue_worker[1332186] http: Access-Control-Allow-Origin: *
+2022/06/30 14:27:59.92 work_queue_worker[1332185] http: Date: Thu Jun 30 08:27:59 2022
+2022/06/30 14:27:59.93 work_queue_worker[1332184] http: Date: Thu Jun 30 08:27:59 2022
+2022/06/30 14:27:59.93 work_queue_worker[1332186] http: Content-type: text/plain
+2022/06/30 14:27:59.93 work_queue_worker[1332185] http: Server: catalog_server
+2022/06/30 14:27:59.93 work_queue_worker[1332184] http: Server: catalog_server
+2022/06/30 14:27:59.93 work_queue_worker[1332186] http:
+2022/06/30 14:27:59.93 work_queue_worker[1332185] http: Connection: close
+2022/06/30 14:27:59.93 work_queue_worker[1332184] http: Connection: close
+2022/06/30 14:27:59.93 work_queue_worker[1332185] http: Access-Control-Allow-Origin: *
+2022/06/30 14:27:59.93 work_queue_worker[1332184] http: Access-Control-Allow-Origin: *
+2022/06/30 14:27:59.93 work_queue_worker[1332185] http: Content-type: text/plain
+2022/06/30 14:27:59.93 work_queue_worker[1332184] http: Content-type: text/plain
+2022/06/30 14:27:59.93 work_queue_worker[1332185] http:
+2022/06/30 14:27:59.93 work_queue_worker[1332184] http:
+2022/06/30 14:28:00.46 work_queue_worker[1332184] tcp: disconnected from 129.74.152.177 port 9097
+2022/06/30 14:28:00.47 work_queue_worker[1332184] wq: project name test-dm-seed-two-epoch matches 0 managers
+2022/06/30 14:28:00.48 work_queue_worker[1332186] tcp: disconnected from 129.74.152.177 port 9097
+2022/06/30 14:28:00.49 work_queue_worker[1332186] wq: project name test-dm-seed-two-epoch matches 0 managers
+2022/06/30 14:28:00.48 work_queue_worker[1332185] tcp: disconnected from 129.74.152.177 port 9097
+2022/06/30 14:28:00.50 work_queue_worker[1332185] wq: project name test-dm-seed-two-epoch matches 0 managers
+2022/06/30 14:28:02.48 work_queue_worker[1332184] wq: project name test-dm-seed-two-epoch matches 0 managers
+2022/06/30 14:28:02.49 work_queue_worker[1332186] wq: project name test-dm-seed-two-epoch matches 0 managers
+2022/06/30 14:28:02.50 work_queue_worker[1332185] wq: project name test-dm-seed-two-epoch matches 0 managers
+2022/06/30 14:28:06.48 work_queue_worker[1332184] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:28:06.48 work_queue_worker[1332184] wq: project name test-dm-seed-two-epoch matches 0 managers
+2022/06/30 14:28:06.49 work_queue_worker[1332186] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:28:06.49 work_queue_worker[1332186] wq: project name test-dm-seed-two-epoch matches 0 managers
+2022/06/30 14:28:06.50 work_queue_worker[1332185] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:28:06.50 work_queue_worker[1332185] wq: project name test-dm-seed-two-epoch matches 0 managers
+2022/06/30 14:28:14.48 work_queue_worker[1332184] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:28:14.48 work_queue_worker[1332184] wq: project name test-dm-seed-two-epoch matches 0 managers
+2022/06/30 14:28:14.48 work_queue_worker[1332184] notice: stopping: could not connect after 10 seconds.
+2022/06/30 14:28:14.49 work_queue_worker[1332186] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:28:14.49 work_queue_worker[1332186] wq: project name test-dm-seed-two-epoch matches 0 managers
+2022/06/30 14:28:14.49 work_queue_worker[1332186] notice: stopping: could not connect after 10 seconds.
+2022/06/30 14:28:14.50 work_queue_worker[1332185] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:28:14.50 work_queue_worker[1332185] wq: project name test-dm-seed-two-epoch matches 0 managers
+2022/06/30 14:28:14.50 work_queue_worker[1332185] notice: stopping: could not connect after 10 seconds.
+2022/06/30 14:35:48.07 work_queue_worker[1332837] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/06/30 14:35:48.07 work_queue_worker[1332837] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/06/30 14:35:48.07 work_queue_worker[1332835] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/06/30 14:35:48.07 work_queue_worker[1332837] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/06/30 14:35:48.07 work_queue_worker[1332836] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/06/30 14:35:48.07 work_queue_worker[1332835] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/06/30 14:35:48.07 work_queue_worker[1332837] debug: Configuration: --debug --prefix /home/user2/huangxin/dadi-cli --with-base-dir /home/user2/huangxin/dadi-cli --with-python3-path /home/user2/huangxin/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/06/30 14:35:48.07 work_queue_worker[1332836] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/06/30 14:35:48.07 work_queue_worker[1332835] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/06/30 14:35:48.08 work_queue_worker[1332835] debug: Configuration: --debug --prefix /home/user2/huangxin/dadi-cli --with-base-dir /home/user2/huangxin/dadi-cli --with-python3-path /home/user2/huangxin/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/06/30 14:35:48.08 work_queue_worker[1332836] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/06/30 14:35:48.08 work_queue_worker[1332836] debug: Configuration: --debug --prefix /home/user2/huangxin/dadi-cli --with-base-dir /home/user2/huangxin/dadi-cli --with-python3-path /home/user2/huangxin/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/06/30 14:35:48.09 work_queue_worker[1332835] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-1332835.
+2022/06/30 14:35:48.09 work_queue_worker[1332837] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-1332837.
+2022/06/30 14:35:48.09 work_queue_worker[1332836] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-1332836.
+2022/06/30 14:35:48.10 work_queue_worker[1332835] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:35:48.10 work_queue_worker[1332835] wq: querying catalog for managers with project=test-dfe-two-epoch
+2022/06/30 14:35:48.10 work_queue_worker[1332837] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:35:48.10 work_queue_worker[1332836] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:35:48.10 work_queue_worker[1332835] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/06/30 14:35:48.10 work_queue_worker[1332837] wq: querying catalog for managers with project=test-dfe-two-epoch
+2022/06/30 14:35:48.10 work_queue_worker[1332836] wq: querying catalog for managers with project=test-dfe-two-epoch
+2022/06/30 14:35:48.10 work_queue_worker[1332835] http: connect catalog.cse.nd.edu port 9097
+2022/06/30 14:35:48.10 work_queue_worker[1332837] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/06/30 14:35:48.10 work_queue_worker[1332836] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/06/30 14:35:48.10 work_queue_worker[1332835] dns: looking up name catalog.cse.nd.edu
+2022/06/30 14:35:48.10 work_queue_worker[1332837] http: connect catalog.cse.nd.edu port 9097
+2022/06/30 14:35:48.10 work_queue_worker[1332836] http: connect catalog.cse.nd.edu port 9097
+2022/06/30 14:35:48.10 work_queue_worker[1332837] dns: looking up name catalog.cse.nd.edu
+2022/06/30 14:35:48.10 work_queue_worker[1332836] dns: looking up name catalog.cse.nd.edu
+2022/06/30 14:35:48.10 work_queue_worker[1332835] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/06/30 14:35:48.10 work_queue_worker[1332835] tcp: connecting to 129.74.152.177 port 9097
+2022/06/30 14:35:48.11 work_queue_worker[1332837] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/06/30 14:35:48.11 work_queue_worker[1332836] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/06/30 14:35:48.11 work_queue_worker[1332837] tcp: connecting to 129.74.152.177 port 9097
+2022/06/30 14:35:48.11 work_queue_worker[1332836] tcp: connecting to 129.74.152.177 port 9097
+2022/06/30 14:35:48.24 work_queue_worker[1332835] tcp: made connection to 129.74.152.177 port 9097
+2022/06/30 14:35:48.24 work_queue_worker[1332835] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/06/30 14:35:48.24 work_queue_worker[1332837] tcp: made connection to 129.74.152.177 port 9097
+2022/06/30 14:35:48.24 work_queue_worker[1332836] tcp: made connection to 129.74.152.177 port 9097
+2022/06/30 14:35:48.24 work_queue_worker[1332836] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/06/30 14:35:48.24 work_queue_worker[1332837] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/06/30 14:35:48.37 work_queue_worker[1332835] http: HTTP/1.1 200 OK
+2022/06/30 14:35:48.37 work_queue_worker[1332835] http: Date: Thu Jun 30 08:35:48 2022
+2022/06/30 14:35:48.37 work_queue_worker[1332835] http: Server: catalog_server
+2022/06/30 14:35:48.38 work_queue_worker[1332835] http: Connection: close
+2022/06/30 14:35:48.38 work_queue_worker[1332835] http: Access-Control-Allow-Origin: *
+2022/06/30 14:35:48.38 work_queue_worker[1332836] http: HTTP/1.1 200 OK
+2022/06/30 14:35:48.38 work_queue_worker[1332835] http: Content-type: text/plain
+2022/06/30 14:35:48.38 work_queue_worker[1332835] http:
+2022/06/30 14:35:48.38 work_queue_worker[1332837] http: HTTP/1.1 200 OK
+2022/06/30 14:35:48.38 work_queue_worker[1332836] http: Date: Thu Jun 30 08:35:48 2022
+2022/06/30 14:35:48.38 work_queue_worker[1332837] http: Date: Thu Jun 30 08:35:48 2022
+2022/06/30 14:35:48.38 work_queue_worker[1332836] http: Server: catalog_server
+2022/06/30 14:35:48.38 work_queue_worker[1332837] http: Server: catalog_server
+2022/06/30 14:35:48.38 work_queue_worker[1332837] http: Connection: close
+2022/06/30 14:35:48.38 work_queue_worker[1332836] http: Connection: close
+2022/06/30 14:35:48.38 work_queue_worker[1332837] http: Access-Control-Allow-Origin: *
+2022/06/30 14:35:48.38 work_queue_worker[1332836] http: Access-Control-Allow-Origin: *
+2022/06/30 14:35:48.38 work_queue_worker[1332837] http: Content-type: text/plain
+2022/06/30 14:35:48.38 work_queue_worker[1332836] http: Content-type: text/plain
+2022/06/30 14:35:48.38 work_queue_worker[1332837] http:
+2022/06/30 14:35:48.38 work_queue_worker[1332836] http:
+2022/06/30 14:35:48.91 work_queue_worker[1332836] tcp: disconnected from 129.74.152.177 port 9097
+2022/06/30 14:35:48.92 work_queue_worker[1332835] tcp: disconnected from 129.74.152.177 port 9097
+2022/06/30 14:35:48.92 work_queue_worker[1332837] tcp: disconnected from 129.74.152.177 port 9097
+2022/06/30 14:35:48.92 work_queue_worker[1332836] wq: project name test-dfe-two-epoch matches 0 managers
+2022/06/30 14:35:48.93 work_queue_worker[1332835] wq: project name test-dfe-two-epoch matches 0 managers
+2022/06/30 14:35:48.93 work_queue_worker[1332837] wq: project name test-dfe-two-epoch matches 0 managers
+2022/06/30 14:35:50.92 work_queue_worker[1332836] wq: project name test-dfe-two-epoch matches 0 managers
+2022/06/30 14:35:50.93 work_queue_worker[1332835] wq: project name test-dfe-two-epoch matches 0 managers
+2022/06/30 14:35:50.93 work_queue_worker[1332837] wq: project name test-dfe-two-epoch matches 0 managers
+2022/06/30 14:35:54.93 work_queue_worker[1332836] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:35:54.93 work_queue_worker[1332836] wq: project name test-dfe-two-epoch matches 0 managers
+2022/06/30 14:35:54.93 work_queue_worker[1332835] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:35:54.93 work_queue_worker[1332835] wq: project name test-dfe-two-epoch matches 0 managers
+2022/06/30 14:35:54.93 work_queue_worker[1332837] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:35:54.93 work_queue_worker[1332837] wq: project name test-dfe-two-epoch matches 0 managers
+2022/06/30 14:36:02.93 work_queue_worker[1332836] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:36:02.93 work_queue_worker[1332836] wq: project name test-dfe-two-epoch matches 0 managers
+2022/06/30 14:36:02.93 work_queue_worker[1332836] notice: stopping: could not connect after 10 seconds.
+2022/06/30 14:36:02.93 work_queue_worker[1332835] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:36:02.93 work_queue_worker[1332835] wq: project name test-dfe-two-epoch matches 0 managers
+2022/06/30 14:36:02.93 work_queue_worker[1332837] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:36:02.93 work_queue_worker[1332835] notice: stopping: could not connect after 10 seconds.
+2022/06/30 14:36:02.93 work_queue_worker[1332837] wq: project name test-dfe-two-epoch matches 0 managers
+2022/06/30 14:36:02.93 work_queue_worker[1332837] notice: stopping: could not connect after 10 seconds.
+2022/06/30 14:40:45.35 work_queue_worker[1333989] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/06/30 14:40:45.35 work_queue_worker[1333990] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/06/30 14:40:45.35 work_queue_worker[1333989] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/06/30 14:40:45.35 work_queue_worker[1333990] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/06/30 14:40:45.35 work_queue_worker[1333991] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/06/30 14:40:45.35 work_queue_worker[1333989] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/06/30 14:40:45.35 work_queue_worker[1333990] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/06/30 14:40:45.35 work_queue_worker[1333990] debug: Configuration: --debug --prefix /home/user2/huangxin/dadi-cli --with-base-dir /home/user2/huangxin/dadi-cli --with-python3-path /home/user2/huangxin/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/06/30 14:40:45.35 work_queue_worker[1333991] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/06/30 14:40:45.35 work_queue_worker[1333989] debug: Configuration: --debug --prefix /home/user2/huangxin/dadi-cli --with-base-dir /home/user2/huangxin/dadi-cli --with-python3-path /home/user2/huangxin/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/06/30 14:40:45.35 work_queue_worker[1333991] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/06/30 14:40:45.35 work_queue_worker[1333991] debug: Configuration: --debug --prefix /home/user2/huangxin/dadi-cli --with-base-dir /home/user2/huangxin/dadi-cli --with-python3-path /home/user2/huangxin/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/06/30 14:40:45.37 work_queue_worker[1333989] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-1333989.
+2022/06/30 14:40:45.37 work_queue_worker[1333990] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-1333990.
+2022/06/30 14:40:45.37 work_queue_worker[1333989] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:40:45.37 work_queue_worker[1333990] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:40:45.37 work_queue_worker[1333989] wq: querying catalog for managers with project=test-dfe-two-epoch
+2022/06/30 14:40:45.37 work_queue_worker[1333990] wq: querying catalog for managers with project=test-dfe-two-epoch
+2022/06/30 14:40:45.37 work_queue_worker[1333989] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/06/30 14:40:45.37 work_queue_worker[1333990] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/06/30 14:40:45.37 work_queue_worker[1333989] http: connect catalog.cse.nd.edu port 9097
+2022/06/30 14:40:45.37 work_queue_worker[1333990] http: connect catalog.cse.nd.edu port 9097
+2022/06/30 14:40:45.37 work_queue_worker[1333989] dns: looking up name catalog.cse.nd.edu
+2022/06/30 14:40:45.37 work_queue_worker[1333990] dns: looking up name catalog.cse.nd.edu
+2022/06/30 14:40:45.37 work_queue_worker[1333991] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-1333991.
+2022/06/30 14:40:45.37 work_queue_worker[1333990] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/06/30 14:40:45.38 work_queue_worker[1333989] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/06/30 14:40:45.38 work_queue_worker[1333991] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:40:45.38 work_queue_worker[1333990] tcp: connecting to 129.74.152.177 port 9097
+2022/06/30 14:40:45.38 work_queue_worker[1333989] tcp: connecting to 129.74.152.177 port 9097
+2022/06/30 14:40:45.38 work_queue_worker[1333991] wq: querying catalog for managers with project=test-dfe-two-epoch
+2022/06/30 14:40:45.38 work_queue_worker[1333991] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/06/30 14:40:45.38 work_queue_worker[1333991] http: connect catalog.cse.nd.edu port 9097
+2022/06/30 14:40:45.38 work_queue_worker[1333991] dns: looking up name catalog.cse.nd.edu
+2022/06/30 14:40:45.38 work_queue_worker[1333991] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/06/30 14:40:45.38 work_queue_worker[1333991] tcp: connecting to 129.74.152.177 port 9097
+2022/06/30 14:40:45.51 work_queue_worker[1333990] tcp: made connection to 129.74.152.177 port 9097
+2022/06/30 14:40:45.51 work_queue_worker[1333990] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/06/30 14:40:45.51 work_queue_worker[1333989] tcp: made connection to 129.74.152.177 port 9097
+2022/06/30 14:40:45.51 work_queue_worker[1333989] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/06/30 14:40:45.52 work_queue_worker[1333991] tcp: made connection to 129.74.152.177 port 9097
+2022/06/30 14:40:45.52 work_queue_worker[1333991] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/06/30 14:40:45.65 work_queue_worker[1333989] http: HTTP/1.1 200 OK
+2022/06/30 14:40:45.65 work_queue_worker[1333990] http: HTTP/1.1 200 OK
+2022/06/30 14:40:45.65 work_queue_worker[1333989] http: Date: Thu Jun 30 08:40:45 2022
+2022/06/30 14:40:45.65 work_queue_worker[1333990] http: Date: Thu Jun 30 08:40:45 2022
+2022/06/30 14:40:45.65 work_queue_worker[1333989] http: Server: catalog_server
+2022/06/30 14:40:45.65 work_queue_worker[1333990] http: Server: catalog_server
+2022/06/30 14:40:45.65 work_queue_worker[1333989] http: Connection: close
+2022/06/30 14:40:45.65 work_queue_worker[1333990] http: Connection: close
+2022/06/30 14:40:45.65 work_queue_worker[1333989] http: Access-Control-Allow-Origin: *
+2022/06/30 14:40:45.65 work_queue_worker[1333990] http: Access-Control-Allow-Origin: *
+2022/06/30 14:40:45.65 work_queue_worker[1333989] http: Content-type: text/plain
+2022/06/30 14:40:45.65 work_queue_worker[1333989] http:
+2022/06/30 14:40:45.65 work_queue_worker[1333990] http: Content-type: text/plain
+2022/06/30 14:40:45.65 work_queue_worker[1333990] http:
+2022/06/30 14:40:45.65 work_queue_worker[1333991] http: HTTP/1.1 200 OK
+2022/06/30 14:40:45.65 work_queue_worker[1333991] http: Date: Thu Jun 30 08:40:45 2022
+2022/06/30 14:40:45.65 work_queue_worker[1333991] http: Server: catalog_server
+2022/06/30 14:40:45.65 work_queue_worker[1333991] http: Connection: close
+2022/06/30 14:40:45.65 work_queue_worker[1333991] http: Access-Control-Allow-Origin: *
+2022/06/30 14:40:45.65 work_queue_worker[1333991] http: Content-type: text/plain
+2022/06/30 14:40:45.65 work_queue_worker[1333991] http:
+2022/06/30 14:40:46.18 work_queue_worker[1333989] tcp: disconnected from 129.74.152.177 port 9097
+2022/06/30 14:40:46.19 work_queue_worker[1333990] tcp: disconnected from 129.74.152.177 port 9097
+2022/06/30 14:40:46.19 work_queue_worker[1333989] wq: project name test-dfe-two-epoch matches 0 managers
+2022/06/30 14:40:46.19 work_queue_worker[1333991] tcp: disconnected from 129.74.152.177 port 9097
+2022/06/30 14:40:46.20 work_queue_worker[1333990] wq: project name test-dfe-two-epoch matches 0 managers
+2022/06/30 14:40:46.20 work_queue_worker[1333991] wq: project name test-dfe-two-epoch matches 0 managers
+2022/06/30 14:40:48.19 work_queue_worker[1333989] wq: project name test-dfe-two-epoch matches 0 managers
+2022/06/30 14:40:48.20 work_queue_worker[1333990] wq: project name test-dfe-two-epoch matches 0 managers
+2022/06/30 14:40:48.20 work_queue_worker[1333991] wq: project name test-dfe-two-epoch matches 0 managers
+2022/06/30 14:40:52.19 work_queue_worker[1333989] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:40:52.19 work_queue_worker[1333989] wq: project name test-dfe-two-epoch matches 0 managers
+2022/06/30 14:40:52.20 work_queue_worker[1333990] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:40:52.20 work_queue_worker[1333990] wq: project name test-dfe-two-epoch matches 0 managers
+2022/06/30 14:40:52.20 work_queue_worker[1333991] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:40:52.20 work_queue_worker[1333991] wq: project name test-dfe-two-epoch matches 0 managers
+2022/06/30 14:41:00.19 work_queue_worker[1333989] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:41:00.20 work_queue_worker[1333989] wq: project name test-dfe-two-epoch matches 0 managers
+2022/06/30 14:41:00.20 work_queue_worker[1333989] notice: stopping: could not connect after 10 seconds.
+2022/06/30 14:41:00.20 work_queue_worker[1333990] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:41:00.20 work_queue_worker[1333990] wq: project name test-dfe-two-epoch matches 0 managers
+2022/06/30 14:41:00.20 work_queue_worker[1333990] notice: stopping: could not connect after 10 seconds.
+2022/06/30 14:41:00.20 work_queue_worker[1333991] debug: error reading disk usage on directory: ./cache.
+2022/06/30 14:41:00.20 work_queue_worker[1333991] wq: project name test-dfe-two-epoch matches 0 managers
+2022/06/30 14:41:00.21 work_queue_worker[1333991] notice: stopping: could not connect after 10 seconds.

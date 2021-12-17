@@ -4,7 +4,7 @@ dist/*
 examples/snakepipe/*/.snakemake/*
 examples/snakepipe/*/1KG.*
 */.DS_Store
-*/__pycache__/*
+*__pycache__*
 .coverage
-tests/test_results/*.opts.*
+tests/test_results/
 wq-factory-*
