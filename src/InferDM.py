@@ -11,6 +11,15 @@ def pts_l_func(fs):
 
 def infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds, 
                      fixed_params, misid, cuda, global_optimization, maxeval, maxtime, seed):
+
+    # Randomize starting parameter values
+    if seed != None: 
+        np.random.seed(seed)
+    else:
+        ts = time.time()
+        seed = int(time.time()) + int(os.getpid())
+        np.random.seed(seed)
+
     # TODO: Need to consider appropriate rtol & atol values, and whether these maxeval are appropriate
     if cuda:
         dadi.cuda_enabled(True)
