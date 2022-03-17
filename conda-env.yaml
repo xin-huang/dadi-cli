@@ -1,0 +1,9 @@
+name: dadi-cli
+channels:
+        - conda-forge
+        - bioconda
+dependencies:
+        - python==3.8
+        - dadi==2.1.1
+        - snakemake==7.1.1
+        - ndcctools==7.4.3
