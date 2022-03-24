@@ -42,6 +42,7 @@ rule generate_dadi_fs:
         "../../data/1KG.YRI.CEU.popfile.txt"
     output:
         "1KG.YRI.{mut_type}.snps.unfold.fs"
+    resources: time_min=60, mem_mb=5000, cpus=1
     threads: 1
     shell:
         "dadi-cli GenerateFs --vcf {input[0]} --pop-info {input[1]} --pop-ids YRI --projections 216 --polarized --output {output}"
@@ -51,7 +52,8 @@ rule dadi_infer_dm:
         "1KG.YRI.synonymous.snps.unfold.fs"
     output:
         "1KG.YRI.two_epoch.InferDM.opts.0",
-    threads: 4
+    resources: time_min=60, mem_mb=5000, cpus=8
+    threads: 8
     shell:
         "dadi-cli InferDM --fs {input} --model {demo_model} --misid --p0 {demo_p0} --ubounds {demo_ubounds} --lbounds {demo_lbounds} --output-prefix 1KG.YRI.two_epoch --optimizations 1000 --threads {threads}"
 
@@ -59,6 +61,7 @@ rule dadi_bestfit_dm:
     input: rules.dadi_infer_dm.output
     output:
         "1KG.YRI.two_epoch.InferDM.bestfits"
+    resources: time_min=60, mem_mb=5000, cpus=1
     threads: 1
     shell: 
         "dadi-cli BestFit --input-prefix ./1KG.YRI.two_epoch.InferDM --model {demo_model} --misid --ubounds {demo_ubounds} --lbounds {demo_lbounds}"
@@ -67,6 +70,7 @@ rule dadi_generate_cache:
     input: rules.dadi_bestfit_dm.output
     output:
         "1KG.YRI.two_epoch.spectra.bpkl"
+    resources: time_min=60, mem_mb=5000, cpus=8
     threads: 8
     shell:
         "dadi-cli GenerateCache --model two_epoch --demo-popt {input} --sample-size 216 --output {output} --mp --misid --grids 800 1000 1200 --gamma-pts 5000"
@@ -78,17 +82,19 @@ rule dadi_infer_dfe:
         "1KG.YRI.two_epoch.InferDM.bestfits"
     output:
         "1KG.YRI.two_epoch.gamma.InferDFE.opts.0"
+    resources: time_min=60, mem_mb=5000, cpus=8
     threads: 8
     shell:
-        "dadi-cli InferDFE --fs {input[0]} --cache1d {input[1]} --demo-popt {input[2]} --output-prefix 1KG.YRI.two_epoch.gamma --pdf1d {dfe_model} --p0 {dfe_p0} --ubounds {dfe_ubounds} --lbounds {dfe_lbounds} --misid --ratio 2.31 --optimizations 1000"
+        "dadi-cli InferDFE --fs {input[0]} --cache1d {input[1]} --demo-popt {input[2]} --output-prefix 1KG.YRI.two_epoch.gamma --pdf1d {dfe_model} --p0 {dfe_p0} --ubounds {dfe_ubounds} --lbounds {dfe_lbounds} --misid --ratio 2.31 --optimization 10000"
 
 rule dadi_bestfit_dfe:
     input: rules.dadi_infer_dfe.output
     output:
         "1KG.YRI.two_epoch.gamma.InferDFE.bestfits"
+    resources: time_min=60, mem_mb=5000, cpus=1
     threads: 1
     shell:
-        "dadi-cli BestFit --input-prefix ./1KG.YRI.two_epoch.gamma.InferDFE --pdf gamma --misid --ubounds {dfe_ubounds} --lbounds {dfe_lbounds}"
+        "dadi-cli BestFit --input-prefix ./1KG.YRI.two_epoch.gamma.InferDFE --pdf gamma --misid --ubounds {dfe_ubounds} --lbounds {dfe_lbounds} --model two_epoch"
 
 #rule plot_dadi_dfe_results:
 #    input: rules.dadi_bestfit_dfe.output
@@ -97,5 +103,3 @@ rule dadi_bestfit_dfe:
 #    threads: 1
 #    shell:
 #        "dadi-cli Plot --dfe-popt {input} --pdf1d gamma --output {output}"
-
-# rule clean

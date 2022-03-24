@@ -1,0 +1,2 @@
+cluster: "sbatch -t {resources.time_min} --mem-per-cpu={resources.mem_mb} -c {resources.cpus} -o logs_slurm/{rule}_{wildcards} -e logs_slurm/{rule}_{wildcards} --mail-type=FAIL"
+latency-wait: 300

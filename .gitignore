@@ -3,6 +3,7 @@ dadi_cli.egg-info/*
 dist/*
 examples/snakepipe/*/.snakemake/*
 examples/snakepipe/*/1KG.*
+examples/snakepipe/*/logs_slurm/*
 */.DS_Store
 */__pycache__/*
 .coverage
