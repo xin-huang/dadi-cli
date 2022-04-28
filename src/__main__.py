@@ -77,7 +77,7 @@ def run_infer_dm(args):
             args.optimizations -= global_optimizations
             if args.work_queue:
                 import work_queue as wq
-                q = wq.WorkQueue(name = args.work_queue[0], port = 0)
+                q = wq.WorkQueue(name = args.work_queue[0])
                 # Returns 1 for success, 0 for failure
                 if not q.specify_password_file(args.work_queue[1]):
                     raise ValueError('Work Queue password file "{0}" not found.'.format(args.work_queue[1]))
@@ -143,7 +143,7 @@ def run_infer_dm(args):
             converged = True
         if args.work_queue:
             import work_queue as wq
-            q = wq.WorkQueue(name = args.work_queue[0], port = 0)
+            q = wq.WorkQueue(name = args.work_queue[0])
             # Returns 1 for success, 0 for failure
             if not q.specify_password_file(args.work_queue[1]):
                 raise ValueError('Work Queue password file "{0}" not found.'.format(args.work_queue[1]))
@@ -234,7 +234,7 @@ def run_infer_dfe(args):
             converged = True
         if args.work_queue:
             import work_queue as wq
-            q = wq.WorkQueue(name = args.work_queue[0], port = 0)
+            q = wq.WorkQueue(name = args.work_queue[0])
             # Returns 1 for success, 0 for failure
             if not q.specify_password_file(args.work_queue[1]):
                 raise ValueError('Work Queue password file "{0}" not found.'.format(args.work_queue[1]))
