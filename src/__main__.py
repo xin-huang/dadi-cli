@@ -77,7 +77,10 @@ def run_infer_dm(args):
             args.optimizations -= global_optimizations
             if args.work_queue:
                 import work_queue as wq
-                q = wq.WorkQueue(name = args.work_queue[0])
+                if args.debug_wq:
+                    q = wq.WorkQueue(name = args.work_queue[0], debug_log = 'debug.log')
+                else:
+                    q = wq.WorkQueue(name = args.work_queue[0])
                 # Returns 1 for success, 0 for failure
                 if not q.specify_password_file(args.work_queue[1]):
                     raise ValueError('Work Queue password file "{0}" not found.'.format(args.work_queue[1]))
@@ -143,7 +146,10 @@ def run_infer_dm(args):
             converged = True
         if args.work_queue:
             import work_queue as wq
-            q = wq.WorkQueue(name = args.work_queue[0])
+            if args.debug_wq:
+                q = wq.WorkQueue(name = args.work_queue[0], debug_log = 'debug.log')
+            else:
+                q = wq.WorkQueue(name = args.work_queue[0])
             # Returns 1 for success, 0 for failure
             if not q.specify_password_file(args.work_queue[1]):
                 raise ValueError('Work Queue password file "{0}" not found.'.format(args.work_queue[1]))
@@ -234,7 +240,10 @@ def run_infer_dfe(args):
             converged = True
         if args.work_queue:
             import work_queue as wq
-            q = wq.WorkQueue(name = args.work_queue[0])
+            if args.debug_wq:
+                q = wq.WorkQueue(name = args.work_queue[0], debug_log = 'debug.log')
+            else:
+                q = wq.WorkQueue(name = args.work_queue[0])
             # Returns 1 for success, 0 for failure
             if not q.specify_password_file(args.work_queue[1]):
                 raise ValueError('Work Queue password file "{0}" not found.'.format(args.work_queue[1]))
@@ -412,6 +421,7 @@ def add_inference_argument(parser):
     parser.add_argument('--check-convergence', default=False, action='store_true', dest='check_convergence', help='Stop optimization runs when convergence criteria are reached. BestFit results file will be call <output_prefix>.InferDM.bestfits. Default: False')
     parser.add_argument('--force-convergence', default=False, action='store_true', dest='force_convergence', help='Only stop optimization once convergence criteria is reached. BestFit results file will be call <output_prefix>.InferDM.bestfits. Default: False')
     parser.add_argument('--work-queue', nargs=2, default=[], action='store', dest='work_queue', help='Enable Work Queue. Additional arguments are the WorkQueue project name and the name of the password file.')
+    parser.add_argument('--debug-wq', default=False, action='store_true', dest='debug_wq', help='Store debug information from WorkQueue to a file called "debug.log". Default: False')
     parser.add_argument('--maxeval', type=_check_positive_int, default=False, help='Max number of parameter set evaluations tried for optimizing demography. Default: Number of parameters multiplied by 100')
     parser.add_argument('--maxtime', type=_check_positive_int, default=np.inf, help='max amount of time for optimizing demography. Default: infinite')
     parser.add_argument('--threads', type=_check_positive_int, default=multiprocessing.cpu_count(), help='number of threads using in multiprocessing. Default: All available threads')
