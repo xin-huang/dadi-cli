@@ -1,0 +1,15 @@
+name: dadi-cli
+channels:
+        - conda-forge
+        - bioconda
+dependencies:
+        - dadi==2.1.2
+        - dill==0.3.4
+        - codecov
+        - ndcctools==7.4.3
+        - pip
+        - pytest-cov
+        - python==3.8
+        - snakemake==7.1.1
+        - pip:
+            - .

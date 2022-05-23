@@ -56,6 +56,7 @@ def test_InferDM_seed(files):
     fits = open(glob.glob("./tests/test_results/simulation.two_epoch.demo.seeded.params.InferDM.opts.*")[-1],'r').readlines()
     assert fits[1] == fits[2] == fits[3]
 
+@pytest.mark.skip()
 def test_InferDM_wq(files):
     optimizations = 3
     factory = subprocess.Popen(
