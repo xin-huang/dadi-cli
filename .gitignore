@@ -7,3 +7,4 @@ examples/snakepipe/*/1KG.*
 */__pycache__/*
 .coverage
 tests/test_results/*.opts.*
+wq-factory-*

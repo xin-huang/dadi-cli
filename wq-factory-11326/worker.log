@@ -1,0 +1,959 @@
+2022/05/25 08:00:49.21 work_queue_worker[25758] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/05/25 08:00:49.21 work_queue_worker[25758] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/05/25 08:00:49.21 work_queue_worker[25758] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/05/25 08:00:49.21 work_queue_worker[25760] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/05/25 08:00:49.22 work_queue_worker[25760] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/05/25 08:00:49.21 work_queue_worker[25758] debug: Configuration: --debug --prefix /scratch/admixlab/xinhuang/software/anaconda3/envs/dadi-cli --with-base-dir /scratch/admixlab/xinhuang/software/anaconda3/envs/dadi-cli --with-python3-path /scratch/admixlab/xinhuang/software/anaconda3/envs/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/05/25 08:00:49.22 work_queue_worker[25760] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/05/25 08:00:49.22 work_queue_worker[25760] debug: Configuration: --debug --prefix /scratch/admixlab/xinhuang/software/anaconda3/envs/dadi-cli --with-base-dir /scratch/admixlab/xinhuang/software/anaconda3/envs/dadi-cli --with-python3-path /scratch/admixlab/xinhuang/software/anaconda3/envs/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/05/25 08:00:49.22 work_queue_worker[25759] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/05/25 08:00:49.22 work_queue_worker[25759] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/05/25 08:00:49.22 work_queue_worker[25759] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/05/25 08:00:49.22 work_queue_worker[25759] debug: Configuration: --debug --prefix /scratch/admixlab/xinhuang/software/anaconda3/envs/dadi-cli --with-base-dir /scratch/admixlab/xinhuang/software/anaconda3/envs/dadi-cli --with-python3-path /scratch/admixlab/xinhuang/software/anaconda3/envs/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/05/25 08:00:49.24 work_queue_worker[25758] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-25758.
+2022/05/25 08:00:49.24 work_queue_worker[25760] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-25760.
+2022/05/25 08:00:49.24 work_queue_worker[25758] debug: error reading disk usage on directory: ./cache.
+2022/05/25 08:00:49.24 work_queue_worker[25758] wq: querying catalog for managers with project=test-dfe-two-epoch
+2022/05/25 08:00:49.24 work_queue_worker[25760] debug: error reading disk usage on directory: ./cache.
+2022/05/25 08:00:49.24 work_queue_worker[25758] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/05/25 08:00:49.24 work_queue_worker[25760] wq: querying catalog for managers with project=test-dfe-two-epoch
+2022/05/25 08:00:49.24 work_queue_worker[25759] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-25759.
+2022/05/25 08:00:49.24 work_queue_worker[25758] http: connect catalog.cse.nd.edu port 9097
+2022/05/25 08:00:49.24 work_queue_worker[25758] dns: looking up name catalog.cse.nd.edu
+2022/05/25 08:00:49.24 work_queue_worker[25760] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/05/25 08:00:49.24 work_queue_worker[25759] debug: error reading disk usage on directory: ./cache.
+2022/05/25 08:00:49.24 work_queue_worker[25759] wq: querying catalog for managers with project=test-dfe-two-epoch
+2022/05/25 08:00:49.24 work_queue_worker[25758] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/05/25 08:00:49.24 work_queue_worker[25760] http: connect catalog.cse.nd.edu port 9097
+2022/05/25 08:00:49.24 work_queue_worker[25760] dns: looking up name catalog.cse.nd.edu
+2022/05/25 08:00:49.24 work_queue_worker[25759] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/05/25 08:00:49.24 work_queue_worker[25758] tcp: connecting to 129.74.152.177 port 9097
+2022/05/25 08:00:49.25 work_queue_worker[25760] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/05/25 08:00:49.25 work_queue_worker[25759] http: connect catalog.cse.nd.edu port 9097
+2022/05/25 08:00:49.25 work_queue_worker[25759] dns: looking up name catalog.cse.nd.edu
+2022/05/25 08:00:49.25 work_queue_worker[25760] tcp: connecting to 129.74.152.177 port 9097
+2022/05/25 08:00:49.25 work_queue_worker[25759] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/05/25 08:00:49.25 work_queue_worker[25759] tcp: connecting to 129.74.152.177 port 9097
+2022/05/25 08:00:49.38 work_queue_worker[25758] tcp: made connection to 129.74.152.177 port 9097
+2022/05/25 08:00:49.38 work_queue_worker[25758] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/05/25 08:00:49.38 work_queue_worker[25760] tcp: made connection to 129.74.152.177 port 9097
+2022/05/25 08:00:49.38 work_queue_worker[25760] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/05/25 08:00:49.38 work_queue_worker[25759] tcp: made connection to 129.74.152.177 port 9097
+2022/05/25 08:00:49.38 work_queue_worker[25759] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/05/25 08:00:49.52 work_queue_worker[25758] http: HTTP/1.1 200 OK
+2022/05/25 08:00:49.52 work_queue_worker[25758] http: Date: Wed May 25 02:00:49 2022
+2022/05/25 08:00:49.52 work_queue_worker[25760] http: HTTP/1.1 200 OK
+2022/05/25 08:00:49.52 work_queue_worker[25760] http: Date: Wed May 25 02:00:49 2022
+2022/05/25 08:00:49.52 work_queue_worker[25758] http: Server: catalog_server
+2022/05/25 08:00:49.52 work_queue_worker[25759] http: HTTP/1.1 200 OK
+2022/05/25 08:00:49.52 work_queue_worker[25759] http: Date: Wed May 25 02:00:49 2022
+2022/05/25 08:00:49.52 work_queue_worker[25760] http: Server: catalog_server
+2022/05/25 08:00:49.52 work_queue_worker[25760] http: Connection: close
+2022/05/25 08:00:49.52 work_queue_worker[25758] http: Connection: close
+2022/05/25 08:00:49.52 work_queue_worker[25758] http: Access-Control-Allow-Origin: *
+2022/05/25 08:00:49.52 work_queue_worker[25759] http: Server: catalog_server
+2022/05/25 08:00:49.52 work_queue_worker[25759] http: Connection: close
+2022/05/25 08:00:49.52 work_queue_worker[25760] http: Access-Control-Allow-Origin: *
+2022/05/25 08:00:49.52 work_queue_worker[25760] http: Content-type: text/plain
+2022/05/25 08:00:49.52 work_queue_worker[25758] http: Content-type: text/plain
+2022/05/25 08:00:49.52 work_queue_worker[25758] http:
+2022/05/25 08:00:49.52 work_queue_worker[25759] http: Access-Control-Allow-Origin: *
+2022/05/25 08:00:49.52 work_queue_worker[25760] http:
+2022/05/25 08:00:49.52 work_queue_worker[25759] http: Content-type: text/plain
+2022/05/25 08:00:49.52 work_queue_worker[25759] http:
+2022/05/25 08:00:50.05 work_queue_worker[25760] tcp: disconnected from 129.74.152.177 port 9097
+2022/05/25 08:00:50.05 work_queue_worker[25758] tcp: disconnected from 129.74.152.177 port 9097
+2022/05/25 08:00:50.05 work_queue_worker[25759] tcp: disconnected from 129.74.152.177 port 9097
+2022/05/25 08:00:50.06 work_queue_worker[25760] wq: project name test-dfe-two-epoch matches 0 managers
+2022/05/25 08:00:50.06 work_queue_worker[25759] wq: project name test-dfe-two-epoch matches 0 managers
+2022/05/25 08:00:50.06 work_queue_worker[25758] wq: project name test-dfe-two-epoch matches 0 managers
+2022/05/25 08:00:52.06 work_queue_worker[25760] wq: project name test-dfe-two-epoch matches 0 managers
+2022/05/25 08:00:52.06 work_queue_worker[25759] wq: project name test-dfe-two-epoch matches 0 managers
+2022/05/25 08:00:52.06 work_queue_worker[25758] wq: project name test-dfe-two-epoch matches 0 managers
+2022/05/25 08:00:56.06 work_queue_worker[25760] debug: error reading disk usage on directory: ./cache.
+2022/05/25 08:00:56.07 work_queue_worker[25760] wq: project name test-dfe-two-epoch matches 0 managers
+2022/05/25 08:00:56.07 work_queue_worker[25759] debug: error reading disk usage on directory: ./cache.
+2022/05/25 08:00:56.07 work_queue_worker[25759] wq: project name test-dfe-two-epoch matches 0 managers
+2022/05/25 08:00:56.07 work_queue_worker[25758] debug: error reading disk usage on directory: ./cache.
+2022/05/25 08:00:56.07 work_queue_worker[25758] wq: project name test-dfe-two-epoch matches 0 managers
+2022/05/25 08:01:04.07 work_queue_worker[25760] debug: error reading disk usage on directory: ./cache.
+2022/05/25 08:01:04.07 work_queue_worker[25760] wq: project name test-dfe-two-epoch matches 0 managers
+2022/05/25 08:01:04.07 work_queue_worker[25760] notice: stopping: could not connect after 10 seconds.
+2022/05/25 08:01:04.07 work_queue_worker[25759] debug: error reading disk usage on directory: ./cache.
+2022/05/25 08:01:04.07 work_queue_worker[25759] wq: project name test-dfe-two-epoch matches 0 managers
+2022/05/25 08:01:04.07 work_queue_worker[25759] notice: stopping: could not connect after 10 seconds.
+2022/05/25 08:01:04.07 work_queue_worker[25758] debug: error reading disk usage on directory: ./cache.
+2022/05/25 08:01:04.07 work_queue_worker[25758] wq: project name test-dfe-two-epoch matches 0 managers
+2022/05/25 08:01:04.07 work_queue_worker[25758] notice: stopping: could not connect after 10 seconds.
+2022/05/25 08:01:20.14 work_queue_worker[25901] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/05/25 08:01:20.14 work_queue_worker[25901] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/05/25 08:01:20.14 work_queue_worker[25900] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/05/25 08:01:20.14 work_queue_worker[25900] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/05/25 08:01:20.14 work_queue_worker[25901] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/05/25 08:01:20.14 work_queue_worker[25901] debug: Configuration: --debug --prefix /scratch/admixlab/xinhuang/software/anaconda3/envs/dadi-cli --with-base-dir /scratch/admixlab/xinhuang/software/anaconda3/envs/dadi-cli --with-python3-path /scratch/admixlab/xinhuang/software/anaconda3/envs/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/05/25 08:01:20.14 work_queue_worker[25900] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/05/25 08:01:20.14 work_queue_worker[25900] debug: Configuration: --debug --prefix /scratch/admixlab/xinhuang/software/anaconda3/envs/dadi-cli --with-base-dir /scratch/admixlab/xinhuang/software/anaconda3/envs/dadi-cli --with-python3-path /scratch/admixlab/xinhuang/software/anaconda3/envs/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/05/25 08:01:20.14 work_queue_worker[25899] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/05/25 08:01:20.14 work_queue_worker[25899] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/05/25 08:01:20.15 work_queue_worker[25899] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/05/25 08:01:20.15 work_queue_worker[25899] debug: Configuration: --debug --prefix /scratch/admixlab/xinhuang/software/anaconda3/envs/dadi-cli --with-base-dir /scratch/admixlab/xinhuang/software/anaconda3/envs/dadi-cli --with-python3-path /scratch/admixlab/xinhuang/software/anaconda3/envs/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/05/25 08:01:20.16 work_queue_worker[25901] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-25901.
+2022/05/25 08:01:20.16 work_queue_worker[25900] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-25900.
+2022/05/25 08:01:20.16 work_queue_worker[25901] debug: error reading disk usage on directory: ./cache.
+2022/05/25 08:01:20.16 work_queue_worker[25901] wq: querying catalog for managers with project=test-dm-two-epoch
+2022/05/25 08:01:20.16 work_queue_worker[25900] debug: error reading disk usage on directory: ./cache.
+2022/05/25 08:01:20.16 work_queue_worker[25901] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/05/25 08:01:20.16 work_queue_worker[25900] wq: querying catalog for managers with project=test-dm-two-epoch
+2022/05/25 08:01:20.16 work_queue_worker[25901] http: connect catalog.cse.nd.edu port 9097
+2022/05/25 08:01:20.16 work_queue_worker[25900] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/05/25 08:01:20.16 work_queue_worker[25899] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-25899.
+2022/05/25 08:01:20.16 work_queue_worker[25901] dns: looking up name catalog.cse.nd.edu
+2022/05/25 08:01:20.16 work_queue_worker[25900] http: connect catalog.cse.nd.edu port 9097
+2022/05/25 08:01:20.16 work_queue_worker[25901] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/05/25 08:01:20.16 work_queue_worker[25899] debug: error reading disk usage on directory: ./cache.
+2022/05/25 08:01:20.16 work_queue_worker[25900] dns: looking up name catalog.cse.nd.edu
+2022/05/25 08:01:20.17 work_queue_worker[25901] tcp: connecting to 129.74.152.177 port 9097
+2022/05/25 08:01:20.17 work_queue_worker[25899] wq: querying catalog for managers with project=test-dm-two-epoch
+2022/05/25 08:01:20.17 work_queue_worker[25900] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/05/25 08:01:20.17 work_queue_worker[25899] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/05/25 08:01:20.17 work_queue_worker[25900] tcp: connecting to 129.74.152.177 port 9097
+2022/05/25 08:01:20.17 work_queue_worker[25899] http: connect catalog.cse.nd.edu port 9097
+2022/05/25 08:01:20.17 work_queue_worker[25899] dns: looking up name catalog.cse.nd.edu
+2022/05/25 08:01:20.17 work_queue_worker[25899] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/05/25 08:01:20.17 work_queue_worker[25899] tcp: connecting to 129.74.152.177 port 9097
+2022/05/25 08:01:20.30 work_queue_worker[25901] tcp: made connection to 129.74.152.177 port 9097
+2022/05/25 08:01:20.30 work_queue_worker[25901] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/05/25 08:01:20.30 work_queue_worker[25900] tcp: made connection to 129.74.152.177 port 9097
+2022/05/25 08:01:20.30 work_queue_worker[25900] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/05/25 08:01:20.30 work_queue_worker[25899] tcp: made connection to 129.74.152.177 port 9097
+2022/05/25 08:01:20.30 work_queue_worker[25899] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/05/25 08:01:20.44 work_queue_worker[25901] http: HTTP/1.1 200 OK
+2022/05/25 08:01:20.44 work_queue_worker[25900] http: HTTP/1.1 200 OK
+2022/05/25 08:01:20.44 work_queue_worker[25901] http: Date: Wed May 25 02:01:20 2022
+2022/05/25 08:01:20.44 work_queue_worker[25900] http: Date: Wed May 25 02:01:20 2022
+2022/05/25 08:01:20.44 work_queue_worker[25901] http: Server: catalog_server
+2022/05/25 08:01:20.44 work_queue_worker[25900] http: Server: catalog_server
+2022/05/25 08:01:20.44 work_queue_worker[25901] http: Connection: close
+2022/05/25 08:01:20.44 work_queue_worker[25901] http: Access-Control-Allow-Origin: *
+2022/05/25 08:01:20.44 work_queue_worker[25899] http: HTTP/1.1 200 OK
+2022/05/25 08:01:20.44 work_queue_worker[25900] http: Connection: close
+2022/05/25 08:01:20.44 work_queue_worker[25901] http: Content-type: text/plain
+2022/05/25 08:01:20.44 work_queue_worker[25899] http: Date: Wed May 25 02:01:20 2022
+2022/05/25 08:01:20.44 work_queue_worker[25900] http: Access-Control-Allow-Origin: *
+2022/05/25 08:01:20.44 work_queue_worker[25901] http:
+2022/05/25 08:01:20.44 work_queue_worker[25899] http: Server: catalog_server
+2022/05/25 08:01:20.44 work_queue_worker[25900] http: Content-type: text/plain
+2022/05/25 08:01:20.44 work_queue_worker[25899] http: Connection: close
+2022/05/25 08:01:20.44 work_queue_worker[25900] http:
+2022/05/25 08:01:20.44 work_queue_worker[25899] http: Access-Control-Allow-Origin: *
+2022/05/25 08:01:20.44 work_queue_worker[25899] http: Content-type: text/plain
+2022/05/25 08:01:20.44 work_queue_worker[25899] http:
+2022/05/25 08:01:20.97 work_queue_worker[25899] tcp: disconnected from 129.74.152.177 port 9097
+2022/05/25 08:01:20.98 work_queue_worker[25900] tcp: disconnected from 129.74.152.177 port 9097
+2022/05/25 08:01:20.98 work_queue_worker[25901] tcp: disconnected from 129.74.152.177 port 9097
+2022/05/25 08:01:20.98 work_queue_worker[25899] wq: project name test-dm-two-epoch matches 0 managers
+2022/05/25 08:01:20.99 work_queue_worker[25900] wq: project name test-dm-two-epoch matches 0 managers
+2022/05/25 08:01:20.99 work_queue_worker[25901] wq: project name test-dm-two-epoch matches 0 managers
+2022/05/25 08:01:22.98 work_queue_worker[25899] wq: project name test-dm-two-epoch matches 0 managers
+2022/05/25 08:01:22.99 work_queue_worker[25900] wq: project name test-dm-two-epoch matches 0 managers
+2022/05/25 08:01:22.99 work_queue_worker[25901] wq: project name test-dm-two-epoch matches 0 managers
+2022/05/25 08:01:26.99 work_queue_worker[25899] debug: error reading disk usage on directory: ./cache.
+2022/05/25 08:01:26.99 work_queue_worker[25899] wq: project name test-dm-two-epoch matches 0 managers
+2022/05/25 08:01:26.99 work_queue_worker[25900] debug: error reading disk usage on directory: ./cache.
+2022/05/25 08:01:26.99 work_queue_worker[25901] debug: error reading disk usage on directory: ./cache.
+2022/05/25 08:01:26.99 work_queue_worker[25901] wq: project name test-dm-two-epoch matches 0 managers
+2022/05/25 08:01:26.99 work_queue_worker[25900] wq: project name test-dm-two-epoch matches 0 managers
+2022/05/25 08:01:34.99 work_queue_worker[25899] debug: error reading disk usage on directory: ./cache.
+2022/05/25 08:01:34.99 work_queue_worker[25899] wq: project name test-dm-two-epoch matches 0 managers
+2022/05/25 08:01:34.99 work_queue_worker[25899] notice: stopping: could not connect after 10 seconds.
+2022/05/25 08:01:35.00 work_queue_worker[25901] debug: error reading disk usage on directory: ./cache.
+2022/05/25 08:01:35.00 work_queue_worker[25901] wq: project name test-dm-two-epoch matches 0 managers
+2022/05/25 08:01:35.00 work_queue_worker[25900] debug: error reading disk usage on directory: ./cache.
+2022/05/25 08:01:35.00 work_queue_worker[25900] wq: project name test-dm-two-epoch matches 0 managers
+2022/05/25 08:01:35.00 work_queue_worker[25900] notice: stopping: could not connect after 10 seconds.
+2022/05/25 08:01:35.00 work_queue_worker[25901] notice: stopping: could not connect after 10 seconds.
+2022/06/30 13:14:10.88 work_queue_worker[1323537] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/06/30 13:14:10.88 work_queue_worker[1323540] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/06/30 13:14:10.88 work_queue_worker[1323538] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/06/30 13:14:10.89 work_queue_worker[1323537] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/06/30 13:14:10.89 work_queue_worker[1323540] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/06/30 13:14:10.89 work_queue_worker[1323538] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/06/30 13:14:10.99 work_queue_worker[1323538] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/06/30 13:14:10.94 work_queue_worker[1323539] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/06/30 13:14:10.99 work_queue_worker[1323537] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/06/30 13:14:10.99 work_queue_worker[1323535] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/06/30 13:14:10.99 work_queue_worker[1323540] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/06/30 13:14:10.99 work_queue_worker[1323536] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/06/30 13:14:10.99 work_queue_worker[1323538] debug: Configuration: --debug --prefix /home/user2/huangxin/dadi-cli --with-base-dir /home/user2/huangxin/dadi-cli --with-python3-path /home/user2/huangxin/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/06/30 13:14:10.99 work_queue_worker[1323539] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/06/30 13:14:10.99 work_queue_worker[1323537] debug: Configuration: --debug --prefix /home/user2/huangxin/dadi-cli --with-base-dir /home/user2/huangxin/dadi-cli --with-python3-path /home/user2/huangxin/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/06/30 13:14:10.99 work_queue_worker[1323535] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/06/30 13:14:10.99 work_queue_worker[1323540] debug: Configuration: --debug --prefix /home/user2/huangxin/dadi-cli --with-base-dir /home/user2/huangxin/dadi-cli --with-python3-path /home/user2/huangxin/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/06/30 13:14:10.99 work_queue_worker[1323536] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/06/30 13:14:10.99 work_queue_worker[1323539] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/06/30 13:14:10.99 work_queue_worker[1323535] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/06/30 13:14:11.00 work_queue_worker[1323536] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/06/30 13:14:11.00 work_queue_worker[1323539] debug: Configuration: --debug --prefix /home/user2/huangxin/dadi-cli --with-base-dir /home/user2/huangxin/dadi-cli --with-python3-path /home/user2/huangxin/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/06/30 13:14:11.00 work_queue_worker[1323535] debug: Configuration: --debug --prefix /home/user2/huangxin/dadi-cli --with-base-dir /home/user2/huangxin/dadi-cli --with-python3-path /home/user2/huangxin/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/06/30 13:14:11.00 work_queue_worker[1323536] debug: Configuration: --debug --prefix /home/user2/huangxin/dadi-cli --with-base-dir /home/user2/huangxin/dadi-cli --with-python3-path /home/user2/huangxin/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/06/30 13:14:11.01 work_queue_worker[1323538] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-1323538.
+2022/06/30 13:14:11.01 work_queue_worker[1323537] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-1323537.
+2022/06/30 13:14:11.01 work_queue_worker[1323538] debug: error reading disk usage on directory: ./cache.
+2022/06/30 13:14:11.01 work_queue_worker[1323537] debug: error reading disk usage on directory: ./cache.
+2022/06/30 13:14:11.01 work_queue_worker[1323538] wq: querying catalog for managers with project=test-dm-two-epoch
+2022/06/30 13:14:11.01 work_queue_worker[1323537] wq: querying catalog for managers with project=test-dm-two-epoch
+2022/06/30 13:14:11.01 work_queue_worker[1323538] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/06/30 13:14:11.01 work_queue_worker[1323540] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-1323540.
+2022/06/30 13:14:11.01 work_queue_worker[1323537] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/06/30 13:14:11.01 work_queue_worker[1323538] http: connect catalog.cse.nd.edu port 9097
+2022/06/30 13:14:11.01 work_queue_worker[1323540] debug: error reading disk usage on directory: ./cache.
+2022/06/30 13:14:11.01 work_queue_worker[1323537] http: connect catalog.cse.nd.edu port 9097
+2022/06/30 13:14:11.01 work_queue_worker[1323538] dns: looking up name catalog.cse.nd.edu
+2022/06/30 13:14:11.01 work_queue_worker[1323540] wq: querying catalog for managers with project=test-dm-two-epoch
+2022/06/30 13:14:11.02 work_queue_worker[1323537] dns: looking up name catalog.cse.nd.edu
+2022/06/30 13:14:11.02 work_queue_worker[1323535] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-1323535.
+2022/06/30 13:14:11.02 work_queue_worker[1323539] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-1323539.
+2022/06/30 13:14:11.02 work_queue_worker[1323540] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/06/30 13:14:11.02 work_queue_worker[1323540] http: connect catalog.cse.nd.edu port 9097
+2022/06/30 13:14:11.02 work_queue_worker[1323536] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-1323536.
+2022/06/30 13:14:11.02 work_queue_worker[1323535] debug: error reading disk usage on directory: ./cache.
+2022/06/30 13:14:11.02 work_queue_worker[1323535] wq: querying catalog for managers with project=test-dm-two-epoch
+2022/06/30 13:14:11.02 work_queue_worker[1323539] debug: error reading disk usage on directory: ./cache.
+2022/06/30 13:14:11.02 work_queue_worker[1323540] dns: looking up name catalog.cse.nd.edu
+2022/06/30 13:14:11.02 work_queue_worker[1323536] debug: error reading disk usage on directory: ./cache.
+2022/06/30 13:14:11.02 work_queue_worker[1323538] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/06/30 13:14:11.02 work_queue_worker[1323535] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/06/30 13:14:11.02 work_queue_worker[1323539] wq: querying catalog for managers with project=test-dm-two-epoch
+2022/06/30 13:14:11.02 work_queue_worker[1323537] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/06/30 13:14:11.02 work_queue_worker[1323536] wq: querying catalog for managers with project=test-dm-two-epoch
+2022/06/30 13:14:11.02 work_queue_worker[1323538] tcp: connecting to 129.74.152.177 port 9097
+2022/06/30 13:14:11.02 work_queue_worker[1323535] http: connect catalog.cse.nd.edu port 9097
+2022/06/30 13:14:11.02 work_queue_worker[1323539] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/06/30 13:14:11.02 work_queue_worker[1323537] tcp: connecting to 129.74.152.177 port 9097
+2022/06/30 13:14:11.02 work_queue_worker[1323536] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/06/30 13:14:11.03 work_queue_worker[1323535] dns: looking up name catalog.cse.nd.edu
+2022/06/30 13:14:11.03 work_queue_worker[1323540] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/06/30 13:14:11.03 work_queue_worker[1323540] tcp: connecting to 129.74.152.177 port 9097
+2022/06/30 13:14:11.03 work_queue_worker[1323539] http: connect catalog.cse.nd.edu port 9097
+2022/06/30 13:14:11.03 work_queue_worker[1323539] dns: looking up name catalog.cse.nd.edu
+2022/06/30 13:14:11.03 work_queue_worker[1323536] http: connect catalog.cse.nd.edu port 9097
+2022/06/30 13:14:11.03 work_queue_worker[1323536] dns: looking up name catalog.cse.nd.edu
+2022/06/30 13:14:11.03 work_queue_worker[1323535] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/06/30 13:14:11.03 work_queue_worker[1323535] tcp: connecting to 129.74.152.177 port 9097
+2022/06/30 13:14:11.15 work_queue_worker[1323538] tcp: made connection to 129.74.152.177 port 9097
+2022/06/30 13:14:11.15 work_queue_worker[1323538] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/06/30 13:14:11.15 work_queue_worker[1323537] tcp: made connection to 129.74.152.177 port 9097
+2022/06/30 13:14:11.15 work_queue_worker[1323537] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/06/30 13:14:11.16 work_queue_worker[1323540] tcp: made connection to 129.74.152.177 port 9097
+2022/06/30 13:14:11.16 work_queue_worker[1323540] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/06/30 13:14:11.16 work_queue_worker[1323535] tcp: made connection to 129.74.152.177 port 9097
+2022/06/30 13:14:11.16 work_queue_worker[1323535] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/06/30 13:14:11.26 work_queue_worker[1323539] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/06/30 13:14:11.26 work_queue_worker[1323539] tcp: connecting to 129.74.152.177 port 9097
+2022/06/30 13:14:11.29 work_queue_worker[1323538] http: HTTP/1.1 200 OK
+2022/06/30 13:14:11.29 work_queue_worker[1323538] http: Date: Thu Jun 30 07:14:11 2022
+2022/06/30 13:14:11.29 work_queue_worker[1323538] http: Server: catalog_server
+2022/06/30 13:14:11.29 work_queue_worker[1323538] http: Connection: close
+2022/06/30 13:14:11.29 work_queue_worker[1323537] http: HTTP/1.1 200 OK
+2022/06/30 13:14:11.29 work_queue_worker[1323538] http: Access-Control-Allow-Origin: *
+2022/06/30 13:14:11.29 work_queue_worker[1323537] http: Date: Thu Jun 30 07:14:11 2022
+2022/06/30 13:14:11.29 work_queue_worker[1323538] http: Content-type: text/plain
+2022/06/30 13:14:11.29 work_queue_worker[1323537] http: Server: catalog_server
+2022/06/30 13:14:11.29 work_queue_worker[1323537] http: Connection: close
+2022/06/30 13:14:11.29 work_queue_worker[1323540] http: HTTP/1.1 200 OK
+2022/06/30 13:14:11.29 work_queue_worker[1323538] http:
+2022/06/30 13:14:11.29 work_queue_worker[1323537] http: Access-Control-Allow-Origin: *
+2022/06/30 13:14:11.29 work_queue_worker[1323537] http: Content-type: text/plain
+2022/06/30 13:14:11.29 work_queue_worker[1323540] http: Date: Thu Jun 30 07:14:11 2022
+2022/06/30 13:14:11.29 work_queue_worker[1323537] http:
+2022/06/30 13:14:11.29 work_queue_worker[1323540] http: Server: catalog_server
+2022/06/30 13:14:11.29 work_queue_worker[1323540] http: Connection: close
+2022/06/30 13:14:11.29 work_queue_worker[1323540] http: Access-Control-Allow-Origin: *
+2022/06/30 13:14:11.29 work_queue_worker[1323540] http: Content-type: text/plain
+2022/06/30 13:14:11.29 work_queue_worker[1323540] http:
+2022/06/30 13:14:11.29 work_queue_worker[1323535] http: HTTP/1.1 200 OK
+2022/06/30 13:14:11.29 work_queue_worker[1323535] http: Date: Thu Jun 30 07:14:11 2022
+2022/06/30 13:14:11.29 work_queue_worker[1323535] http: Server: catalog_server
+2022/06/30 13:14:11.29 work_queue_worker[1323535] http: Connection: close
+2022/06/30 13:14:11.30 work_queue_worker[1323535] http: Access-Control-Allow-Origin: *
+2022/06/30 13:14:11.30 work_queue_worker[1323535] http: Content-type: text/plain
+2022/06/30 13:14:11.30 work_queue_worker[1323535] http:
+2022/06/30 13:14:11.39 work_queue_worker[1323539] tcp: made connection to 129.74.152.177 port 9097
+2022/06/30 13:14:11.39 work_queue_worker[1323539] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/06/30 13:14:11.52 work_queue_worker[1323536] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/06/30 13:14:11.52 work_queue_worker[1323536] tcp: connecting to 129.74.152.177 port 9097
+2022/06/30 13:14:11.52 work_queue_worker[1323539] http: HTTP/1.1 200 OK
+2022/06/30 13:14:11.52 work_queue_worker[1323539] http: Date: Thu Jun 30 07:14:11 2022
+2022/06/30 13:14:11.52 work_queue_worker[1323539] http: Server: catalog_server
+2022/06/30 13:14:11.52 work_queue_worker[1323539] http: Connection: close
+2022/06/30 13:14:11.52 work_queue_worker[1323539] http: Access-Control-Allow-Origin: *
+2022/06/30 13:14:11.52 work_queue_worker[1323539] http: Content-type: text/plain
+2022/06/30 13:14:11.52 work_queue_worker[1323539] http:
+2022/06/30 13:14:11.65 work_queue_worker[1323536] tcp: made connection to 129.74.152.177 port 9097
+2022/06/30 13:14:11.65 work_queue_worker[1323536] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/06/30 13:14:11.78 work_queue_worker[1323536] http: HTTP/1.1 200 OK
+2022/06/30 13:14:11.78 work_queue_worker[1323536] http: Date: Thu Jun 30 07:14:11 2022
+2022/06/30 13:14:11.78 work_queue_worker[1323536] http: Server: catalog_server
+2022/06/30 13:14:11.78 work_queue_worker[1323536] http: Connection: close
+2022/06/30 13:14:11.78 work_queue_worker[1323536] http: Access-Control-Allow-Origin: *
+2022/06/30 13:14:11.78 work_queue_worker[1323536] http: Content-type: text/plain
+2022/06/30 13:14:11.78 work_queue_worker[1323536] http:
+2022/06/30 13:14:11.81 work_queue_worker[1323540] tcp: disconnected from 129.74.152.177 port 9097
+2022/06/30 13:14:11.81 work_queue_worker[1323538] tcp: disconnected from 129.74.152.177 port 9097
+2022/06/30 13:14:11.82 work_queue_worker[1323537] tcp: disconnected from 129.74.152.177 port 9097
+2022/06/30 13:14:11.82 work_queue_worker[1323540] wq: project name test-dm-two-epoch matches 3 managers
+2022/06/30 13:14:11.82 work_queue_worker[1323540] wq: selected manager with project=test-dm-two-epoch addr=20.245.202.192 port=9123
+2022/06/30 13:14:11.82 work_queue_worker[1323540] error: Did not find the manager address '20.245.202.192' in the list of interfaces.
+2022/06/30 13:14:11.82 work_queue_worker[1323540] dns: looking up name 10.1.1.6
+2022/06/30 13:14:11.82 work_queue_worker[1323540] dns: 10.1.1.6 is 10.1.1.6
+2022/06/30 13:14:11.82 work_queue_worker[1323538] wq: project name test-dm-two-epoch matches 3 managers
+2022/06/30 13:14:11.82 work_queue_worker[1323535] tcp: disconnected from 129.74.152.177 port 9097
+2022/06/30 13:14:11.82 work_queue_worker[1323538] wq: selected manager with project=test-dm-two-epoch addr=20.124.197.82 port=9123
+2022/06/30 13:14:11.82 work_queue_worker[1323538] error: Did not find the manager address '20.124.197.82' in the list of interfaces.
+2022/06/30 13:14:11.82 work_queue_worker[1323540] tcp: connecting to 10.1.1.6 port 9123
+2022/06/30 13:14:11.82 work_queue_worker[1323538] dns: looking up name 10.1.0.113
+2022/06/30 13:14:11.83 work_queue_worker[1323538] dns: 10.1.0.113 is 10.1.0.113
+2022/06/30 13:14:11.83 work_queue_worker[1323537] wq: project name test-dm-two-epoch matches 3 managers
+2022/06/30 13:14:11.83 work_queue_worker[1323540] tcp: connection to 10.1.1.6 port 9123 failed (Connection refused)
+2022/06/30 13:14:11.83 work_queue_worker[1323537] wq: selected manager with project=test-dm-two-epoch addr=20.124.197.82 port=9123
+2022/06/30 13:14:11.83 work_queue_worker[1323540] tcp: disconnected from 10.1.1.6 port 9123
+2022/06/30 13:14:11.83 work_queue_worker[1323538] tcp: connecting to 10.1.0.113 port 9123
+2022/06/30 13:14:11.83 work_queue_worker[1323537] error: Did not find the manager address '20.124.197.82' in the list of interfaces.
+2022/06/30 13:14:11.83 work_queue_worker[1323540] dns: looking up name 172.17.0.1
+2022/06/30 13:14:11.83 work_queue_worker[1323537] dns: looking up name 10.1.0.113
+2022/06/30 13:14:11.83 work_queue_worker[1323540] dns: 172.17.0.1 is 172.17.0.1
+2022/06/30 13:14:11.83 work_queue_worker[1323537] dns: 10.1.0.113 is 10.1.0.113
+2022/06/30 13:14:11.83 work_queue_worker[1323540] tcp: connecting to 172.17.0.1 port 9123
+2022/06/30 13:14:11.83 work_queue_worker[1323537] tcp: connecting to 10.1.0.113 port 9123
+2022/06/30 13:14:11.83 work_queue_worker[1323535] wq: project name test-dm-two-epoch matches 3 managers
+2022/06/30 13:14:11.83 work_queue_worker[1323535] wq: selected manager with project=test-dm-two-epoch addr=131.130.65.106 port=9123
+2022/06/30 13:14:11.83 work_queue_worker[1323535] dns: looking up name 131.130.65.106
+2022/06/30 13:14:11.83 work_queue_worker[1323535] dns: 131.130.65.106 is 131.130.65.106
+2022/06/30 13:14:11.84 work_queue_worker[1323535] tcp: connecting to 131.130.65.106 port 9123
+2022/06/30 13:14:11.84 work_queue_worker[1323535] tcp: made connection to 131.130.65.106 port 9123
+2022/06/30 13:14:11.84 work_queue_worker[1323535] wq: connected to manager 131.130.65.106:9123 via local address 131.130.65.106:36024
+2022/06/30 13:14:11.84 work_queue_worker[1323535] wq: authenticating to manager
+2022/06/30 13:14:11.84 work_queue_worker[1323535] auth: sending challenge data
+2022/06/30 13:14:11.84 work_queue_worker[1323535] auth: receiving peer's challenge data
+2022/06/30 13:14:11.84 work_queue_worker[1323535] auth: sending my response
+2022/06/30 13:14:11.84 work_queue_worker[1323535] auth: getting peer's response
+2022/06/30 13:14:11.84 work_queue_worker[1323535] auth: peer sent correct response
+2022/06/30 13:14:11.84 work_queue_worker[1323535] auth: peer accepted my response
+2022/06/30 13:14:11.84 work_queue_worker[1323535] wq: preparing workspace /tmp/worker-11326-1323535
+2022/06/30 13:14:11.84 work_queue_worker[1323535] dns: looking up name vlogin2.csb.univie.ac.at
+2022/06/30 13:14:11.84 work_queue_worker[1323535] dns: vlogin2.csb.univie.ac.at is 131.130.65.106
+2022/06/30 13:14:11.84 work_queue_worker[1323535] dns: looking up addr 131.130.65.106
+2022/06/30 13:14:11.84 work_queue_worker[1323535] dns: 131.130.65.106 is vlogin2.csb.univie.ac.at
+2022/06/30 13:14:11.84 work_queue_worker[1323535] dns: finding my hostname: uname = vlogin2.csb.univie.ac.at, address = 131.130.65.106, hostname = vlogin2.csb.univie.ac.at
+2022/06/30 13:14:11.84 work_queue_worker[1323535] wq: tx to manager: workqueue 9 vlogin2.csb.univie.ac.at Linux x86_64 7.4.3
+2022/06/30 13:14:11.84 work_queue_worker[1323535] wq: tx to manager: info worker-id worker-0cd1ed629d503a79296b6527732453e3
+2022/06/30 13:14:11.84 work_queue_worker[1323535] wq: tx to manager: alive
+2022/06/30 13:14:11.84 work_queue_worker[1323535] wq: Sending resource description to manager:
+2022/06/30 13:14:11.84 work_queue_worker[1323535] wq:  workers      0 inuse      1 total      1 smallest      1 largest
+2022/06/30 13:14:11.84 work_queue_worker[1323535] wq:     disk      0 inuse 1876504 total 1876504 smallest 1876504 largest
+2022/06/30 13:14:11.84 work_queue_worker[1323535] wq:   memory      0 inuse 257915 total 257915 smallest 257915 largest
+2022/06/30 13:14:11.84 work_queue_worker[1323535] wq:     gpus      0 inuse      0 total      0 smallest      0 largest
+2022/06/30 13:14:11.84 work_queue_worker[1323535] wq:    cores      0 inuse      1 total      1 smallest      1 largest
+2022/06/30 13:14:11.84 work_queue_worker[1323535] wq: tx to manager: info end_of_resource_update 0
+2022/06/30 13:14:11.84 work_queue_worker[1323535] wq: tx to manager: info tasks_running 0
+2022/06/30 13:14:11.84 work_queue_worker[1323535] wq: tx to manager: info worker-end-time 0
+2022/06/30 13:14:11.85 work_queue_worker[1323535] wq: working for manager at 131.130.65.106:9123.
+2022/06/30 13:14:11.85 work_queue_worker[1323535] wq: rx from manager: put file-0-70d9a322d1ccb30b1bb7fe0791dafcae-pytask_wrapper.py 363 0644
+2022/06/30 13:14:11.85 work_queue_worker[1323535] wq: rx from manager: put file-10-da5c47fc292c7ce170755b607b59649e-function_2f6a82ab-ebc7-40cd-88be-64fc04b0f88a.p 47 0644
+2022/06/30 13:14:11.85 work_queue_worker[1323535] wq: rx from manager: put file-11-d786e5be8c3cadd535a738278334d0d2-args_2f6a82ab-ebc7-40cd-88be-64fc04b0f88a.p 655 0644
+2022/06/30 13:14:11.85 work_queue_worker[1323535] wq: rx from manager: task 3
+2022/06/30 13:14:11.85 work_queue_worker[1323535] wq: rx from manager: cmd 159
+2022/06/30 13:14:11.85 work_queue_worker[1323535] wq: rx from manager: python pytask_wrapper.py function_2f6a82ab-ebc7-40cd-88be-64fc04b0f88a.p args_2f6a82ab-ebc7-40cd-88be-64fc04b0f88a.p out_2f6a82ab-ebc7-40cd-88be-64fc04b0f88a.p
+2022/06/30 13:14:11.85 work_queue_worker[1323535] wq: rx from manager: category default
+2022/06/30 13:14:11.85 work_queue_worker[1323535] wq: rx from manager: cores 1.000
+2022/06/30 13:14:11.85 work_queue_worker[1323535] wq: rx from manager: gpus 0
+2022/06/30 13:14:11.85 work_queue_worker[1323535] wq: rx from manager: memory 257915
+2022/06/30 13:14:11.85 work_queue_worker[1323535] wq: rx from manager: disk 1876504
+2022/06/30 13:14:11.85 work_queue_worker[1323535] wq: rx from manager: infile file-0-70d9a322d1ccb30b1bb7fe0791dafcae-pytask_wrapper.py pytask_wrapper.py 1
+2022/06/30 13:14:11.85 work_queue_worker[1323535] wq: rx from manager: infile file-10-da5c47fc292c7ce170755b607b59649e-function_2f6a82ab-ebc7-40cd-88be-64fc04b0f88a.p function_2f6a82ab-ebc7-40cd-88be-64fc04b0f88a.p 0
+2022/06/30 13:14:11.85 work_queue_worker[1323535] wq: rx from manager: infile file-11-d786e5be8c3cadd535a738278334d0d2-args_2f6a82ab-ebc7-40cd-88be-64fc04b0f88a.p args_2f6a82ab-ebc7-40cd-88be-64fc04b0f88a.p 0
+2022/06/30 13:14:11.85 work_queue_worker[1323535] wq: rx from manager: outfile file-12-04efe7f040c56cbde5aa20c9d4062535-out_2f6a82ab-ebc7-40cd-88be-64fc04b0f88a.p out_2f6a82ab-ebc7-40cd-88be-64fc04b0f88a.p 0
+2022/06/30 13:14:11.85 work_queue_worker[1323535] wq: rx from manager: end
+2022/06/30 13:14:11.85 work_queue_worker[1323535] wq: linking cache/file-0-70d9a322d1ccb30b1bb7fe0791dafcae-pytask_wrapper.py to /tmp/worker-11326-1323535/t.3/pytask_wrapper.py
+2022/06/30 13:14:11.85 work_queue_worker[1323535] wq: linking cache/file-10-da5c47fc292c7ce170755b607b59649e-function_2f6a82ab-ebc7-40cd-88be-64fc04b0f88a.p to /tmp/worker-11326-1323535/t.3/function_2f6a82ab-ebc7-40cd-88be-64fc04b0f88a.p
+2022/06/30 13:14:11.85 work_queue_worker[1323535] wq: linking cache/file-11-d786e5be8c3cadd535a738278334d0d2-args_2f6a82ab-ebc7-40cd-88be-64fc04b0f88a.p to /tmp/worker-11326-1323535/t.3/args_2f6a82ab-ebc7-40cd-88be-64fc04b0f88a.p
+2022/06/30 13:14:11.85 work_queue_worker[1323535] wq: started process 1323547: python pytask_wrapper.py function_2f6a82ab-ebc7-40cd-88be-64fc04b0f88a.p args_2f6a82ab-ebc7-40cd-88be-64fc04b0f88a.p out_2f6a82ab-ebc7-40cd-88be-64fc04b0f88a.p
+2022/06/30 13:14:11.85 work_queue_worker[1323535] wq: tx to manager: info tasks_running 1
+2022/06/30 13:14:12.05 work_queue_worker[1323539] tcp: disconnected from 129.74.152.177 port 9097
+2022/06/30 13:14:12.06 work_queue_worker[1323539] wq: project name test-dm-two-epoch matches 3 managers
+2022/06/30 13:14:12.06 work_queue_worker[1323539] wq: selected manager with project=test-dm-two-epoch addr=131.130.65.106 port=9123
+2022/06/30 13:14:12.06 work_queue_worker[1323539] dns: looking up name 131.130.65.106
+2022/06/30 13:14:12.06 work_queue_worker[1323539] dns: 131.130.65.106 is 131.130.65.106
+2022/06/30 13:14:12.06 work_queue_worker[1323539] tcp: connecting to 131.130.65.106 port 9123
+2022/06/30 13:14:12.06 work_queue_worker[1323539] tcp: made connection to 131.130.65.106 port 9123
+2022/06/30 13:14:12.06 work_queue_worker[1323539] wq: connected to manager 131.130.65.106:9123 via local address 131.130.65.106:36026
+2022/06/30 13:14:12.06 work_queue_worker[1323539] wq: authenticating to manager
+2022/06/30 13:14:12.06 work_queue_worker[1323539] auth: sending challenge data
+2022/06/30 13:14:12.06 work_queue_worker[1323539] auth: receiving peer's challenge data
+2022/06/30 13:14:12.06 work_queue_worker[1323539] auth: sending my response
+2022/06/30 13:14:12.06 work_queue_worker[1323539] auth: getting peer's response
+2022/06/30 13:14:12.06 work_queue_worker[1323539] auth: peer sent correct response
+2022/06/30 13:14:12.06 work_queue_worker[1323539] auth: peer accepted my response
+2022/06/30 13:14:12.06 work_queue_worker[1323539] wq: preparing workspace /tmp/worker-11326-1323539
+2022/06/30 13:14:12.06 work_queue_worker[1323539] dns: looking up name vlogin2.csb.univie.ac.at
+2022/06/30 13:14:12.06 work_queue_worker[1323539] dns: vlogin2.csb.univie.ac.at is 131.130.65.106
+2022/06/30 13:14:12.06 work_queue_worker[1323539] dns: looking up addr 131.130.65.106
+2022/06/30 13:14:12.06 work_queue_worker[1323539] dns: 131.130.65.106 is vlogin2.csb.univie.ac.at
+2022/06/30 13:14:12.07 work_queue_worker[1323539] dns: finding my hostname: uname = vlogin2.csb.univie.ac.at, address = 131.130.65.106, hostname = vlogin2.csb.univie.ac.at
+2022/06/30 13:14:12.07 work_queue_worker[1323539] wq: tx to manager: workqueue 9 vlogin2.csb.univie.ac.at Linux x86_64 7.4.3
+2022/06/30 13:14:12.07 work_queue_worker[1323539] wq: tx to manager: info worker-id worker-4b5fd11bf8b8a478d5b661e590af4398
+2022/06/30 13:14:12.07 work_queue_worker[1323539] wq: tx to manager: alive
+2022/06/30 13:14:12.07 work_queue_worker[1323539] wq: Sending resource description to manager:
+2022/06/30 13:14:12.07 work_queue_worker[1323539] wq:  workers      0 inuse      1 total      1 smallest      1 largest
+2022/06/30 13:14:12.07 work_queue_worker[1323539] wq:     disk      0 inuse 1876504 total 1876504 smallest 1876504 largest
+2022/06/30 13:14:12.07 work_queue_worker[1323539] wq:   memory      0 inuse 257915 total 257915 smallest 257915 largest
+2022/06/30 13:14:12.07 work_queue_worker[1323539] wq:     gpus      0 inuse      0 total      0 smallest      0 largest
+2022/06/30 13:14:12.07 work_queue_worker[1323539] wq:    cores      0 inuse      1 total      1 smallest      1 largest
+2022/06/30 13:14:12.07 work_queue_worker[1323539] wq: tx to manager: info end_of_resource_update 0
+2022/06/30 13:14:12.07 work_queue_worker[1323539] wq: tx to manager: info tasks_running 0
+2022/06/30 13:14:12.07 work_queue_worker[1323539] wq: tx to manager: info worker-end-time 0
+2022/06/30 13:14:12.07 work_queue_worker[1323539] wq: working for manager at 131.130.65.106:9123.
+2022/06/30 13:14:12.07 work_queue_worker[1323539] wq: rx from manager: put file-0-27dfea887a297b38d48cd31cac87d4d3-pytask_wrapper.py 363 0644
+2022/06/30 13:14:12.07 work_queue_worker[1323539] wq: rx from manager: put file-6-add84f49d1e49508f4f7355b96323d21-function_12b78635-e41f-47e2-be86-9c26767de6ba.p 47 0644
+2022/06/30 13:14:12.07 work_queue_worker[1323539] wq: rx from manager: put file-7-f600456a12bb41be6011c950b7007cc9-args_12b78635-e41f-47e2-be86-9c26767de6ba.p 655 0644
+2022/06/30 13:14:12.07 work_queue_worker[1323539] wq: rx from manager: task 2
+2022/06/30 13:14:12.07 work_queue_worker[1323539] wq: rx from manager: cmd 159
+2022/06/30 13:14:12.07 work_queue_worker[1323539] wq: rx from manager: python pytask_wrapper.py function_12b78635-e41f-47e2-be86-9c26767de6ba.p args_12b78635-e41f-47e2-be86-9c26767de6ba.p out_12b78635-e41f-47e2-be86-9c26767de6ba.p
+2022/06/30 13:14:12.07 work_queue_worker[1323539] wq: rx from manager: category default
+2022/06/30 13:14:12.07 work_queue_worker[1323539] wq: rx from manager: cores 1.000
+2022/06/30 13:14:12.07 work_queue_worker[1323539] wq: rx from manager: gpus 0
+2022/06/30 13:14:12.07 work_queue_worker[1323539] wq: rx from manager: memory 257915
+2022/06/30 13:14:12.07 work_queue_worker[1323539] wq: rx from manager: disk 1876504
+2022/06/30 13:14:12.08 work_queue_worker[1323539] wq: rx from manager: infile file-0-27dfea887a297b38d48cd31cac87d4d3-pytask_wrapper.py pytask_wrapper.py 1
+2022/06/30 13:14:12.08 work_queue_worker[1323539] wq: rx from manager: infile file-6-add84f49d1e49508f4f7355b96323d21-function_12b78635-e41f-47e2-be86-9c26767de6ba.p function_12b78635-e41f-47e2-be86-9c26767de6ba.p 0
+2022/06/30 13:14:12.08 work_queue_worker[1323539] wq: rx from manager: infile file-7-f600456a12bb41be6011c950b7007cc9-args_12b78635-e41f-47e2-be86-9c26767de6ba.p args_12b78635-e41f-47e2-be86-9c26767de6ba.p 0
+2022/06/30 13:14:12.08 work_queue_worker[1323539] wq: rx from manager: outfile file-8-b5e27ab1cdc53596bde6c3739cc8d9c0-out_12b78635-e41f-47e2-be86-9c26767de6ba.p out_12b78635-e41f-47e2-be86-9c26767de6ba.p 0
+2022/06/30 13:14:12.08 work_queue_worker[1323539] wq: rx from manager: end
+2022/06/30 13:14:12.08 work_queue_worker[1323539] wq: linking cache/file-0-27dfea887a297b38d48cd31cac87d4d3-pytask_wrapper.py to /tmp/worker-11326-1323539/t.2/pytask_wrapper.py
+2022/06/30 13:14:12.08 work_queue_worker[1323539] wq: linking cache/file-6-add84f49d1e49508f4f7355b96323d21-function_12b78635-e41f-47e2-be86-9c26767de6ba.p to /tmp/worker-11326-1323539/t.2/function_12b78635-e41f-47e2-be86-9c26767de6ba.p
+2022/06/30 13:14:12.08 work_queue_worker[1323539] wq: linking cache/file-7-f600456a12bb41be6011c950b7007cc9-args_12b78635-e41f-47e2-be86-9c26767de6ba.p to /tmp/worker-11326-1323539/t.2/args_12b78635-e41f-47e2-be86-9c26767de6ba.p
+2022/06/30 13:14:12.08 work_queue_worker[1323539] wq: started process 1323549: python pytask_wrapper.py function_12b78635-e41f-47e2-be86-9c26767de6ba.p args_12b78635-e41f-47e2-be86-9c26767de6ba.p out_12b78635-e41f-47e2-be86-9c26767de6ba.p
+2022/06/30 13:14:12.08 work_queue_worker[1323539] wq: tx to manager: info tasks_running 1
+2022/06/30 13:14:12.30 work_queue_worker[1323536] tcp: disconnected from 129.74.152.177 port 9097
+2022/06/30 13:14:12.31 work_queue_worker[1323536] wq: project name test-dm-two-epoch matches 3 managers
+2022/06/30 13:14:12.31 work_queue_worker[1323536] wq: selected manager with project=test-dm-two-epoch addr=20.124.197.82 port=9123
+2022/06/30 13:14:12.31 work_queue_worker[1323536] error: Did not find the manager address '20.124.197.82' in the list of interfaces.
+2022/06/30 13:14:12.31 work_queue_worker[1323536] dns: looking up name 10.1.0.113
+2022/06/30 13:14:12.31 work_queue_worker[1323536] dns: 10.1.0.113 is 10.1.0.113
+2022/06/30 13:14:12.32 work_queue_worker[1323536] tcp: connecting to 10.1.0.113 port 9123
+2022/06/30 13:14:14.73 work_queue_worker[1323535] wq: task 3 (pid 1323547) exited normally with exit code 0
+2022/06/30 13:14:14.73 work_queue_worker[1323535] wq: moving output file from /tmp/worker-11326-1323535/t.3/out_2f6a82ab-ebc7-40cd-88be-64fc04b0f88a.p to cache/file-12-04efe7f040c56cbde5aa20c9d4062535-out_2f6a82ab-ebc7-40cd-88be-64fc04b0f88a.p
+2022/06/30 13:14:14.73 work_queue_worker[1323535] wq: tx to manager: available_results
+2022/06/30 13:14:14.73 work_queue_worker[1323535] wq: rx from manager: send_results -1
+2022/06/30 13:14:14.73 work_queue_worker[1323535] wq: tx to manager: result 0 0 74 2878938 3
+2022/06/30 13:14:14.73 work_queue_worker[1323535] wq: tx to manager: info tasks_running 0
+2022/06/30 13:14:14.73 work_queue_worker[1323535] wq: tx to manager: end
+2022/06/30 13:14:14.73 work_queue_worker[1323535] wq: rx from manager: get file-12-04efe7f040c56cbde5aa20c9d4062535-out_2f6a82ab-ebc7-40cd-88be-64fc04b0f88a.p 1
+2022/06/30 13:14:14.73 work_queue_worker[1323535] wq: tx to manager: file file-12-04efe7f040c56cbde5aa20c9d4062535-out_2f6a82ab-ebc7-40cd-88be-64fc04b0f88a.p 279
+2022/06/30 13:14:14.73 work_queue_worker[1323535] wq: tx to manager: end
+2022/06/30 13:14:14.73 work_queue_worker[1323535] wq: rx from manager: kill 3
+2022/06/30 13:14:14.73 work_queue_worker[1323535] wq: trashing file ./worker.stdout.WqAiDL to /tmp/worker-11326-1323535/trash/mepyrai.1656587654739692
+2022/06/30 13:14:14.74 work_queue_worker[1323535] wq: trashing file /tmp/worker-11326-1323535/t.3 to /tmp/worker-11326-1323535/trash/kyovyql.1656587654740074
+2022/06/30 13:14:14.74 work_queue_worker[1323535] wq: rx from manager: unlink file-10-da5c47fc292c7ce170755b607b59649e-function_2f6a82ab-ebc7-40cd-88be-64fc04b0f88a.p
+2022/06/30 13:14:14.74 work_queue_worker[1323535] wq: rx from manager: unlink file-11-d786e5be8c3cadd535a738278334d0d2-args_2f6a82ab-ebc7-40cd-88be-64fc04b0f88a.p
+2022/06/30 13:14:14.74 work_queue_worker[1323535] wq: rx from manager: unlink file-12-04efe7f040c56cbde5aa20c9d4062535-out_2f6a82ab-ebc7-40cd-88be-64fc04b0f88a.p
+2022/06/30 13:14:14.74 work_queue_worker[1323535] wq: rx from manager: put file-0-df5d23a27664d993cf74c0b8ee00f78c-pytask_wrapper.py 363 0644
+2022/06/30 13:14:14.74 work_queue_worker[1323535] wq: rx from manager: put file-2-4cfbce3771339004703b7eef7303feef-function_06325a96-5831-4f02-94cb-02e508d2ccc7.p 47 0644
+2022/06/30 13:14:14.74 work_queue_worker[1323535] wq: rx from manager: put file-3-952558cf0cdc5e715c56f1ef75df53a3-args_06325a96-5831-4f02-94cb-02e508d2ccc7.p 655 0644
+2022/06/30 13:14:14.74 work_queue_worker[1323535] wq: rx from manager: task 1
+2022/06/30 13:14:14.74 work_queue_worker[1323535] wq: rx from manager: cmd 159
+2022/06/30 13:14:14.74 work_queue_worker[1323535] wq: rx from manager: python pytask_wrapper.py function_06325a96-5831-4f02-94cb-02e508d2ccc7.p args_06325a96-5831-4f02-94cb-02e508d2ccc7.p out_06325a96-5831-4f02-94cb-02e508d2ccc7.p
+2022/06/30 13:14:14.74 work_queue_worker[1323535] wq: rx from manager: category default
+2022/06/30 13:14:14.74 work_queue_worker[1323535] wq: rx from manager: cores 1.000
+2022/06/30 13:14:14.74 work_queue_worker[1323535] wq: rx from manager: gpus 0
+2022/06/30 13:14:14.74 work_queue_worker[1323535] wq: rx from manager: memory 257915
+2022/06/30 13:14:14.74 work_queue_worker[1323535] wq: rx from manager: disk 1876504
+2022/06/30 13:14:14.74 work_queue_worker[1323535] wq: rx from manager: infile file-0-df5d23a27664d993cf74c0b8ee00f78c-pytask_wrapper.py pytask_wrapper.py 1
+2022/06/30 13:14:14.74 work_queue_worker[1323535] wq: rx from manager: infile file-2-4cfbce3771339004703b7eef7303feef-function_06325a96-5831-4f02-94cb-02e508d2ccc7.p function_06325a96-5831-4f02-94cb-02e508d2ccc7.p 0
+2022/06/30 13:14:14.74 work_queue_worker[1323535] wq: rx from manager: infile file-3-952558cf0cdc5e715c56f1ef75df53a3-args_06325a96-5831-4f02-94cb-02e508d2ccc7.p args_06325a96-5831-4f02-94cb-02e508d2ccc7.p 0
+2022/06/30 13:14:14.74 work_queue_worker[1323535] wq: rx from manager: outfile file-4-32c1eba706a711e3000903323c93bb53-out_06325a96-5831-4f02-94cb-02e508d2ccc7.p out_06325a96-5831-4f02-94cb-02e508d2ccc7.p 0
+2022/06/30 13:14:14.74 work_queue_worker[1323535] wq: rx from manager: end
+2022/06/30 13:14:14.74 work_queue_worker[1323535] wq: linking cache/file-0-df5d23a27664d993cf74c0b8ee00f78c-pytask_wrapper.py to /tmp/worker-11326-1323535/t.1/pytask_wrapper.py
+2022/06/30 13:14:14.74 work_queue_worker[1323535] wq: linking cache/file-2-4cfbce3771339004703b7eef7303feef-function_06325a96-5831-4f02-94cb-02e508d2ccc7.p to /tmp/worker-11326-1323535/t.1/function_06325a96-5831-4f02-94cb-02e508d2ccc7.p
+2022/06/30 13:14:14.74 work_queue_worker[1323535] wq: linking cache/file-3-952558cf0cdc5e715c56f1ef75df53a3-args_06325a96-5831-4f02-94cb-02e508d2ccc7.p to /tmp/worker-11326-1323535/t.1/args_06325a96-5831-4f02-94cb-02e508d2ccc7.p
+2022/06/30 13:14:14.74 work_queue_worker[1323535] wq: started process 1323553: python pytask_wrapper.py function_06325a96-5831-4f02-94cb-02e508d2ccc7.p args_06325a96-5831-4f02-94cb-02e508d2ccc7.p out_06325a96-5831-4f02-94cb-02e508d2ccc7.p
+2022/06/30 13:14:14.74 work_queue_worker[1323535] wq: tx to manager: info tasks_running 1
+2022/06/30 13:14:14.85 work_queue_worker[1323539] wq: task 2 (pid 1323549) exited normally with exit code 0
+2022/06/30 13:14:14.85 work_queue_worker[1323539] wq: moving output file from /tmp/worker-11326-1323539/t.2/out_12b78635-e41f-47e2-be86-9c26767de6ba.p to cache/file-8-b5e27ab1cdc53596bde6c3739cc8d9c0-out_12b78635-e41f-47e2-be86-9c26767de6ba.p
+2022/06/30 13:14:14.85 work_queue_worker[1323539] wq: tx to manager: available_results
+2022/06/30 13:14:14.85 work_queue_worker[1323539] wq: rx from manager: send_results -1
+2022/06/30 13:14:14.85 work_queue_worker[1323539] wq: tx to manager: result 0 0 73 2768031 2
+2022/06/30 13:14:14.85 work_queue_worker[1323539] wq: tx to manager: info tasks_running 0
+2022/06/30 13:14:14.85 work_queue_worker[1323539] wq: tx to manager: end
+2022/06/30 13:14:14.85 work_queue_worker[1323539] wq: rx from manager: get file-8-b5e27ab1cdc53596bde6c3739cc8d9c0-out_12b78635-e41f-47e2-be86-9c26767de6ba.p 1
+2022/06/30 13:14:14.85 work_queue_worker[1323539] wq: tx to manager: file file-8-b5e27ab1cdc53596bde6c3739cc8d9c0-out_12b78635-e41f-47e2-be86-9c26767de6ba.p 279
+2022/06/30 13:14:14.85 work_queue_worker[1323539] wq: tx to manager: end
+2022/06/30 13:14:14.85 work_queue_worker[1323539] wq: rx from manager: kill 2
+2022/06/30 13:14:14.85 work_queue_worker[1323539] wq: trashing file ./worker.stdout.MNmhDN to /tmp/worker-11326-1323539/trash/kxklyyu.1656587654855691
+2022/06/30 13:14:14.85 work_queue_worker[1323539] wq: trashing file /tmp/worker-11326-1323539/t.2 to /tmp/worker-11326-1323539/trash/gzzzrpz.1656587654856126
+2022/06/30 13:14:14.85 work_queue_worker[1323539] wq: rx from manager: unlink file-6-add84f49d1e49508f4f7355b96323d21-function_12b78635-e41f-47e2-be86-9c26767de6ba.p
+2022/06/30 13:14:14.85 work_queue_worker[1323539] wq: rx from manager: unlink file-7-f600456a12bb41be6011c950b7007cc9-args_12b78635-e41f-47e2-be86-9c26767de6ba.p
+2022/06/30 13:14:14.85 work_queue_worker[1323539] wq: rx from manager: unlink file-8-b5e27ab1cdc53596bde6c3739cc8d9c0-out_12b78635-e41f-47e2-be86-9c26767de6ba.p
+2022/06/30 13:14:14.92 work_queue_worker[1323537] tcp: connection to 10.1.0.113 port 9123 failed (No route to host)
+2022/06/30 13:14:14.93 work_queue_worker[1323537] tcp: disconnected from 10.1.0.113 port 9123
+2022/06/30 13:14:14.92 work_queue_worker[1323536] tcp: connection to 10.1.0.113 port 9123 failed (No route to host)
+2022/06/30 13:14:14.92 work_queue_worker[1323538] tcp: connection to 10.1.0.113 port 9123 failed (No route to host)
+2022/06/30 13:14:14.93 work_queue_worker[1323537] dns: looking up name 172.17.0.1
+2022/06/30 13:14:14.93 work_queue_worker[1323536] tcp: disconnected from 10.1.0.113 port 9123
+2022/06/30 13:14:14.93 work_queue_worker[1323538] tcp: disconnected from 10.1.0.113 port 9123
+2022/06/30 13:14:14.93 work_queue_worker[1323537] dns: 172.17.0.1 is 172.17.0.1
+2022/06/30 13:14:14.93 work_queue_worker[1323536] dns: looking up name 172.17.0.1
+2022/06/30 13:14:14.93 work_queue_worker[1323538] dns: looking up name 172.17.0.1
+2022/06/30 13:14:14.93 work_queue_worker[1323537] tcp: connecting to 172.17.0.1 port 9123
+2022/06/30 13:14:14.93 work_queue_worker[1323536] dns: 172.17.0.1 is 172.17.0.1
+2022/06/30 13:14:14.93 work_queue_worker[1323538] dns: 172.17.0.1 is 172.17.0.1
+2022/06/30 13:14:14.93 work_queue_worker[1323536] tcp: connecting to 172.17.0.1 port 9123
+2022/06/30 13:14:14.93 work_queue_worker[1323538] tcp: connecting to 172.17.0.1 port 9123
+2022/06/30 13:14:17.62 work_queue_worker[1323535] wq: task 1 (pid 1323553) exited normally with exit code 0
+2022/06/30 13:14:17.62 work_queue_worker[1323535] wq: moving output file from /tmp/worker-11326-1323535/t.1/out_06325a96-5831-4f02-94cb-02e508d2ccc7.p to cache/file-4-32c1eba706a711e3000903323c93bb53-out_06325a96-5831-4f02-94cb-02e508d2ccc7.p
+2022/06/30 13:14:17.62 work_queue_worker[1323535] wq: tx to manager: available_results
+2022/06/30 13:14:17.62 work_queue_worker[1323535] wq: rx from manager: send_results -1
+2022/06/30 13:14:17.62 work_queue_worker[1323535] wq: tx to manager: result 0 0 73 2873602 1
+2022/06/30 13:14:17.62 work_queue_worker[1323535] wq: tx to manager: info tasks_running 0
+2022/06/30 13:14:17.62 work_queue_worker[1323535] wq: tx to manager: end
+2022/06/30 13:14:17.62 work_queue_worker[1323535] wq: rx from manager: get file-4-32c1eba706a711e3000903323c93bb53-out_06325a96-5831-4f02-94cb-02e508d2ccc7.p 1
+2022/06/30 13:14:17.62 work_queue_worker[1323535] wq: tx to manager: file file-4-32c1eba706a711e3000903323c93bb53-out_06325a96-5831-4f02-94cb-02e508d2ccc7.p 279
+2022/06/30 13:14:17.62 work_queue_worker[1323535] wq: tx to manager: end
+2022/06/30 13:14:17.62 work_queue_worker[1323535] wq: rx from manager: kill 1
+2022/06/30 13:14:17.62 work_queue_worker[1323535] wq: trashing file ./worker.stdout.tEhRq9 to /tmp/worker-11326-1323535/trash/ucugikf.1656587657626975
+2022/06/30 13:14:17.62 work_queue_worker[1323535] wq: trashing file /tmp/worker-11326-1323535/t.1 to /tmp/worker-11326-1323535/trash/zuyqrrx.1656587657627426
+2022/06/30 13:14:17.62 work_queue_worker[1323535] wq: rx from manager: unlink file-2-4cfbce3771339004703b7eef7303feef-function_06325a96-5831-4f02-94cb-02e508d2ccc7.p
+2022/06/30 13:14:17.62 work_queue_worker[1323539] wq: rx from manager: release
+2022/06/30 13:14:17.62 work_queue_worker[1323535] wq: rx from manager: unlink file-3-952558cf0cdc5e715c56f1ef75df53a3-args_06325a96-5831-4f02-94cb-02e508d2ccc7.p
+2022/06/30 13:14:17.62 work_queue_worker[1323539] wq: released by manager 131.130.65.106:9123.
+2022/06/30 13:14:17.62 work_queue_worker[1323535] wq: rx from manager: unlink file-4-32c1eba706a711e3000903323c93bb53-out_06325a96-5831-4f02-94cb-02e508d2ccc7.p
+2022/06/30 13:14:17.62 work_queue_worker[1323539] wq: disconnecting from manager 131.130.65.106:9123
+2022/06/30 13:14:17.63 work_queue_worker[1323535] wq: rx from manager: release
+2022/06/30 13:14:17.63 work_queue_worker[1323539] tcp: disconnected from 131.130.65.106 port 9123
+2022/06/30 13:14:17.63 work_queue_worker[1323535] wq: released by manager 131.130.65.106:9123.
+2022/06/30 13:14:17.63 work_queue_worker[1323539] wq: killing all outstanding tasks
+2022/06/30 13:14:17.63 work_queue_worker[1323535] wq: disconnecting from manager 131.130.65.106:9123
+2022/06/30 13:14:17.63 work_queue_worker[1323539] wq: all data structures are clean
+2022/06/30 13:14:17.63 work_queue_worker[1323535] tcp: disconnected from 131.130.65.106 port 9123
+2022/06/30 13:14:17.63 work_queue_worker[1323539] wq: cleaning workspace /tmp/worker-11326-1323539
+2022/06/30 13:14:17.63 work_queue_worker[1323535] wq: killing all outstanding tasks
+2022/06/30 13:14:17.63 work_queue_worker[1323539] wq: trashing file cache to /tmp/worker-11326-1323539/trash/xtegmcd.1656587657634513
+2022/06/30 13:14:17.63 work_queue_worker[1323535] wq: all data structures are clean
+2022/06/30 13:14:17.63 work_queue_worker[1323535] wq: cleaning workspace /tmp/worker-11326-1323535
+2022/06/30 13:14:17.63 work_queue_worker[1323535] wq: trashing file cache to /tmp/worker-11326-1323535/trash/zuametz.1656587657636708
+2022/06/30 13:14:18.63 work_queue_worker[1323539] wq: project name test-dm-two-epoch matches 3 managers
+2022/06/30 13:14:18.63 work_queue_worker[1323539] wq: selected manager with project=test-dm-two-epoch addr=20.245.202.192 port=9123
+2022/06/30 13:14:18.63 work_queue_worker[1323539] error: Did not find the manager address '20.245.202.192' in the list of interfaces.
+2022/06/30 13:14:18.63 work_queue_worker[1323535] wq: project name test-dm-two-epoch matches 3 managers
+2022/06/30 13:14:18.63 work_queue_worker[1323539] dns: looking up name 10.1.1.6
+2022/06/30 13:14:18.63 work_queue_worker[1323535] wq: selected manager with project=test-dm-two-epoch addr=20.245.202.192 port=9123
+2022/06/30 13:14:18.63 work_queue_worker[1323539] dns: 10.1.1.6 is 10.1.1.6
+2022/06/30 13:14:18.63 work_queue_worker[1323535] error: Did not find the manager address '20.245.202.192' in the list of interfaces.
+2022/06/30 13:14:18.63 work_queue_worker[1323539] tcp: connecting to 10.1.1.6 port 9123
+2022/06/30 13:14:18.64 work_queue_worker[1323535] dns: looking up name 10.1.1.6
+2022/06/30 13:14:18.64 work_queue_worker[1323539] tcp: connection to 10.1.1.6 port 9123 failed (Connection refused)
+2022/06/30 13:14:18.64 work_queue_worker[1323535] dns: 10.1.1.6 is 10.1.1.6
+2022/06/30 13:14:18.64 work_queue_worker[1323539] tcp: disconnected from 10.1.1.6 port 9123
+2022/06/30 13:14:18.64 work_queue_worker[1323535] tcp: connecting to 10.1.1.6 port 9123
+2022/06/30 13:14:18.64 work_queue_worker[1323539] dns: looking up name 172.17.0.1
+2022/06/30 13:14:18.64 work_queue_worker[1323535] tcp: connection to 10.1.1.6 port 9123 failed (Connection refused)
+2022/06/30 13:14:18.64 work_queue_worker[1323539] dns: 172.17.0.1 is 172.17.0.1
+2022/06/30 13:14:18.64 work_queue_worker[1323535] tcp: disconnected from 10.1.1.6 port 9123
+2022/06/30 13:14:18.64 work_queue_worker[1323539] tcp: connecting to 172.17.0.1 port 9123
+2022/06/30 13:14:18.64 work_queue_worker[1323535] dns: looking up name 172.17.0.1
+2022/06/30 13:14:18.64 work_queue_worker[1323535] dns: 172.17.0.1 is 172.17.0.1
+2022/06/30 13:14:18.64 work_queue_worker[1323535] tcp: connecting to 172.17.0.1 port 9123
+2022/06/30 13:14:21.84 work_queue_worker[1323540] tcp: connection to 172.17.0.1 port 9123 failed (Connection timed out)
+2022/06/30 13:14:21.84 work_queue_worker[1323540] tcp: disconnected from 172.17.0.1 port 9123
+2022/06/30 13:14:21.84 work_queue_worker[1323540] dns: looking up name 20.245.202.192
+2022/06/30 13:14:21.84 work_queue_worker[1323540] dns: 20.245.202.192 is 20.245.202.192
+2022/06/30 13:14:21.84 work_queue_worker[1323540] tcp: connecting to 20.245.202.192 port 9123
+2022/06/30 13:14:24.94 work_queue_worker[1323537] tcp: connection to 172.17.0.1 port 9123 failed (Connection timed out)
+2022/06/30 13:14:24.94 work_queue_worker[1323537] tcp: disconnected from 172.17.0.1 port 9123
+2022/06/30 13:14:24.94 work_queue_worker[1323537] dns: looking up name 20.124.197.82
+2022/06/30 13:14:24.94 work_queue_worker[1323536] tcp: connection to 172.17.0.1 port 9123 failed (Connection timed out)
+2022/06/30 13:14:24.94 work_queue_worker[1323537] dns: 20.124.197.82 is 20.124.197.82
+2022/06/30 13:14:24.94 work_queue_worker[1323538] tcp: connection to 172.17.0.1 port 9123 failed (Connection timed out)
+2022/06/30 13:14:24.94 work_queue_worker[1323536] tcp: disconnected from 172.17.0.1 port 9123
+2022/06/30 13:14:24.94 work_queue_worker[1323537] tcp: connecting to 20.124.197.82 port 9123
+2022/06/30 13:14:24.94 work_queue_worker[1323538] tcp: disconnected from 172.17.0.1 port 9123
+2022/06/30 13:14:24.94 work_queue_worker[1323536] dns: looking up name 20.124.197.82
+2022/06/30 13:14:24.94 work_queue_worker[1323538] dns: looking up name 20.124.197.82
+2022/06/30 13:14:24.94 work_queue_worker[1323536] dns: 20.124.197.82 is 20.124.197.82
+2022/06/30 13:14:24.94 work_queue_worker[1323538] dns: 20.124.197.82 is 20.124.197.82
+2022/06/30 13:14:24.94 work_queue_worker[1323536] tcp: connecting to 20.124.197.82 port 9123
+2022/06/30 13:14:24.94 work_queue_worker[1323538] tcp: connecting to 20.124.197.82 port 9123
+2022/06/30 13:14:28.65 work_queue_worker[1323539] tcp: connection to 172.17.0.1 port 9123 failed (Connection timed out)
+2022/06/30 13:14:28.65 work_queue_worker[1323539] tcp: disconnected from 172.17.0.1 port 9123
+2022/06/30 13:14:28.65 work_queue_worker[1323535] tcp: connection to 172.17.0.1 port 9123 failed (Connection timed out)
+2022/06/30 13:14:28.65 work_queue_worker[1323539] dns: looking up name 20.245.202.192
+2022/06/30 13:14:28.65 work_queue_worker[1323535] tcp: disconnected from 172.17.0.1 port 9123
+2022/06/30 13:14:28.65 work_queue_worker[1323539] dns: 20.245.202.192 is 20.245.202.192
+2022/06/30 13:14:28.65 work_queue_worker[1323535] dns: looking up name 20.245.202.192
+2022/06/30 13:14:28.65 work_queue_worker[1323539] tcp: connecting to 20.245.202.192 port 9123
+2022/06/30 13:14:28.65 work_queue_worker[1323535] dns: 20.245.202.192 is 20.245.202.192
+2022/06/30 13:14:28.66 work_queue_worker[1323535] tcp: connecting to 20.245.202.192 port 9123
+2022/06/30 13:14:31.85 work_queue_worker[1323540] tcp: connection to 20.245.202.192 port 9123 failed (Connection timed out)
+2022/06/30 13:14:31.85 work_queue_worker[1323540] tcp: disconnected from 20.245.202.192 port 9123
+2022/06/30 13:14:31.85 work_queue_worker[1323540] notice: stopping: could not connect after 10 seconds.
+2022/06/30 13:14:34.95 work_queue_worker[1323537] tcp: connection to 20.124.197.82 port 9123 failed (Connection timed out)
+2022/06/30 13:14:34.95 work_queue_worker[1323537] tcp: disconnected from 20.124.197.82 port 9123
+2022/06/30 13:14:34.95 work_queue_worker[1323537] notice: stopping: could not connect after 10 seconds.
+2022/06/30 13:14:34.95 work_queue_worker[1323536] tcp: connection to 20.124.197.82 port 9123 failed (Connection timed out)
+2022/06/30 13:14:34.96 work_queue_worker[1323538] tcp: connection to 20.124.197.82 port 9123 failed (Connection timed out)
+2022/06/30 13:14:34.96 work_queue_worker[1323536] tcp: disconnected from 20.124.197.82 port 9123
+2022/06/30 13:14:34.96 work_queue_worker[1323538] tcp: disconnected from 20.124.197.82 port 9123
+2022/06/30 13:14:34.96 work_queue_worker[1323536] notice: stopping: could not connect after 10 seconds.
+2022/06/30 13:14:34.96 work_queue_worker[1323538] notice: stopping: could not connect after 10 seconds.
+2022/06/30 13:14:38.67 work_queue_worker[1323539] tcp: connection to 20.245.202.192 port 9123 failed (Connection timed out)
+2022/06/30 13:14:38.67 work_queue_worker[1323535] tcp: connection to 20.245.202.192 port 9123 failed (Connection timed out)
+2022/06/30 13:14:38.67 work_queue_worker[1323539] tcp: disconnected from 20.245.202.192 port 9123
+2022/06/30 13:14:38.67 work_queue_worker[1323535] tcp: disconnected from 20.245.202.192 port 9123
+2022/06/30 13:14:38.67 work_queue_worker[1323539] notice: stopping: could not connect after 10 seconds.
+2022/06/30 13:14:38.67 work_queue_worker[1323535] notice: stopping: could not connect after 10 seconds.
+2022/06/30 13:24:39.00 work_queue_worker[1324268] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/06/30 13:24:39.01 work_queue_worker[1324266] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/06/30 13:24:39.01 work_queue_worker[1324266] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/06/30 13:24:39.01 work_queue_worker[1324268] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/06/30 13:24:39.01 work_queue_worker[1324268] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/06/30 13:24:39.01 work_queue_worker[1324269] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/06/30 13:24:39.01 work_queue_worker[1324271] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/06/30 13:24:39.01 work_queue_worker[1324266] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/06/30 13:24:39.01 work_queue_worker[1324270] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/06/30 13:24:39.01 work_queue_worker[1324268] debug: Configuration: --debug --prefix /home/user2/huangxin/dadi-cli --with-base-dir /home/user2/huangxin/dadi-cli --with-python3-path /home/user2/huangxin/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/06/30 13:24:39.01 work_queue_worker[1324267] debug: ./work_queue_worker version 7.4.3 FINAL (released 2022-02-03 16:26:52 +0000)
+2022/06/30 13:24:39.02 work_queue_worker[1324267] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/06/30 13:24:39.01 work_queue_worker[1324269] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/06/30 13:24:39.01 work_queue_worker[1324271] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/06/30 13:24:39.02 work_queue_worker[1324266] debug: Configuration: --debug --prefix /home/user2/huangxin/dadi-cli --with-base-dir /home/user2/huangxin/dadi-cli --with-python3-path /home/user2/huangxin/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/06/30 13:24:39.02 work_queue_worker[1324270] debug: Built by conda@0206ac6f97f6 on 2022-02-03 16:26:52 +0000
+2022/06/30 13:24:39.02 work_queue_worker[1324267] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/06/30 13:24:39.02 work_queue_worker[1324267] debug: Configuration: --debug --prefix /home/user2/huangxin/dadi-cli --with-base-dir /home/user2/huangxin/dadi-cli --with-python3-path /home/user2/huangxin/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/06/30 13:24:39.02 work_queue_worker[1324269] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/06/30 13:24:39.02 work_queue_worker[1324271] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/06/30 13:24:39.02 work_queue_worker[1324270] debug: System: Linux 0206ac6f97f6 5.11.0-1028-azure #31~20.04.2-Ubuntu SMP Tue Jan 18 08:46:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+2022/06/30 13:24:39.02 work_queue_worker[1324270] debug: Configuration: --debug --prefix /home/user2/huangxin/dadi-cli --with-base-dir /home/user2/huangxin/dadi-cli --with-python3-path /home/user2/huangxin/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/06/30 13:24:39.02 work_queue_worker[1324269] debug: Configuration: --debug --prefix /home/user2/huangxin/dadi-cli --with-base-dir /home/user2/huangxin/dadi-cli --with-python3-path /home/user2/huangxin/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/06/30 13:24:39.02 work_queue_worker[1324271] debug: Configuration: --debug --prefix /home/user2/huangxin/dadi-cli --with-base-dir /home/user2/huangxin/dadi-cli --with-python3-path /home/user2/huangxin/dadi-cli --with-perl-path no --with-readline-path no --with-fuse-path no --without-system-parrot --without-system-prune --without-system-umbrella --without-system-weaver
+2022/06/30 13:24:39.03 work_queue_worker[1324268] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-1324268.
+2022/06/30 13:24:39.03 work_queue_worker[1324268] debug: error reading disk usage on directory: ./cache.
+2022/06/30 13:24:39.04 work_queue_worker[1324268] wq: querying catalog for managers with project=test-dm-two-epoch
+2022/06/30 13:24:39.04 work_queue_worker[1324268] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/06/30 13:24:39.04 work_queue_worker[1324268] http: connect catalog.cse.nd.edu port 9097
+2022/06/30 13:24:39.04 work_queue_worker[1324268] dns: looking up name catalog.cse.nd.edu
+2022/06/30 13:24:39.04 work_queue_worker[1324267] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-1324267.
+2022/06/30 13:24:39.04 work_queue_worker[1324266] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-1324266.
+2022/06/30 13:24:39.04 work_queue_worker[1324267] debug: error reading disk usage on directory: ./cache.
+2022/06/30 13:24:39.04 work_queue_worker[1324266] debug: error reading disk usage on directory: ./cache.
+2022/06/30 13:24:39.04 work_queue_worker[1324267] wq: querying catalog for managers with project=test-dm-two-epoch
+2022/06/30 13:24:39.04 work_queue_worker[1324266] wq: querying catalog for managers with project=test-dm-two-epoch
+2022/06/30 13:24:39.04 work_queue_worker[1324267] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/06/30 13:24:39.04 work_queue_worker[1324266] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/06/30 13:24:39.04 work_queue_worker[1324267] http: connect catalog.cse.nd.edu port 9097
+2022/06/30 13:24:39.04 work_queue_worker[1324268] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/06/30 13:24:39.04 work_queue_worker[1324266] http: connect catalog.cse.nd.edu port 9097
+2022/06/30 13:24:39.04 work_queue_worker[1324270] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-1324270.
+2022/06/30 13:24:39.04 work_queue_worker[1324271] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-1324271.
+2022/06/30 13:24:39.04 work_queue_worker[1324267] dns: looking up name catalog.cse.nd.edu
+2022/06/30 13:24:39.04 work_queue_worker[1324268] tcp: connecting to 129.74.152.177 port 9097
+2022/06/30 13:24:39.05 work_queue_worker[1324266] dns: looking up name catalog.cse.nd.edu
+2022/06/30 13:24:39.05 work_queue_worker[1324270] debug: error reading disk usage on directory: ./cache.
+2022/06/30 13:24:39.05 work_queue_worker[1324270] wq: querying catalog for managers with project=test-dm-two-epoch
+2022/06/30 13:24:39.05 work_queue_worker[1324271] debug: error reading disk usage on directory: ./cache.
+2022/06/30 13:24:39.05 work_queue_worker[1324270] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/06/30 13:24:39.05 work_queue_worker[1324269] wq: WORK_QUEUE_SANDBOX set to /tmp/worker-11326-1324269.
+2022/06/30 13:24:39.05 work_queue_worker[1324271] wq: querying catalog for managers with project=test-dm-two-epoch
+2022/06/30 13:24:39.05 work_queue_worker[1324270] http: connect catalog.cse.nd.edu port 9097
+2022/06/30 13:24:39.05 work_queue_worker[1324267] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/06/30 13:24:39.05 work_queue_worker[1324266] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/06/30 13:24:39.05 work_queue_worker[1324269] debug: error reading disk usage on directory: ./cache.
+2022/06/30 13:24:39.05 work_queue_worker[1324271] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/06/30 13:24:39.05 work_queue_worker[1324270] dns: looking up name catalog.cse.nd.edu
+2022/06/30 13:24:39.05 work_queue_worker[1324267] tcp: connecting to 129.74.152.177 port 9097
+2022/06/30 13:24:39.05 work_queue_worker[1324266] tcp: connecting to 129.74.152.177 port 9097
+2022/06/30 13:24:39.05 work_queue_worker[1324269] wq: querying catalog for managers with project=test-dm-two-epoch
+2022/06/30 13:24:39.05 work_queue_worker[1324271] http: connect catalog.cse.nd.edu port 9097
+2022/06/30 13:24:39.06 work_queue_worker[1324269] debug: trying catalog query: http://catalog.cse.nd.edu:9097/query/dHJ1ZQ==
+2022/06/30 13:24:39.06 work_queue_worker[1324271] dns: looking up name catalog.cse.nd.edu
+2022/06/30 13:24:39.06 work_queue_worker[1324269] http: connect catalog.cse.nd.edu port 9097
+2022/06/30 13:24:39.06 work_queue_worker[1324269] dns: looking up name catalog.cse.nd.edu
+2022/06/30 13:24:39.06 work_queue_worker[1324270] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/06/30 13:24:39.06 work_queue_worker[1324270] tcp: connecting to 129.74.152.177 port 9097
+2022/06/30 13:24:39.06 work_queue_worker[1324269] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/06/30 13:24:39.06 work_queue_worker[1324271] dns: catalog.cse.nd.edu is 129.74.152.177
+2022/06/30 13:24:39.06 work_queue_worker[1324269] tcp: connecting to 129.74.152.177 port 9097
+2022/06/30 13:24:39.06 work_queue_worker[1324271] tcp: connecting to 129.74.152.177 port 9097
+2022/06/30 13:24:39.18 work_queue_worker[1324268] tcp: made connection to 129.74.152.177 port 9097
+2022/06/30 13:24:39.18 work_queue_worker[1324268] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/06/30 13:24:39.18 work_queue_worker[1324267] tcp: made connection to 129.74.152.177 port 9097
+2022/06/30 13:24:39.18 work_queue_worker[1324266] tcp: made connection to 129.74.152.177 port 9097
+2022/06/30 13:24:39.18 work_queue_worker[1324267] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/06/30 13:24:39.18 work_queue_worker[1324266] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/06/30 13:24:39.19 work_queue_worker[1324270] tcp: made connection to 129.74.152.177 port 9097
+2022/06/30 13:24:39.19 work_queue_worker[1324270] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/06/30 13:24:39.19 work_queue_worker[1324269] tcp: made connection to 129.74.152.177 port 9097
+2022/06/30 13:24:39.19 work_queue_worker[1324271] tcp: made connection to 129.74.152.177 port 9097
+2022/06/30 13:24:39.19 work_queue_worker[1324271] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/06/30 13:24:39.19 work_queue_worker[1324269] http: GET /query/dHJ1ZQ== HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 7.4.3 FINAL Parrot; http://ccl.cse.nd.edu/)
+2022/06/30 13:24:39.31 work_queue_worker[1324268] http: HTTP/1.1 200 OK
+2022/06/30 13:24:39.31 work_queue_worker[1324268] http: Date: Thu Jun 30 07:24:39 2022
+2022/06/30 13:24:39.31 work_queue_worker[1324268] http: Server: catalog_server
+2022/06/30 13:24:39.31 work_queue_worker[1324268] http: Connection: close
+2022/06/30 13:24:39.31 work_queue_worker[1324268] http: Access-Control-Allow-Origin: *
+2022/06/30 13:24:39.31 work_queue_worker[1324268] http: Content-type: text/plain
+2022/06/30 13:24:39.31 work_queue_worker[1324268] http:
+2022/06/30 13:24:39.32 work_queue_worker[1324267] http: HTTP/1.1 200 OK
+2022/06/30 13:24:39.32 work_queue_worker[1324266] http: HTTP/1.1 200 OK
+2022/06/30 13:24:39.32 work_queue_worker[1324267] http: Date: Thu Jun 30 07:24:39 2022
+2022/06/30 13:24:39.32 work_queue_worker[1324266] http: Date: Thu Jun 30 07:24:39 2022
+2022/06/30 13:24:39.32 work_queue_worker[1324267] http: Server: catalog_server
+2022/06/30 13:24:39.32 work_queue_worker[1324266] http: Server: catalog_server
+2022/06/30 13:24:39.32 work_queue_worker[1324267] http: Connection: close
+2022/06/30 13:24:39.32 work_queue_worker[1324266] http: Connection: close
+2022/06/30 13:24:39.32 work_queue_worker[1324267] http: Access-Control-Allow-Origin: *
+2022/06/30 13:24:39.32 work_queue_worker[1324266] http: Access-Control-Allow-Origin: *
+2022/06/30 13:24:39.32 work_queue_worker[1324267] http: Content-type: text/plain
+2022/06/30 13:24:39.32 work_queue_worker[1324266] http: Content-type: text/plain
+2022/06/30 13:24:39.32 work_queue_worker[1324270] http: HTTP/1.1 200 OK
+2022/06/30 13:24:39.32 work_queue_worker[1324267] http:
+2022/06/30 13:24:39.32 work_queue_worker[1324266] http:
+2022/06/30 13:24:39.32 work_queue_worker[1324270] http: Date: Thu Jun 30 07:24:39 2022
+2022/06/30 13:24:39.33 work_queue_worker[1324270] http: Server: catalog_server
+2022/06/30 13:24:39.33 work_queue_worker[1324270] http: Connection: close
+2022/06/30 13:24:39.33 work_queue_worker[1324271] http: HTTP/1.1 200 OK
+2022/06/30 13:24:39.33 work_queue_worker[1324270] http: Access-Control-Allow-Origin: *
+2022/06/30 13:24:39.33 work_queue_worker[1324271] http: Date: Thu Jun 30 07:24:39 2022
+2022/06/30 13:24:39.33 work_queue_worker[1324271] http: Server: catalog_server
+2022/06/30 13:24:39.33 work_queue_worker[1324269] http: HTTP/1.1 200 OK
+2022/06/30 13:24:39.33 work_queue_worker[1324270] http: Content-type: text/plain
+2022/06/30 13:24:39.33 work_queue_worker[1324271] http: Connection: close
+2022/06/30 13:24:39.33 work_queue_worker[1324271] http: Access-Control-Allow-Origin: *
+2022/06/30 13:24:39.33 work_queue_worker[1324269] http: Date: Thu Jun 30 07:24:39 2022
+2022/06/30 13:24:39.33 work_queue_worker[1324270] http:
+2022/06/30 13:24:39.33 work_queue_worker[1324271] http: Content-type: text/plain
+2022/06/30 13:24:39.33 work_queue_worker[1324271] http:
+2022/06/30 13:24:39.33 work_queue_worker[1324269] http: Server: catalog_server
+2022/06/30 13:24:39.34 work_queue_worker[1324269] http: Connection: close
+2022/06/30 13:24:39.34 work_queue_worker[1324269] http: Access-Control-Allow-Origin: *
+2022/06/30 13:24:39.34 work_queue_worker[1324269] http: Content-type: text/plain
+2022/06/30 13:24:39.34 work_queue_worker[1324269] http:
+2022/06/30 13:24:39.84 work_queue_worker[1324268] tcp: disconnected from 129.74.152.177 port 9097
+2022/06/30 13:24:39.84 work_queue_worker[1324266] tcp: disconnected from 129.74.152.177 port 9097
+2022/06/30 13:24:39.84 work_queue_worker[1324268] wq: project name test-dm-two-epoch matches 3 managers
+2022/06/30 13:24:39.85 work_queue_worker[1324268] wq: selected manager with project=test-dm-two-epoch addr=20.245.202.192 port=9123
+2022/06/30 13:24:39.85 work_queue_worker[1324267] tcp: disconnected from 129.74.152.177 port 9097
+2022/06/30 13:24:39.85 work_queue_worker[1324268] error: Did not find the manager address '20.245.202.192' in the list of interfaces.
+2022/06/30 13:24:39.85 work_queue_worker[1324268] dns: looking up name 10.1.1.6
+2022/06/30 13:24:39.85 work_queue_worker[1324268] dns: 10.1.1.6 is 10.1.1.6
+2022/06/30 13:24:39.85 work_queue_worker[1324268] tcp: connecting to 10.1.1.6 port 9123
+2022/06/30 13:24:39.85 work_queue_worker[1324270] tcp: disconnected from 129.74.152.177 port 9097
+2022/06/30 13:24:39.85 work_queue_worker[1324268] tcp: connection to 10.1.1.6 port 9123 failed (Connection refused)
+2022/06/30 13:24:39.85 work_queue_worker[1324268] tcp: disconnected from 10.1.1.6 port 9123
+2022/06/30 13:24:39.85 work_queue_worker[1324268] dns: looking up name 172.17.0.1
+2022/06/30 13:24:39.85 work_queue_worker[1324271] tcp: disconnected from 129.74.152.177 port 9097
+2022/06/30 13:24:39.85 work_queue_worker[1324268] dns: 172.17.0.1 is 172.17.0.1
+2022/06/30 13:24:39.85 work_queue_worker[1324268] tcp: connecting to 172.17.0.1 port 9123
+2022/06/30 13:24:39.85 work_queue_worker[1324266] wq: project name test-dm-two-epoch matches 3 managers
+2022/06/30 13:24:39.86 work_queue_worker[1324269] tcp: disconnected from 129.74.152.177 port 9097
+2022/06/30 13:24:39.86 work_queue_worker[1324267] wq: project name test-dm-two-epoch matches 3 managers
+2022/06/30 13:24:39.86 work_queue_worker[1324266] wq: selected manager with project=test-dm-two-epoch addr=131.130.65.106 port=9123
+2022/06/30 13:24:39.86 work_queue_worker[1324266] dns: looking up name 131.130.65.106
+2022/06/30 13:24:39.86 work_queue_worker[1324267] wq: selected manager with project=test-dm-two-epoch addr=20.124.197.82 port=9123
+2022/06/30 13:24:39.86 work_queue_worker[1324266] dns: 131.130.65.106 is 131.130.65.106
+2022/06/30 13:24:39.86 work_queue_worker[1324270] wq: project name test-dm-two-epoch matches 3 managers
+2022/06/30 13:24:39.86 work_queue_worker[1324267] error: Did not find the manager address '20.124.197.82' in the list of interfaces.
+2022/06/30 13:24:39.86 work_queue_worker[1324270] wq: selected manager with project=test-dm-two-epoch addr=20.245.202.192 port=9123
+2022/06/30 13:24:39.86 work_queue_worker[1324267] dns: looking up name 10.1.0.113
+2022/06/30 13:24:39.86 work_queue_worker[1324271] wq: project name test-dm-two-epoch matches 3 managers
+2022/06/30 13:24:39.86 work_queue_worker[1324270] error: Did not find the manager address '20.245.202.192' in the list of interfaces.
+2022/06/30 13:24:39.86 work_queue_worker[1324267] dns: 10.1.0.113 is 10.1.0.113
+2022/06/30 13:24:39.86 work_queue_worker[1324266] tcp: connecting to 131.130.65.106 port 9123
+2022/06/30 13:24:39.86 work_queue_worker[1324271] wq: selected manager with project=test-dm-two-epoch addr=20.124.197.82 port=9123
+2022/06/30 13:24:39.86 work_queue_worker[1324270] dns: looking up name 10.1.1.6
+2022/06/30 13:24:39.87 work_queue_worker[1324266] tcp: made connection to 131.130.65.106 port 9123
+2022/06/30 13:24:39.87 work_queue_worker[1324269] wq: project name test-dm-two-epoch matches 3 managers
+2022/06/30 13:24:39.87 work_queue_worker[1324271] error: Did not find the manager address '20.124.197.82' in the list of interfaces.
+2022/06/30 13:24:39.87 work_queue_worker[1324270] dns: 10.1.1.6 is 10.1.1.6
+2022/06/30 13:24:39.87 work_queue_worker[1324266] wq: connected to manager 131.130.65.106:9123 via local address 131.130.65.106:36316
+2022/06/30 13:24:39.87 work_queue_worker[1324267] tcp: connecting to 10.1.0.113 port 9123
+2022/06/30 13:24:39.87 work_queue_worker[1324269] wq: selected manager with project=test-dm-two-epoch addr=20.245.202.192 port=9123
+2022/06/30 13:24:39.87 work_queue_worker[1324271] dns: looking up name 10.1.0.113
+2022/06/30 13:24:39.87 work_queue_worker[1324271] dns: 10.1.0.113 is 10.1.0.113
+2022/06/30 13:24:39.87 work_queue_worker[1324266] wq: authenticating to manager
+2022/06/30 13:24:39.87 work_queue_worker[1324269] error: Did not find the manager address '20.245.202.192' in the list of interfaces.
+2022/06/30 13:24:39.87 work_queue_worker[1324270] tcp: connecting to 10.1.1.6 port 9123
+2022/06/30 13:24:39.87 work_queue_worker[1324266] auth: sending challenge data
+2022/06/30 13:24:39.87 work_queue_worker[1324269] dns: looking up name 10.1.1.6
+2022/06/30 13:24:39.87 work_queue_worker[1324270] tcp: connection to 10.1.1.6 port 9123 failed (Connection refused)
+2022/06/30 13:24:39.87 work_queue_worker[1324266] auth: receiving peer's challenge data
+2022/06/30 13:24:39.87 work_queue_worker[1324271] tcp: connecting to 10.1.0.113 port 9123
+2022/06/30 13:24:39.87 work_queue_worker[1324269] dns: 10.1.1.6 is 10.1.1.6
+2022/06/30 13:24:39.87 work_queue_worker[1324270] tcp: disconnected from 10.1.1.6 port 9123
+2022/06/30 13:24:39.87 work_queue_worker[1324266] auth: sending my response
+2022/06/30 13:24:39.87 work_queue_worker[1324270] dns: looking up name 172.17.0.1
+2022/06/30 13:24:39.87 work_queue_worker[1324266] auth: getting peer's response
+2022/06/30 13:24:39.88 work_queue_worker[1324270] dns: 172.17.0.1 is 172.17.0.1
+2022/06/30 13:24:39.88 work_queue_worker[1324269] tcp: connecting to 10.1.1.6 port 9123
+2022/06/30 13:24:39.88 work_queue_worker[1324266] auth: peer sent correct response
+2022/06/30 13:24:39.88 work_queue_worker[1324270] tcp: connecting to 172.17.0.1 port 9123
+2022/06/30 13:24:39.88 work_queue_worker[1324269] tcp: connection to 10.1.1.6 port 9123 failed (Connection refused)
+2022/06/30 13:24:39.88 work_queue_worker[1324266] auth: peer accepted my response
+2022/06/30 13:24:39.88 work_queue_worker[1324269] tcp: disconnected from 10.1.1.6 port 9123
+2022/06/30 13:24:39.88 work_queue_worker[1324266] wq: preparing workspace /tmp/worker-11326-1324266
+2022/06/30 13:24:39.88 work_queue_worker[1324269] dns: looking up name 172.17.0.1
+2022/06/30 13:24:39.88 work_queue_worker[1324266] dns: looking up name vlogin2.csb.univie.ac.at
+2022/06/30 13:24:39.88 work_queue_worker[1324269] dns: 172.17.0.1 is 172.17.0.1
+2022/06/30 13:24:39.88 work_queue_worker[1324266] dns: vlogin2.csb.univie.ac.at is 131.130.65.106
+2022/06/30 13:24:39.88 work_queue_worker[1324269] tcp: connecting to 172.17.0.1 port 9123
+2022/06/30 13:24:39.88 work_queue_worker[1324266] dns: looking up addr 131.130.65.106
+2022/06/30 13:24:39.88 work_queue_worker[1324266] dns: 131.130.65.106 is vlogin2.csb.univie.ac.at
+2022/06/30 13:24:39.88 work_queue_worker[1324266] dns: finding my hostname: uname = vlogin2.csb.univie.ac.at, address = 131.130.65.106, hostname = vlogin2.csb.univie.ac.at
+2022/06/30 13:24:39.88 work_queue_worker[1324266] wq: tx to manager: workqueue 9 vlogin2.csb.univie.ac.at Linux x86_64 7.4.3
+2022/06/30 13:24:39.88 work_queue_worker[1324266] wq: tx to manager: info worker-id worker-58616e46366f4b81b8f323c1cb56bfae
+2022/06/30 13:24:39.88 work_queue_worker[1324266] wq: tx to manager: alive
+2022/06/30 13:24:39.88 work_queue_worker[1324266] wq: Sending resource description to manager:
+2022/06/30 13:24:39.88 work_queue_worker[1324266] wq:  workers      0 inuse      1 total      1 smallest      1 largest
+2022/06/30 13:24:39.88 work_queue_worker[1324266] wq:     disk      0 inuse 1876504 total 1876504 smallest 1876504 largest
+2022/06/30 13:24:39.88 work_queue_worker[1324266] wq:   memory      0 inuse 257915 total 257915 smallest 257915 largest
+2022/06/30 13:24:39.89 work_queue_worker[1324266] wq:     gpus      0 inuse      0 total      0 smallest      0 largest
+2022/06/30 13:24:39.89 work_queue_worker[1324266] wq:    cores      0 inuse      1 total      1 smallest      1 largest
+2022/06/30 13:24:39.89 work_queue_worker[1324266] wq: tx to manager: info end_of_resource_update 0
+2022/06/30 13:24:39.89 work_queue_worker[1324266] wq: tx to manager: info tasks_running 0
+2022/06/30 13:24:39.89 work_queue_worker[1324266] wq: tx to manager: info worker-end-time 0
+2022/06/30 13:24:39.89 work_queue_worker[1324266] wq: working for manager at 131.130.65.106:9123.
+2022/06/30 13:24:39.89 work_queue_worker[1324266] wq: rx from manager: put file-0-e31534f026d2f5bf4e6795e686d643d7-pytask_wrapper.py 363 0644
+2022/06/30 13:24:39.89 work_queue_worker[1324266] wq: rx from manager: put file-10-458294e8593e82c242d550e7267dbf54-function_ab6675a4-db63-46b2-9d4d-8c513cf25a5a.p 47 0644
+2022/06/30 13:24:39.89 work_queue_worker[1324266] wq: rx from manager: put file-11-77d78766aa0b527a9d2c0996ff0158c4-args_ab6675a4-db63-46b2-9d4d-8c513cf25a5a.p 655 0644
+2022/06/30 13:24:39.89 work_queue_worker[1324266] wq: rx from manager: task 3
+2022/06/30 13:24:39.89 work_queue_worker[1324266] wq: rx from manager: cmd 159
+2022/06/30 13:24:39.89 work_queue_worker[1324266] wq: rx from manager: python pytask_wrapper.py function_ab6675a4-db63-46b2-9d4d-8c513cf25a5a.p args_ab6675a4-db63-46b2-9d4d-8c513cf25a5a.p out_ab6675a4-db63-46b2-9d4d-8c513cf25a5a.p
+2022/06/30 13:24:39.89 work_queue_worker[1324266] wq: rx from manager: category default
+2022/06/30 13:24:39.89 work_queue_worker[1324266] wq: rx from manager: cores 1.000
+2022/06/30 13:24:39.89 work_queue_worker[1324266] wq: rx from manager: gpus 0
+2022/06/30 13:24:39.89 work_queue_worker[1324266] wq: rx from manager: memory 257915
+2022/06/30 13:24:39.89 work_queue_worker[1324266] wq: rx from manager: disk 1876504
+2022/06/30 13:24:39.89 work_queue_worker[1324266] wq: rx from manager: infile file-0-e31534f026d2f5bf4e6795e686d643d7-pytask_wrapper.py pytask_wrapper.py 1
+2022/06/30 13:24:39.89 work_queue_worker[1324266] wq: rx from manager: infile file-10-458294e8593e82c242d550e7267dbf54-function_ab6675a4-db63-46b2-9d4d-8c513cf25a5a.p function_ab6675a4-db63-46b2-9d4d-8c513cf25a5a.p 0
+2022/06/30 13:24:39.89 work_queue_worker[1324266] wq: rx from manager: infile file-11-77d78766aa0b527a9d2c0996ff0158c4-args_ab6675a4-db63-46b2-9d4d-8c513cf25a5a.p args_ab6675a4-db63-46b2-9d4d-8c513cf25a5a.p 0
+2022/06/30 13:24:39.89 work_queue_worker[1324266] wq: rx from manager: outfile file-12-682eb8206588cfe8bf4567d1a0a7cae0-out_ab6675a4-db63-46b2-9d4d-8c513cf25a5a.p out_ab6675a4-db63-46b2-9d4d-8c513cf25a5a.p 0
+2022/06/30 13:24:39.89 work_queue_worker[1324266] wq: rx from manager: end
+2022/06/30 13:24:39.90 work_queue_worker[1324266] wq: linking cache/file-0-e31534f026d2f5bf4e6795e686d643d7-pytask_wrapper.py to /tmp/worker-11326-1324266/t.3/pytask_wrapper.py
+2022/06/30 13:24:39.90 work_queue_worker[1324266] wq: linking cache/file-10-458294e8593e82c242d550e7267dbf54-function_ab6675a4-db63-46b2-9d4d-8c513cf25a5a.p to /tmp/worker-11326-1324266/t.3/function_ab6675a4-db63-46b2-9d4d-8c513cf25a5a.p
+2022/06/30 13:24:39.90 work_queue_worker[1324266] wq: linking cache/file-11-77d78766aa0b527a9d2c0996ff0158c4-args_ab6675a4-db63-46b2-9d4d-8c513cf25a5a.p to /tmp/worker-11326-1324266/t.3/args_ab6675a4-db63-46b2-9d4d-8c513cf25a5a.p
+2022/06/30 13:24:39.90 work_queue_worker[1324266] wq: started process 1324278: python pytask_wrapper.py function_ab6675a4-db63-46b2-9d4d-8c513cf25a5a.p args_ab6675a4-db63-46b2-9d4d-8c513cf25a5a.p out_ab6675a4-db63-46b2-9d4d-8c513cf25a5a.p
+2022/06/30 13:24:39.90 work_queue_worker[1324266] wq: tx to manager: info tasks_running 1
+2022/06/30 13:24:42.96 work_queue_worker[1324271] tcp: connection to 10.1.0.113 port 9123 failed (No route to host)
+2022/06/30 13:24:42.96 work_queue_worker[1324267] tcp: connection to 10.1.0.113 port 9123 failed (No route to host)
+2022/06/30 13:24:42.96 work_queue_worker[1324271] tcp: disconnected from 10.1.0.113 port 9123
+2022/06/30 13:24:42.96 work_queue_worker[1324267] tcp: disconnected from 10.1.0.113 port 9123
+2022/06/30 13:24:42.96 work_queue_worker[1324271] dns: looking up name 172.17.0.1
+2022/06/30 13:24:42.96 work_queue_worker[1324267] dns: looking up name 172.17.0.1
+2022/06/30 13:24:42.96 work_queue_worker[1324271] dns: 172.17.0.1 is 172.17.0.1
+2022/06/30 13:24:42.96 work_queue_worker[1324267] dns: 172.17.0.1 is 172.17.0.1
+2022/06/30 13:24:42.96 work_queue_worker[1324271] tcp: connecting to 172.17.0.1 port 9123
+2022/06/30 13:24:42.96 work_queue_worker[1324267] tcp: connecting to 172.17.0.1 port 9123
+2022/06/30 13:24:44.42 work_queue_worker[1324266] wq: tx to manager: info vacating 15
+2022/06/30 13:24:44.42 work_queue_worker[1324266] wq: disconnecting from manager 131.130.65.106:9123
+2022/06/30 13:24:44.42 work_queue_worker[1324266] tcp: disconnected from 131.130.65.106 port 9123
+2022/06/30 13:24:44.42 work_queue_worker[1324266] wq: killing all outstanding tasks
+2022/06/30 13:24:44.42 work_queue_worker[1324266] wq: terminating task 3 pid 1324278
+2022/06/30 13:24:44.43 work_queue_worker[1324266] wq: trashing file ./worker.stdout.HQWcBc to /tmp/worker-11326-1324266/trash/zckhhyc.1656588284438063
+2022/06/30 13:24:44.43 work_queue_worker[1324266] wq: trashing file /tmp/worker-11326-1324266/t.3 to /tmp/worker-11326-1324266/trash/jmkeibu.1656588284438885
+2022/06/30 13:24:44.43 work_queue_worker[1324266] wq: all data structures are clean
+2022/06/30 13:24:44.43 work_queue_worker[1324266] wq: cleaning workspace /tmp/worker-11326-1324266
+2022/06/30 13:24:44.44 work_queue_worker[1324266] wq: trashing file cache to /tmp/worker-11326-1324266/trash/zmulxxa.1656588284440120
+2022/06/30 13:24:44.44 work_queue_worker[1324266] notice: stopping: abort signal received
+2022/06/30 13:24:54.86 work_queue_worker[1324268] tcp: connection to 172.17.0.1 port 9123 failed (Connection timed out)
+2022/06/30 13:24:54.86 work_queue_worker[1324268] tcp: disconnected from 172.17.0.1 port 9123
+2022/06/30 13:24:54.86 work_queue_worker[1324268] dns: looking up name 20.245.202.192
+2022/06/30 13:24:54.86 work_queue_worker[1324268] dns: 20.245.202.192 is 20.245.202.192
+2022/06/30 13:24:54.86 work_queue_worker[1324268] tcp: connecting to 20.245.202.192 port 9123
+2022/06/30 13:24:54.86 work_queue_worker[1324269] tcp: connection to 172.17.0.1 port 9123 failed (Connection timed out)
+2022/06/30 13:24:54.86 work_queue_worker[1324269] tcp: disconnected from 172.17.0.1 port 9123
+2022/06/30 13:24:54.86 work_queue_worker[1324269] dns: looking up name 20.245.202.192
+2022/06/30 13:24:54.86 work_queue_worker[1324269] dns: 20.245.202.192 is 20.245.202.192
+2022/06/30 13:24:54.86 work_queue_worker[1324269] tcp: connecting to 20.245.202.192 port 9123
+2022/06/30 13:24:54.86 work_queue_worker[1324267] tcp: connection to 172.17.0.1 port 9123 failed (Connection timed out)
+2022/06/30 13:24:54.86 work_queue_worker[1324270] tcp: connection to 172.17.0.1 port 9123 failed (Connection timed out)
+2022/06/30 13:24:54.86 work_queue_worker[1324271] tcp: connection to 172.17.0.1 port 9123 failed (Connection timed out)
+2022/06/30 13:24:54.86 work_queue_worker[1324267] tcp: disconnected from 172.17.0.1 port 9123
+2022/06/30 13:24:54.86 work_queue_worker[1324270] tcp: disconnected from 172.17.0.1 port 9123
+2022/06/30 13:24:54.87 work_queue_worker[1324271] tcp: disconnected from 172.17.0.1 port 9123
+2022/06/30 13:24:54.87 work_queue_worker[1324267] dns: looking up name 20.124.197.82
+2022/06/30 13:24:54.87 work_queue_worker[1324270] dns: looking up name 20.245.202.192
+2022/06/30 13:24:54.87 work_queue_worker[1324271] dns: looking up name 20.124.197.82
+2022/06/30 13:24:54.87 work_queue_worker[1324267] dns: 20.124.197.82 is 20.124.197.82
+2022/06/30 13:24:54.87 work_queue_worker[1324270] dns: 20.245.202.192 is 20.245.202.192
+2022/06/30 13:24:54.87 work_queue_worker[1324271] dns: 20.124.197.82 is 20.124.197.82
+2022/06/30 13:24:54.87 work_queue_worker[1324267] tcp: connecting to 20.124.197.82 port 9123
+2022/06/30 13:24:54.87 work_queue_worker[1324270] tcp: connecting to 20.245.202.192 port 9123
+2022/06/30 13:24:54.87 work_queue_worker[1324271] tcp: connecting to 20.124.197.82 port 9123
+2022/06/30 13:25:04.87 work_queue_worker[1324268] tcp: connection to 20.245.202.192 port 9123 failed (Connection timed out)
+2022/06/30 13:25:04.87 work_queue_worker[1324268] tcp: disconnected from 20.245.202.192 port 9123
+2022/06/30 13:25:04.87 work_queue_worker[1324268] notice: stopping: abort signal received
+2022/06/30 13:25:04.87 work_queue_worker[1324269] tcp: connection to 20.245.202.192 port 9123 failed (Connection timed out)
+2022/06/30 13:25:04.87 work_queue_worker[1324269] tcp: disconnected from 20.245.202.192 port 9123
+2022/06/30 13:25:04.87 work_queue_worker[1324269] notice: stopping: abort signal received
+2022/06/30 13:25:04.88 work_queue_worker[1324267] tcp: connection to 20.124.197.82 port 9123 failed (Connection timed out)
+2022/06/30 13:25:04.88 work_queue_worker[1324271] tcp: connection to 20.124.197.82 port 9123 failed (Connection timed out)
+2022/06/30 13:25:04.88 work_queue_worker[1324267] tcp: disconnected from 20.124.197.82 port 9123
+2022/06/30 13:25:04.88 work_queue_worker[1324270] tcp: connection to 20.245.202.192 port 9123 failed (Connection timed out)
+2022/06/30 13:25:04.88 work_queue_worker[1324271] tcp: disconnected from 20.124.197.82 port 9123
+2022/06/30 13:25:04.88 work_queue_worker[1324267] notice: stopping: abort signal received
+2022/06/30 13:25:04.88 work_queue_worker[1324270] tcp: disconnected from 20.245.202.192 port 9123
+2022/06/30 13:25:04.88 work_queue_worker[1324271] notice: stopping: abort signal received
+2022/06/30 13:25:04.88 work_queue_worker[1324270] notice: stopping: abort signal received

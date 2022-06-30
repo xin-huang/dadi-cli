@@ -1,4 +1,4 @@
-# /home/kaixa/Software/anaconda3/bin/pytest -cov=. -vv
+# /home/user2/huangxin/dadi-cli/bin/pytest -v
 # /Users/tjstruck/opt/anaconda3/envs/dadicli/bin/dadi-cli InferDM --fs ./tests/example_data/two_epoch_syn.fs --model two_epoch --misid --grids 120 140 160 --p0 1 .5 .5 --ubounds 10 10 1 --lbounds 10e-3 10e-3 0 --output-prefix ./tests/test_results/simulation2.two_epoch.demo.params --optimizations 130
 #
 # Top 10 results
