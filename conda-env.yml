@@ -3,7 +3,6 @@ channels:
         - conda-forge
         - bioconda
 dependencies:
-        - dadi==2.1.2
         - dill==0.3.4
         - codecov
         - ndcctools==7.4.3
