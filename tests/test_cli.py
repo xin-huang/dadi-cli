@@ -1,5 +1,12 @@
 import pytest
-import src.__main__ as cli
+import dadi_cli.__main__ as cli
+import os
+
+try:
+    if not os.path.exists("./tests/test_results"):
+        os.makedirs("./tests/test_results")
+except:
+    pass
 
 def test_generate_fs_args():
     parser = cli.dadi_cli_parser()

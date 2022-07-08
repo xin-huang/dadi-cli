@@ -2,7 +2,7 @@ import dadi
 import dadi.DFE as DFE
 import pytest
 import numpy as np
-from src.Pdfs import get_dadi_pdf, get_dadi_pdf_params, print_available_pdfs, print_pdf_details
+from dadi_cli.Pdfs import get_dadi_pdf, get_dadi_pdf_params, print_available_pdfs, print_pdf_details
 
 def test_get_dadi_pdf():
     assert get_dadi_pdf('beta') == DFE.PDFs.beta
