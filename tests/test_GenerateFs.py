@@ -20,6 +20,7 @@ def data():
     pytest.four_pop_info = "./tests/example_data/four.popfile.txt"
     pytest.folded_output = "./tests/test_results/1KG.YRI.CEU.synonymous.snps.fold.short.fs"
     pytest.unfolded_output = "./tests/test_results/1KG.YRI.CEU.synonymous.snps.unfold.short.fs"
+    pytest.subsample_output = "./tests/test_results/1KG.YRI.CEU.synonymous.snps.subsample.unfold.short.fs"
     pytest.bootstrap_output = "./tests/test_results/bootstrap/1KG.YRI.CEU.synonymous.snps.unfold.short"
     pytest.singleton_mask_output = "./tests/test_results/1KG.YRI.CEU.synonymous.snps.unfold.short.singleton_mask.fs"
     pytest.shared_singleton_mask_output = "./tests/test_results/1KG.YRI.CEU.synonymous.snps.unfold.short.shared_singleton_mask.fs"
@@ -62,8 +63,20 @@ def test_generate_fs(data):
 
 
 def test_generate_fs_subsample(data):
-    pass
+    pop_ids, projections = ['YRI','CEU'], [216,198]
+    generate_fs(vcf=pytest.vcf, output=pytest.subsample_output, pop_ids=pop_ids, pop_info=pytest.pop_info, 
+                projections=projections, marginalize_pops=None, subsample=True, polarized=True, 
+                bootstrap=None, chunk_size=None, masking='', seed=None)
+    dadi_cli_fs = dadi.Spectrum.from_file(pytest.subsample_output)
 
+    subsample_dict = {
+        'YRI': 216,
+        'CEU': 198,
+    }
+    dd = dadi.Misc.make_data_dict_vcf(pytest.vcf, pytest.pop_info, subsample=subsample_dict)
+    dadi_fs = dadi.Spectrum.from_data_dict(dd, pop_ids, projections, polarized=True)
+
+    assert np.allclose(dadi_cli_fs, dadi_fs)
 
 def test_generate_fs_bootstrap(data):
     generate_fs(vcf=pytest.vcf, output=pytest.bootstrap_output, pop_ids=['YRI', 'CEU'], pop_info=pytest.pop_info, 
