@@ -19,7 +19,7 @@ def generate_fs(vcf, output, pop_ids, pop_info, projections,
                         Otherwise, spectrum is generated with all the samples.
         polarized bool: If True, unfolded spectrum is generated; 
                         Otherwise, folded spectrum is generated.
-        margnialize_pops list: List of population ids.
+        margnialize_pops list: List of population ids to remove from the frequency spectrum.
         bootstrap int: Times to perform bootstrapping.
         chunk_size int: Chunk size to divide the genomes for bootstrapping.
         masking str: If masking == 'singleton', singletons in each population are masked;
@@ -37,14 +37,14 @@ def generate_fs(vcf, output, pop_ids, pop_info, projections,
 
     if bootstrap is None: 
         fs = dadi.Spectrum.from_data_dict(dd, pop_ids=pop_ids, projections=projections, polarized=polarized)
-        if masking != '': _mask_entries(fs, masking)
         if marginalize_pops != None: fs = _marginalized_fs(fs, marginalize_pops, pop_ids)
+        if masking != '': _mask_entries(fs, masking)
         fs.to_file(output)
     else:
         for b in range(bootstrap):
             fs = _generate_bootstrap_fs(dd, chunk_size, pop_ids, projections, polarized, seed)
-            if masking != '': _mask_entries(fs, masking)
             if marginalize_pops != None: fs = _marginalized_fs(fs, marginalize_pops, pop_ids)
+            if masking != '': _mask_entries(fs, masking)
             fs.to_file(output + '.bootstrapping.' + str(b) + '.fs')
 
 
@@ -139,6 +139,7 @@ def _mask_entries(fs, masking):
             fs.mask[-2,-2,-1] = True
             fs.mask[-2,-1,-2] = True
             fs.mask[-2,-2,-2] = True
+    else: raise ValueError("Masking singletons is only supported for a frequency spectrum with no more than 3 populations.")
 
 
 def _marginalized_fs(fs, marginalize_pops, pop_ids):
