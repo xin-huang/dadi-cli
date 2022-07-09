@@ -1,6 +1,32 @@
 import dadi
+import random
 
-def generate_fs(vcf, output, pop_ids, pop_info, projections, subsample, polarized, marginalize_pops, bootstrap, chunk_size, masking, seed):
+
+def generate_fs(vcf, output, pop_ids, pop_info, projections, 
+                subsample, polarized, marginalize_pops, bootstrap, 
+                chunk_size, masking, seed):
+    """
+    Description:
+        Generates a frequency spectrum from a VCF file.
+
+    Arguments:
+        vcf str: Name of the VCF file containing genotype data.
+        output str: Name of the output file containing frequency spectra.
+        pop_ids list: List of population ids.
+        pop_info str: Name of the file containing population information.
+        projections list: List of sample sizes after projection.
+        subsample bool: If True, spectrum is generated with sub-samples; 
+                        Otherwise, spectrum is generated with all the samples.
+        polarized bool: If True, unfolded spectrum is generated; 
+                        Otherwise, folded spectrum is generated.
+        margnialize_pops list: List of population ids.
+        bootstrap int: Times to perform bootstrapping.
+        chunk_size int: Chunk size to divide the genomes for bootstrapping.
+        masking str: If masking == 'singleton', singletons in each population are masked;
+                     If masking == 'shared', singletons in each population and shared across populations are masked;
+                     Otherwise, singletons are not masked.
+        seed int: Seed for generating random numbers.
+    """
     if subsample:
         subsample_dict = {}
         for i in range(len(pop_ids)):
@@ -8,22 +34,37 @@ def generate_fs(vcf, output, pop_ids, pop_info, projections, subsample, polarize
         dd = dadi.Misc.make_data_dict_vcf(vcf_filename=vcf, popinfo_filename=pop_info, subsample=subsample_dict)
     else:
         dd = dadi.Misc.make_data_dict_vcf(vcf_filename=vcf, popinfo_filename=pop_info)
-    if bootstrap == None: 
+
+    if bootstrap is None: 
         fs = dadi.Spectrum.from_data_dict(dd, pop_ids=pop_ids, projections=projections, polarized=polarized)
-        if masking != '':
-            mask_entries(fs, masking)
-        if marginalize_pops != None: fs = marginalized_fs(fs, marginalize_pops, pop_ids)
+        if masking != '': _mask_entries(fs, masking)
+        if marginalize_pops != None: fs = _marginalized_fs(fs, marginalize_pops, pop_ids)
         fs.to_file(output)
     else:
         for b in range(bootstrap):
-            fs = generate_bootstrap_fs(dd, chunk_size, pop_ids, projections, polarized, seed)
-            if masking != '':
-                mask_entries(fs, masking)
-            if marginalize_pops != None: fs = marginalized_fs(fs, marginalize_pops, pop_ids)
+            fs = _generate_bootstrap_fs(dd, chunk_size, pop_ids, projections, polarized, seed)
+            if masking != '': _mask_entries(fs, masking)
+            if marginalize_pops != None: fs = _marginalized_fs(fs, marginalize_pops, pop_ids)
             fs.to_file(output + '.bootstrapping.' + str(b) + '.fs')
 
-def generate_bootstrap_fs(dd, chunk_size, pop_ids, projections, polarized, seed):
-    import random
+
+def _generate_bootstrap_fs(dd, chunk_size, pop_ids, projections, polarized, seed):
+    """
+    Description:
+        Helper function for bootstrapping a frequency spectrum.
+
+    Arguments:
+        dd dict: Data dictionary created by dadi.Misc.make_data_dict_vcf().
+        chunk_size int: Chunk size to divide the genomes for bootstrapping.
+        pop_ids list: List of population ids.
+        projections list: List of sample sizes after projection.
+        polarized bool: If True, unfolded spectrum is generated;
+                        Otherwise, folded spectrum is generated.
+        seed int: Seed for generating random numbers.
+
+    Returns:
+        fs dadi.Sepctrum: Bootstrapped frequency spectrum.
+    """
     if seed != None: random.seed(seed)
     # split the dictionary by chromosome name
     ndd = {}
@@ -63,7 +104,16 @@ def generate_bootstrap_fs(dd, chunk_size, pop_ids, projections, polarized, seed)
     fs = dadi.Spectrum.from_data_dict(bdd, pop_ids=pop_ids, projections=projections, polarized=polarized)
     return fs
 
-def mask_entries(fs, masking):
+
+def _mask_entries(fs, masking):
+    """
+    Description:
+        Helper function for masking singletons in a frequency spectrum.
+
+    Arguments:
+        fs dadi.Spectrum: Frequency spectrum.
+        masking str: Masking shared singletons if masking == 'shared'.
+    """
     if len(fs.sample_sizes) == 1:
         fs.mask[1] = True
         fs.mask[-2] = True
@@ -72,7 +122,7 @@ def mask_entries(fs, masking):
         fs.mask[-2,-1] = True
         fs.mask[0,1] = True
         fs.mask[-1,-2] = True
-        if masking=='shared':
+        if masking == 'shared':
             fs.mask[1,1] = True
             fs.mask[-2,-2] = True
     elif len(fs.sample_sizes) == 3:
@@ -82,7 +132,7 @@ def mask_entries(fs, masking):
         fs.mask[-1,-2,-1] = True
         fs.mask[0,0,1] = True
         fs.mask[-1,-1,-2] = True
-        if masking=='shared':
+        if masking == 'shared':
             fs.mask[1,1,0] = True
             fs.mask[1,0,1] = True
             fs.mask[1,1,1] = True
@@ -90,12 +140,20 @@ def mask_entries(fs, masking):
             fs.mask[-2,-1,-2] = True
             fs.mask[-2,-2,-2] = True
 
-def marginalized_fs(fs, marginalize_pops, pop_ids):
+
+def _marginalized_fs(fs, marginalize_pops, pop_ids):
+    """
+    Description:
+        Helper function for generating a marginalized frequency spectrum.
+
+    Arguments:
+        fs dadi.Spectrum: Frequency spectrum for marginalization.
+        marginalize_pops list: List of population ids to remove from the frequency spectrum.
+        pop_ids list: List of all the population ids in the frequency spectrum.
+
+    Returns:
+        mfs dadi.Spectrum: Marginalized frequency spectrum.
+    """
     marginalize_list = [pop_ids.index(pop) for pop in marginalize_pops]
-    return(fs.marginalize(marginalize_list))
-
-
-
-
-
-
+    mfs = fs.marginalize(marginalize_list)
+    return mfs

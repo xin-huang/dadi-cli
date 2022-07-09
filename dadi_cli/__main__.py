@@ -4,19 +4,23 @@ import random
 import dadi
 import multiprocessing
 
+from dadi_cli.GenerateFs import generate_fs
 from dadi_cli.InferDM import infer_demography
 from dadi_cli.InferDM import infer_global_opt
 from dadi_cli.InferDFE import infer_dfe
 from dadi_cli.Pdfs import get_dadi_pdf_params
 from dadi_cli.Models import *
 
+
 def set_sigpipe_handler():
     if os.name == "posix":
         # Set signal handler for SIGPIPE to quietly kill the program.
         signal.signal(signal.SIGPIPE, signal.SIG_DFL)
 
+
 def sys_exit(message):
     sys.exit(message)
+
 
 # Worker functions for multiprocessing with demography/DFE inference
 def _worker_func(func, in_queue, out_queue, args):
@@ -26,8 +30,8 @@ def _worker_func(func, in_queue, out_queue, args):
         results = func(*args)
         out_queue.put(results)
 
+
 def run_generate_fs(args):
-    from dadi_cli.GenerateFs import generate_fs
     if args.mask_shared: mask='shared'
     elif args.mask: mask='singletons'
     else: mask=''
@@ -35,6 +39,7 @@ def run_generate_fs(args):
                 pop_ids=args.pop_ids, pop_info=args.pop_info, projections=args.projections, polarized=args.polarized,
                 marginalize_pops=args.marginalize_pops, subsample=args.subsample, masking=mask)
 
+    
 def run_generate_cache(args):
     from dadi_cli.GenerateCache import generate_cache
     from dadi_cli.Models import get_model
@@ -43,9 +48,11 @@ def run_generate_cache(args):
                    gamma_bounds=args.gamma_bounds, gamma_pts=args.gamma_pts, additional_gammas=args.additional_gammas,
                    output=args.output, sample_sizes=args.sample_sizes, mp=args.mp, cuda=args.cuda, dimensionality=args.dimensionality)
 
+
 def run_simulate_dm(args):
     from dadi_cli.SimulateFs import simulate_demography
     simulate_demography(args.model, args.model_file, args.p0, args.ns, args.grids, args.misid, args.output, args.inference_file)
+
 
 def run_simulate_dfe(args):
     from dadi_cli.SimulateFs import simulate_dfe
@@ -60,9 +67,11 @@ def run_simulate_dfe(args):
 
     simulate_dfe(args.p0, cache1d, cache2d, args.pdf1d, args.pdf2d, args.ratio, args.misid, args.output)
 
+
 def run_simulate_demes(args):
     from dadi_cli.SimulateFs import simulate_demes
     simulate_demes(args.demes_file, atgs.ns, args.grids, args.output)
+
 
 def run_infer_dm(args):
     fs = dadi.Spectrum.from_file(args.fs)
@@ -266,6 +275,7 @@ def run_infer_dm(args):
     fid.close()
     # TODO: Stop the remaining work_queue workers
 
+
 def run_infer_dfe(args):
     fs = dadi.Spectrum.from_file(args.fs)
     # Due to development history, much of the code expects a args.misid variable, so create it.
@@ -403,9 +413,11 @@ def run_infer_dfe(args):
                 worker.terminate()
     fid.close()
 
+
 def run_bestfit(args):
     from dadi_cli.BestFit import get_bestfit_params
     get_bestfit_params(path=args.input_prefix+'.opts.*', delta=args.delta_ll, lbounds=args.lbounds, ubounds=args.ubounds, output=args.input_prefix+'.bestfits')
+
 
 def run_stat_demography(args):
     from dadi_cli.Stat import godambe_stat_demograpy
@@ -417,6 +429,7 @@ def run_stat_demography(args):
                            nomisid=args.nomisid, demo_popt=args.demo_popt, fixed_params=args.constants,
                            logscale=args.logscale, output=args.output)
 
+
 def run_stat_dfe(args):
     from dadi_cli.Stat import godambe_stat_dfe
 
@@ -427,6 +440,7 @@ def run_stat_dfe(args):
                      nomisid=args.nomisid, dfe_popt=args.dfe_popt,
                      fixed_params=args.constants,
                      logscale=args.logscale, output=args.output)
+
 
 def run_plot(args):
     from dadi_cli.Plot import plot_comparison, plot_fitted_demography, plot_fitted_dfe, plot_single_sfs, plot_mut_prop
@@ -447,11 +461,13 @@ def run_plot(args):
     else:
         plot_comparison(fs=args.fs, fs2=args.fs2, projections=args.projections, output=args.output, vmin=args.vmin, resid_range=args.resid_range)
 
+
 def run_model(args):
     if args.names == None:
         print_built_in_models()
     else:
         print_built_in_model_details(args.names)
+
 
 def run_pdf(args):
     from dadi_cli.Pdfs import print_available_pdfs, print_pdf_details
@@ -460,44 +476,57 @@ def run_pdf(args):
     else:
         print_pdf_details(args.names)
 
+
 def add_output_argument(parser):
     parser.add_argument('--output', type=str, required=True, help='Name of the output file')
 
+
 def add_cuda_argument(parser):
     parser.add_argument('--cuda', default=False, action='store_true', help='Determine whether using GPUs to accelerate inference or not; Default: False')
+
 
 def add_bounds_argument(parser):
     parser.add_argument('--lbounds', type=float, nargs='+', required=True, help='Lower bounds of the optimized parameters')
     parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='Upper bounds of the optimized parameters')
 
+
 def add_demo_popt_argument(parser):
     parser.add_argument('--demo-popt', type=str, required=True, help='File contains the bestfit parameters for the demographic model', dest='demo_popt')
 
+
 def add_grids_argument(parser):
     parser.add_argument('--grids', type=_check_positive_int, nargs=3, help='Sizes of grids. Default: None')
+
 
 def add_misid_argument(parser):
     # Note that the code previously had a --misid function that did the opposite, but this ia more sensible default.
     parser.add_argument('--nomisid', default=False, action='store_true', help='Enable to *not* include a parameter modeling ancestral state misidentification when data are polarized.')
 
+
 def add_model_argument(parser):
     parser.add_argument('--model', type=str, required=True, help='Name of the demographic model. To check available demographic models, please use `dadi-cli Model`')
+
 
 def add_fs_argument(parser):
     parser.add_argument('--fs', type=str, required=True, help='Frequency spectrum of mutations used for inference. To generate the frequency spectrum, please use `dadi-cli GenerateFs`')
 
+
 def add_seed_argument(parser):
     parser.add_argument('--seed', type=_check_positive_int, help='Random seed')
+
 
 def add_constant_argument(parser):
     parser.add_argument('--constants', default=-1, type=float, nargs='+', help='Fixed parameters during the inference or using Godambe analysis. Use -1 to indicate a parameter is NOT fixed. Default: None')
 
+
 def add_delta_ll_argument(parser):
     parser.add_argument('--delta-ll', type=_check_positive_num, required=False, dest='delta_ll', default=0.0001, help='When using --check-convergence argument in InferDM or InferDFE modules or the BestFits module, set the max percentage difference for log-likliehoods compared to the best optimization log-likliehood to be consider convergent (with 1 being 100%% difference to the best optimization\'s log-likelihood). Default: 0.0001')
+
 
 def add_popt_argument(parser):
     parser.add_argument('--demo-popt', type=str, dest='demo_popt', help='File contains the bestfit demographic parameters, generated by `dadi-cli BestFit`')
     parser.add_argument('--dfe-popt', type=str, dest='dfe_popt', help='File contains the bestfit DFE parameters, generated by `dadi-cli BestFit`')
+
 
 def add_dfe_argument(parser):
     parser.add_argument('--cache1d', type=str, help='File name of the 1D DFE cache. To generate the cache, please use `dadi-cli GenerateCache`')
@@ -505,6 +534,7 @@ def add_dfe_argument(parser):
     parser.add_argument('--pdf1d', type=str, help='1D probability density function for the DFE inference. To check available probability density functions, please use `dadi-cli Pdf`')
     parser.add_argument('--pdf2d', type=str, help='2D probability density function for the joint DFE inference. To check available probability density functions, please use `dadi-cli Pdf`')
     parser.add_argument('--mix-pdf', dest='mix_pdf', type=str, default=None, help='If you are using a model that is a mixture of probability density function for the joint DFE inference pass in the model name. To check available probability density functions, please use `dadi-cli Pdf`')
+
 
 def add_inference_argument(parser):
     parser.add_argument('--p0', default=-1, type=float, nargs='+', required=False, help='Initial parameter values for inference.')
@@ -518,10 +548,12 @@ def add_inference_argument(parser):
     parser.add_argument('--maxtime', type=_check_positive_int, default=np.inf, help='max amount of time for optimizing demography. Default: infinite')
     parser.add_argument('--threads', type=_check_positive_int, default=multiprocessing.cpu_count(), help='number of threads using in multiprocessing. Default: All available threads')
 
+
 def add_simulation_argument(parser):
     parser.add_argument('--grids', type=_check_positive_int, nargs=3, help='Sizes of grids. Default: None')
     parser.add_argument('--misid', dest='misid', default=False, action='store_true', help='Enable to include a parameter modeling ancestral state misidentification when data are polarized ; Default: False')
     parser.add_argument('--p0', type=float, nargs='+', required=True, help='Parameters for simulated demography or dfe.')
+
 
 def dadi_cli_parser():
     top_parser = argparse.ArgumentParser()
@@ -669,6 +701,7 @@ def dadi_cli_parser():
 
     return top_parser
 
+
 # helper functions for reading, parsing, and validating parameters from command line or files
 def _check_params(params, model, option, misid):
     input_params_len = len(params)
@@ -679,6 +712,7 @@ def _check_params(params, model, option, misid):
                         "; however, " + str(model_params_len) + " demographic parameters are required from the " + model + " model" +
                         "\nYou might be using the wrong model or need to add --nomisid if you did not use ancestral allele information to polarize the fs.")
     return params
+
 
 def _check_pdf_params(params, pdf, option, misid):
     input_params_len = len(params)
@@ -696,17 +730,20 @@ def _check_pdf_params(params, pdf, option, misid):
                         "; however, " + str(model_params_len) + " pdf parameters are required from the " + pdf + " pdf")
     return params, param_names
 
+
 def _check_positive_int(value):
     ivalue = int(value)
     if ivalue <= 0:
         raise argparse.ArgumentTypeError("only accepts postive integers; %s is an invalid value" % value)
     return ivalue
 
+
 def _check_positive_num(value):
     fvalue = float(value)
     if fvalue <= 0:
         raise argparse.ArgumentTypeError("only accepts postive numbers; %s is an invalid value" % value)
     return fvalue
+
 
 def _calc_p0_from_bounds(lb, ub):
     p0 = []
@@ -717,11 +754,13 @@ def _calc_p0_from_bounds(lb, ub):
             p0.append(np.sqrt(l*u))
     return p0
 
+
 def _check_dir(path):
     parent_dir = os.path.dirname(path)
     if not os.path.isdir(parent_dir):
         raise argparse.ArgumentTypeError("directory %s does not exist" % parent_dir)
     return path
+
 
 # Main function
 def main(arg_list=None):

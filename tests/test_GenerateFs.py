@@ -1,14 +1,16 @@
 import dadi
 import pytest
 import numpy as np
-from dadi_cli.GenerateFs import generate_fs
 import os
+from dadi_cli.GenerateFs import generate_fs
+
 
 try:
     if not os.path.exists("./tests/test_results/bootstrap"):
         os.makedirs("./tests/test_results/bootstrap")
 except:
     pass
+
 
 @pytest.fixture
 def data():
@@ -20,9 +22,11 @@ def data():
     pytest.shared_singleton_mask_output = "./tests/test_results/1KG.YRI.CEU.synonymous.snps.unfold.short.shared_singleton_mask.fs"
     pytest.marginalize_CEU_output = "./tests/test_results/1KG.YRI.CEU.synonymous.snps.unfold.short.marginalize_CEU.fs"
 
+
 def test_generate_fs(data):
     generate_fs(vcf=pytest.vcf, output=pytest.output, pop_ids=['YRI', 'CEU'], pop_info=pytest.pop_info, 
-        projections=[216, 198], marginalize_pops=None, subsample=False, polarized=True, bootstrap=None, chunk_size=None, masking='', seed=None)
+                projections=[216, 198], marginalize_pops=None, subsample=False, polarized=True, 
+                bootstrap=None, chunk_size=None, masking='', seed=None)
     dadi.cli_fs = dadi.Spectrum.from_file(pytest.output)
 
     dd = dadi.Misc.make_data_dict_vcf(pytest.vcf, pytest.pop_info)
@@ -31,9 +35,11 @@ def test_generate_fs(data):
 
     assert np.allclose(dadi.cli_fs, dadi_fs)
 
+
 def test_generate_fs_bootstrap(data):
     generate_fs(vcf=pytest.vcf, output=pytest.bootstrap_output, pop_ids=['YRI', 'CEU'], pop_info=pytest.pop_info, 
-        projections=[216, 198], marginalize_pops=None, subsample=False, polarized=True, bootstrap=10, chunk_size=100000, masking='', seed=123)
+                projections=[216, 198], marginalize_pops=None, subsample=False, polarized=True, 
+                bootstrap=10, chunk_size=100000, masking='', seed=123)
 
     for i in range(10):
         fs = dadi.Spectrum.from_file("./tests/test_results/bootstrap/1KG.YRI.CEU.synonymous.snps.unfold.short.bootstrapping."+str(i)+".fs")
@@ -43,7 +49,8 @@ def test_generate_fs_bootstrap(data):
 
 def test_generate_fs_masks(data):
     generate_fs(vcf=pytest.vcf, output=pytest.singleton_mask_output, pop_ids=['YRI', 'CEU'], pop_info=pytest.pop_info, 
-        projections=[216, 198], marginalize_pops=None, subsample=False, polarized=True, bootstrap=None, chunk_size=None, masking='singletons', seed=None)
+                projections=[216, 198], marginalize_pops=None, subsample=False, polarized=True, 
+                bootstrap=None, chunk_size=None, masking='singletons', seed=None)
     dadi.cli_fs = dadi.Spectrum.from_file(pytest.singleton_mask_output)
 
     dd = dadi.Misc.make_data_dict_vcf(pytest.vcf, pytest.pop_info)
@@ -57,7 +64,8 @@ def test_generate_fs_masks(data):
     assert np.allclose(dadi.cli_fs, dadi_fs)
 
     generate_fs(vcf=pytest.vcf, output=pytest.shared_singleton_mask_output, pop_ids=['YRI', 'CEU'], pop_info=pytest.pop_info, 
-        projections=[216, 198], marginalize_pops=None, subsample=False, polarized=True, bootstrap=None, chunk_size=None, masking='shared', seed=None)
+                projections=[216, 198], marginalize_pops=None, subsample=False, polarized=True, bootstrap=None, chunk_size=None, 
+                masking='shared', seed=None)
     dadi.cli_fs = dadi.Spectrum.from_file(pytest.shared_singleton_mask_output)
 
     dadi_fs.mask[1,1] = True
@@ -65,9 +73,11 @@ def test_generate_fs_masks(data):
 
     assert np.allclose(dadi.cli_fs, dadi_fs)
 
+
 def test_generate_fs_marginalize(data):
     generate_fs(vcf=pytest.vcf, output=pytest.marginalize_CEU_output, pop_ids=['YRI', 'CEU'], pop_info=pytest.pop_info, 
-        projections=[216, 198], marginalize_pops=['CEU'], subsample=False, polarized=True, bootstrap=None, chunk_size=None, masking='', seed=None)
+                projections=[216, 198], marginalize_pops=['CEU'], subsample=False, polarized=True, 
+                bootstrap=None, chunk_size=None, masking='', seed=None)
     dadi.cli_fs = dadi.Spectrum.from_file(pytest.marginalize_CEU_output)
 
     dd = dadi.Misc.make_data_dict_vcf(pytest.vcf, pytest.pop_info)
@@ -76,6 +86,3 @@ def test_generate_fs_marginalize(data):
     dadi_fs = dadi_fs.marginalize([1])
 
     assert np.allclose(dadi.cli_fs, dadi_fs)
-
-
-
