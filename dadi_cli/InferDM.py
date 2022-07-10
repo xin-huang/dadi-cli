@@ -27,7 +27,7 @@ def infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds,
     p0 = dadi.Misc.perturb_params(p0, fold=1, upper_bound=upper_bounds,
                                   lower_bound=lower_bounds)
     if pts_l is None:
-        pts_l = pts_l_func(fs)
+        pts_l = pts_l_func(fs.sample_sizes)
 
     popt, _ = dadi.Inference.opt(p0, fs, func_ex, pts_l,
                                  lower_bound=lower_bounds,
@@ -67,7 +67,7 @@ def infer_global_opt(fs, func, p0, pts_l, upper_bounds, lower_bounds,
     # First, global optimization in which sample sizes are at most 20 per axis
     proj_ns = np.minimum(fs.sample_sizes, 20)
     fs_proj = fs.project(proj_ns)
-    pts_l_proj = pts_l_func(fs_proj)
+    pts_l_proj = pts_l_func(fs_proj.sample_sizes)
     popt, ll_global = dadi.Inference.opt(p0, fs_proj, func_ex, pts_l_proj,
                                         lower_bound=lower_bounds,
                                         upper_bound=upper_bounds, fixed_params=fixed_params,

@@ -45,7 +45,7 @@ def plot_fitted_demography(fs, model, popt, projections, nomisid, output, vmin, 
     
     func, params = get_model(model, None)
 
-    popt, _ = get_opts_and_theta(popt, True)
+    popt, _ = get_opts_and_theta(popt)
 
     fs = dadi.Spectrum.from_file(fs)
     if not nomisid:
@@ -72,9 +72,7 @@ def plot_fitted_demography(fs, model, popt, projections, nomisid, output, vmin, 
 
 def plot_fitted_dfe(fs, cache1d, cache2d, demo_popt, sele_popt, projections, pdf, pdf2, nomisid, output, vmin, resid_range):
 
-    import dadi.DFE
-    
-    sele_popt, theta = get_opts_and_theta(sele_popt, True)
+    sele_popt, theta = get_opts_and_theta(sele_popt)
 
     fs = dadi.Spectrum.from_file(fs)
 
@@ -119,7 +117,7 @@ def plot_fitted_dfe(fs, cache1d, cache2d, demo_popt, sele_popt, projections, pdf
 
 def plot_mut_prop(dfe_popt, nomisid, mut_rate, seq_len, ratio, output):
 
-    dfe_params, theta = get_opts_and_theta(dfe_popt, nomisid)
+    dfe_params, theta = get_opts_and_theta(dfe_popt)
 
     Na = theta/(4*mut_rate*seq_len*(ratio/(1+ratio)))
 
@@ -143,4 +141,3 @@ def plot_mut_prop(dfe_popt, nomisid, mut_rate, seq_len, ratio, output):
                ['0<=|s|<1e-5', '1e-5<=|s|<1e-4', '1e-4<=|s|<1e-3', '1e-3<=|s|<1e-2', '1e-2<=|s|'], rotation=45)
     plt.grid(alpha=0.3)
     fig.savefig(output, bbox_inches='tight')
-

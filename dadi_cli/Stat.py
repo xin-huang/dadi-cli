@@ -11,7 +11,7 @@ def godambe_stat_demograpy(fs, func, grids, output, bootstrap_dir, demo_popt, fi
     # We want the best fits from the demograpic fit.
     # We set the second argument to true, since we want
     # all the parameters from the file.
-    demo_popt, _ = get_opts_and_theta(demo_popt, True)
+    demo_popt, _ = get_opts_and_theta(demo_popt)
     fixed_params = convert_to_None(fixed_params, len(demo_popt))
     free_params = _free_params(demo_popt, fixed_params)
     fs = dadi.Spectrum.from_file(fs)
@@ -52,7 +52,7 @@ def godambe_stat_dfe(fs, cache1d, cache2d, sele_dist, sele_dist2,
                      output, bootstrap_syn_dir, bootstrap_non_dir, 
                      dfe_popt, fixed_params, nomisid, logscale):
 
-    dfe_popt, theta = get_opts_and_theta(dfe_popt, True)
+    dfe_popt, theta = get_opts_and_theta(dfe_popt)
     fixed_params = convert_to_None(fixed_params, len(dfe_popt))
     free_params = _free_params(dfe_popt, fixed_params)
 
@@ -150,5 +150,3 @@ def _convert_free_params(free_params, fixed_params):
         else:
             params.append(fixed_params[i])
     return np.array(params)
-
-
