@@ -4,12 +4,13 @@ import random
 import dadi
 import multiprocessing
 
-from dadi_cli.GenerateFs import generate_fs
-from dadi_cli.InferDM import infer_demography
-from dadi_cli.InferDM import infer_global_opt
-from dadi_cli.InferDFE import infer_dfe
-from dadi_cli.Pdfs import get_dadi_pdf_params
+from dadi_cli.GenerateFs import *
+from dadi_cli.GenerateCache import *
+from dadi_cli.InferDM import *
+from dadi_cli.InferDFE import *
+from dadi_cli.Pdfs import *
 from dadi_cli.Models import *
+from dadi_cli.utilites import *
 
 
 def set_sigpipe_handler():
@@ -41,8 +42,6 @@ def run_generate_fs(args):
 
     
 def run_generate_cache(args):
-    from dadi_cli.GenerateCache import generate_cache
-    from dadi_cli.Models import get_model
     func = get_model(args.model, args.model_file)
     generate_cache(func=func, grids=args.grids, popt=args.demo_popt,
                    gamma_bounds=args.gamma_bounds, gamma_pts=args.gamma_pts, additional_gammas=args.additional_gammas,
@@ -294,7 +293,7 @@ def run_infer_dfe(args):
     if args.p0 == -1: args.p0 = _calc_p0_from_bounds(args.lbounds, args.ubounds)
 
     from dadi_cli.utilities import get_opts_and_theta
-    _, theta = get_opts_and_theta(args.demo_popt, False) 
+    _, theta = get_opts_and_theta(args.demo_popt) 
     theta *= args.ratio
 
     import pickle

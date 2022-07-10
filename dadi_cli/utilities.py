@@ -67,10 +67,8 @@ def get_opts_and_theta(filename):
     fid.close()
 
     theta = opts[-1]
-    if 'misid' in param_names : 
-        opts = opts[1:-2]
-    else: 
-        opts = opts[1:-1]
+    if 'misid' in param_names : opts = opts[1:-2]
+    else: opts = opts[1:-1]
 
     if not is_converged: print('No converged optimization results found.')
 
