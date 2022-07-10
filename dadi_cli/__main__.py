@@ -10,7 +10,7 @@ from dadi_cli.InferDM import *
 from dadi_cli.InferDFE import *
 from dadi_cli.Pdfs import *
 from dadi_cli.Models import *
-from dadi_cli.utilites import *
+from dadi_cli.utilities import *
 
 
 def set_sigpipe_handler():
