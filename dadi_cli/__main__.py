@@ -201,7 +201,7 @@ def run_infer_dm(args):
                     worker.terminate()
             from dadi_cli.utilities import get_opts_and_theta
             import os
-            args.p0, _ = get_opts_and_theta(args.output_prefix+'.global.InferDM.bestfits', True)
+            args.p0, _ = get_opts_and_theta(args.output_prefix+'.global.InferDM.bestfits')
 
     converged = False
     while not converged:
