@@ -42,7 +42,7 @@ def run_generate_fs(args):
 
     
 def run_generate_cache(args):
-    func = get_model(args.model, args.model_file)
+    func, _ = get_model(args.model, args.model_file)
     generate_cache(func=func, grids=args.grids, popt=args.demo_popt,
                    gamma_bounds=args.gamma_bounds, gamma_pts=args.gamma_pts, additional_gammas=args.additional_gammas,
                    output=args.output, sample_sizes=args.sample_sizes, mp=args.mp, cuda=args.cuda, dimensionality=args.dimensionality)
@@ -83,8 +83,8 @@ def run_infer_dm(args):
 
     if args.p0 == -1: args.p0 = _calc_p0_from_bounds(args.lbounds, args.ubounds)
 
-    # Extract model function, from custom model_file if necessary
-    func = get_model(args.model, args.model_file)
+    # Extract model function and parameter names, from custom model_file if necessary
+    func, param_names = get_model(args.model, args.model_file)
 
     if args.maxeval == False: args.maxeval = max(len(args.p0)*50,1)
 
@@ -99,7 +99,6 @@ def run_infer_dm(args):
     fid.write('# {0}\n'.format(' '.join(sys.argv)))
     
     # Write column headers
-    param_names = get_dadi_model_params(args.model, args.model_file)
     if not args.nomisid: param_names += ['misid']
     fid.write('# Log(likelihood)\t'+'\t'.join(param_names)+'\ttheta\n')
 
@@ -422,7 +421,7 @@ def run_stat_demography(args):
     from dadi_cli.Stat import godambe_stat_demograpy
 
     # Extract model function, from custom model_file if necessary
-    func = get_model(args.model, args.model_file)
+    func, _ = get_model(args.model, args.model_file)
 
     godambe_stat_demograpy(fs=args.fs, func=func, bootstrap_dir=args.bootstrapping_dir, grids=args.grids,
                            nomisid=args.nomisid, demo_popt=args.demo_popt, fixed_params=args.constants,
@@ -704,7 +703,8 @@ def dadi_cli_parser():
 # helper functions for reading, parsing, and validating parameters from command line or files
 def _check_params(params, model, option, misid):
     input_params_len = len(params)
-    model_params_len = len(get_dadi_model_params(model, None))
+    _, model_params_len = get_model(model, None)
+    model_params_len = len(model_params_len)
     if misid: input_params_len = input_params_len - 1
     if input_params_len != model_params_len:
         raise Exception("\nFound " + str(input_params_len) + " demographic parameters from the option " + option + 
