@@ -69,6 +69,7 @@ def split_mig_fix_T_sel(params, ns, pts):
 
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
+split_mig_fix_T_sel.__param_names__ = ['nu1', 'nu2', 'm', 'gamma1', 'gamma2']
 
 def split_mig_fix_T_one_s(params, ns, pts):
     """
@@ -76,3 +77,4 @@ def split_mig_fix_T_one_s(params, ns, pts):
     """
     nu1,nu2,m,gamma = params
     return split_mig_fix_T_sel([nu1,nu2,m,gamma,gamma], ns, pts)
+split_mig_fix_T_one_s.__param_names__ = ['nu1', 'nu2', 'm', 'gamma']
