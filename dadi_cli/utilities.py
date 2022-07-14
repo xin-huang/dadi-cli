@@ -34,7 +34,7 @@ def convert_to_None(inference_input, p0_len):
     return inference_input
 
 
-def get_opts_and_theta(filename, gen_cache=False):
+def get_opts_and_theta(filename):
     """
     Description:
         Obtains optimized parameters and theta.
@@ -67,7 +67,7 @@ def get_opts_and_theta(filename, gen_cache=False):
     fid.close()
 
     theta = opts[-1]
-    if gen_cache : opts = opts[1:-2]
+    if 'misid' in param_names : opts = opts[1:-2]
     else: opts = opts[1:-1]
 
     if not is_converged: print('No converged optimization results found.')

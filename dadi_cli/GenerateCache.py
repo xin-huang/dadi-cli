@@ -28,7 +28,7 @@ def generate_cache(func, grids, popt,
         dimensionality int: Dimensionality of the frequency spectrum.
     """
 
-    popt, theta = get_opts_and_theta(popt, True)
+    popt, theta = get_opts_and_theta(popt)
 
     if cuda: dadi.cuda_enabled(True)
 
