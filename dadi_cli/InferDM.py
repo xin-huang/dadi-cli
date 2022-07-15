@@ -4,7 +4,7 @@ import dadi, nlopt
 from dadi_cli.utilities import pts_l_func, convert_to_None
 
 def infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds, 
-                     fixed_params, misid, cuda, maxeval, maxtime, seed=None):
+                     fixed_params, misid, cuda, maxeval, maxtime, bestfits=None, seed=None):
 
     # Set seed for starting parameter values when using WorkQueue
     if seed != None:
@@ -14,11 +14,13 @@ def infer_demography(fs, func, p0, pts_l, upper_bounds, lower_bounds,
     if cuda:
         dadi.cuda_enabled(True)
 
+    if bestfits != None:
+        p0 = bestfits[np.random.randint(len(bestfits))%10]
+
     if misid:
         func = dadi.Numerics.make_anc_state_misid_func(func)
     
     func_ex = dadi.Numerics.make_extrap_func(func)
-
     p0_len = len(p0)
     lower_bounds = convert_to_None(lower_bounds, p0_len)
     upper_bounds = convert_to_None(upper_bounds, p0_len)

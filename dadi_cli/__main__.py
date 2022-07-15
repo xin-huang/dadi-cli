@@ -216,8 +216,15 @@ def run_infer_dm(args):
             # Returns 1 for success, 0 for failure
             if not q.specify_password_file(args.work_queue[1]):
                 raise ValueError('Work Queue password file "{0}" not found.'.format(args.work_queue[1]))
-
+            # Check if we can get a list of top fits
+            print(args.bestfit_p0)
+            if args.bestfit_p0 != None : 
+                bestfits = _top_opts(args.bestfit_p0)
+                print(bestfits)
             for ii in range(args.optimizations):
+                # Replace p0 with one of the top 10 fits if argument is passed in
+                if args.bestfit_p0 != None: 
+                    args.p0 = bestfits[ii%10]
                 new_seed = np.random.randint(1,1e6)
                 t = wq.PythonTask(infer_demography, fs, func, args.p0, args.grids, 
                                   args.ubounds, args.lbounds, args.constants, args.misid, 
@@ -229,9 +236,17 @@ def run_infer_dm(args):
         else:
             from multiprocessing import Process, Queue
 
+            # Check if we can get a list of top fits
+            if args.bestfit_p0 != None : 
+                bestfits = _top_opts(args.bestfit_p0)
+                # args.p0 = bestfits[np.random.randint(len(bestfits)%10)]
+            else:
+                bestfits = None
+
+
             # Worker arguments, leave seed argmument out as it is added in as workers are created
             worker_args = (fs, func, args.p0, args.grids, args.ubounds, args.lbounds, args.constants, args.misid, 
-                           args.cuda, args.maxeval, args.maxtime)
+                           args.cuda, args.maxeval, args.maxtime, bestfits)
 
             # Queues to manage input and output
             in_queue, out_queue = Queue(), Queue()
@@ -239,6 +254,9 @@ def run_infer_dm(args):
             workers = [Process(target=_worker_func, args=(infer_demography, in_queue, out_queue, worker_args)) for ii in range(args.threads)]
             # Put the tasks to be done in the queue.
             for ii in range(args.optimizations):
+                # # Replace p0 with one of the top 10 fits if argument is passed in
+                # if args.bestfit_p0 != None: 
+                #     print(workers[ii].args)
                 new_seed = np.random.randint(1,1e6)
                 in_queue.put(new_seed)
             # Start the workers
@@ -545,7 +563,7 @@ def add_inference_argument(parser):
     parser.add_argument('--maxeval', type=_check_positive_int, default=False, help='Max number of parameter set evaluations tried for optimizing demography. Default: Number of parameters multiplied by 100.')
     parser.add_argument('--maxtime', type=_check_positive_int, default=np.inf, help='Max amount of time for optimizing demography. Default: infinite.')
     parser.add_argument('--threads', type=_check_positive_int, default=multiprocessing.cpu_count(), help='Number of threads using in multiprocessing. Default: All available threads.')
-
+    parser.add_argument('--bestfit-p0-file', type=str, dest='bestfit_p0', help='Pass in a .bestfit or .opt.<N> file name to cycle --p0 between up to the top 10 best fits for each optimization.')
 
 def add_simulation_argument(parser):
     parser.add_argument('--grids', type=_check_positive_int, nargs=3, help='Sizes of grids. Default: None.')
@@ -760,6 +778,37 @@ def _check_dir(path):
         raise argparse.ArgumentTypeError("directory %s does not exist" % parent_dir)
     return path
 
+def _top_opts(filename):
+    """
+    Description:
+        Obtains optimized parameters and theta.
+
+    Arguments:
+        filename str: Name of the file.
+
+    Returns:
+        opts list: Optimized parameters.
+        theta float: Population-scaled mutation rate.
+    """
+    opts = []
+    is_here = False
+    fid = open(filename, 'r')
+    for line in fid.readlines():
+        if line.startswith('# Top'):
+            is_here = True
+            continue
+        elif line.startswith('#'): continue
+        else:
+            try:
+                opts.append([float(_) for _ in line.rstrip().split("\t")])
+            except ValueError:
+                pass
+    fid.close()
+
+    opts = [opt[1:-1] for opt in opts]
+
+    if not is_here: print('No file found.')
+    return opts
 
 # Main function
 def main(arg_list=None):
