@@ -23,14 +23,14 @@ def test_convert_to_None():
 
 
 def test_get_opts_and_theta(capfd):
-    # no misid
-    opts, theta = utilities.get_opts_and_theta("tests/example_data/example.split_mig.demo.params.InferDM.bestfits")
+    # remove misid for cache generation
+    opts, theta = utilities.get_opts_and_theta("tests/example_data/example.split_mig.demo.params.with.misid.InferDM.bestfits", gen_cache=True)
     assert np.allclose(opts, [1.2176133096314186, 1.217675913949673, 0.009847665426385547, 1.0068236071499865])
     assert np.isclose(theta, 99910.43972307118)
 
-    # with misid
+    # keep misid for all other functions
     opts, theta = utilities.get_opts_and_theta("tests/example_data/example.split_mig.demo.params.with.misid.InferDM.bestfits")
-    assert np.allclose(opts, [1.2176133096314186, 1.217675913949673, 0.009847665426385547, 1.0068236071499865])
+    assert np.allclose(opts, [1.2176133096314186, 1.217675913949673, 0.009847665426385547, 1.0068236071499865, 0.05])
     assert np.isclose(theta, 99910.43972307118)
 
     # no convergence

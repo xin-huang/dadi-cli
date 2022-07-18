@@ -34,12 +34,18 @@ def get_model(model_name, model_file=None):
     """
     model_name0 = model_name
     if model_file != None:
-        model_file = os.path.abspath(model_file)
-        model_path = os.path.dirname(model_file)
-        model_file = os.path.basename(model_file)
-        model_file = os.path.splitext(model_file)[0]
-        sys.path.append(model_path)
-        func = getattr(importlib.import_module(model_file), model_name)
+        # If the user has the model folder in their PATH
+        try:
+            func = getattr(importlib.import_module(model_file), model_name)
+        # If the user does not have the model folder in their PATH we add it
+        # This currently can mess with the User's PATH while running dadi-cli
+        except:
+            model_file = os.path.abspath(model_file)
+            model_path = os.path.dirname(model_file)
+            model_file = os.path.basename(model_file)
+            model_file = os.path.splitext(model_file)[0]
+            sys.path.append(model_path)
+            func = getattr(importlib.import_module(model_file), model_name)
     elif model_name in oned_models: func = getattr(dadi.Demographics1D, model_name)
     elif model_name in twod_models: func = getattr(dadi.Demographics2D, model_name)
     elif model_name in sele_models: func = getattr(DFE.DemogSelModels, model_name)
