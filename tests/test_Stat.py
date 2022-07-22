@@ -26,8 +26,18 @@ def test_StatDM_code():
     fixed_params = -1
     nomisid = True
     logscale = False
-    godambe_stat_demograpy(fs, func, grids, output, bootstrap_dir, 
-                           demo_popt, fixed_params, nomisid, logscale)
+    godambe_stat_demograpy(
+        fs,
+        func,
+        grids,
+        output,
+        bootstrap_dir,
+        demo_popt,
+        fixed_params,
+        nomisid,
+        logscale,
+    )
+
 
 # def test_StatDM_fix_code():
 #     fs = "tests/example_data/split_mig_syn.fs"
@@ -41,7 +51,7 @@ def test_StatDM_code():
 #     fixed_params = [-1, -1, 0.00984767, -1]
 #     nomisid = True
 #     logscale = False
-#     godambe_stat_demograpy(fs, func, grids, output, bootstrap_dir, 
+#     godambe_stat_demograpy(fs, func, grids, output, bootstrap_dir,
 #                            demo_popt, fixed_params, nomisid, logscale)
 
 
@@ -58,9 +68,20 @@ def test_StatDFE_code_mix_lognormal():
     fixed_params = [-1, -1, 0, -1]
     nomisid = True
     logscale = False
-    godambe_stat_dfe(fs, cache1d, cache2d, sele_dist1, sele_dist2,
-                     output, bootstrap_syn_dir, bootstrap_non_dir, 
-                     dfe_popt, fixed_params, nomisid, logscale)
+    godambe_stat_dfe(
+        fs,
+        cache1d,
+        cache2d,
+        sele_dist1,
+        sele_dist2,
+        output,
+        bootstrap_syn_dir,
+        bootstrap_non_dir,
+        dfe_popt,
+        fixed_params,
+        nomisid,
+        logscale,
+    )
 
 
 def test_StatDFE_code_1d_lognormal():
@@ -72,13 +93,26 @@ def test_StatDFE_code_1d_lognormal():
     output = "./tests/test_results/example.split_mig.dfe.1D_lognormal.params.ci"
     bootstrap_syn_dir = "tests/example_data/split_mig_bootstrap_syn/"
     bootstrap_non_dir = "tests/example_data/split_mig_bootstrap_non/bootstrap_non_1d/"
-    dfe_popt = "tests/example_data/example.split_mig.dfe.1D_lognormal.params.InferDFE.bestfits"
+    dfe_popt = (
+        "tests/example_data/example.split_mig.dfe.1D_lognormal.params.InferDFE.bestfits"
+    )
     fixed_params = -1
     nomisid = True
     logscale = False
-    godambe_stat_dfe(fs, cache1d, cache2d, sele_dist1, sele_dist2,
-                     output, bootstrap_syn_dir, bootstrap_non_dir, 
-                     dfe_popt, fixed_params, nomisid, logscale)
+    godambe_stat_dfe(
+        fs,
+        cache1d,
+        cache2d,
+        sele_dist1,
+        sele_dist2,
+        output,
+        bootstrap_syn_dir,
+        bootstrap_non_dir,
+        dfe_popt,
+        fixed_params,
+        nomisid,
+        logscale,
+    )
 
 
 def test_StatDFE_code_2d_lognormal():
@@ -90,13 +124,27 @@ def test_StatDFE_code_2d_lognormal():
     output = "./tests/test_results/example.split_mig.dfe.2D_lognormal.params.ci"
     bootstrap_syn_dir = "tests/example_data/split_mig_bootstrap_syn/"
     bootstrap_non_dir = "tests/example_data/split_mig_bootstrap_non/bootstrap_non_2d/"
-    dfe_popt = "tests/example_data/example.split_mig.dfe.2D_lognormal.params.InferDFE.bestfits"
+    dfe_popt = (
+        "tests/example_data/example.split_mig.dfe.2D_lognormal.params.InferDFE.bestfits"
+    )
     fixed_params = -1
     nomisid = True
     logscale = False
-    godambe_stat_dfe(fs, cache1d, cache2d, sele_dist1, sele_dist2,
-                     output, bootstrap_syn_dir, bootstrap_non_dir, 
-                     dfe_popt, fixed_params, nomisid, logscale)
+    godambe_stat_dfe(
+        fs,
+        cache1d,
+        cache2d,
+        sele_dist1,
+        sele_dist2,
+        output,
+        bootstrap_syn_dir,
+        bootstrap_non_dir,
+        dfe_popt,
+        fixed_params,
+        nomisid,
+        logscale,
+    )
+
 
 @pytest.mark.skip()
 def test_StatDFE_terminal_1d_lognormal():
@@ -106,17 +154,28 @@ def test_StatDFE_terminal_1d_lognormal():
     output = "./tests/test_results/example.split_mig.dfe.mixture_lognormal.params.ci"
     bootstrap_syn_dir = "tests/example_data/split_mig_bootstrap_syn/"
     bootstrap_non_dir = "tests/example_data/split_mig_bootstrap_non/bootstrap_non_1d/"
-    dfe_popt = "tests/example_data/example.split_mig.dfe.1d_lognormal.params.InferDFE.bestfits"
-    subprocess.run(
-        "dadi-cli StatDFE --nomisid" +
-        " --fs " + fs +
-        " --dfe-popt " + dfe_popt +
-        " --cache1d " + cache1d +
-        " --pdf1d " + sele_dist1 +
-        " --bootstrapping-synonymous-dir " + bootstrap_syn_dir +
-        " --bootstrapping-nonsynonymous-dir " + bootstrap_non_dir +
-        " --output " + output, shell=True
+    dfe_popt = (
+        "tests/example_data/example.split_mig.dfe.1d_lognormal.params.InferDFE.bestfits"
     )
+    subprocess.run(
+        "dadi-cli StatDFE --nomisid"
+        + " --fs "
+        + fs
+        + " --dfe-popt "
+        + dfe_popt
+        + " --cache1d "
+        + cache1d
+        + " --pdf1d "
+        + sele_dist1
+        + " --bootstrapping-synonymous-dir "
+        + bootstrap_syn_dir
+        + " --bootstrapping-nonsynonymous-dir "
+        + bootstrap_non_dir
+        + " --output "
+        + output,
+        shell=True,
+    )
+
 
 @pytest.mark.skip()
 def test_StatDFE_terminal_2d_lognormal():
@@ -128,19 +187,30 @@ def test_StatDFE_terminal_2d_lognormal():
     output = "./tests/test_results/example.split_mig.dfe.2D_lognormal.params.ci"
     bootstrap_syn_dir = "tests/example_data/split_mig_bootstrap_syn/"
     bootstrap_non_dir = "tests/example_data/split_mig_bootstrap_non/bootstrap_non_2d/"
-    dfe_popt = "tests/example_data/example.split_mig.dfe.2D_lognormal.params.InferDFE.bestfits"
+    dfe_popt = (
+        "tests/example_data/example.split_mig.dfe.2D_lognormal.params.InferDFE.bestfits"
+    )
     nomisid = True
     logscale = False
     subprocess.run(
-        "dadi-cli StatDFE --nomisid" +
-        " --fs " + fs +
-        " --dfe-popt " + dfe_popt +
-        " --cache2d " + cache2d +
-        " --pdf2d " + sele_dist2 +
-        " --bootstrapping-synonymous-dir " + bootstrap_syn_dir +
-        " --bootstrapping-nonsynonymous-dir " + bootstrap_non_dir +
-        " --output " + output, shell=True
+        "dadi-cli StatDFE --nomisid"
+        + " --fs "
+        + fs
+        + " --dfe-popt "
+        + dfe_popt
+        + " --cache2d "
+        + cache2d
+        + " --pdf2d "
+        + sele_dist2
+        + " --bootstrapping-synonymous-dir "
+        + bootstrap_syn_dir
+        + " --bootstrapping-nonsynonymous-dir "
+        + bootstrap_non_dir
+        + " --output "
+        + output,
+        shell=True,
     )
+
 
 @pytest.mark.skip()
 def test_StatDFE_terminal_mix_lognormal():
@@ -155,15 +225,26 @@ def test_StatDFE_terminal_mix_lognormal():
     dfe_popt = "tests/example_data/example.split_mig.dfe.lognormal_mixture.params.InferDFE.bestfits"
     constants = "-1 -1 0 -1"
     subprocess.run(
-        "dadi-cli StatDFE --nomisid" +
-        " --fs " + fs +
-        " --dfe-popt " + dfe_popt +
-        " --constants " + constants +
-        " --cache1d " + cache1d +
-        " --cache2d " + cache2d +
-        " --pdf1d " + sele_dist1 +
-        " --pdf2d " + sele_dist2 +
-        " --bootstrapping-synonymous-dir " + bootstrap_syn_dir +
-        " --bootstrapping-nonsynonymous-dir " + bootstrap_non_dir +
-        " --output " + output, shell=True
+        "dadi-cli StatDFE --nomisid"
+        + " --fs "
+        + fs
+        + " --dfe-popt "
+        + dfe_popt
+        + " --constants "
+        + constants
+        + " --cache1d "
+        + cache1d
+        + " --cache2d "
+        + cache2d
+        + " --pdf1d "
+        + sele_dist1
+        + " --pdf2d "
+        + sele_dist2
+        + " --bootstrapping-synonymous-dir "
+        + bootstrap_syn_dir
+        + " --bootstrapping-nonsynonymous-dir "
+        + bootstrap_non_dir
+        + " --output "
+        + output,
+        shell=True,
     )

@@ -9,23 +9,27 @@ from inspect import isfunction, getmembers
 # Define varibles to hold list of all dadi model names and functions
 @pytest.fixture
 def model_list():
-    pytest.demo_model_list = getmembers(dadi.Demographics1D, isfunction) + getmembers(dadi.Demographics2D, isfunction)
+    pytest.demo_model_list = getmembers(dadi.Demographics1D, isfunction) + getmembers(
+        dadi.Demographics2D, isfunction
+    )
     pytest.sel_model_list = getmembers(DFE.DemogSelModels, isfunction)
 
 
 def test_get_built_in_model(model_list):
-    for model in pytest.demo_model_list: #+ pytest.sel_model_list:
-        if model[0] == 'bottlegrowth': continue
-        if model[0] == 'snm': continue
+    for model in pytest.demo_model_list:  # + pytest.sel_model_list:
+        if model[0] == "bottlegrowth":
+            continue
+        if model[0] == "snm":
+            continue
         func, params = get_model(model[0])
         assert func == model[1]
         assert params == model[1].__param_names__
 
     # Cover error message
     with pytest.raises(ValueError) as e_info:
-        get_model('haha')
+        get_model("haha")
 
-    assert str(e_info.value) == 'Cannot find model: haha.'
+    assert str(e_info.value) == "Cannot find model: haha."
 
 
 def test_print_built_in_models(capfd, model_list):
@@ -81,21 +85,23 @@ def test_print_built_in_models(capfd, model_list):
 
 
 def test_print_built_in_model_details(capfd, model_list):
-    for model in pytest.demo_model_list: #+ pytest.sel_model_list:
-        if model[0] == 'bottlegrowth': continue
-        if model[0] == 'snm': continue
+    for model in pytest.demo_model_list:  # + pytest.sel_model_list:
+        if model[0] == "bottlegrowth":
+            continue
+        if model[0] == "snm":
+            continue
         print_built_in_model_details(model[0])
-        out = ''
+        out = ""
         out, err = capfd.readouterr()
         model_doc = model[1].__doc__
-        model_doc_new = ''
-        for ele in model_doc.split('\n'):
-            if 'ns:' not in ele and 'pts:' not in ele and 'n1' not in ele:
-                model_doc_new += '\t' + ele.strip()+'\n'
-        model_doc_new = '- '+model[0]+':\n\n\t' + model_doc_new.strip() + '\n\n'
+        model_doc_new = ""
+        for ele in model_doc.split("\n"):
+            if "ns:" not in ele and "pts:" not in ele and "n1" not in ele:
+                model_doc_new += "\t" + ele.strip() + "\n"
+        model_doc_new = "- " + model[0] + ":\n\n\t" + model_doc_new.strip() + "\n\n"
         assert out == model_doc_new
 
     with pytest.raises(ValueError) as e_info:
-        print_built_in_model_details('mixture')
+        print_built_in_model_details("mixture")
 
-    assert str(e_info.value) == 'Cannot find model: mixture.'
+    assert str(e_info.value) == "Cannot find model: mixture."

@@ -26,8 +26,8 @@ setup(
     ],
     packages=["dadi_cli"],
     include_package_data=True,
-    #install_requires=[
+    # install_requires=[
     #    "dadi"
-    #],
+    # ],
     entry_points={"console_scripts": ["dadi-cli=dadi_cli.__main__:main"]},
 )
