@@ -78,7 +78,6 @@ def infer_dfe(
         func = dadi.Numerics.make_anc_state_misid_func(func)
 
     p0_len = len(p0)
-    p0 = convert_to_None(p0, p0_len)
     lower_bounds = convert_to_None(lower_bounds, p0_len)
     upper_bounds = convert_to_None(upper_bounds, p0_len)
     fixed_params = convert_to_None(fixed_params, p0_len)
