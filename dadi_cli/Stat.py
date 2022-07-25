@@ -35,7 +35,7 @@ def godambe_stat_demograpy(
 
     f = open(output, "w")
     for eps in [0.01, 0.001, 0.0001]:
-        popt = np.array(demo_popt)  # [1:-1]
+        popt = np.array(free_params)
         uncerts_adj = dadi.Godambe.GIM_uncert(
             gfunc, grids, all_boot, popt, fs, multinom=True, log=logscale, eps=eps
         )
