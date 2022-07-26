@@ -58,9 +58,11 @@ def generate_fs(
             _mask_entries(fs, masking)
         fs.to_file(output)
     else:
+        if seed != None:
+            random.seed(seed)
         for b in range(bootstrap):
             fs = _generate_bootstrap_fs(
-                dd, chunk_size, pop_ids, projections, polarized, seed
+                dd, chunk_size, pop_ids, projections, polarized
             )
             if marginalize_pops != None:
                 fs = _marginalized_fs(fs, marginalize_pops, pop_ids)
@@ -69,7 +71,7 @@ def generate_fs(
             fs.to_file(output + ".bootstrapping." + str(b) + ".fs")
 
 
-def _generate_bootstrap_fs(dd, chunk_size, pop_ids, projections, polarized, seed):
+def _generate_bootstrap_fs(dd, chunk_size, pop_ids, projections, polarized):
     """
     Description:
         Helper function for bootstrapping a frequency spectrum.
@@ -81,13 +83,10 @@ def _generate_bootstrap_fs(dd, chunk_size, pop_ids, projections, polarized, seed
         projections list: List of sample sizes after projection.
         polarized bool: If True, unfolded spectrum is generated;
                         Otherwise, folded spectrum is generated.
-        seed int: Seed for generating random numbers.
 
     Returns:
         fs dadi.Sepctrum: Bootstrapped frequency spectrum.
     """
-    if seed != None:
-        random.seed(seed)
     # split the dictionary by chromosome name
     ndd = {}
     for k in dd.keys():
