@@ -155,10 +155,6 @@ def godambe_stat_dfe(
 
     f = open(output, "w")
     for eps in [0.01, 0.001, 0.0001]:
-        if (cache1d != None) and (cache2d != None):
-            popt = np.concatenate([dfe_popt[0:2], dfe_popt[3:]])
-        else:
-            popt = np.array(dfe_popt)
         free_params = np.array(free_params)
         boot_theta_adjusts = [b.sum() / fs.sum() for b in all_syn_boot]
         uncerts_adj = dadi.Godambe.GIM_uncert(
@@ -223,7 +219,7 @@ def _free_params(dfe_popt, fixed_params):
             index_free_fixed[i] = ("free", i)
         else:
             fixed_index[i] = fixed_params[i]
-    return free_params  # , fixed_index
+    return free_params
 
 
 # Because the free params need to be passed into Godambe and func but also
