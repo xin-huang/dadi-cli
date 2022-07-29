@@ -46,19 +46,6 @@ def infer_demography(
     if pts_l is None:
         pts_l = pts_l_func(fs.sample_sizes)
 
-    print(
-        'p0:',p0,'\n',
-        fs,'\n',
-        func_ex,'\n',
-        'grids:',pts_l,'\n',
-        'lower_bound',lower_bounds,'\n',
-        'upper_bound',upper_bounds,'\n',
-        'fixed_params',fixed_params,'\n',
-        'algorithm',nlopt.LN_BOBYQA,'\n',
-        'maxeval',maxeval,'\n',
-        'maxtime',maxtime,'\n',
-        'verbose',0,'\n',
-    )
     popt, _ = dadi.Inference.opt(
         p0,
         fs,
