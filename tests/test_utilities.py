@@ -16,7 +16,12 @@ def test_convert_to_None():
     assert utilities.convert_to_None(inference_input, p0_len) == [1, 2, 3, 4]
 
     inference_input = -1
-    assert utilities.convert_to_None(inference_input, p0_len) == [None, None, None, None]
+    assert utilities.convert_to_None(inference_input, p0_len) == [
+        None,
+        None,
+        None,
+        None,
+    ]
 
     inference_input = [-1, 2, 3, 4]
     assert utilities.convert_to_None(inference_input, p0_len) == [None, 2, 3, 4]
@@ -24,16 +29,40 @@ def test_convert_to_None():
 
 def test_get_opts_and_theta(capfd):
     # remove misid for cache generation
-    opts, theta = utilities.get_opts_and_theta("tests/example_data/example.split_mig.demo.params.with.misid.InferDM.bestfits", gen_cache=True)
-    assert np.allclose(opts, [1.2176133096314186, 1.217675913949673, 0.009847665426385547, 1.0068236071499865])
+    opts, theta = utilities.get_opts_and_theta(
+        "tests/example_data/example.split_mig.demo.params.with.misid.InferDM.bestfits",
+        gen_cache=True,
+    )
+    assert np.allclose(
+        opts,
+        [
+            1.2176133096314186,
+            1.217675913949673,
+            0.009847665426385547,
+            1.0068236071499865,
+        ],
+    )
     assert np.isclose(theta, 99910.43972307118)
 
     # keep misid for all other functions
-    opts, theta = utilities.get_opts_and_theta("tests/example_data/example.split_mig.demo.params.with.misid.InferDM.bestfits")
-    assert np.allclose(opts, [1.2176133096314186, 1.217675913949673, 0.009847665426385547, 1.0068236071499865, 0.05])
+    opts, theta = utilities.get_opts_and_theta(
+        "tests/example_data/example.split_mig.demo.params.with.misid.InferDM.bestfits"
+    )
+    assert np.allclose(
+        opts,
+        [
+            1.2176133096314186,
+            1.217675913949673,
+            0.009847665426385547,
+            1.0068236071499865,
+            0.05,
+        ],
+    )
     assert np.isclose(theta, 99910.43972307118)
 
     # no convergence
-    opts, theta = utilities.get_opts_and_theta("tests/example_data/example.split_mig.demo.params.InferDM.no.convergence.bestfits")
+    opts, theta = utilities.get_opts_and_theta(
+        "tests/example_data/example.split_mig.demo.params.InferDM.no.convergence.bestfits"
+    )
     out, err = capfd.readouterr()
     assert out.rstrip() == "No converged optimization results found."

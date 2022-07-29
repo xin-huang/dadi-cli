@@ -17,12 +17,12 @@ To get help information, users can use
 
     dadi-cli -h
 
-There are nine subcommands in `dadi-cli`: 
+There are nine subcommands in `dadi-cli`:
 - `GenerateFs`
 - `GenerateCache`
 - `InferDM`
 - `InferDFE`
-- `BestFit` 
+- `BestFit`
 - `Stat`
 - `Plot`
 - `Model`
@@ -31,7 +31,7 @@ There are nine subcommands in `dadi-cli`:
 To display help information for each subcommand, users can use
 
     dadi-cli subcommand -h
-    
+
 For example,
 
     dadi-cli GenerateFs -h
@@ -47,7 +47,7 @@ Here we use the data from the 1000 Genomes Project to demonstrate how to apply `
 `dadi-cli` only accepts VCF files to generate allele frequency spectra. To generate a spectrum, users can use
 
     dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 20 20 --polarized --output ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfold.fs
-    
+
     dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.nonsynonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 20 20 --polarized --output ./examples/results/fs/1KG.YRI.CEU.20.nonsynonymous.snps.unfold.fs
 
 Here `./examples/data/1KG.YRI.CEU.popfile.txt` is a file providing the population information for each individual. In the population information file, each line contains two fields. The first field is the name of the individual, and the second field is the name of the population that the individual belongs to. For example,
@@ -70,11 +70,11 @@ While making the spectrum, users can also mask the singleton calls that are excl
 ### Inferring demographic models
 
 In this example, we infer a demographic model from the spectrum for synonymous SNPs. Here, we use the `split_mig` model. In this model, the ancestral population diverges into two populations, which then have an instantaneous change of population size with migration between the two populations over time. To see descriptions of the four parameters of the `split_mig` model, use `dadi-cli Model --names split_mig`.
-By default, with unfolded data an additional parameter is added, which quantifies the proportion of sites for which the ancestral state was misidentified. 
+By default, with unfolded data an additional parameter is added, which quantifies the proportion of sites for which the ancestral state was misidentified.
 (To disable this, use the `--nomisid` option.)
 Therefore, we have five parameters in total.
 
-To start the inference, users should specify the lower bounds and upper bounds for these parameters with `--lbounds` and `--ubounds`. For demographic models, setting parameter boundaries prevents optimizers from going into parameter spaces that are hard for `dadi` to calculate, such as low population size, high time, and high migration. 
+To start the inference, users should specify the lower bounds and upper bounds for these parameters with `--lbounds` and `--ubounds`. For demographic models, setting parameter boundaries prevents optimizers from going into parameter spaces that are hard for `dadi` to calculate, such as low population size, high time, and high migration.
 In this case, we set the range of relative population sizes to be explored as 1e-3 to 100, the range of divergence time to 0 to 1, the range of migration rates from 0 to 10, and the range of misidentification proportions to 0 to 0.5.
 (Parameters can be fixed to certain values with `--constants`. In that case, `-1` indicates that a parameter is free to vary.)
 Because we need to run optimization several times to find a converged result with maximum likelihood, we use `--optimizations` to specify how many times the optimization will run. `dadi-cli` can use multiprocessing to run optimizations in parallel and by default the max number of CPUs available will be utilized. If users want fewer CPUs to be used, they can use the `--threads` option to pass in the number of CPUs they want utilized for multiprocessing.
@@ -83,12 +83,12 @@ Because we need to run optimization several times to find a converged result wit
 
     dadi-cli InferDM --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfold.fs --model split_mig --lbounds 1e-3 1e-3 0 0 0 --ubounds 100 100 1 10 0.5  --output ./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params --optimizations 10
 
-After the optimization, a file `./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params.InferDM.opts.0` will be made. Any subsequent optimzations using the same output argument will be number `.1`, `.2`, etc. 
+After the optimization, a file `./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params.InferDM.opts.0` will be made. Any subsequent optimzations using the same output argument will be number `.1`, `.2`, etc.
 
 Users can use `BestFit` to obtain the best fit parameters across all optimization runs with a matching prefix.
 
-    dadi-cli BestFit --input-prefix ./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params.InferDM --lbounds 1e-3 1e-3 0 0 0 --ubounds 100 100 1 10 0.5 
-    
+    dadi-cli BestFit --input-prefix ./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params.InferDM --lbounds 1e-3 1e-3 0 0 0 --ubounds 100 100 1 10 0.5
+
 The result is in a file `./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params.InferDM.bestfits`. This file contains the 100 highest likelihood parameter sets found (if at least that many optimizations have been carried out). If optimization converged, then the file also contains the converged results.
 
 The results look like:
@@ -115,7 +115,7 @@ The results look like:
     -1437.4626671227088	2.348110308415506	0.6039083548424201	0.456754335717111	1.2524206835381557	0.030106689556776402	5971.036610931144
     -1591.7611157189594	1.9723568097803748	0.5074933640133197	0.9819908721498116	1.6576780338511465	0.024964816092429044	5651.0110782323845
     -2008.8420038152385	4.223980226535977	0.7590647581822983	0.2679298140727045	0.7488053157919355	0.01757046441838214	5977.616341188507A
-    
+
 Because there is randomness built into dadi-cli for where the starting parameters are for each optimization, it is possible the results could have not converged. Some things that can be done when using `InferDM` are increasing the max number of parameter sets each optimization will attempt with the `--maxeval` option. Users can also try to use a global optimization before moving onto the local optimization with the `--global-optimization` option. 25% of the number of optimizations the user passes in will be used for the global and the remaining will be used for the local optimization.
 
 Using `BestFit`, users can adjust the criteria for convergence. By default optimizations are considered convergent if there are two other optimizations with a log-likelihood within 0.01% units of the optimization with the best log-likelihood. This criteria can be adjusted using the `--delta-ll` option and passing in the percentage difference in decimal form (so the default is 0.0001, rather than 0.01). Generally a higher `--delta-ll` can result in a false positive convergence, but this is dependent on the data being used (especially the sample size can effect the size of the log-likelihood). Optimizations in the bestfit file will be ordered by log-likelihood and should be examined closely for similarity of parameter values in convergent fits.
@@ -150,14 +150,14 @@ Then defines the demographic model:
         Instantaneous split into two populations of specified size, with symmetric migration and a fixed time point.
         """
         nu1,nu2,m = params
-        
+
         xx = Numerics.default_grid(pts)
-        
+
         phi = PhiManip.phi_1D(xx)
         phi = PhiManip.phi_1D_to_2D(xx, phi)
-        
+
         phi = Integration.two_pops(phi, xx, 0.3, nu1, nu2, m12=m, m21=m)
-        
+
         fs = Spectrum.from_phi(phi, ns, (xx,xx))
         return fs
 
@@ -178,10 +178,10 @@ When making your demographic models with selection and setting the inital $\phi$
 Because custom model files can have multiple models in them, users will still want to use `--model` to pass in the model for demographic inference and cache generation. Here are some quick examples for users to run:
 
     dadi-cli InferDM --model split_mig_fix_T --model-file examples/data/split_mig_fix_T_models --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfold.fs --p0 2 0.5 1.2 .02 --ubounds 3 1 2 0.03 --lbounds 1 1e-1 1e-1 1e-3 --grids 60 80 100 --output ./examples/results/demo/1KG.YRI.CEU.20.split_mig_fix_T.demo.params --optimizations 20 --maxeval 300 --check-convergence
-    
+
     dadi-cli GenerateCache --model split_mig_fix_T_one_s --model-file examples/data/split_mig_fix_T_models --demo-popt ./examples/results/demo/1KG.YRI.CEU.20.split_mig_fix_T.demo.params.InferDM.bestfits --sample-size 20 20 --grids 160 180 200 --gamma-pts 10 --gamma-bounds 1e-4 20 --output ./examples/results/caches/1KG.YRI.CEU.20.split_mig_one_s_psudo_new_model.spectra.bpkl --mp
-    
-    dadi-cli GenerateCache --model split_mig_fix_T_sel --model-file examples/data/split_mig_fix_T_models --dimensionality 2 --demo-popt ./examples/results/demo/1KG.YRI.CEU.20.split_mig_fix_T.demo.params.InferDM.bestfits --sample-size 20 20 --grids 160 180 200 --gamma-pts 10 --gamma-bounds 1e-4 20 --output ./examples/results/caches/1KG.YRI.CEU.20.split_mig_sel_psudo_new_model.spectra.bpkl --mp 
+
+    dadi-cli GenerateCache --model split_mig_fix_T_sel --model-file examples/data/split_mig_fix_T_models --dimensionality 2 --demo-popt ./examples/results/demo/1KG.YRI.CEU.20.split_mig_fix_T.demo.params.InferDM.bestfits --sample-size 20 20 --grids 160 180 200 --gamma-pts 10 --gamma-bounds 1e-4 20 --output ./examples/results/caches/1KG.YRI.CEU.20.split_mig_sel_psudo_new_model.spectra.bpkl --mp
 
 ### Inferring DFE
 
@@ -276,7 +276,7 @@ To compare frequency spectra between a demographic model without selection and d
 To compare frequency spectra between a demographic model with selection and data, users can use
 
     dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.20.nonsynonymous.snps.unfold.fs --model split_mig --pdf1d lognormal --pdf2d biv_lognormal --dfe-popt ./examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.lognormal_mixture.params.InferDFE.bestfits --cache1d ./examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.spectra.bpkl --output ./examples/results/plots/1KG.YRI.CEU.20.nonsynonymous.snps.vs.lognormal_mixture.pdf
-    
+
 By default, `dadi-cli` projects the sample size down to 20 for each population. Users can use `--projections` to lower the sample size for visualization purposes.
 
 ### Using WorkQueue for distributed inference with dadi-cli
@@ -284,12 +284,12 @@ By default, `dadi-cli` projects the sample size down to 20 for each population. 
 `dadi-cli` `InferDM` and `InferDFE` has built in options to work with  Cooperative Computing Tools (`CCTools`)'s `Work Queue` for launching independent optimizations across multiple machines. This example will be for submitting jobs to a `Slurm Workload Manager`. First we want to submit a factory.
 
     work_queue_factory -T local -M dm-inference -P ./tests/mypwfile --workers-per-cycle=0 --cores=1 &
-    
+
 `dm-inference` is the project name and `mypwfile` is a file containing a password, both of which are needed for `dadi-cli` use. Next you'll want to submit jobs from `dadi-cli`.
 
     dadi-cli InferDM --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfold.fs --model split_mig --p0 1 1 .5 1 .5 --ubounds 10 10 1 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5 --grids 60 80 100 --output ./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.work_queue.params --optimizations 5 --maxeval 200 --check-convergence --work-queue dm-inference ./tests/mypwfile
 
-`dadi-cli` will send the number of workers as the number of optimizations you request. The `check-convergence` and `force-convergence` options work with `Work Queue` as well. 
+`dadi-cli` will send the number of workers as the number of optimizations you request. The `check-convergence` and `force-convergence` options work with `Work Queue` as well.
 
 ### Available demographic models
 
@@ -297,7 +297,7 @@ By default, `dadi-cli` projects the sample size down to 20 for each population. 
 To find out available demographic models, users can use
 
     dadi-cli Model --names
-    
+
 Then the available demographic models will be displayed in the screen:
 
     Available 1D demographic models:
@@ -306,7 +306,7 @@ Then the available demographic models will be displayed in the screen:
     - snm_1d
     - three_epoch
     - two_epoch
-    
+
     Available 2D demographic models:
     - bottlegrowth_2d
     - bottlegrowth_split
@@ -316,7 +316,7 @@ Then the available demographic models will be displayed in the screen:
     - split_mig
     - split_asym_mig
     - snm_2d
-    
+
     Available demographic models with selection:
     - equil
     - equil_X
@@ -334,19 +334,19 @@ Then the available demographic models will be displayed in the screen:
 To find out the parameters and detail of a specific model, users can use the name of the demograpic model as the parameter after `--names`. For example,
 
     dadi-cli Model --names split_mig
-    
+
 Then the detail of the model will be displayed in the screen:
 
     - split_mig:
-    
+
             Split into two populations of specifed size, with symmetric migration.
             Two populations in this model.
-    
+
             params = [nu1,nu2,T,m]
-        
+
                 nu1: Size of population 1 after split (in units of Na)
                 nu2: Size of population 2 after split (in units of Na)
-                  T: Time in the past of split (in units of 2*Na generations) 
+                  T: Time in the past of split (in units of 2*Na generations)
                   m: Migration rate between populations (2*Na*m)
 
 ### Available DFE distributions
@@ -356,7 +356,7 @@ Then the detail of the model will be displayed in the screen:
 To find out available probability density functions, users can use
 
     dadi-cli Pdf --names
-    
+
 Then the availalbe functions will be displayed in the screen:
 
     Available probability density functions:
@@ -372,13 +372,13 @@ Then the availalbe functions will be displayed in the screen:
 To find out the parameters and the detail of a specific function, users can use the name of the function as the parameter after `--names`. For example,
 
     dadi-cli Pdf --names lognormal
-    
+
 Then the detail of the function will be displayed in the screen:
 
     - lognormal:
-    
+
             Lognormal probability density function.
-    
+
             params = [log_mu, log_sigma]
 
 ## Dependencies
