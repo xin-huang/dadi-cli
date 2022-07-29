@@ -382,6 +382,7 @@ def run_infer_dm(args):
                 args.cuda,
                 args.maxeval,
                 args.maxtime,
+                bestfits,
             )
 
             # Queues to manage input and output
