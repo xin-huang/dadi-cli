@@ -60,76 +60,16 @@ def generate_fs(
     else:
         if seed != None:
             random.seed(seed)
-        for b in range(bootstrap):
-            fs = _generate_bootstrap_fs(
-                dd, chunk_size, pop_ids, projections, polarized
-            )
+        fragments = dadi.Misc.fragment_data_dict(dd, chunk_size)
+        bootstrap_list = dadi.Misc.bootstraps_from_dd_chunks(
+            fragments, bootstrap, pop_ids, projections, polarized
+        )
+        for fs, b in zip(bootstrap_list, range(len(bootstrap_list))):
             if marginalize_pops != None:
                 fs = _marginalized_fs(fs, marginalize_pops, pop_ids)
             if masking != "":
                 _mask_entries(fs, masking)
             fs.to_file(output + ".bootstrapping." + str(b) + ".fs")
-
-
-def _generate_bootstrap_fs(dd, chunk_size, pop_ids, projections, polarized):
-    """
-    Description:
-        Helper function for bootstrapping a frequency spectrum.
-
-    Arguments:
-        dd dict: Data dictionary created by dadi.Misc.make_data_dict_vcf().
-        chunk_size int: Chunk size to divide the genomes for bootstrapping.
-        pop_ids list: List of population ids.
-        projections list: List of sample sizes after projection.
-        polarized bool: If True, unfolded spectrum is generated;
-                        Otherwise, folded spectrum is generated.
-
-    Returns:
-        fs dadi.Sepctrum: Bootstrapped frequency spectrum.
-    """
-    # split the dictionary by chromosome name
-    ndd = {}
-    for k in dd.keys():
-        chrname, pos = "_".join(k.split("_")[:-1]), k.split("_")[-1]
-        if chrname not in ndd:
-            ndd[chrname] = {}
-        if pos not in ndd[chrname]:
-            ndd[chrname][int(pos)] = 1
-
-    # generate chunks with given chunk size
-    chunks = {}
-    for chrname in ndd.keys():
-        if chrname not in chunks:
-            chunks[chrname] = []
-        pos = sorted(ndd[chrname])
-        end = chunk_size
-        chunk_index = 0
-        chunks[chrname].append([])
-        for p in pos:
-            if p <= end:
-                chunks[chrname][chunk_index].append(p)
-            else:
-                end += chunk_size
-                chunk_index += 1
-                chunks[chrname].append([])
-                chunks[chrname][chunk_index].append(p)
-
-    # sample the dictionary with replacement
-    bdd = {}
-    index = 0
-    for chrname in chunks.keys():
-        random_chunks = random.choices(
-            range(len(chunks[chrname])), k=len(chunks[chrname])
-        )
-        for chunk in random_chunks:
-            for pos in chunks[chrname][chunk]:
-                bdd.update({index: dd[chrname + "_" + str(pos)]})
-                index += 1
-    fs = dadi.Spectrum.from_data_dict(
-        bdd, pop_ids=pop_ids, projections=projections, polarized=polarized
-    )
-    return fs
-
 
 def _mask_entries(fs, masking):
     """
