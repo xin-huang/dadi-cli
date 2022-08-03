@@ -477,12 +477,17 @@ def run_infer_dfe(args):
 
     if args.cache1d != None:
         cache1d = pickle.load(open(args.cache1d, "rb"))
+        cache_ns = cache1d.ns
     else:
         cache1d = args.cache1d
     if args.cache2d != None:
         cache2d = pickle.load(open(args.cache2d, "rb"))
+        cache_ns = cache2d.ns
     else:
         cache2d = args.cache2d
+
+    if not np.all(cache_ns != fs.sample_sizes):
+        raise ValueError('Cache and frequencey spectrum do not have the same sample sizes')
 
     if args.maxeval == False:
         args.maxeval = max(len(args.p0) * 100, 1)
@@ -626,6 +631,7 @@ def run_infer_dfe(args):
                 result = out_queue.get()
             # Write latest result to file
             # Check that the log-likelihood is not a weird value
+            # print('\n\n\n\n\n\nCACHE LL:',float(result[0]),'\n\n\n\n\n')
             if result[0] in [np.ma.core.MaskedConstant, np.inf]:
                 result = (-np.inf,) + result[1:]
             fid.write(
