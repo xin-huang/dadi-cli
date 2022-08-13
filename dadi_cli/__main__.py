@@ -404,7 +404,7 @@ def run_infer_dm(args):
             ]
             workers.extend([
                 Process(target=_worker_func,
-                    args=(infer_global_opt, in_queue, out_queue, worker_args, True))
+                    args=(infer_demography, in_queue, out_queue, worker_args, True))
                 for ii in range(args.gpus)
             ])
             # Put the tasks to be done in the queue.
@@ -615,7 +615,7 @@ def run_infer_dfe(args):
             ]
             workers.extend([
                 Process(target=_worker_func,
-                    args=(infer_global_opt, in_queue, out_queue, worker_args, True))
+                    args=(infer_dfe, in_queue, out_queue, worker_args, True))
                 for ii in range(args.gpus)
             ])
             # Put the tasks to be done in the queue.
