@@ -1017,13 +1017,13 @@ def add_inference_argument(parser):
     )
     parser.add_argument(
         "--cpus",
-        type=_check_positive_int,
+        type=_check_nonnegative_int,
         default=multiprocessing.cpu_count(),
         help="Number of CPUs to use in multiprocessing. Default: All available CPUs.",
     )
     parser.add_argument(
         "--gpus",
-        type=_check_positive_int,
+        type=_check_nonnegative_int,
         default=0,
         help="Number of GPUs to use in multiprocessing. Default: 0.",
     )
@@ -1551,6 +1551,14 @@ def _check_positive_int(value):
     if ivalue <= 0:
         raise argparse.ArgumentTypeError(
             "only accepts postive integers; %s is an invalid value" % value
+        )
+    return ivalue
+
+def _check_nonnegative_int(value):
+    ivalue = int(value)
+    if ivalue < 0:
+        raise argparse.ArgumentTypeError(
+            "only accepts nonnegative integers; %s is an invalid value" % value
         )
     return ivalue
 
