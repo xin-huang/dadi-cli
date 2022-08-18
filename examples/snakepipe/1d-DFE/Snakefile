@@ -13,7 +13,7 @@ demo_model = 'two_epoch'
 demo_p0 = '5 5 0.5'
 
 # Lower bounds for demographic parameters
-demo_lbounds = '10e-3 10e-3 10e-5'
+demo_lbounds = '10e-3 10e-3 10e-5' 
 
 # Upper bounds for demographic parameters
 demo_ubounds = '10 10 1'
@@ -47,7 +47,7 @@ rule generate_dadi_fs:
         "dadi-cli GenerateFs --vcf {input[0]} --pop-info {input[1]} --pop-ids YRI --projections 216 --polarized --output {output}"
 
 rule dadi_infer_dm:
-    input:
+    input: 
         "1KG.YRI.synonymous.snps.unfold.fs"
     output:
         "1KG.YRI.two_epoch.InferDM.opts.0",
@@ -60,7 +60,7 @@ rule dadi_bestfit_dm:
     output:
         "1KG.YRI.two_epoch.InferDM.bestfits"
     threads: 1
-    shell:
+    shell: 
         "dadi-cli BestFit --input-prefix ./1KG.YRI.two_epoch.InferDM --model {demo_model} --misid --ubounds {demo_ubounds} --lbounds {demo_lbounds}"
 
 rule dadi_generate_cache:
