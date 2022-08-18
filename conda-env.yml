@@ -16,6 +16,7 @@ dependencies:
   - pytest-cov
   - python==3.8
   - scipy
+  - setuptools==58.0.4
   - snakemake==7.1.1
   - pip:
       - git+https://bitbucket.org/gutenkunstlab/dadi@devel
