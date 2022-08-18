@@ -163,3 +163,27 @@ time dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.20.nonsynonymous.snps.
 # --optimizations 5 --maxeval 400 \
 # --force-convergence --delta-ll 0.1 \
 # --work-queue test-dfe-two-epoch ./tests/mypwfile
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

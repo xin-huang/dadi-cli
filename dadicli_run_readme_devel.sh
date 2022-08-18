@@ -49,7 +49,7 @@ time dadi-cli InferDM --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.
 --model split_mig_fix_T --model-file examples/data/split_mig_fix_T_models \
 --p0 2 0.5 1.2 .02 --ubounds 3 1 2 0.03 --lbounds 1 1e-1 1e-1 1e-3 \
 --grids 60 80 100 --output ./examples/results/demo/1KG.YRI.CEU.20.split_mig_fix_T.demo.params --optimizations 50 --maxeval 300 \
---force-convergence
+--force-convergence 
 #--global-optimization
 
 #
@@ -131,7 +131,7 @@ time dadi-cli InferDFE --fs ./examples/results/fs/1KG.YRI.CEU.20.nonsynonymous.s
 --optimizations 50 --maxeval 400 --check-convergence &
 
 #
-echo Infer bivariate asymetric lognormal DFE
+echo Infer bivariate asymetric lognormal DFE 
 #
 time dadi-cli InferDFE --fs ./examples/results/fs/1KG.YRI.CEU.20.nonsynonymous.snps.unfold.fs \
 --cache2d ./examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.spectra.bpkl \
@@ -239,3 +239,27 @@ dadi-cli InferDFE --fs ./examples/results/fs/1KG.YRI.CEU.20.nonsynonymous.snps.u
 --optimizations 5 --maxeval 400 \
 --force-convergence --delta-ll 0.1 \
 --work-queue test-dfe-two-epoch ./tests/mypwfile
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

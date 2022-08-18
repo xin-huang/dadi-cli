@@ -6,26 +6,22 @@ from dadi_cli.utilities import get_opts_and_theta
 from dadi_cli.Models import get_model
 from dadi_cli.Pdfs import get_dadi_pdf
 
-fig = plt.figure(figsize=(8, 6))
-
+fig = plt.figure(figsize=(8,6))
 
 def plot_single_sfs(fs, projections, output, vmin):
 
-    fs = dadi.Spectrum.from_file(fs)
-
+    fs = dadi.Spectrum.from_file(fs)    
+    
     fig = plt.figure(219033)
     if len(fs.sample_sizes) == 1:
-        if projections == None:
-            projections = [20]
+        if projections == None: projections = [20]
         fs = fs.project(projections)
         dadi.Plotting.plot_1d_fs(fs)
     if len(fs.sample_sizes) == 2:
-        if projections == None:
-            projections = [20, 20]
+        if projections == None: projections = [20, 20]
         fs = fs.project(projections)
         dadi.Plotting.plot_single_2d_sfs(fs, vmin=vmin)
     fig.savefig(output)
-
 
 def plot_comparison(fs, fs2, projections, output, vmin, resid_range):
 
@@ -34,73 +30,51 @@ def plot_comparison(fs, fs2, projections, output, vmin, resid_range):
 
     fig = plt.figure(219033)
     if len(fs.sample_sizes) == 1:
-        if projections == None:
-            projections = [20]
+        if projections == None: projections = [20]
         fs = fs.project(projections)
         fs2 = fs2.project(projections)
         dadi.Plotting.plot_1d_comp_Poisson(model=fs, data=fs2)
     if len(fs.sample_sizes) == 2:
-        if projections == None:
-            projections = [20, 20]
+        if projections == None: projections = [20, 20]
         fs = fs.project(projections)
-        fs2 = fs2.project(projections)
-        dadi.Plotting.plot_2d_comp_Poisson(
-            model=fs, data=fs2, vmin=vmin, resid_range=resid_range
-        )
+        fs2 = fs2.project(projections) 
+        dadi.Plotting.plot_2d_comp_Poisson(model=fs, data=fs2, vmin=vmin, resid_range=resid_range)
     fig.savefig(output)
 
-
-def plot_fitted_demography(
-    fs, model, popt, projections, nomisid, output, vmin, resid_range
-):
-
+def plot_fitted_demography(fs, model, popt, projections, nomisid, output, vmin, resid_range):
+    
     func, params = get_model(model, None)
 
-    popt, _ = get_opts_and_theta(popt)
+    popt, _ = get_opts_and_theta(popt, True)
 
     fs = dadi.Spectrum.from_file(fs)
     if not nomisid:
         func = dadi.Numerics.make_anc_state_misid_func(func)
     func_ex = dadi.Numerics.make_extrap_func(func)
     ns = fs.sample_sizes
-    pts_l = [int(max(ns) + 10), int(max(ns) + 20), int(max(ns) + 30)]
+    pts_l = [int(max(ns)+10), int(max(ns)+20), int(max(ns)+30)]
 
-    model = func_ex(popt, ns, pts_l)
-
+    model = func_ex(popt, ns, pts_l)    
+   
     fig = plt.figure(219033)
-    if len(ns) == 1:
-        if projections == None:
-            projections = [20]
+    if len(ns) == 1: 
+        if projections == None: projections = [20]
         fs = fs.project(projections)
         model = model.project(projections)
-        dadi.Plotting.plot_1d_comp_multinom(model, fs)
+        dadi.Plotting.plot_1d_comp_multinom(model, fs)   
     if len(ns) == 2:
-        if projections == None:
-            projections = [20, 20]
+        if projections == None: projections = [20, 20]
         fs = fs.project(projections)
         model = model.project(projections)
-        dadi.Plotting.plot_2d_comp_multinom(
-            model, fs, vmin=vmin, resid_range=resid_range
-        )
-    fig.savefig(output)
+        dadi.Plotting.plot_2d_comp_multinom(model, fs, vmin=vmin, resid_range=resid_range)
+    fig.savefig(output) 
 
 
-def plot_fitted_dfe(
-    fs,
-    cache1d,
-    cache2d,
-    demo_popt,
-    sele_popt,
-    projections,
-    pdf,
-    pdf2,
-    nomisid,
-    output,
-    vmin,
-    resid_range,
-):
+def plot_fitted_dfe(fs, cache1d, cache2d, demo_popt, sele_popt, projections, pdf, pdf2, nomisid, output, vmin, resid_range):
 
-    sele_popt, theta = get_opts_and_theta(sele_popt)
+    import dadi.DFE
+    
+    sele_popt, theta = get_opts_and_theta(sele_popt, True)
 
     fs = dadi.Spectrum.from_file(fs)
 
@@ -109,22 +83,21 @@ def plot_fitted_dfe(
     if pdf2 != None:
         pdf2 = get_dadi_pdf(pdf2)
         if pdf == None:
-            pdf = pdf2
+            pdf=pdf2
 
     ns = fs.sample_sizes
     # Integrate over a range of gammas
-    pts_l = [max(ns) + 10, max(ns) + 20, max(ns) + 30]
+    pts_l = [max(ns)+10, max(ns)+20, max(ns)+30]
     if cache1d != None:
-        spectra1d = pickle.load(open(cache1d, "rb"))
+        spectra1d = pickle.load(open(cache1d, 'rb'))
         func = spectra1d.integrate
     if cache2d != None:
-        spectra2d = pickle.load(open(cache2d, "rb"))
+        spectra2d = pickle.load(open(cache2d, 'rb'))
         func = spectra2d.integrate
-    if (cache1d != None) and (cache2d != None):
+    if (cache1d != None) and (cache2d != None): 
         func = dadi.DFE.mixture
-
-    if not nomisid:
-        func = dadi.Numerics.make_anc_state_misid_func(func)
+    
+    if not nomisid: func = dadi.Numerics.make_anc_state_misid_func(func)
     # Get expected SFS for MLE
     if (cache1d != None) and (cache2d != None):
         model = func(sele_popt, None, spectra1d, spectra2d, pdf, pdf2, theta, None)
@@ -133,55 +106,41 @@ def plot_fitted_dfe(
 
     fig = plt.figure(219033)
     if len(ns) == 1:
-        if projections == None:
-            projections = [20]
+        if projections == None: projections = [20]
         fs = fs.project(projections)
         model = model.project(projections)
         dadi.Plotting.plot_2d_comp_Poisson(model, fs)
     if len(ns) == 2:
-        if projections == None:
-            projections = [20, 20]
+        if projections == None: projections = [20, 20]
         fs = fs.project(projections)
         model = model.project(projections)
-        dadi.Plotting.plot_2d_comp_Poisson(
-            model, fs, vmin=vmin, resid_range=resid_range
-        )
+        dadi.Plotting.plot_2d_comp_Poisson(model, fs, vmin=vmin, resid_range=resid_range)
     fig.savefig(output)
-
 
 def plot_mut_prop(dfe_popt, nomisid, mut_rate, seq_len, ratio, output):
 
-    dfe_params, theta = get_opts_and_theta(dfe_popt)
+    dfe_params, theta = get_opts_and_theta(dfe_popt, nomisid)
 
-    Na = theta / (4 * mut_rate * seq_len * (ratio / (1 + ratio)))
+    Na = theta/(4*mut_rate*seq_len*(ratio/(1+ratio)))
 
     def mut_prop(shape, scale, Na):
         from scipy import stats
-
-        scale = scale / (2 * Na)
+        scale = scale / (2*Na)
         p1 = stats.gamma.cdf(1e-5, a=shape, scale=scale)
         p2 = stats.gamma.cdf(1e-4, a=shape, scale=scale)
         p3 = stats.gamma.cdf(1e-3, a=shape, scale=scale)
         p4 = stats.gamma.cdf(1e-2, a=shape, scale=scale)
 
-        return p1, p2 - p1, p3 - p2, p4 - p3, 1 - p4
+        return p1, p2-p1, p3-p2, p4-p3, 1-p4
 
     props = mut_prop(dfe_params[0], dfe_params[1], Na)
 
     fig = plt.figure(219033)
-    plt.bar([0, 1, 2, 3, 4], props, alpha=0.7)
-    plt.ylabel("Proportion")
-    plt.xlabel("Selection coefficient")
-    plt.xticks(
-        [0, 1, 2, 3, 4],
-        [
-            "0<=|s|<1e-5",
-            "1e-5<=|s|<1e-4",
-            "1e-4<=|s|<1e-3",
-            "1e-3<=|s|<1e-2",
-            "1e-2<=|s|",
-        ],
-        rotation=45,
-    )
+    plt.bar([0,1,2,3,4],props,alpha=0.7)
+    plt.ylabel('Proportion')
+    plt.xlabel('Selection coefficient')
+    plt.xticks([0,1,2,3,4],
+               ['0<=|s|<1e-5', '1e-5<=|s|<1e-4', '1e-4<=|s|<1e-3', '1e-3<=|s|<1e-2', '1e-2<=|s|'], rotation=45)
     plt.grid(alpha=0.3)
-    fig.savefig(output, bbox_inches="tight")
+    fig.savefig(output, bbox_inches='tight')
+
