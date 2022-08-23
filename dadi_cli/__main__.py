@@ -136,6 +136,12 @@ def run_infer_dm(args):
     if args.p0 == -1:
         args.p0 = _calc_p0_from_bounds(args.lbounds, args.ubounds)
 
+    # Check if we can get a list of top fits
+    if args.bestfit_p0 != None : 
+        bestfits = _top_opts(args.bestfit_p0)
+    else:
+        bestfits = None
+
     # Extract model function and parameter names, from custom model_file if necessary
     func, param_names = get_model(args.model, args.model_file)
 
@@ -238,6 +244,7 @@ def run_infer_dm(args):
                         args.maxeval,
                         args.maxtime,
                         global_algorithm,
+                        bestfits,
                         new_seed,
                     )
                     # If using a custom model, need to include the file from which it comes
@@ -260,6 +267,7 @@ def run_infer_dm(args):
                     args.maxeval,
                     args.maxtime,
                     global_algorithm,
+                    bestfits,
                 )
 
                 # Queues to manage input and output
@@ -352,6 +360,7 @@ def run_infer_dm(args):
                     args.cuda,
                     args.maxeval,
                     args.maxtime,
+                    bestfits,
                     new_seed,
                 )
                 # If using a custom model, need to include the file from which it comes
@@ -360,14 +369,6 @@ def run_infer_dm(args):
                 q.submit(t)
         else:
             from multiprocessing import Process, Queue
-
-            # Check if we can get a list of top fits
-            if args.bestfit_p0 != None : 
-                bestfits = _top_opts(args.bestfit_p0)
-                # args.p0 = bestfits[np.random.randint(len(bestfits)%10)]
-            else:
-                bestfits = None
-
 
             # Worker arguments, leave seed argmument out as it is added in as workers are created
             worker_args = (
@@ -398,6 +399,7 @@ def run_infer_dm(args):
             # Put the tasks to be done in the queue.
             for ii in range(args.optimizations):
                 new_seed = np.random.randint(1, 1e6)
+                print('true seed:',new_seed)
                 in_queue.put(new_seed)
             # Start the workers
             for worker in workers:
