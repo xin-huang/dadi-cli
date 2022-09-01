@@ -24,7 +24,8 @@ def sys_exit(message):
 
 
 # Worker functions for multiprocessing with demography/DFE inference
-def _worker_func(func, in_queue, out_queue, args):
+def _worker_func(func, in_queue, out_queue, args, use_gpu=False):
+    dadi.cuda_enabled(use_gpu)
     while True:
         new_seed = in_queue.get()
         np.random.seed(new_seed)
@@ -66,8 +67,8 @@ def run_generate_cache(args):
         additional_gammas=args.additional_gammas,
         output=args.output,
         sample_sizes=args.sample_sizes,
-        mp=args.mp,
-        cuda=args.cuda,
+        cpus=args.cpus,
+        gpus=args.gpus,
         dimensionality=args.dimensionality,
     )
 
@@ -234,7 +235,7 @@ def run_infer_dm(args):
                         args.lbounds,
                         args.constants,
                         args.misid,
-                        args.cuda,
+                        None,
                         args.maxeval,
                         args.maxtime,
                         global_algorithm,
@@ -256,7 +257,7 @@ def run_infer_dm(args):
                     args.lbounds,
                     args.constants,
                     args.misid,
-                    args.cuda,
+                    None,
                     args.maxeval,
                     args.maxtime,
                     global_algorithm,
@@ -268,10 +269,15 @@ def run_infer_dm(args):
                 workers = [
                     Process(
                         target=_worker_func,
-                        args=(infer_global_opt, in_queue, out_queue, worker_args),
+                        args=(infer_global_opt, in_queue, out_queue, worker_args)
                     )
-                    for ii in range(args.threads)
+                    for ii in range(args.cpus)
                 ]
+                workers.extend([
+                    Process(target=_worker_func,
+                        args=(infer_global_opt, in_queue, out_queue, worker_args, True))
+                    for ii in range(args.gpus)
+                ])
                 # Put the tasks to be done in the queue.
                 for ii in range(global_optimizations):
                     new_seed = np.random.randint(1, 1e6)
@@ -349,7 +355,7 @@ def run_infer_dm(args):
                     args.lbounds,
                     args.constants,
                     args.misid,
-                    args.cuda,
+                    None,
                     args.maxeval,
                     args.maxtime,
                     new_seed,
@@ -379,7 +385,7 @@ def run_infer_dm(args):
                 args.lbounds,
                 args.constants,
                 args.misid,
-                args.cuda,
+                None,
                 args.maxeval,
                 args.maxtime,
                 bestfits,
@@ -391,10 +397,15 @@ def run_infer_dm(args):
             workers = [
                 Process(
                     target=_worker_func,
-                    args=(infer_demography, in_queue, out_queue, worker_args),
+                    args=(infer_demography, in_queue, out_queue, worker_args)
                 )
-                for ii in range(args.threads)
+                for ii in range(args.cpus)
             ]
+            workers.extend([
+                Process(target=_worker_func,
+                    args=(infer_demography, in_queue, out_queue, worker_args, True))
+                for ii in range(args.gpus)
+            ])
             # Put the tasks to be done in the queue.
             for ii in range(args.optimizations):
                 new_seed = np.random.randint(1, 1e6)
@@ -562,7 +573,7 @@ def run_infer_dfe(args):
                     args.lbounds,
                     args.constants,
                     args.misid,
-                    args.cuda,
+                    None,
                     args.maxeval,
                     args.maxtime,
                     new_seed,
@@ -586,7 +597,7 @@ def run_infer_dfe(args):
                 args.lbounds,
                 args.constants,
                 args.misid,
-                args.cuda,
+                None,
                 args.maxeval,
                 args.maxtime,
             )
@@ -597,10 +608,15 @@ def run_infer_dfe(args):
             workers = [
                 Process(
                     target=_worker_func,
-                    args=(infer_dfe, in_queue, out_queue, worker_args),
+                    args=(infer_dfe, in_queue, out_queue, worker_args)
                 )
-                for ii in range(args.threads)
+                for ii in range(args.cpus)
             ]
+            workers.extend([
+                Process(target=_worker_func,
+                    args=(infer_dfe, in_queue, out_queue, worker_args, True))
+                for ii in range(args.gpus)
+            ])
             # Put the tasks to be done in the queue.
             for ii in range(args.optimizations):
                 new_seed = np.random.randint(1, 1e6)
@@ -790,16 +806,6 @@ def add_output_argument(parser):
     parser.add_argument(
         "--output", type=str, required=True, help="Name of the output file."
     )
-
-
-def add_cuda_argument(parser):
-    parser.add_argument(
-        "--cuda",
-        default=False,
-        action="store_true",
-        help="Determine whether using GPUs to accelerate inference or not; Default: False.",
-    )
-
 
 def add_bounds_argument(parser):
     parser.add_argument(
@@ -999,10 +1005,16 @@ def add_inference_argument(parser):
         help="Max amount of time for optimizing demography. Default: infinite.",
     )
     parser.add_argument(
-        "--threads",
-        type=_check_positive_int,
+        "--cpus",
+        type=_check_nonnegative_int,
         default=multiprocessing.cpu_count(),
-        help="Number of threads using in multiprocessing. Default: All available threads.",
+        help="Number of CPUs to use in multiprocessing. Default: All available CPUs.",
+    )
+    parser.add_argument(
+        "--gpus",
+        type=_check_nonnegative_int,
+        default=0,
+        help="Number of GPUs to use in multiprocessing. Default: 0.",
     )
     parser.add_argument(
         "--bestfit-p0-file", 
@@ -1144,10 +1156,16 @@ def dadi_cli_parser():
         dest="gamma_pts",
     )
     parser.add_argument(
-        "--mp",
-        default=False,
-        action="store_true",
-        help="Determine whether generating cache with multiprocess or not; Default: False.",
+        "--cpus",
+        type=_check_nonnegative_int,
+        default=multiprocessing.cpu_count(),
+        help="Number of CPUs to use in multiprocessing. Default: All available CPUs.",
+    )
+    parser.add_argument(
+        "--gpus",
+        type=_check_nonnegative_int,
+        default=0,
+        help="Number of GPUs to use in multiprocessing. Default: 0.",
     )
     parser.add_argument(
         "--sample-sizes",
@@ -1172,7 +1190,6 @@ def dadi_cli_parser():
         help="Name of python module file (not including .py) that contains custom models to use. Default: None.",
     )
     add_output_argument(parser)
-    add_cuda_argument(parser)
     add_demo_popt_argument(parser)
     add_grids_argument(parser)
     add_model_argument(parser)
@@ -1251,7 +1268,6 @@ def dadi_cli_parser():
     add_fs_argument(parser)
     add_inference_argument(parser)
     add_delta_ll_argument(parser)
-    add_cuda_argument(parser)
     add_model_argument(parser)
     parser.add_argument(
         "--model-file",
@@ -1301,7 +1317,6 @@ def dadi_cli_parser():
     )
     add_inference_argument(parser)
     add_delta_ll_argument(parser)
-    add_cuda_argument(parser)
     add_misid_argument(parser)
     add_constant_argument(parser)
     add_bounds_argument(parser)
@@ -1528,6 +1543,14 @@ def _check_positive_int(value):
     if ivalue <= 0:
         raise argparse.ArgumentTypeError(
             "only accepts postive integers; %s is an invalid value" % value
+        )
+    return ivalue
+
+def _check_nonnegative_int(value):
+    ivalue = int(value)
+    if ivalue < 0:
+        raise argparse.ArgumentTypeError(
+            "only accepts nonnegative integers; %s is an invalid value" % value
         )
     return ivalue
 
