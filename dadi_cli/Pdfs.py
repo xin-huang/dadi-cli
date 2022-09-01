@@ -2,54 +2,84 @@ import dadi.DFE as DFE
 
 
 def get_dadi_pdf(pdf):
+    """
+    Description:
+        Obtains a built-in probability density function for
+        modeling distribution of fitness effects in dadi.
+
+    Arguments:
+        pdf string: Name of the probability density function.
+
+    Returns:
+        func DFE.PDFs: PDF for modeling. 
+    """
     if pdf == "beta":
-        return DFE.PDFs.beta
+        func = DFE.PDFs.beta
     elif pdf == "biv_ind_gamma":
-        return DFE.PDFs.biv_ind_gamma
+        func = DFE.PDFs.biv_ind_gamma
     elif pdf == "biv_lognormal":
-        return DFE.PDFs.biv_lognormal
+        func = DFE.PDFs.biv_lognormal
     elif pdf == "exponential":
-        return DFE.PDFs.exponential
+        func = DFE.PDFs.exponential
     elif pdf == "gamma":
-        return DFE.PDFs.gamma
+        func = DFE.PDFs.gamma
     elif pdf == "lognormal":
-        return DFE.PDFs.lognormal
+        func = DFE.PDFs.lognormal
     elif pdf == "normal":
-        return DFE.PDFs.normal
+        func = DFE.PDFs.normal
     elif "mixture" in pdf:
-        return DFE.mixture
+        func = DFE.mixture
     else:
         raise Exception("Probability density function " + pdf + " is not available!")
+
+    return func
 
 
 def get_dadi_pdf_params(pdf):
+    """
+    Description:
+        Obtains a list of parameters for a given built-in probability density function
+        in dadi.
+
+    Arguments:
+        pdf string: Name of the probability density function.
+
+    Returns:
+        params list: List of parameters.
+    """
     if pdf == "beta":
-        return ["alpha", "beta"]
+        params = ["alpha", "beta"]
     elif pdf == "biv_sym_ind_gamma":
-        return ["shape", "scale"]
+        params = ["shape", "scale"]
     elif pdf == "biv_asym_ind_gamma":
-        return ["shape1", "scale1", "shape2", "scale2"]
+        params = ["shape1", "scale1", "shape2", "scale2"]
     elif pdf == "biv_sym_lognormal":
-        return ["log_mu", "log_sigma", "rho"]
+        params = ["log_mu", "log_sigma", "rho"]
     elif pdf == "biv_asym_lognormal":
-        return ["log_mu1", "log_sigma1", "log_mu2", "log_sigma2", "rho"]
+        params = ["log_mu1", "log_sigma1", "log_mu2", "log_sigma2", "rho"]
     elif pdf == "exponential":
-        return ["scale"]
+        params = ["scale"]
     elif pdf == "gamma":
-        return ["shape", "scale"]
+        params = ["shape", "scale"]
     elif pdf == "lognormal":
-        return ["log_mu", "log_sigma"]
+        params = ["log_mu", "log_sigma"]
     elif pdf == "mixture_gamma":
-        return ["shape", "scale", "w"]
+        params = ["shape", "scale", "w"]
     elif pdf == "mixture_lognormal":
-        return ["log_mu", "log_sigma", "rho", "w"]
+        params = ["log_mu", "log_sigma", "rho", "w"]
     elif pdf == "normal":
-        return ["mu", "sigma"]
+        params = ["mu", "sigma"]
     else:
         raise Exception("Probability density function " + pdf + " is not available!")
 
+    return params
+
 
 def print_available_pdfs():
+    """
+    Description:
+        Prints out available built-in probability density functions in dadi.
+    """
     print("Available probability density functions:")
     print("- beta")
     print("- biv_ind_gamma")
@@ -62,6 +92,14 @@ def print_available_pdfs():
 
 
 def print_pdf_details(pdf_name):
+    """
+    Description:
+        Prints out the details of a given built-in probability density function
+        in dadi.
+
+    Arguments:
+        pdf_name string: Name of the probability density function.
+    """
 
     beta = """
         Beta probability density function.
