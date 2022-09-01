@@ -15,8 +15,8 @@ def generate_cache(
     additional_gammas,
     output,
     sample_sizes,
-    cpus,
-    gpus,
+    mp,
+    cuda,
     dimensionality,
 ):
     """
@@ -32,12 +32,17 @@ def generate_cache(
         additional_gammas list: Additional positive population-scaled selection coefficients to cache for.
         output str: Name of the output file.
         sample_sizes list: Sample sizes of populations.
-        cpus int: Number of CPUs to use in cache generation.
-        gpus int: Number of GPUs to use in cache generation.
+        mp bool: If True, use multiprocess to speed up calculation;
+                 Otherwise, use a single thread to do calculation.
+        cuda bool: If True, use GPU to speed up calculation;
+                   Otherwise, use CPU to do calculation.
         dimensionality int: Dimensionality of the frequency spectrum.
     """
 
     popt, theta = get_opts_and_theta(popt, gen_cache=True)
+
+    if cuda:
+        dadi.cuda_enabled(True)
 
     if grids == None:
         grids = pts_l_func(sample_sizes)
@@ -51,8 +56,7 @@ def generate_cache(
             additional_gammas=additional_gammas,
             gamma_bounds=gamma_bounds,
             gamma_pts=gamma_pts,
-            cpus=cpus,
-            gpus=gpus
+            mp=mp,
         )
     elif dimensionality == 2:
         spectra = DFE.Cache2D(
@@ -63,8 +67,7 @@ def generate_cache(
             additional_gammas=additional_gammas,
             gamma_bounds=gamma_bounds,
             gamma_pts=gamma_pts,
-            cpus=cpus,
-            gpus=gpus
+            mp=mp,
         )
     else:
         raise ValueError("--dimensionality only accepts 1 or 2.")
