@@ -1,19 +1,20 @@
 import dadi
 import numpy as np
 
-def pts_l_func(fs):
+
+def pts_l_func(sample_sizes):
     """
     Description:
         Calculates plausible grid sizes for modeling a frequency spectrum.
 
     Arguments:
-        fs dadi.Spectrum: Frequency spectrum for modeling.
+        sample_sizes list: Sample sizes.
 
     Returns:
         grid_sizes tuple: Grid sizes for modeling.
     """
-    n = max(fs.sample_sizes)
-    grid_sizes = (int(n*1.1)+2, int(n*1.2)+4, int(n*1.3)+6)
+    n = max(sample_sizes)
+    grid_sizes = (int(n * 1.1) + 2, int(n * 1.2) + 4, int(n * 1.3) + 6)
     return grid_sizes
 
 
@@ -29,43 +30,55 @@ def convert_to_None(inference_input, p0_len):
     Returns:
         inference_input list: Converted input parameters.
     """
-    if inference_input == -1: inference_input = [inference_input]*p0_len
-    inference_input = list(np.where(np.array(inference_input) == -1, None, np.array(inference_input)))
+    if inference_input == -1:
+        inference_input = [inference_input] * p0_len
+    inference_input = list(
+        np.where(np.array(inference_input) == -1, None, np.array(inference_input))
+    )
     return inference_input
 
 
-def get_opts_and_theta(filename, nomisid):
+def get_opts_and_theta(filename, gen_cache=False):
     """
     Description:
         Obtains optimized parameters and theta.
 
     Arguments:
         filename str: Name of the file.
-        nomisisid bool: True if no misid parameter is in the optimized parameters;
-                        False if a misid parameter is in the optimized parameters.
+        gen_cache bool: Make True for generating a cache to remove misid parameter when present.
 
     Returns:
         opts list: Optimized parameters.
         theta float: Population-scaled mutation rate.
     """
     opts = []
-    fid = open(filename, 'r')
+    param_names = []
+    is_converged = False
+    fid = open(filename, "r")
     for line in fid.readlines():
-        if line.startswith('# Top'): break
-        elif line.startswith('#'): continue
+        if line.startswith("# Converged"):
+            is_converged = True
+            continue
+        elif line.startswith("# Log(likelihood)"):
+            param_names = line.rstrip().split("\t")
+            continue
+        elif line.startswith("#"):
+            continue
         else:
             try:
-                opts.append([float(_) for _ in line.rstrip().split()])
+                opts = [float(_) for _ in line.rstrip().split("\t")]
+                break
             except ValueError:
                 pass
     fid.close()
 
-    theta = 0
-    if len(opts) == 0:
-        print('No optimization results found.')
+    theta = opts[-1]
+    if gen_cache and "misid" in param_names:
+        opts = opts[1:-2]
     else:
-        theta = opts[0][-1]
-        if not nomisid: opts = opts[0][1:-2]
-        else: opts = opts[0][1:-1]
+        opts = opts[1:-1]
+
+    if not is_converged:
+        print("No converged optimization results found.")
 
     return opts, theta
