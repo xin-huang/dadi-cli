@@ -23,15 +23,16 @@ package_update: true
 package_upgrade: true
 
 runcmd:
-  - systemctl stop ssh
+  - systemctl stop sshd
   - cd /home/dadi
   - chown dadi:dadi .
   - wget "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
   - su - dadi -c "bash Mambaforge-$(uname)-$(uname -m).sh -b"
   - rm Mambaforge-$(uname)-$(uname -m).sh
+  - su - dadi -c 'echo "export CATALOG_UPDATE_PROTOCOL=tcp" >> /home/dadi/.profile'
   - su - dadi -c 'echo ". /home/dadi/mambaforge/etc/profile.d/conda.sh" >> /home/dadi/.profile'
   - su - dadi -c 'echo ". /home/dadi/mambaforge/etc/profile.d/mamba.sh" >> /home/dadi/.profile'
   - su - dadi -c "git clone https://github.com/xin-huang/dadi-cli"
   - su - dadi -c "mamba env create -f /home/dadi/dadi-cli/conda-env.yml"
   - su - dadi -c 'echo "conda activate dadi-cli" >> /home/dadi/.profile'
-  - systemctl start ssh
+  - systemctl start sshd
