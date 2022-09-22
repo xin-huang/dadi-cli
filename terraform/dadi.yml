@@ -35,4 +35,7 @@ runcmd:
   - su - dadi -c "git clone https://github.com/xin-huang/dadi-cli"
   - su - dadi -c "mamba env create -f /home/dadi/dadi-cli/conda-env.yml"
   - su - dadi -c 'echo "conda activate dadi-cli" >> /home/dadi/.profile'
+%{ if workqueue_password != "" }
+  - su - dadi -c 'echo "${workqueue_password}" > /home/dadi/wqpw'
+%{ endif }
   - systemctl start sshd

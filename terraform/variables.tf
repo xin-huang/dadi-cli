@@ -9,3 +9,7 @@ variable "region" {
   default = "us-east-2"
 }
 
+variable "workqueue_password" {
+  description = "Optional password to be used by Work Queue"
+  default = ""
+}
