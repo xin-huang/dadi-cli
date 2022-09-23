@@ -6,7 +6,17 @@ variable "instance_type" {
 
 variable "region" {
   description = "The region Terraform deploys your instance"
-  default = "us-east-2"
+  default = "us-east-1"
+}
+
+variable "public_key" {
+  description = "The contents of your public key file for connecting to the isntance"
+  default = ""
+}
+
+variable "project_name" {
+  description = "Optional name for project, if set workqueue_factory will be run automatically"
+  default = ""
 }
 
 variable "workqueue_password" {

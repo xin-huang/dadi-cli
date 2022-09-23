@@ -17,13 +17,13 @@ users:
     groups: users, admin
     lock_passwd: false
     ssh_authorized_keys:
-      - 
+      - ${public_key}
 
 package_update: true
 package_upgrade: true
 
 runcmd:
-  - systemctl stop sshd
+#  - systemctl stop sshd
   - cd /home/dadi
   - chown dadi:dadi .
   - wget "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
@@ -38,4 +38,7 @@ runcmd:
 %{ if workqueue_password != "" }
   - su - dadi -c 'echo "${workqueue_password}" > /home/dadi/wqpw'
 %{ endif }
-  - systemctl start sshd
+%{ if project_name != "" }
+  - su - dadi -c 'work_queue_factory -T local -M "${project_name}" %{ if workqueue_password != "" }--password /home/dadi/wqpw %{ endif }-E "--connection-mode by_apparent_ip"'
+%{ endif }
+#  - systemctl start sshd
