@@ -95,6 +95,11 @@ resource "aws_security_group" "sg_22_9123" {
 
 data "template_file" "user_data" {
   template = file("dadi.yml")
+  vars = {
+    project_name = "${var.project_name}"
+    public_key = "${var.public_key}"
+    workqueue_password = "${var.workqueue_password}"
+  }
 }
 
 resource "aws_instance" "dadi" {
