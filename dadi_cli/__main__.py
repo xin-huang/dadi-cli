@@ -328,6 +328,28 @@ def run_infer_dm(args):
     while not converged:
         if not args.force_convergence:
             converged = True
+
+        # Check if we can get a list of top fits
+        if args.bestfit_p0 is not None: 
+            bestfits = _top_opts(args.bestfit_p0)
+            # args.p0 = bestfits[np.random.randint(len(bestfits)%10)]
+        else:
+            bestfits = None
+
+        # Worker arguments, leave seed argmument out as it is added in as workers are created
+        worker_args = [fs,
+                       func,
+                       args.p0,
+                       args.grids,
+                       args.ubounds,
+                       args.lbounds,
+                       args.constants,
+                       args.misid,
+                       None,
+                       args.maxeval,
+                       args.maxtime,
+                       bestfits]
+
         if args.work_queue:
             import work_queue as wq
 
@@ -337,59 +359,19 @@ def run_infer_dm(args):
                 q = wq.WorkQueue(name=args.work_queue[0])
             # Returns 1 for success, 0 for failure
             if not q.specify_password_file(args.work_queue[1]):
-                raise ValueError(
-                    'Work Queue password file "{0}" not found.'.format(
-                        args.work_queue[1]
-                    )
-                )
+                raise ValueError('Work Queue password file "{0}" not found.'.format(
+                    args.work_queue[1]))
 
             for ii in range(args.optimizations):
                 new_seed = np.random.randint(1, 1e6)
-                t = wq.PythonTask(
-                    infer_demography,
-                    fs,
-                    func,
-                    args.p0,
-                    args.grids,
-                    args.ubounds,
-                    args.lbounds,
-                    args.constants,
-                    args.misid,
-                    None,
-                    args.maxeval,
-                    args.maxtime,
-                    new_seed,
-                )
+                t = wq.PythonTask(infer_demography, *(worker_args+[new_seed]))
+                t.specify_cores(1)
                 # If using a custom model, need to include the file from which it comes
                 if args.model_file:
                     t.specify_input_file(args.model_file + ".py")
                 q.submit(t)
         else:
             from multiprocessing import Process, Queue
-
-            # Check if we can get a list of top fits
-            if args.bestfit_p0 != None : 
-                bestfits = _top_opts(args.bestfit_p0)
-                # args.p0 = bestfits[np.random.randint(len(bestfits)%10)]
-            else:
-                bestfits = None
-
-
-            # Worker arguments, leave seed argmument out as it is added in as workers are created
-            worker_args = (
-                fs,
-                func,
-                args.p0,
-                args.grids,
-                args.ubounds,
-                args.lbounds,
-                args.constants,
-                args.misid,
-                None,
-                args.maxeval,
-                args.maxtime,
-                bestfits,
-            )
 
             # Queues to manage input and output
             in_queue, out_queue = Queue(), Queue()
@@ -959,9 +941,9 @@ def add_inference_argument(parser):
     )
     parser.add_argument(
         "--optimizations",
-        default=3,
+        default=100,
         type=_check_positive_int,
-        help="Number of optimizations to run in parallel. Default: 3.",
+        help="Total number of optimizations to run. Default: 100.",
     )
     parser.add_argument(
         "--check-convergence",
