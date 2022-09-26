@@ -55,6 +55,31 @@ def test_infer_demography_code():
         maxtime,
     )
 
+def test_infer_custom_demography_code():
+    fs = dadi.Spectrum.from_file("./tests/example_data/two_epoch_syn.fs")
+    func, params = get_model('three_epoch_bottleneck', 'tests/example_data/example_models')
+    p0 = [1, 0.5]
+    pts_l = [120, 140, 160]
+    upper_bounds = [10, 10]
+    lower_bounds = [1e-3, 1e-3]
+    fixed_params = -1
+    misid = False
+    cuda = False
+    maxeval = 100
+    maxtime = 300
+    infer_demography(
+        fs,
+        func,
+        p0,
+        pts_l,
+        upper_bounds,
+        lower_bounds,
+        fixed_params,
+        misid,
+        cuda,
+        maxeval,
+        maxtime,
+    )
 
 def test_infer_global_opt_code():
     fs = dadi.Spectrum.from_file("./tests/example_data/two_epoch_syn.fs")
@@ -66,7 +91,6 @@ def test_infer_global_opt_code():
     fixed_params = -1
     misid = False
     cuda = False
-    global_optimization = True
     maxeval = 100
     maxtime = 300
     global_algorithm = nlopt.GN_MLSL
