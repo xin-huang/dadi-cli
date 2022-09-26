@@ -330,24 +330,24 @@ def run_infer_dm(args):
             converged = True
 
         # Check if we can get a list of top fits
-        if args.bestfit_p0 != None : 
+        if args.bestfit_p0 is not None: 
             bestfits = _top_opts(args.bestfit_p0)
             # args.p0 = bestfits[np.random.randint(len(bestfits)%10)]
-            else:
+        else:
             bestfits = None
 
         # Worker arguments, leave seed argmument out as it is added in as workers are created
         worker_args = [fs,
-                    func,
-                    args.p0,
-                    args.grids,
-                    args.ubounds,
-                    args.lbounds,
-                    args.constants,
-                    args.misid,
-                    None,
-                    args.maxeval,
-                    args.maxtime,
+                       func,
+                       args.p0,
+                       args.grids,
+                       args.ubounds,
+                       args.lbounds,
+                       args.constants,
+                       args.misid,
+                       None,
+                       args.maxeval,
+                       args.maxtime,
                        bestfits]
 
         if args.work_queue:
