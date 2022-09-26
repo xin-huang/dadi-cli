@@ -959,9 +959,9 @@ def add_inference_argument(parser):
     )
     parser.add_argument(
         "--optimizations",
-        default=3,
+        default=100,
         type=_check_positive_int,
-        help="Number of optimizations to run in parallel. Default: 3.",
+        help="Total number of optimizations to run. Default: 100.",
     )
     parser.add_argument(
         "--check-convergence",
