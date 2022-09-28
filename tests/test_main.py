@@ -85,6 +85,7 @@ def test_run_infer_dm_workqueue(infer_dm_args):
     pytest.p0 = [1, 0.5]
     pytest.ubounds = [10, 10]
     pytest.lbounds = [1e-3, 1e-3]
+    pytest.output_prefix = None
     pytest.work_queue = []
 
 
