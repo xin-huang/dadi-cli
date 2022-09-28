@@ -74,13 +74,13 @@ except:
 def test_run_infer_dm_workqueue(infer_dm_args):
     import subprocess
     factory = subprocess.Popen(
-        "work_queue_factory -T local -M test-dm-two-epoch -P ./tests/mypwfile --workers-per-cycle=0 -t 10 --cores=1  -w 1 -W 1 -E '--connection-mode by_apparent_ip'",
+        "work_queue_factory -T local -M pytest-dadi-cli -P ./tests/mypwfile --workers-per-cycle=0 -t 10 --cores=1  -w 1 -W 1 -E '--connection-mode by_apparent_ip'",
         shell=True,
     )
     pytest.model = "two_epoch"
     pytest.model_file = None
     pytest.output_prefix = "tests/test_results/example.two_epoch.demo_wq.params"
-    pytest.work_queue = ['test-dm-two-epoch', 'tests/mypwfile']
+    pytest.work_queue = ['pytest-dadi-cli', 'tests/mypwfile']
     dadi_cli.run_infer_dm(pytest)
     factory.kill()
 
