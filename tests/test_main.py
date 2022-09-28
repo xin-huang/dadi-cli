@@ -44,7 +44,7 @@ def infer_dm_args():
     pytest.seed = None
 
 def test_run_infer_dm(infer_dm_args):
-    dadi_cli.run_infer_dm(args)
+    dadi_cli.run_infer_dm(pytest)
 
 def test_run_infer_dm_misid(infer_dm_args):
     pytest.nomisid = False
@@ -52,12 +52,17 @@ def test_run_infer_dm_misid(infer_dm_args):
     pytest.p0 = [1, 0.5, 1e-2]
     pytest.ubounds = [10, 10, 0.999]
     pytest.lbounds = [1e-3, 1e-3, 1e-4]
-    dadi_cli.run_infer_dm(args)
+    dadi_cli.run_infer_dm(pytest)
 
 def test_run_infer_dm_bestfit(infer_dm_args):
+    print(pytest.nomisid)
     pytest.bestfit_p0 = "tests/example_data/example.bestfit.two_epoch.demo.params.InferDM.opts.0"
     pytest.output_prefix = "tests/test_results/example.two_epoch.demo_bestfit_p0.params"
-    dadi_cli.run_infer_dm(args)
+    pytest.nomisid = False
+    pytest.p0 = [1, 0.5, 1e-2]
+    pytest.ubounds = [10, 10, 0.999]
+    pytest.lbounds = [1e-3, 1e-3, 1e-4]
+    dadi_cli.run_infer_dm(pytest)
 
 try:
     import work_queue as wq
@@ -76,17 +81,9 @@ def test_run_infer_dm_workqueue(infer_dm_args):
     pytest.model_file = None
     pytest.output_prefix = "tests/test_results/example.two_epoch.demo_wq.params"
     pytest.work_queue = ['test-dm-two-epoch', 'tests/mypwfile']
-    dadi_cli.run_infer_dm(args)
+    dadi_cli.run_infer_dm(pytest)
     factory.kill()
 
-
-    # Clean up args
-    pytest.nomisid = True
-    pytest.p0 = [1, 0.5]
-    pytest.ubounds = [10, 10]
-    pytest.lbounds = [1e-3, 1e-3]
-    pytest.output_prefix = None
-    pytest.work_queue = []
 
 
 def test_run_simulate_dm():
