@@ -38,7 +38,7 @@ def get_model(model_name, model_file=None):
 
     Arguments:
         model_name str: Name of the demographic model.
-        model_file str: Path and Name of the file containing customized models.
+        model_file str: Path and name of the file containing customized models.
 
     Returns:
         func function: Demographic model for modeling.

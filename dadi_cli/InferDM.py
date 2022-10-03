@@ -19,6 +19,31 @@ def infer_demography(
     bestfits=None,
     seed=None,
 ):
+    """
+    Description:
+        Demographic inference.
+
+    Arguments:
+        fs dadi.Spectrum: Frequence spectrum.
+        func function: Demographic model for modeling.
+        p0 list: Initial parameter values for inference.
+        pts_l tuple: Grid sizes for modeling.
+        upper_bounds list: Upper bounds of the optimized parameters.
+        lower_bounds list: Lower bounds of the optimized parameters.
+        fixed_params list: Fixed parameters during the inference.
+        misid bool: If True, add a parameter for modeling ancestral state misidentification when data are polarized.
+        cuda bool: If True, use GPU to speed up calculation;
+                   Otherwise, use CPU to do calculation.
+        maxeval int: Max number of parameter set evaluations tried for optimization.
+        maxtime int: Max amount of time for optimization.
+        bestfits list: Best-fit parameters.
+        seed int: Seed for generating random numbers.
+
+    Returns:
+        ll_model float: Log(likelihood) of the inferred model.
+        popt list: Optimized parameters.
+        theta float: Population-scaled mutation rate inferred from the demographic model.
+    """
 
     # Set seed for starting parameter values when using WorkQueue
     if seed != None:
@@ -83,6 +108,31 @@ def infer_global_opt(
     global_algorithm,
     seed=None,
 ):
+    """
+    Description:
+        Demographic inference with global optimization.
+
+    Arguments:
+        fs dadi.Spectrum: Frequence spectrum.
+        func function: Demographic model for modeling.
+        p0 list: Initial parameter values for inference.
+        pts_l tuple: Grid sizes for modeling.
+        upper_bounds list: Upper bounds of the optimized parameters.
+        lower_bounds list: Lower bounds of the optimized parameters.
+        fixed_params list: Fixed parameters during the inference.
+        misid bool: If True, add a parameter for modeling ancestral state misidentification when data are polarized.
+        cuda bool: If True, use GPU to speed up calculation;
+                   Otherwise, use CPU to do calculation.
+        maxeval int: Max number of parameter set evaluations tried for optimization.
+        maxtime int: Max amount of time for optimization.
+        global_algorithm str: Algorithm for global optimization.
+        seed int: Seed for generating random numbers.
+
+    Returns:
+        ll_model float: Log(likelihood) of the inferred model.
+        popt list: Optimized parameters.
+        theta float: Population-scaled mutation rate inferred from the demographic model.
+    """
 
     # Randomize starting parameter values
     if seed != None:
@@ -128,4 +178,5 @@ def infer_global_opt(
     popt = dadi.Misc.perturb_params(
         popt, fold=0, upper_bound=upper_bounds, lower_bound=lower_bounds
     )
-    return ll_global, popt, 0
+    theta = 0
+    return ll_global, popt, theta

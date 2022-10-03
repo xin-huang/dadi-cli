@@ -10,7 +10,16 @@ fig = plt.figure(figsize=(8, 6))
 
 
 def plot_single_sfs(fs, projections, output, vmin):
+    """
+    Description:
+        Plots 1d or 2d frequency spectrum.
 
+    Arguments:
+        fs str: Name of the file containing frequency spectrum from dadi.
+        projections list: Sample sizes after projection.
+        output str: Name of the output file.
+        vmin float: Minimum value in the colorbar.
+    """
     fs = dadi.Spectrum.from_file(fs)
 
     fig = plt.figure(219033)
@@ -28,7 +37,18 @@ def plot_single_sfs(fs, projections, output, vmin):
 
 
 def plot_comparison(fs, fs2, projections, output, vmin, resid_range):
+    """
+    Description:
+        Plots comparison between two frequence spectra.
 
+    Arguments:
+        fs str: Name of the file containing the first frequency spectrum from dadi.
+        fs2 str: Name of the file containing the second frequency spectrum from dadi.
+        projections list: Sample sizes after projection.
+        output str: Name of the output file.
+        vmin float: Minimum value in the colorbar.
+        resid_range list: Range of the residuals.
+    """
     fs = dadi.Spectrum.from_file(fs)
     fs2 = dadi.Spectrum.from_file(fs2)
 
@@ -53,7 +73,20 @@ def plot_comparison(fs, fs2, projections, output, vmin, resid_range):
 def plot_fitted_demography(
     fs, model, popt, projections, nomisid, output, vmin, resid_range
 ):
+    """
+    Description:
+        Plots frequency spectrum fitted to a demographic model.
 
+    Arguments:
+        fs str: Name of the file containing frequecy spectrum from dadi.
+        model str: Name of the demographic model.
+        popt str: Name of the file containing the best-fit demographic parameters.
+        projections list: Sample sizes after projection.
+        nomisid bool: If False, add a parameter for modeling ancestral state misidentification when data are polarized.
+        output str: Name of the output file.
+        vmin float: Minimum value in the colorbar.
+        resid_range list: Range of the residuals.
+    """
     func, params = get_model(model, None)
 
     popt, _ = get_opts_and_theta(popt)
@@ -99,7 +132,24 @@ def plot_fitted_dfe(
     vmin,
     resid_range,
 ):
+    """
+    Description:
+        Plots frequency specturm fitted to a demographic model with a DFE.
 
+    Arguments:
+        fs str: Name of the file containing frequency spectrum from dadi.
+        cache1d str: Name of the file containing 1d frequency spectra cache from dadi.
+        cache2d str: Name of the file containing 2d frequency spectra cache from dadi.
+        demo_popt str: Name of the file containing the best-fit demographic parameters.
+        sele_popt str: Name of the file containing the best-fit DFE parameters.
+        projections list: Sample sizes after projection.
+        pdf str: Name of the 1d PDF for modeling DFE.
+        pdf2 str: Name of the 2d PDF for modeling DFE.
+        nomisid bool: If False, add a parameter for modeling ancestral state misidentification when data are polarized.
+        output str: Name of the output file.
+        vmin float: Minimum value in the colorbar.
+        resid_range list: Range of the residuals.
+    """
     sele_popt, theta = get_opts_and_theta(sele_popt)
 
     fs = dadi.Spectrum.from_file(fs)
@@ -150,7 +200,18 @@ def plot_fitted_dfe(
 
 
 def plot_mut_prop(dfe_popt, nomisid, mut_rate, seq_len, ratio, output):
+    """
+    Description:
+        Plots proportions of mutations with different selection coefficients given a DFE.
 
+    Arguments:
+        dfe_popt str: Name of the file containing the best-fit DFE parameters.
+        nomisid bool: If False, add a parameter for modeling ancestral state misidentification when data are polarized.
+        mut_rate float: Mutation rate per base.
+        seq_len float: Sequence length.
+        ratio float: Ratio of synonymous to non-synonymous mutations.
+        output str: Name of the output file.
+    """
     dfe_params, theta = get_opts_and_theta(dfe_popt)
 
     Na = theta / (4 * mut_rate * seq_len * (ratio / (1 + ratio)))

@@ -235,7 +235,6 @@ def run_infer_dm(args):
                         args.lbounds,
                         args.constants,
                         args.misid,
-                        None,
                         args.maxeval,
                         args.maxtime,
                         global_algorithm,
@@ -1535,7 +1534,6 @@ def _check_nonnegative_int(value):
             "only accepts nonnegative integers; %s is an invalid value" % value
         )
     return ivalue
-
 
 def _check_positive_num(value):
     fvalue = float(value)

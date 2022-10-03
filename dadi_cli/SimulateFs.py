@@ -9,6 +9,20 @@ import dadi
 def simulate_demography(
     model, model_file, p0, ns, pts_l, misid, output, inference_file
 ):
+    """
+    Description:
+        Simulates fequency spectrum from a demographic model.
+
+    Arguments:
+        model str: Name of the demographic model.
+        model_file str: Path and name of the file containing customized models.
+        p0 list: Initial parameter values for inference.
+        ns int: Sample size.
+        pts_l tuple: Grid sizes for modeling.
+        misid bool: If True, add a parameter for modeling ancestral state misidentification when data are polarized.
+        output str: Name of the output file.
+        inference_file bool: If True, outputs the inference results to generate caches.
+    """
     if pts_l == None:
         pts_l = (int(ns * 1.1) + 2, int(ns * 1.2) + 4, int(ns * 1.3) + 6)
     # fs = dadi.Numerics.make_extrap_func(get_dadi_model_func(model, model_file))(popt, fs.sample_sizes, pts_l)*theta
@@ -32,6 +46,17 @@ def simulate_demography(
 
 
 def simulate_demes(demes_file, ns, pts_l, pop_ids, output):
+    """
+    Description:
+        Simulates frequency spectrum from a DEMES format file.
+
+    Arguments
+        demes_file str: Name of the DEME format file.
+        ns int: Sample size.
+        pts_l tuple: Grid sizes for modeling.
+        pop_ids list: Names of the populations in the model.
+        output str: Name of the output file.
+    """
     if pts_l == None:
         pts_l = (int(ns * 1.1) + 2, int(ns * 1.2) + 4, int(ns * 1.3) + 6)
     fs = dadi.Spectrum.from_demes(
@@ -41,7 +66,20 @@ def simulate_demes(demes_file, ns, pts_l, pop_ids, output):
 
 
 def simulate_dfe(p0, cache1d, cache2d, sele_dist, sele_dist2, ratio, misid, output):
+    """
+    Description:
+        Simulates frequency spectrum from a DFE model.
 
+    Arguments:
+        p0 list: Initial parameter values for inference.
+        cache1d dadi.DFE.Cache1D_mod: Caches of 1d frequency spectra for DFE inference.
+        cache2d dadi.DFE.Cache2D_mod: Caches of 2d frequency spectra for DFE inference.
+        sele_dist str: Name of the 1d PDF function for modeling DFEs.
+        sele_dist2 str: Name of the 2d PDF function for modeling DFEs.
+        ratio float: Ratio of synonymous to non-synonymous mutations.
+        misid bool: If True, add a parameter for modeling ancestral state misidentification when data are polarized.
+        output str: Name of the output file.
+    """
     if cache1d != None:
         func = cache1d.integrate
     if cache2d != None:
