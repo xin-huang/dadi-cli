@@ -6,7 +6,6 @@ from dadi_cli.utilities import get_opts_and_theta
 from dadi_cli.Models import get_model
 from dadi_cli.Pdfs import get_dadi_pdf
 
-
 fig = plt.figure(figsize=(8, 6))
 
 

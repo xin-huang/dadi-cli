@@ -65,7 +65,7 @@ def simulate_demes(demes_file, ns, pts_l, pop_ids, output):
     fs.to_file(output)
 
 
-def simulate_dfe(p0, cache1d, cache2d, sele_dist, sele_dist2, theta, misid, output):
+def simulate_dfe(p0, cache1d, cache2d, sele_dist, sele_dist2, ratio, misid, output):
     """
     Description:
         Simulates frequency spectrum from a DFE model.
@@ -76,7 +76,7 @@ def simulate_dfe(p0, cache1d, cache2d, sele_dist, sele_dist2, theta, misid, outp
         cache2d dadi.DFE.Cache2D_mod: Caches of 2d frequency spectra for DFE inference.
         sele_dist str: Name of the 1d PDF function for modeling DFEs.
         sele_dist2 str: Name of the 2d PDF function for modeling DFEs.
-        theta float: Population-scaled mutation rate.
+        ratio float: Ratio of synonymous to non-synonymous mutations.
         misid bool: If True, add a parameter for modeling ancestral state misidentification when data are polarized.
         output str: Name of the output file.
     """
@@ -94,16 +94,16 @@ def simulate_dfe(p0, cache1d, cache2d, sele_dist, sele_dist2, theta, misid, outp
 
     if (cache1d != None) and (cache2d != None):
         func = dadi.DFE.Cache2D_mod.mixture
-        func_args = [cache1d, cache2d, sele_dist, sele_dist2, theta]
+        func_args = [cache1d, cache2d, sele_dist, sele_dist2, ratio]
     else:
-        func_args = [sele_dist, theta]
+        func_args = [sele_dist, ratio]
 
     if misid:
         func = dadi.Numerics.make_anc_state_misid_func(func)
-    print(p0, None, sele_dist, theta, None)
+    print(p0, None, sele_dist, ratio, None)
     # Get expected SFS for MLE
     if (cache1d != None) and (cache2d != None):
-        fs = func(p0, None, cache1d, cache2d, sele_dist, sele_dist2, theta, None)
+        fs = func(p0, None, cache1d, cache2d, sele_dist, sele_dist2, ratio, None)
     else:
-        fs = func(p0, None, sele_dist, theta, None)
+        fs = func(p0, None, sele_dist, ratio, None)
     fs.to_file(output)

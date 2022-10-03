@@ -8,3 +8,9 @@ examples/snakepipe/*/1KG.*
 .coverage
 tests/test_results/
 wq-factory-*
+.terraform.lock.hcl
+.terraform/
+ssh-key
+ssh-key.pub
+terraform.tfstate
+terraform.tfstate.backup

@@ -42,8 +42,8 @@ def infer_dfe(
         misid bool: If True, add a parameter for modeling ancestral state misidentification when data are polarized.
         cuda bool: If True, use GPU to speed up calculation;
                    Otherwise, use CPU to do calculation.
-        maxeval int: Max number of parameter set evaluations tried for optimization.
-        maxtime int: Max amount of time for optimization.
+        maxeval int: Max number of parameter set evaluations tried for optimizing demography.
+        maxtime int: Max amount of time for optimizing demography.
         seed int: Seed for generating random numbers.
 
     Returns:

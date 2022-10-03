@@ -24,8 +24,8 @@ def test_generate_cache_code(capsys):
         output="./tests/test_results/cache_large_two_epoch_code.bpkl",
         sample_sizes=[20],
         additional_gammas=[],
-        mp=False,
-        cuda=False,
+        cpus=None,
+        gpus=0,
         dimensionality=1,
     )
 
@@ -65,8 +65,8 @@ def test_generate_cache_custom_model_code(capsys):
         output="./tests/test_results/cache_small_2s_split_mig_fix_T_sel_code.bpkl",
         sample_sizes=[20, 20],
         additional_gammas=[],
-        mp=False,
-        cuda=False,
+        cpus=None,
+        gpus=0,
         dimensionality=2,
     )
 

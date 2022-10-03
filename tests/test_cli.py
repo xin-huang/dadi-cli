@@ -54,9 +54,9 @@ def test_infer_dm_args():
     debug_wq = True
     maxeval = 100
     maxtime = 6000
-    threads = 5
+    cpus = 5
     delta_ll = 0.01
-    cuda = True
+    gpus = 0
     model = "split_mig_fix_T"
     model_file = "tests/example_data/example_models"
     grids = [130, 140, 150]
@@ -87,11 +87,12 @@ def test_infer_dm_args():
             str(maxeval),
             "--maxtime",
             str(maxtime),
-            "--threads",
-            str(threads),
+            "--cpus",
+            str(cpus),
             "--delta-ll",
             str(delta_ll),
-            "--cuda",
+            "--gpus",
+            str(gpus),
             "--model",
             model,
             "--model-file",
@@ -118,9 +119,9 @@ def test_infer_dm_args():
     assert args.debug_wq == True
     assert args.maxeval == maxeval
     assert args.maxtime == maxtime
-    assert args.threads == threads
+    assert args.cpus == cpus 
     assert args.delta_ll == delta_ll
-    assert args.cuda == True
+    assert args.gpus == gpus
     assert args.model == model
     assert args.model_file == model_file
     assert args.grids == grids
