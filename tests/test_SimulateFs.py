@@ -108,7 +108,13 @@ def test_simulate_dfe_code():
     )
     assert np.allclose(dadi_cli_fs, dadi_fs)
 
+try:
+    import demes
+    skip = False
+except:
+    skip = True
 
+@pytest.mark.skipif(skip, reason="Could not load Demes")
 def test_simulate_demes_code():
     demes_file = "examples/data/gutenkunst_ooa.yml"
     ns = [10, 10, 10]
