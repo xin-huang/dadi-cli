@@ -37,7 +37,7 @@ def infer_dm_args():
     pytest.debug_wq = False
     pytest.cpus = 1
     pytest.gpus = 0
-    pytest.optimizations = 1
+    pytest.optimizations = 3
     pytest.bestfit_p0 = None
     pytest.delta_ll = 0.001
     pytest.global_optimization = False
@@ -70,12 +70,12 @@ try:
 except:
     skip = True
 
-# @pytest.mark.skipif(skip, reason="Could not load Work Queue")
-@pytest.mark.skip(reason="Issues running Work Queue right now")
+@pytest.mark.skipif(skip, reason="Could not load Work Queue")
+# @pytest.mark.skip(reason="Issues running Work Queue right now")
 def test_run_infer_dm_workqueue(infer_dm_args):
     import subprocess
     factory = subprocess.Popen(
-        "work_queue_factory -T local -M pytest-dadi-cli -P ./tests/mypwfile --workers-per-cycle=0 -t 10 --cores=1  -w 1 -W 1 -E '--connection-mode by_apparent_ip'",
+        "work_queue_factory -T local -M pytest-dadi-cli -P ./tests/mypwfile --workers-per-cycle=0 --cores=1  -w 3 -W 3",
         shell=True,
     )
     pytest.model = "two_epoch"
@@ -84,7 +84,6 @@ def test_run_infer_dm_workqueue(infer_dm_args):
     pytest.work_queue = ['pytest-dadi-cli', 'tests/mypwfile']
     dadi_cli.run_infer_dm(pytest)
     factory.kill()
-
 
 
 def test_run_simulate_dm():
