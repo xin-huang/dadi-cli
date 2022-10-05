@@ -122,7 +122,7 @@ def test_infer_demography_bash(files):
     )
     assert optimizations == number_of_fits
 
-# @pytest.mark.skip()
+@pytest.mark.skip()
 def test_infer_custom_demography_bash(files):
     optimizations = 3
     cmd = pytest.bash_command.replace("--model two_epoch", "--model three_epoch_bottleneck").replace(".two_epoch.", ".three_epoch_bottleneck.") + str(optimizations) + " --model-file tests/example_data/example_models"
