@@ -108,7 +108,7 @@ def run_simulate_dfe(args):
         cache2d,
         args.pdf1d,
         args.pdf2d,
-        args.ratio,
+        args.theta_ns,
         args.misid,
         args.output,
     )
@@ -1212,8 +1212,9 @@ def dadi_cli_parser():
     )
     add_dfe_argument(parser)
     parser.add_argument(
-        "--ratio",
+        "--theta-ns",
         type=float,
+        dest="theta_ns",
         required=True,
         help="Ratio for the nonsynonymous mutations to the synonymous mutations.",
     )

@@ -40,7 +40,7 @@ def simulate_demes(demes_file, ns, pts_l, pop_ids, output):
     fs.to_file(output)
 
 
-def simulate_dfe(p0, cache1d, cache2d, sele_dist, sele_dist2, ratio, misid, output):
+def simulate_dfe(p0, cache1d, cache2d, sele_dist, sele_dist2, theta_ns, misid, output):
 
     if cache1d != None:
         func = cache1d.integrate
@@ -56,16 +56,16 @@ def simulate_dfe(p0, cache1d, cache2d, sele_dist, sele_dist2, ratio, misid, outp
 
     if (cache1d != None) and (cache2d != None):
         func = dadi.DFE.Cache2D_mod.mixture
-        func_args = [cache1d, cache2d, sele_dist, sele_dist2, ratio]
+        func_args = [cache1d, cache2d, sele_dist, sele_dist2, theta_ns]
     else:
-        func_args = [sele_dist, ratio]
+        func_args = [sele_dist, theta_ns]
 
     if misid:
         func = dadi.Numerics.make_anc_state_misid_func(func)
-    print(p0, None, sele_dist, ratio, None)
+    print(p0, None, sele_dist, theta_ns, None)
     # Get expected SFS for MLE
     if (cache1d != None) and (cache2d != None):
-        fs = func(p0, None, cache1d, cache2d, sele_dist, sele_dist2, ratio, None)
+        fs = func(p0, None, cache1d, cache2d, sele_dist, sele_dist2, theta_ns, None)
     else:
-        fs = func(p0, None, sele_dist, ratio, None)
+        fs = func(p0, None, sele_dist, theta_ns, None)
     fs.to_file(output)
