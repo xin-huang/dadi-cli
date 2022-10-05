@@ -33,6 +33,22 @@ def test_simulate_demography_code():
     )
     assert np.allclose(dadi_cli_fs, dadi_fs)
 
+def test_simulate_custom_demography_code():
+    model = "three_epoch_bottleneck"
+    model_file = "tests/example_data/example_models"
+    p0 = [1, 0.5]
+    ns = [10]
+    pts_l = [20, 30, 40]
+    misid = False
+    output = "tests/test_results/simulate_three_epoch_bottleneck.fs"
+    inference_file = False
+    simulate_demography(model, model_file, p0, ns, pts_l, misid, output, inference_file)
+    dadi_cli_fs = dadi.Spectrum.from_file(output)
+    from tests.example_data.example_models import three_epoch_bottleneck
+    dadi_fs = dadi.Numerics.make_extrap_func(three_epoch_bottleneck)(
+        p0, ns, pts_l
+    )
+    assert np.allclose(dadi_cli_fs, dadi_fs)
 
 def test_simulate_demography_misid_code():
     model = "two_epoch"
@@ -49,6 +65,7 @@ def test_simulate_demography_misid_code():
         dadi.Numerics.make_anc_state_misid_func(dadi.Demographics1D.two_epoch)
     )(p0, ns, pts_l)
     assert np.allclose(dadi_cli_fs, dadi_fs)
+    assert os.path.exists("tests/test_results/simulate_two_epoch_with_misid.fs.SimulateDM.pseudofit")
 
 
 def test_simulate_dfe_code():
