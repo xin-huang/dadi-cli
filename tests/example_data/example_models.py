@@ -61,6 +61,22 @@ def split_no_mig(params, ns, pts):
     return fs
 split_no_mig.__param_names__ = ["nu1", "nu2", "T"]
 
+def split_no_mig_missing_param_names(params, ns, pts):
+    """
+    Instantaneous split into two populations of specified size, with symmetric migration and a fixed time point.
+    """
+    nu1, nu2, T = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    phi = Integration.two_pops(phi, xx, T, nu1, nu2, m12=0, m21=0)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs
+
 # Selection models for split_mig_fix_T
 def split_mig_fix_T_sel(params, ns, pts):
     """

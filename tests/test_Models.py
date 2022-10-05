@@ -116,8 +116,8 @@ def test_custome_model_import(capfd):
         assert out == "" and err == ""
     # Test importing a custom model without .__param_names__ attribute
     with pytest.raises(ValueError) as e_info:
-        get_model('split_mig_fix_T_one_s', 'tests/example_data/example_models')
-    assert str(e_info.value) == "Demographic model needs a .__param_names__ attribute!\nAdd one by adding the line split_mig_fix_T_one_s.__param_name__ = [LIST_OF_PARAMS]\nReplacing LIST_OF_PARAMS with the names of the parameters as strings."
+        get_model('split_no_mig_missing_param_names', 'tests/example_data/example_models')
+    assert str(e_info.value) == "Demographic model needs a .__param_names__ attribute!\nAdd one by adding the line split_no_mig_missing_param_names.__param_name__ = [LIST_OF_PARAMS]\nReplacing LIST_OF_PARAMS with the names of the parameters as strings."
     # Test importing a custom model not in example_models
     with pytest.raises(AttributeError) as e_info:
         get_model('haha', 'tests/example_data/example_models')
