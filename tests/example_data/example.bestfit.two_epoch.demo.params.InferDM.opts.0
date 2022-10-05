@@ -1,5 +1,6 @@
 # /Users/tjstruck/opt/anaconda3/envs/dadicli/bin/dadi-cli InferDM --fs ./tests/example_data/two_epoch_syn.fs --model two_epoch --misid --grids 120 140 160 --p0 1 .5 .5 --ubounds 10 10 1 --lbounds 10e-3 10e-3 0 --output-prefix ./tests/test_results/simulation2.two_epoch.demo.params --optimizations 130
-# Top 100 results
+#
+# Converged results
 # Log(likelihood)	nu	T	misid	theta
 -63.50519490207202	1.1169043965192302	0.07889586247682234	0.00045416305570071297	995.9693514409967
 -63.456413286350084	1.328451120411168	0.022716920261719897	0.00010841817063797527	999.1138186309603
