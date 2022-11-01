@@ -1244,6 +1244,7 @@ def dadi_cli_parser():
         dest="pop_ids",
     )
     add_simulation_argument(parser)
+    add_grids_argument(parser)
     add_output_argument(parser)
     parser.set_defaults(runner=run_simulate_demes)
 
