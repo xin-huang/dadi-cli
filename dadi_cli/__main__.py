@@ -1014,12 +1014,6 @@ def add_inference_argument(parser):
 
 def add_simulation_argument(parser):
     parser.add_argument(
-        "--grids",
-        type=_check_positive_int,
-        nargs=3,
-        help="Sizes of grids. Default: None.",
-    )
-    parser.add_argument(
         "--misid",
         dest="misid",
         default=False,
@@ -1204,6 +1198,7 @@ def dadi_cli_parser():
         help="Name of python module file (not including .py) that contains custom models to use. Default: None.",
     )
     add_simulation_argument(parser)
+    add_grids_argument(parser)
     parser.add_argument(
         "--inference-file",
         dest="inference_file",
