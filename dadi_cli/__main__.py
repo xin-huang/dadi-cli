@@ -212,9 +212,9 @@ def run_infer_dm(args):
                 import work_queue as wq
 
                 if args.debug_wq:
-                    q = wq.WorkQueue(name=args.work_queue[0], debug_log="debug.log")
+                    q = wq.WorkQueue(name=args.work_queue[0], debug_log="debug.log", port=args.port)
                 else:
-                    q = wq.WorkQueue(name=args.work_queue[0])
+                    q = wq.WorkQueue(name=args.work_queue[0], port=args.port)
                 # Returns 1 for success, 0 for failure
                 if not q.specify_password_file(args.work_queue[1]):
                     raise ValueError(
@@ -354,9 +354,9 @@ def run_infer_dm(args):
             import work_queue as wq
 
             if args.debug_wq:
-                q = wq.WorkQueue(name=args.work_queue[0], debug_log="debug.log")
+                q = wq.WorkQueue(name=args.work_queue[0], debug_log="debug.log", port=args.port)
             else:
-                q = wq.WorkQueue(name=args.work_queue[0])
+                q = wq.WorkQueue(name=args.work_queue[0], port=args.port)
             # Returns 1 for success, 0 for failure
             if not q.specify_password_file(args.work_queue[1]):
                 raise ValueError('Work Queue password file "{0}" not found.'.format(
@@ -529,9 +529,9 @@ def run_infer_dfe(args):
             import work_queue as wq
 
             if args.debug_wq:
-                q = wq.WorkQueue(name=args.work_queue[0], debug_log="debug.log")
+                q = wq.WorkQueue(name=args.work_queue[0], debug_log="debug.log", port=args.port)
             else:
-                q = wq.WorkQueue(name=args.work_queue[0])
+                q = wq.WorkQueue(name=args.work_queue[0], port=args.port)
             # Returns 1 for success, 0 for failure
             if not q.specify_password_file(args.work_queue[1]):
                 raise ValueError(
@@ -968,6 +968,13 @@ def add_inference_argument(parser):
         help="Enable Work Queue. Additional arguments are the WorkQueue project name and the name of the password file.",
     )
     parser.add_argument(
+        "--port",
+        default=9123,
+        type=_check_positive_int,
+        dest="port",
+        help="Choose a specific port for Work Queue communication. Default 9123.",
+    )
+    parser.add_argument(
         "--debug-wq",
         default=False,
         action="store_true",
@@ -1212,9 +1219,9 @@ def dadi_cli_parser():
     )
     add_dfe_argument(parser)
     parser.add_argument(
-        "--theta-ns",
+        "--ratio",
         type=float,
-        dest="theta_ns",
+        dest="ratio",
         required=True,
         help="Ratio for the nonsynonymous mutations to the synonymous mutations.",
     )
