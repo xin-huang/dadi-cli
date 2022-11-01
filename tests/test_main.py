@@ -47,7 +47,7 @@ def test_run_simulate_dm():
     simulate_args.model = "two_epoch"
     simulate_args.model_file = None
     simulate_args.p0 = [1, 0.5]
-    simulate_args.ns = [10]
+    simulate_args.sample_sizes = [10]
     simulate_args.grids = [20, 30, 40]
     simulate_args.misid = False
     simulate_args.output = "tests/test_results/main_simulate_two_epoch.fs"
@@ -64,7 +64,7 @@ def test_run_simulate_dfe():
     simulate_args.cache2d = "tests/example_data/cache_split_mig_2d.bpkl"
     simulate_args.pdf1d = "lognormal"
     simulate_args.pdf2d = "biv_lognormal"
-    simulate_args.theta_ns = 2.31
+    simulate_args.ratio = 2.31
     simulate_args.misid = True
     simulate_args.output = "tests/test_results/main_simulate_mix_dfe.fs"
 
@@ -256,10 +256,10 @@ try:
 except:
     skip = True
 
-# if os.path.exists("/home/runner/work/dadi-cli/dadi-cli"):
-#     skip = True
+if os.path.exists("/home/runner/work/dadi-cli/dadi-cli"):
+    skip = True
 
-# @pytest.mark.skipif(skip, reason="Could not load Work Queue or in GitAction environments")
+@pytest.mark.skipif(skip, reason="Could not load Work Queue or in GitAction environments")
 @pytest.mark.skip(reason="Issues running Work Queue right now")
 def test_run_infer_dm_workqueue(infer_dm_args):
     import subprocess
