@@ -80,7 +80,7 @@ def run_simulate_dm(args):
         args.model,
         args.model_file,
         args.p0,
-        args.ns,
+        args.sample_sizes,
         args.grids,
         args.misid,
         args.output,
@@ -108,7 +108,7 @@ def run_simulate_dfe(args):
         cache2d,
         args.pdf1d,
         args.pdf2d,
-        args.theta_ns,
+        args.ratio,
         args.misid,
         args.output,
     )
@@ -117,7 +117,7 @@ def run_simulate_dfe(args):
 def run_simulate_demes(args):
     from dadi_cli.SimulateFs import simulate_demes
 
-    simulate_demes(args.demes_file, atgs.ns, args.grids, args.output)
+    simulate_demes(args.demes_file, atgs.sample_sizes, args.grids, args.output)
 
 
 def run_infer_dm(args):
@@ -878,6 +878,17 @@ def add_delta_ll_argument(parser):
     )
 
 
+def add_sample_sizes_argument(parser):
+    parser.add_argument(
+        "--sample-sizes",
+        type=_check_positive_int,
+        nargs="+",
+        required=True,
+        help="Sample sizes of populations.",
+        dest="sample_sizes",
+    )
+
+
 def add_popt_argument(parser):
     parser.add_argument(
         "--demo-popt",
@@ -1151,14 +1162,6 @@ def dadi_cli_parser():
         help="Number of GPUs to use in multiprocessing. Default: 0.",
     )
     parser.add_argument(
-        "--sample-sizes",
-        type=_check_positive_int,
-        nargs="+",
-        required=True,
-        help="Sample sizes of populations.",
-        dest="sample_sizes",
-    )
-    parser.add_argument(
         "--dimensionality",
         type=int,
         default=1,
@@ -1172,6 +1175,7 @@ def dadi_cli_parser():
         dest="model_file",
         help="Name of python module file (not including .py) that contains custom models to use. Default: None.",
     )
+    add_sample_sizes_argument(parser)
     add_output_argument(parser)
     add_demo_popt_argument(parser)
     add_grids_argument(parser)
@@ -1182,14 +1186,7 @@ def dadi_cli_parser():
         "SimulateDM", help="Generate frequency spectrum based on a demographic history."
     )
     add_model_argument(parser)
-    parser.add_argument(
-        "--sample-sizes",
-        dest="ns",
-        type=_check_positive_int,
-        nargs="+",
-        required=True,
-        help="Sample sizes for simulated populations.",
-    )
+    add_sample_sizes_argument(parser)
     parser.add_argument(
         "--model-file",
         type=str,
@@ -1244,6 +1241,7 @@ def dadi_cli_parser():
         dest="pop_ids",
     )
     add_simulation_argument(parser)
+    add_sample_sizes_argument(parser)
     add_grids_argument(parser)
     add_output_argument(parser)
     parser.set_defaults(runner=run_simulate_demes)
