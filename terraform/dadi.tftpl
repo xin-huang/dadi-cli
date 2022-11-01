@@ -38,7 +38,10 @@ runcmd:
 %{ if workqueue_password != "" }
   - su - dadi -c 'echo "${workqueue_password}" > /home/dadi/wqpw'
 %{ endif }
-%{ if project_name != "" }
-  - su - dadi -c 'work_queue_factory -T local -M "${project_name}" %{ if workqueue_password != "" }--password /home/dadi/wqpw %{ endif }-E "--connection-mode by_apparent_ip"'
+%{ if dadi_cli.run }
+  - su - dadi -c 'dadi-cli ${dadi_cli.parameters} --fs "${dadi_cli.fs_file}" --work-queue "${project_name}" /home/dadi/wqpw &'
+%{ endif }
+%{ if workqueue_factory.run }
+  - su - dadi -c 'work_queue_factory -T local -M "${project_name}" --password /home/dadi/wqpw -E "--connection-mode by_apparent_ip"'
 %{ endif }
 #  - systemctl start sshd
