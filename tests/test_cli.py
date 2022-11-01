@@ -301,16 +301,209 @@ def test_infer_dfe_args():
     assert args.bestfit_p0 == None
 
 def test_bestfit_args():
-    pass
+    parser = cli.dadi_cli_parser()
+    cmd = "BestFit"
+    input_prefix = "tests/example_data/example.split_mig.demo.params.InferDM"
+    args = parser.parse_args(
+        [
+            cmd,
+            "--input-prefix",
+            input_prefix,
+            "--lbounds",
+            "1e-4", "1e-4", "1e-4", "1e-4",
+            "--ubounds",
+            "10", "10", "1", "5",
+            "--delta-ll",
+            "0.0001",
+        ]
+    )
+    assert args.input_prefix == input_prefix
+    assert args.lbounds == [1e-4, 1e-4, 1e-4, 1e-4]
+    assert args.ubounds == [10, 10, 1, 5]
+    assert args.delta_ll == 1e-4
 
 
 def test_plot_args():
-    pass
+    parser = cli.dadi_cli_parser()
+    cmd = "Plot"
+    fs = "tests/example_data/split_mig_non_1d.fs"
+    fs2 = "tests/example_data/split_mig_non_2d.fs"
+    demo_popt = "tests/example_data/example.two_epoch.demo.params.InferDM.bestfits"
+    dfe_popt = "tests/example_data/example.split_mig.dfe.lognormal_mixture.params.InferDFE.bestfits"
+    model = "split_mig"
+    cache1d = "tests/example_data/cache_split_mig_1d.bpkl"
+    cache2d = "tests/example_data/cache_split_mig_2d.bpkl"
+    pdf1d = "lognormal"
+    pdf2d = "biv_lognormal"
+    nomisid = True
+    output = "tests/test_results/plot_cli_test.png"
+    mut_rate = 1.8e-8
+    seq_len = 38157840
+    projections = [10, 10]
+    resid_range = 3
+    vmin = 1e-5
+    ratio = 2.31
+
+    args = parser.parse_args(
+        [
+            cmd,
+            "--fs",
+            fs,
+            "--fs2",
+            fs2,
+            "--demo-popt",
+            demo_popt,
+            "--dfe-popt",
+            dfe_popt,
+            "--model",
+            model,
+            "--cache1d",
+            cache1d,
+            "--cache2d",
+            cache2d,
+            "--pdf1d",
+            pdf1d,
+            "--pdf2d",
+            pdf2d,
+            "--nomisid",
+            "--output",
+            output,
+            "--mut-rate",
+            str(mut_rate),
+            "--seq-len",
+            str(seq_len),
+            "--projections",
+            "10", "10",
+            "--resid-range",
+            str(resid_range),
+            "--vmin",
+            str(vmin),
+            "--ratio",
+            str(ratio)
+        ]
+    )
+
+    assert args.fs == fs
+    assert args.fs2 == fs2
+    assert args.demo_popt == demo_popt
+    assert args.dfe_popt == dfe_popt
+    assert args.model == model
+    assert args.cache1d == cache1d
+    assert args.cache2d == cache2d
+    assert args.pdf1d == pdf1d
+    assert args.pdf2d == pdf2d
+    assert args.nomisid == nomisid
+    assert args.output == output
+    assert args.mut_rate == mut_rate
+    assert args.seq_len == seq_len
+    assert args.projections == projections
+    assert args.resid_range == resid_range
+    assert args.vmin == vmin
+    assert args.ratio == ratio
 
 
-def test_stat_args():
-    pass
 
+def test_stat_dm_args():
+    parser = cli.dadi_cli_parser()
+    cmd = "StatDM"
+    fs = "tests/example_data/split_mig_syn.fs"
+    model = "split_mig"
+    grids = [60, 80, 100]
+    nomisid = False
+    output = "tests/test_results/example.cli.split_mig.demo.params.ci"
+    constants = -1
+    demo_popt = "tests/example_data/example.split_mig.demo.params.InferDM.bestfits"
+    model_file = None
+    bootstrapping_dir = "tests/example_data/split_mig_bootstrap_syn"
+    logscale = True
+
+    args = parser.parse_args(
+        [
+            cmd,
+            "--fs",
+            fs,
+            "--model",
+            model,
+            "--grids",
+            "60", "80", "100",
+            "--output",
+            output,
+            "--demo-popt",
+            demo_popt,
+            "--bootstrapping-dir",
+            bootstrapping_dir,
+            "--logscale"
+        ]
+    )
+
+    assert args.fs == fs
+    assert args.model == model
+    assert args.grids == grids
+    assert args.nomisid == nomisid
+    assert args.output == output
+    assert args.constants == constants
+    assert args.demo_popt == demo_popt
+    assert args.model_file == model_file
+    assert args.bootstrapping_dir == bootstrapping_dir
+    assert args.logscale == logscale
+
+def test_stat_dfe_args():
+    parser = cli.dadi_cli_parser()
+    cmd = "StatDFE"
+    fs = "tests/example_data/split_mig_non_mix.fs"
+    cache1d = "tests/example_data/cache_split_mig_1d.bpkl"
+    cache2d = "tests/example_data/cache_split_mig_2d.bpkl"
+    pdf1d = "lognormal"
+    pdf2d = "biv_lognormal"
+    mix_pdf = "mixture_lognormal"
+    output = "./tests/test_results/example.split_mig.dfe.mixture_lognormal.params.ci"
+    bootstrapping_synonymous_dir = "tests/example_data/split_mig_bootstrap_syn/"
+    bootstrapping_nonsynonymous_dir = "tests/example_data/split_mig_bootstrap_non/bootstrap_non_mix/"
+    dfe_popt = "tests/example_data/example.split_mig.dfe.lognormal_mixture.params.with.misid.InferDFE.bestfits"
+    constants = [-1, -1, 0, -1, -1]
+    nomisid = False
+    logscale = False
+
+    args = parser.parse_args(
+        [
+            cmd,
+            "--fs",
+            fs,
+            "--cache1d",
+            cache1d,
+            "--cache2d",
+            cache2d,
+            "--pdf1d",
+            pdf1d,
+            "--pdf2d",
+            pdf2d,
+            "--mix-pdf",
+            mix_pdf,
+            "--output",
+            output,
+            "--constants",
+            "-1", "-1", "0", "-1", "-1",
+            "--dfe-popt",
+            dfe_popt,
+            "--bootstrapping-synonymous-dir",
+            bootstrapping_synonymous_dir,
+            "--bootstrapping-nonsynonymous-dir",
+            bootstrapping_nonsynonymous_dir,
+        ]
+    )
+
+    assert args.fs == fs
+    assert args.cache1d == cache1d
+    assert args.cache2d == cache2d
+    assert args.pdf1d ==  pdf1d
+    assert args.pdf2d == pdf2d
+    assert args.mix_pdf == mix_pdf
+    assert args.output == output
+    assert args.constants == constants
+    assert args.dfe_popt == dfe_popt
+    assert args.bootstrapping_syn_dir == bootstrapping_synonymous_dir
+    assert args.bootstrapping_non_dir == bootstrapping_nonsynonymous_dir
+    assert args.logscale == logscale
 
 def test_model_args():
     parser = cli.dadi_cli_parser()
