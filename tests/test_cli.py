@@ -93,6 +93,128 @@ def test_generate_cache_args():
     assert args.demo_popt == demo_popt
     assert args.additional_gammas == additional_gammas
 
+def test_simulate_dm_args():
+    parser = cli.dadi_cli_parser()
+    cmd = "SimulateDM"
+    model = "two_epoch"
+    model_file = None
+    p0 = [1, 0.5]
+    sample_sizes = [10]
+    grids = [20, 30, 40]
+    misid = False
+    output = "tests/test_results/simulate_cli_two_epoch.fs"
+    inference_file = True
+
+    args = parser.parse_args(
+        [
+            cmd,
+            "--model",
+            model,
+            "--p0",
+            "1", "0.5",
+            "--sample-sizes",
+            "10",
+            "--grids",
+            "20", "30", "40",
+            "--output",
+            output,
+            "--inference-file"
+        ]
+    )
+
+    assert args.model == model
+    assert args.model_file == model_file
+    assert args.p0 == p0
+    assert args.sample_sizes == sample_sizes
+    assert args.grids == grids
+    assert args.misid == misid
+    assert args.output == output
+    assert args.inference_file == inference_file
+
+def test_simulate_dfe_args():
+    parser = cli.dadi_cli_parser()
+    cmd = "SimulateDFE"
+    cache1d = "tests/example_data/cache_split_mig_1d.bpkl"
+    cache2d = "tests/example_data/cache_split_mig_2d.bpkl"
+    pdf1d = "lognormal"
+    pdf2d = "biv_lognormal"
+    mix_pdf = "mixture_lognormal"
+    ratio = 2
+    p0 = [1, 1.4, 0, 0.97, 0.02]
+    misid = True
+    output = "tests/test_results/simulate_cli_dfe_split_mig_mix_s_lognormal.fs"
+
+    args = parser.parse_args(
+        [
+            cmd,
+            "--cache1d",
+            cache1d,
+            "--cache2d",
+            cache2d,
+            "--pdf1d",
+            pdf1d,
+            "--pdf2d",
+            pdf2d,
+            "--mix-pdf",
+            mix_pdf,
+            "--ratio",
+            str(ratio),
+            "--p0",
+            "1", "1.4", "0", "0.97", "0.02",
+            "--misid",
+            "--output",
+            output
+        ]
+    )
+
+    assert args.cache1d == cache1d
+    assert args.cache2d == cache2d
+    assert args.pdf1d == pdf1d
+    assert args.pdf2d == pdf2d
+    assert args.mix_pdf == mix_pdf
+    assert args.ratio == ratio
+    assert args.p0 == p0
+    assert args.misid == misid
+    assert args.output == output
+
+try:
+    import demes
+    skip = False
+except:
+    skip = True
+
+@pytest.mark.skipif(skip, reason="Could not load Demes")
+def test_simulate_demes_args():
+    parser = cli.dadi_cli_parser()
+    cmd = "SimulateDemes"
+    demes_file = "examples/data/gutenkunst_ooa.yml"
+    sample_sizes = [10, 10, 10]
+    grids = [20, 30, 40]
+    pop_ids = ["YRI", "CEU", "CHB"]
+    output = "tests/test_results/demes_gutenkunst_ooa_simulation.fs"
+
+    args = parser.parse_args(
+        [
+            cmd,
+            "--demes-file",
+            demes_file,
+            "--sample-sizes",
+            "10", "10", "10",
+            "--grids",
+            "20", "30", "40",
+            "--pop-ids",
+            "YRI", "CEU", "CHB",
+            "--output",
+            output,
+        ]
+    )
+
+    assert args.demes_file == demes_file
+    assert args.sample_sizes == sample_sizes
+    assert args.grids == grids
+    assert args.pop_ids == pop_ids
+    assert args.output == output
+
 def test_infer_dm_args():
     parser = cli.dadi_cli_parser()
     cmd = "InferDM"
