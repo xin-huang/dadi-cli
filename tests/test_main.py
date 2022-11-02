@@ -260,7 +260,6 @@ if os.path.exists("/home/runner/work/dadi-cli/dadi-cli"):
     skip = True
 
 @pytest.mark.skipif(skip, reason="Could not load Work Queue or in GitAction environments")
-@pytest.mark.skip(reason="Issues running Work Queue right now")
 def test_run_infer_dm_workqueue(infer_dm_args):
     import subprocess
     factory = subprocess.Popen(
