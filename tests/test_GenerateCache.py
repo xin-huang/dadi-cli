@@ -54,7 +54,7 @@ def test_generate_cache_bash(capsys):
 
 def test_generate_cache_custom_model_code(capsys):
     sel_func, params = get_model(
-        "split_mig_fix_T_sel", "tests/example_data/example_models.py"
+        "split_mig_fix_T_sel", "tests/example_data/example_models"
     )
     generate_cache(
         func=sel_func,

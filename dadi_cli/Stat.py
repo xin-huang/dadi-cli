@@ -11,6 +11,21 @@ from dadi_cli.utilities import get_opts_and_theta, convert_to_None
 def godambe_stat_demograpy(
     fs, func, grids, output, bootstrap_dir, demo_popt, fixed_params, nomisid, logscale
 ):
+    """
+    Description:
+        Godambe statistics for demographic inference.
+
+    Arguments:
+        fs str: Name of the file containing frequency spectrum from dadi.
+        func function: Function for modeling demography.
+        grids tuple: Grid sizes for modeling.
+        output str: Name of the output file.
+        bootstrap_dir str: Name of the directory containing bootstrapped frequency spectra.
+        demo_popt str: Name of the file containg the best-fit demographic parameters.
+        fixed_params list: List of the fixed parameters.
+        nomisid bool: If False, add a parameter for modeling ancestral state misidentification when data are polarized.
+        logscale bool: If True, calculate statistics using log scale.
+    """
     # We want the best fits from the demograpic fit.
     # We set the second argument to true, since we want
     # all the parameters from the file.
@@ -92,7 +107,24 @@ def godambe_stat_dfe(
     nomisid,
     logscale,
 ):
+    """
+    Description:
+        Godambe statistics for DFE inference.
 
+    Argument:
+        fs str: Name of the file containing frequency spectrum from dadi.
+        cache1d str: Name of the file containing 1d frequency spectra cache from dadi.
+        cache2d str: Name of the file containing 2d frequency spectra cache from dadi.
+        sele_dist str: Name of the 1d PDF for modeling DFE.
+        sele_dist2 str: Name of the 2d PDF for modeling DFE.
+        output str: Name of the output file.
+        bootstrap_syn_dir str: Name of the directory containing bootstrapped frequency spectra for synonymous mutations.
+        bootstrap_non_dir str: Name of the directory containing bootstrapped frequency spectra for non-synonymous mutations.
+        dfe_popt str: Name of the file containing the best-fit DFE parameters.
+        fixed_params list: List of the fixed parameters.
+        nomisid bool: If False, add a parameter for modeling ancestral state misidentification when data are polarized.
+        logscale bool: If True, calculate statistics using log scale.
+    """
     dfe_popt, theta = get_opts_and_theta(dfe_popt)
     fixed_params = convert_to_None(fixed_params, len(dfe_popt))
     free_params = _free_params(dfe_popt, fixed_params)
@@ -208,6 +240,17 @@ def godambe_stat_dfe(
 # on fixed parameters, we find the free parameters
 # that we will pass into Godambe.
 def _free_params(dfe_popt, fixed_params):
+    """
+    Description:
+        Helper function for finding the free parameters for Godambe.
+
+    Arguments:
+        dfe_popt list: List of the best-fit parameters for DFE inference.
+        fixed_params list: List of the fixed parameters.
+
+    Returns:
+        free_params list: List of the free parameters.
+    """
     free_params = []
     free_index = {}
     fixed_index = {}
@@ -226,6 +269,17 @@ def _free_params(dfe_popt, fixed_params):
 # need to contain any fixed parameters used to generate the model or DFE
 # we use the free parameters to recreate the optimal parameters.
 def _convert_free_params(free_params, fixed_params):
+    """
+    Description:
+        Helper function for recreating the optimal parameters.
+
+    Arguments:
+        free_params list: List of the free parameters.
+        fixed_params list: List of the fixed parameters.
+
+    Returns:
+        params list: List of the optimal parameters.
+    """
     params = []
     ii = 0
     for i in range(len(fixed_params)):
@@ -234,4 +288,6 @@ def _convert_free_params(free_params, fixed_params):
             ii += 1
         else:
             params.append(fixed_params[i])
-    return np.array(params)
+
+    params = np.array(params)
+    return params

@@ -108,7 +108,7 @@ def run_simulate_dfe(args):
         cache2d,
         args.pdf1d,
         args.pdf2d,
-        args.ratio,
+        args.theta_ns,
         args.misid,
         args.output,
     )
