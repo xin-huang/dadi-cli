@@ -1023,14 +1023,7 @@ def add_inference_argument(parser):
         help="Pass in a .bestfit or .opt.<N> file name to cycle --p0 between up to the top 10 best fits for each optimization."
     )
 
-def add_simulation_argument(parser):
-    parser.add_argument(
-        "--misid",
-        dest="misid",
-        default=False,
-        action="store_true",
-        help="Enable to include a parameter modeling ancestral state misidentification when data are polarized ; Default: False.",
-    )
+def add_p0_argument(parser):
     parser.add_argument(
         "--p0",
         type=float,
@@ -1194,7 +1187,8 @@ def dadi_cli_parser():
         dest="model_file",
         help="Name of python module file (not including .py) that contains custom models to use. Default: None.",
     )
-    add_simulation_argument(parser)
+    add_p0_argument(parser)
+    add_misid_argument(parser)
     add_grids_argument(parser)
     parser.add_argument(
         "--inference-file",
@@ -1217,7 +1211,8 @@ def dadi_cli_parser():
         required=True,
         help="Ratio for the nonsynonymous mutations to the synonymous mutations.",
     )
-    add_simulation_argument(parser)
+    add_p0_argument(parser)
+    add_misid_argument(parser)
     add_output_argument(parser)
     parser.set_defaults(runner=run_simulate_dfe)
 
@@ -1240,7 +1235,6 @@ def dadi_cli_parser():
         help="Population names for the samples, required for Demes.",
         dest="pop_ids",
     )
-    add_simulation_argument(parser)
     add_sample_sizes_argument(parser)
     add_grids_argument(parser)
     add_output_argument(parser)

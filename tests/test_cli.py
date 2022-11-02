@@ -101,7 +101,7 @@ def test_simulate_dm_args():
     p0 = [1, 0.5]
     sample_sizes = [10]
     grids = [20, 30, 40]
-    misid = False
+    nomisid = True
     output = "tests/test_results/simulate_cli_two_epoch.fs"
     inference_file = True
 
@@ -118,7 +118,8 @@ def test_simulate_dm_args():
             "20", "30", "40",
             "--output",
             output,
-            "--inference-file"
+            "--inference-file",
+            "--nomisid"
         ]
     )
 
@@ -127,7 +128,7 @@ def test_simulate_dm_args():
     assert args.p0 == p0
     assert args.sample_sizes == sample_sizes
     assert args.grids == grids
-    assert args.misid == misid
+    assert args.nomisid == nomisid
     assert args.output == output
     assert args.inference_file == inference_file
 
@@ -141,7 +142,7 @@ def test_simulate_dfe_args():
     mix_pdf = "mixture_lognormal"
     ratio = 2
     p0 = [1, 1.4, 0, 0.97, 0.02]
-    misid = True
+    nomisid = False
     output = "tests/test_results/simulate_cli_dfe_split_mig_mix_s_lognormal.fs"
 
     args = parser.parse_args(
@@ -161,7 +162,6 @@ def test_simulate_dfe_args():
             str(ratio),
             "--p0",
             "1", "1.4", "0", "0.97", "0.02",
-            "--misid",
             "--output",
             output
         ]
@@ -174,7 +174,7 @@ def test_simulate_dfe_args():
     assert args.mix_pdf == mix_pdf
     assert args.ratio == ratio
     assert args.p0 == p0
-    assert args.misid == misid
+    assert args.nomisid == nomisid
     assert args.output == output
 
 try:
