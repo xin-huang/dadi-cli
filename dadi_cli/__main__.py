@@ -1205,9 +1205,9 @@ def dadi_cli_parser():
     )
     add_dfe_argument(parser)
     parser.add_argument(
-        "--t",
+        "--ratio",
         type=float,
-        dest="t",
+        dest="ratio",
         required=True,
         help="Ratio for the nonsynonymous mutations to the synonymous mutations.",
     )
