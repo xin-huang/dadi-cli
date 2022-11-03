@@ -10,13 +10,14 @@ def get_bestfit_params(path, lbounds, ubounds, output, delta, Nclose=3, Nbest=10
         Obtains bestfit parameters.
 
     Arguments:
-        path str: Path to
-        lbounds list:
-        ubounds list:
+        path str: Path to results of inference.
+        lbounds list: Lower bounds of the optimized parameters.
+        ubounds list: Upper bounds of the optimized parameters.
         output str: Name of the output file.
-        delta float:
-        Nclose int:
-        Nbest int:
+        delta float: Max percentage difference for log-likliehoods compared to the best optimization
+                     log-likliehood to be consider convergent.
+        Nclose int: Number of best-fit results to be consider convergent. 
+        Nbest int: Number of best-fit results to be displayed.
     """
     files = glob.glob(path)
     if files == []:

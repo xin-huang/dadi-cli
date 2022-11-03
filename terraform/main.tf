@@ -10,7 +10,7 @@ terraform {
 
 
 provider "aws" {
-  region = var.region
+  region = var.AWS.region
 }
 
 data "aws_ami" "ubuntu" {
@@ -93,22 +93,52 @@ resource "aws_security_group" "sg_22_9123" {
   }
 }
 
-data "template_file" "user_data" {
-  template = file("dadi.yml")
-  vars = {
+locals {
+  template_vars = {
+    dadi_cli = var.dadi_cli
     project_name = "${var.project_name}"
-    public_key = "${var.public_key}"
+    public_key = "${var.AWS.public_key}"
+    workqueue_factory = var.workqueue_factory
     workqueue_password = "${var.workqueue_password}"
   }
 }
 
-resource "aws_instance" "dadi" {
+resource "aws_instance" "dadi_manager" {
+  count = var.dadi_cli.run ? 1 : 0
   ami                         = data.aws_ami.ubuntu.id
-  instance_type               = var.instance_type
+  instance_type               = var.AWS.instance_type
   subnet_id                   = aws_subnet.subnet_public.id
   vpc_security_group_ids      = [aws_security_group.sg_22_9123.id]
   associate_public_ip_address = true
-  user_data                   = data.template_file.user_data.rendered
+  user_data                   = templatefile("dadi.tftpl", local.template_vars)
+
+  root_block_device {
+    volume_type = "gp2"
+    volume_size = "16"
+  }
+
+  tags = {
+    Name = "Dadi"
+  }
+  provisioner "file" {
+    source = var.dadi_cli.fs_file
+    destination = "${var.dadi_cli.fs_file}"
+    connection {
+      type        = "ssh"
+      user        = "dadi"
+      private_key = "${file("ssh-key")}"
+      host        = "${self.public_dns}"
+    }
+  }
+}
+resource "aws_instance" "dadi" {
+  count = var.dadi_cli.run ? 0 : 1
+  ami                         = data.aws_ami.ubuntu.id
+  instance_type               = var.AWS.instance_type
+  subnet_id                   = aws_subnet.subnet_public.id
+  vpc_security_group_ids      = [aws_security_group.sg_22_9123.id]
+  associate_public_ip_address = true
+  user_data                   = templatefile("dadi.tftpl", local.template_vars)
 
   root_block_device {
     volume_type = "gp2"
@@ -121,5 +151,5 @@ resource "aws_instance" "dadi" {
 }
 
 output "public_ip" {
-  value = aws_instance.dadi.public_ip
+  value = var.dadi_cli.run ? aws_instance.dadi_manager[0].public_ip : aws_instance.dadi[0].public_ip
 }
