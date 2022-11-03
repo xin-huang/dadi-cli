@@ -38,7 +38,6 @@ def test_infer_demography_code():
     fixed_params = -1
     misid = False
     cuda = False
-    global_optimization = True
     maxeval = 100
     maxtime = 300
     infer_demography(
@@ -55,6 +54,31 @@ def test_infer_demography_code():
         maxtime,
     )
 
+def test_infer_custom_demography_code():
+    fs = dadi.Spectrum.from_file("./tests/example_data/two_epoch_syn.fs")
+    func, params = get_model('three_epoch_bottleneck', 'tests/example_data/example_models')
+    p0 = [1, 0.5]
+    pts_l = [120, 140, 160]
+    upper_bounds = [10, 10]
+    lower_bounds = [1e-3, 1e-3]
+    fixed_params = -1
+    misid = False
+    cuda = False
+    maxeval = 100
+    maxtime = 300
+    infer_demography(
+        fs,
+        func,
+        p0,
+        pts_l,
+        upper_bounds,
+        lower_bounds,
+        fixed_params,
+        misid,
+        cuda,
+        maxeval,
+        maxtime,
+    )
 
 def test_infer_global_opt_code():
     fs = dadi.Spectrum.from_file("./tests/example_data/two_epoch_syn.fs")
@@ -66,7 +90,6 @@ def test_infer_global_opt_code():
     fixed_params = -1
     misid = False
     cuda = False
-    global_optimization = True
     maxeval = 100
     maxtime = 300
     global_algorithm = nlopt.GN_MLSL
@@ -99,36 +122,18 @@ def test_infer_demography_bash(files):
     )
     assert optimizations == number_of_fits
 
-
-def test_InferDM_seed(files):
+@pytest.mark.skip()
+def test_infer_custom_demography_bash(files):
     optimizations = 3
-    subprocess.run(
-        pytest.bash_command.replace(".demo.", ".demo.seeded.")
-        + str(optimizations)
-        + " --threads "
-        + str(optimizations)
-        + " --seed 12345",
-        shell=True,
+    cmd = pytest.bash_command.replace("--model two_epoch", "--model three_epoch_bottleneck").replace(".two_epoch.", ".three_epoch_bottleneck.") + str(optimizations) + " --model-file tests/example_data/example_models"
+    subprocess.run(cmd, shell=True)
+    fits = glob.glob(
+        "./tests/test_results/example.three_epoch_bottleneck.demo.params.InferDM.opts.*"
     )
-    subprocess.run(
-        pytest.bash_command.replace(".demo.", ".demo.seeded.")
-        + str(optimizations)
-        + " --threads "
-        + str(optimizations)
-        + " --seed 12345",
-        shell=True,
+    number_of_fits = sum(
+        [ele.startswith("#") != True for ele in open(fits[-1]).readlines()]
     )
-    fits_list = glob.glob(
-        "./tests/test_results/simulation.two_epoch.demo.seeded.params.InferDM.opts.*"
-    )
-    fits_list.sort()
-    fits1 = [line.strip() for line in open(fits_list[-2], "r").readlines()]
-    fits1.sort()
-    fits2 = [line.strip() for line in open(fits_list[-1], "r").readlines()]
-    fits2.sort()
-    for i in range(2, len(fits1)):
-        assert fits1[i] == fits2[i]
-
+    assert optimizations == number_of_fits
 
 @pytest.mark.skip()
 def test_InferDM_wq(files):

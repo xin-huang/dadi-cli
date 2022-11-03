@@ -33,6 +33,22 @@ def test_simulate_demography_code():
     )
     assert np.allclose(dadi_cli_fs, dadi_fs)
 
+def test_simulate_custom_demography_code():
+    model = "three_epoch_bottleneck"
+    model_file = "tests/example_data/example_models"
+    p0 = [1, 0.5]
+    ns = [10]
+    pts_l = [20, 30, 40]
+    misid = False
+    output = "tests/test_results/simulate_three_epoch_bottleneck.fs"
+    inference_file = False
+    simulate_demography(model, model_file, p0, ns, pts_l, misid, output, inference_file)
+    dadi_cli_fs = dadi.Spectrum.from_file(output)
+    from tests.example_data.example_models import three_epoch_bottleneck
+    dadi_fs = dadi.Numerics.make_extrap_func(three_epoch_bottleneck)(
+        p0, ns, pts_l
+    )
+    assert np.allclose(dadi_cli_fs, dadi_fs)
 
 def test_simulate_demography_misid_code():
     model = "two_epoch"
@@ -49,6 +65,7 @@ def test_simulate_demography_misid_code():
         dadi.Numerics.make_anc_state_misid_func(dadi.Demographics1D.two_epoch)
     )(p0, ns, pts_l)
     assert np.allclose(dadi_cli_fs, dadi_fs)
+    assert os.path.exists("tests/test_results/simulate_two_epoch_with_misid.fs.SimulateDM.pseudofit")
 
 
 def test_simulate_dfe_code():
@@ -60,7 +77,7 @@ def test_simulate_dfe_code():
     cache2d = pickle.load(open("tests/example_data/cache_split_mig_2d.bpkl", "rb"))
     sele_dist = "lognormal"
     sele_dist2 = "biv_lognormal"
-    ratio = 2.31
+    theta_ns = 2.31
     misid = False
     output_1d = "tests/test_results/simulate_dfe_split_mig_one_s_lognormal.fs"
     output_2d = "tests/test_results/simulate_dfe_split_mig_two_s_lognormal.fs"
@@ -70,20 +87,20 @@ def test_simulate_dfe_code():
     )
 
     # Test 1D
-    simulate_dfe(p0_1d, cache1d, None, sele_dist, None, ratio, misid, output_1d)
+    simulate_dfe(p0_1d, cache1d, None, sele_dist, None, theta_ns, misid, output_1d)
     dadi_cli_fs = dadi.Spectrum.from_file(output_1d)
-    dadi_fs = cache1d.integrate(p0_1d, None, get_dadi_pdf(sele_dist), ratio)
+    dadi_fs = cache1d.integrate(p0_1d, None, get_dadi_pdf(sele_dist), theta_ns)
     assert np.allclose(dadi_cli_fs, dadi_fs)
 
     # Test 2D
-    simulate_dfe(p0_2d, None, cache2d, None, sele_dist2, ratio, misid, output_2d)
+    simulate_dfe(p0_2d, None, cache2d, None, sele_dist2, theta_ns, misid, output_2d)
     dadi_cli_fs = dadi.Spectrum.from_file(output_2d)
-    dadi_fs = cache2d.integrate(p0_2d, None, get_dadi_pdf(sele_dist2), ratio, None)
+    dadi_fs = cache2d.integrate(p0_2d, None, get_dadi_pdf(sele_dist2), theta_ns, None)
     assert np.allclose(dadi_cli_fs, dadi_fs)
 
     # Test mix
     simulate_dfe(
-        p0_mix, cache1d, cache2d, sele_dist, sele_dist2, ratio, misid, output_mix
+        p0_mix, cache1d, cache2d, sele_dist, sele_dist2, theta_ns, misid, output_mix
     )
     dadi_cli_fs = dadi.Spectrum.from_file(output_mix)
     dadi_fs = DFE.mixture(
@@ -93,22 +110,28 @@ def test_simulate_dfe_code():
         cache2d,
         get_dadi_pdf(sele_dist),
         get_dadi_pdf(sele_dist2),
-        ratio,
+        theta_ns,
         None,
     )
     assert np.allclose(dadi_cli_fs, dadi_fs)
 
     # Test 1D misid
     simulate_dfe(
-        p0_1d_misid, cache1d, None, sele_dist, None, ratio, True, output_1d_misid
+        p0_1d_misid, cache1d, None, sele_dist, None, theta_ns, True, output_1d_misid
     )
     dadi_cli_fs = dadi.Spectrum.from_file(output_1d_misid)
     dadi_fs = dadi.Numerics.make_anc_state_misid_func(cache1d.integrate)(
-        p0_1d_misid, None, get_dadi_pdf(sele_dist), ratio
+        p0_1d_misid, None, get_dadi_pdf(sele_dist), theta_ns
     )
     assert np.allclose(dadi_cli_fs, dadi_fs)
 
+try:
+    import demes
+    skip = False
+except:
+    skip = True
 
+@pytest.mark.skipif(skip, reason="Could not load Demes")
 def test_simulate_demes_code():
     demes_file = "examples/data/gutenkunst_ooa.yml"
     ns = [10, 10, 10]

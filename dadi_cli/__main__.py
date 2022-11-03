@@ -80,7 +80,7 @@ def run_simulate_dm(args):
         args.model,
         args.model_file,
         args.p0,
-        args.ns,
+        args.sample_sizes,
         args.grids,
         args.misid,
         args.output,
@@ -117,7 +117,7 @@ def run_simulate_dfe(args):
 def run_simulate_demes(args):
     from dadi_cli.SimulateFs import simulate_demes
 
-    simulate_demes(args.demes_file, atgs.ns, args.grids, args.output)
+    simulate_demes(args.demes_file, atgs.sample_sizes, args.grids, args.output)
 
 
 def run_infer_dm(args):
@@ -878,6 +878,17 @@ def add_delta_ll_argument(parser):
     )
 
 
+def add_sample_sizes_argument(parser):
+    parser.add_argument(
+        "--sample-sizes",
+        type=_check_positive_int,
+        nargs="+",
+        required=True,
+        help="Sample sizes of populations.",
+        dest="sample_sizes",
+    )
+
+
 def add_popt_argument(parser):
     parser.add_argument(
         "--demo-popt",
@@ -1012,20 +1023,7 @@ def add_inference_argument(parser):
         help="Pass in a .bestfit or .opt.<N> file name to cycle --p0 between up to the top 10 best fits for each optimization."
     )
 
-def add_simulation_argument(parser):
-    parser.add_argument(
-        "--grids",
-        type=_check_positive_int,
-        nargs=3,
-        help="Sizes of grids. Default: None.",
-    )
-    parser.add_argument(
-        "--misid",
-        dest="misid",
-        default=False,
-        action="store_true",
-        help="Enable to include a parameter modeling ancestral state misidentification when data are polarized ; Default: False.",
-    )
+def add_p0_argument(parser):
     parser.add_argument(
         "--p0",
         type=float,
@@ -1157,14 +1155,6 @@ def dadi_cli_parser():
         help="Number of GPUs to use in multiprocessing. Default: 0.",
     )
     parser.add_argument(
-        "--sample-sizes",
-        type=_check_positive_int,
-        nargs="+",
-        required=True,
-        help="Sample sizes of populations.",
-        dest="sample_sizes",
-    )
-    parser.add_argument(
         "--dimensionality",
         type=int,
         default=1,
@@ -1178,6 +1168,7 @@ def dadi_cli_parser():
         dest="model_file",
         help="Name of python module file (not including .py) that contains custom models to use. Default: None.",
     )
+    add_sample_sizes_argument(parser)
     add_output_argument(parser)
     add_demo_popt_argument(parser)
     add_grids_argument(parser)
@@ -1188,14 +1179,7 @@ def dadi_cli_parser():
         "SimulateDM", help="Generate frequency spectrum based on a demographic history."
     )
     add_model_argument(parser)
-    parser.add_argument(
-        "--sample-sizes",
-        dest="ns",
-        type=_check_positive_int,
-        nargs="+",
-        required=True,
-        help="Sample sizes for simulated populations.",
-    )
+    add_sample_sizes_argument(parser)
     parser.add_argument(
         "--model-file",
         type=str,
@@ -1203,7 +1187,9 @@ def dadi_cli_parser():
         dest="model_file",
         help="Name of python module file (not including .py) that contains custom models to use. Default: None.",
     )
-    add_simulation_argument(parser)
+    add_p0_argument(parser)
+    add_misid_argument(parser)
+    add_grids_argument(parser)
     parser.add_argument(
         "--inference-file",
         dest="inference_file",
@@ -1221,11 +1207,12 @@ def dadi_cli_parser():
     parser.add_argument(
         "--theta-ns",
         type=float,
-        dest="theta_ns",
+        dest="ratio",
         required=True,
         help="Ratio for the nonsynonymous mutations to the synonymous mutations.",
     )
-    add_simulation_argument(parser)
+    add_p0_argument(parser)
+    add_misid_argument(parser)
     add_output_argument(parser)
     parser.set_defaults(runner=run_simulate_dfe)
 
@@ -1248,7 +1235,8 @@ def dadi_cli_parser():
         help="Population names for the samples, required for Demes.",
         dest="pop_ids",
     )
-    add_simulation_argument(parser)
+    add_sample_sizes_argument(parser)
+    add_grids_argument(parser)
     add_output_argument(parser)
     parser.set_defaults(runner=run_simulate_demes)
 

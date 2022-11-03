@@ -105,3 +105,22 @@ def test_print_built_in_model_details(capfd, model_list):
         print_built_in_model_details("mixture")
 
     assert str(e_info.value) == "Cannot find model: mixture."
+
+def test_custome_model_import(capfd):
+    import tests.example_data.example_models as custom
+    custome_model_list = ['three_epoch_bottleneck', 'split_mig_fix_T', 'split_mig_fix_T_sel']
+    # Test importing good custom models
+    for custome_model in custome_model_list:
+        get_model(custome_model, 'tests/example_data/example_models')
+        out, err = capfd.readouterr()
+        assert out == "" and err == ""
+    # Test importing a custom model without .__param_names__ attribute
+    with pytest.raises(ValueError) as e_info:
+        get_model('split_no_mig_missing_param_names', 'tests/example_data/example_models')
+    assert str(e_info.value) == "Demographic model needs a .__param_names__ attribute!\nAdd one by adding the line split_no_mig_missing_param_names.__param_name__ = [LIST_OF_PARAMS]\nReplacing LIST_OF_PARAMS with the names of the parameters as strings."
+    # Test importing a custom model not in example_models
+    with pytest.raises(AttributeError) as e_info:
+        get_model('haha', 'tests/example_data/example_models')
+    assert str(e_info.value) == "module 'example_models' has no attribute 'haha'"
+
+
