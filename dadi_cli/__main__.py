@@ -1205,7 +1205,7 @@ def dadi_cli_parser():
     )
     add_dfe_argument(parser)
     parser.add_argument(
-        "--theta-ns",
+        "--ratio",
         type=float,
         dest="ratio",
         required=True,
