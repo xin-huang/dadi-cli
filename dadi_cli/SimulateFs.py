@@ -41,7 +41,20 @@ def simulate_demes(demes_file, ns, pts_l, pop_ids, output):
 
 
 def simulate_dfe(p0, cache1d, cache2d, sele_dist, sele_dist2, ratio, misid, output):
+    """
+    Description:
+        Simulates frequency spectrum from a DFE model.
 
+    Arguments:
+        p0 list: Initial parameter values for inference.
+        cache1d dadi.DFE.Cache1D_mod: Caches of 1d frequency spectra for DFE inference.
+        cache2d dadi.DFE.Cache2D_mod: Caches of 2d frequency spectra for DFE inference.
+        sele_dist str: Name of the 1d PDF function for modeling DFEs.
+        sele_dist2 str: Name of the 2d PDF function for modeling DFEs.
+        ratio float: Ratio of synonymous to non-synonymous mutations.
+        misid bool: If True, add a parameter for modeling ancestral state misidentification when data are polarized.
+        output str: Name of the output file.
+    """
     if sele_dist != None:
         sele_dist = get_dadi_pdf(sele_dist)
     if sele_dist2 != None:
