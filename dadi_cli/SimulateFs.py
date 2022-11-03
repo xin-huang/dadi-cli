@@ -55,6 +55,11 @@ def simulate_dfe(p0, cache1d, cache2d, sele_dist, sele_dist2, ratio, misid, outp
         misid bool: If True, add a parameter for modeling ancestral state misidentification when data are polarized.
         output str: Name of the output file.
     """
+    if cache1d != None:
+        func = cache1d.integrate
+    if cache2d != None:
+        func = cache2d.integrate
+
     if sele_dist != None:
         sele_dist = get_dadi_pdf(sele_dist)
     if sele_dist2 != None:
@@ -62,17 +67,15 @@ def simulate_dfe(p0, cache1d, cache2d, sele_dist, sele_dist2, ratio, misid, outp
     if (sele_dist == None) and (sele_dist2 != None):
         sele_dist = sele_dist2
 
-    if cache1d != None:
-        func = cache1d.integrate
-    if cache2d != None:
-        func = cache2d.integrate
-
     if (cache1d != None) and (cache2d != None):
         func = dadi.DFE.Cache2D_mod.mixture
+        func_args = [cache1d, cache2d, sele_dist, sele_dist2, ratio]
+    else:
+        func_args = [sele_dist, ratio]
 
     if misid:
         func = dadi.Numerics.make_anc_state_misid_func(func)
-    print(func, p0, None, sele_dist, ratio, None)
+    print(p0, None, sele_dist, ratio, None)
     # Get expected SFS for MLE
     if (cache1d != None) and (cache2d != None):
         fs = func(p0, None, cache1d, cache2d, sele_dist, sele_dist2, ratio, None)
