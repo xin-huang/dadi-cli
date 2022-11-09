@@ -1,0 +1,3 @@
+Any files in this directory (terraform/uploads) will be copied to the dadi user's home directory in the AWS instance if the variables are configured to autorun dadi-cli.
+
+You can safely delete this file if you don't want it uploaded to your instance.

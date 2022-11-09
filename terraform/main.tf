@@ -121,8 +121,8 @@ resource "aws_instance" "dadi_manager" {
     Name = "Dadi"
   }
   provisioner "file" {
-    source = var.dadi_cli.fs_file
-    destination = "${var.dadi_cli.fs_file}"
+    source = "uploads/"
+    destination = "/home/dadi"
     connection {
       type        = "ssh"
       user        = "dadi"
