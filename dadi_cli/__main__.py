@@ -925,6 +925,10 @@ def add_dfe_argument(parser):
         type=str,
         help="2D probability density function for the joint DFE inference. To check available probability density functions, please use `dadi-cli Pdf`.",
     )
+
+
+# Currently this command is only needed for param_names.
+def add_mix_pdf_argument(parser):
     parser.add_argument(
         "--mix-pdf",
         dest="mix_pdf",
@@ -1280,6 +1284,7 @@ def dadi_cli_parser():
         help="File contains the bestfit parameters for the demographic model.",
     )
     add_dfe_argument(parser)
+    add_mix_pdf_argument(parser)
     parser.add_argument(
         "--ratio",
         type=float,
