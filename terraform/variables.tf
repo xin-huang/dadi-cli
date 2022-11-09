@@ -11,7 +11,6 @@ variable "dadi_cli" {
   type = object({
     run        = bool,
     parameters = string,
-    fs_file    = string
   })
 }
 
