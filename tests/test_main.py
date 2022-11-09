@@ -103,7 +103,7 @@ def infer_dm_args():
     pytest.cuda = False
     pytest.maxeval = 10
     pytest.maxtime = 10
-    pytest.output_prefix = "tests/test_results/example.two_epoch.demo.params"
+    pytest.output_prefix = "tests/test_results/main.test.two_epoch.demo.params"
     pytest.check_convergence = True
     pytest.force_convergence = False
     pytest.work_queue = []
@@ -137,7 +137,7 @@ def test_run_infer_no_custom_model_dm(infer_dm_args):
 
 def test_run_infer_dm_misid(infer_dm_args):
     pytest.nomisid = False
-    pytest.output_prefix = "tests/test_results/example.two_epoch.demo_misid.params"
+    pytest.output_prefix = "tests/test_results/main.test.two_epoch.demo_misid.params"
     pytest.p0 = [1, 0.5, 1e-2]
     pytest.ubounds = [10, 10, 0.999]
     pytest.lbounds = [1e-3, 1e-3, 1e-4]
@@ -149,7 +149,7 @@ def test_run_infer_dm_global_bestfit(infer_dm_args):
     pytest.global_optimization = True
     print(pytest.nomisid)
     pytest.bestfit_p0 = "tests/example_data/example.bestfit.two_epoch.demo.params.InferDM.opts.0"
-    pytest.output_prefix = "tests/test_results/example.two_epoch.demo_bestfit_p0.params"
+    pytest.output_prefix = "tests/test_results/main.test.two_epoch.demo_bestfit_p0.params"
     pytest.nomisid = False
     pytest.p0 = [1, 0.5, 1e-2]
     pytest.ubounds = [10, 10, 0.999]
@@ -183,7 +183,7 @@ def infer_dfe_args():
     pytest.cuda = False
     pytest.maxeval = 100
     pytest.maxtime = 300
-    pytest.output_prefix = "tests/test_results/example.split_mig_fix_T."
+    pytest.output_prefix = "tests/test_results/main.test.split_mig_fix_T."
     pytest.check_convergence = True
     pytest.force_convergence = False
     pytest.cpus = 1
@@ -240,7 +240,7 @@ def test_run_infer_dfe_mix(infer_dfe_args):
     pytest.lbounds = [1e-3, 1e-3, None, 1e-3]
     pytest.constants = [None, None, 0, None]
     dadi_cli.run_infer_dfe(pytest)
-    fids = glob.glob(pytest.output_prefix+"*")
+    fids = glob.glob(pytest.output_prefix+"*.opts.0")
     print(fids)
     opt = open(fids[-1],'r').readlines()
     print(opt)
@@ -266,7 +266,7 @@ def test_run_infer_dm_workqueue(infer_dm_args):
         "work_queue_factory -T local -M pytest-dadi-cli -P ./tests/mypwfile --workers-per-cycle=0 --cores=1  -w 3 -W 3",
         shell=True,
     )
-    pytest.output_prefix = "tests/test_results/example.two_epoch.demo_wq.params"
+    pytest.output_prefix = "tests/test_results/main.test.two_epoch.demo_wq.params"
     pytest.work_queue = ['pytest-dadi-cli', 'tests/mypwfile']
     dadi_cli.run_infer_dm(pytest)
     factory.kill()
