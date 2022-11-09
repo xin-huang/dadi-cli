@@ -139,7 +139,6 @@ def test_simulate_dfe_args():
     cache2d = "tests/example_data/cache_split_mig_2d.bpkl"
     pdf1d = "lognormal"
     pdf2d = "biv_lognormal"
-    mix_pdf = "mixture_lognormal"
     ratio = 2
     p0 = [1, 1.4, 0, 0.97, 0.02]
     nomisid = False
@@ -156,8 +155,6 @@ def test_simulate_dfe_args():
             pdf1d,
             "--pdf2d",
             pdf2d,
-            "--mix-pdf",
-            mix_pdf,
             "--ratio",
             str(ratio),
             "--p0",
@@ -171,7 +168,6 @@ def test_simulate_dfe_args():
     assert args.cache2d == cache2d
     assert args.pdf1d == pdf1d
     assert args.pdf2d == pdf2d
-    assert args.mix_pdf == mix_pdf
     assert args.ratio == ratio
     assert args.p0 == p0
     assert args.nomisid == nomisid
@@ -577,7 +573,6 @@ def test_stat_dfe_args():
     cache2d = "tests/example_data/cache_split_mig_2d.bpkl"
     pdf1d = "lognormal"
     pdf2d = "biv_lognormal"
-    mix_pdf = "mixture_lognormal"
     output = "./tests/test_results/example.split_mig.dfe.mixture_lognormal.params.ci"
     bootstrapping_synonymous_dir = "tests/example_data/split_mig_bootstrap_syn/"
     bootstrapping_nonsynonymous_dir = "tests/example_data/split_mig_bootstrap_non/bootstrap_non_mix/"
@@ -599,8 +594,6 @@ def test_stat_dfe_args():
             pdf1d,
             "--pdf2d",
             pdf2d,
-            "--mix-pdf",
-            mix_pdf,
             "--output",
             output,
             "--constants",
@@ -619,7 +612,6 @@ def test_stat_dfe_args():
     assert args.cache2d == cache2d
     assert args.pdf1d ==  pdf1d
     assert args.pdf2d == pdf2d
-    assert args.mix_pdf == mix_pdf
     assert args.output == output
     assert args.constants == constants
     assert args.dfe_popt == dfe_popt
