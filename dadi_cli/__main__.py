@@ -983,7 +983,7 @@ def add_inference_argument(parser):
     )
     parser.add_argument(
         "--work-queue",
-        nargs=3,
+        nargs=2,
         default=[],
         action="store",
         dest="work_queue",
