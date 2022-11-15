@@ -148,7 +148,8 @@ def run_infer_dm(args):
         newest_file_num = max([int(ele.split(".")[-1]) for ele in existing_files]) + 1
     except:
         newest_file_num = 0
-    fid = open(args.output_prefix + ".InferDM.opts.{0}".format(newest_file_num), "a")
+    results_file = args.output_prefix + ".InferDM.opts.{0}".format(newest_file_num)
+    fid = open(results_file, "a")
     # Write command line to results file
     import sys
 
@@ -416,6 +417,7 @@ def run_infer_dm(args):
             )
             fid.flush()
             if args.check_convergence or args.force_convergence:
+                results_file = args.output_prefix + ".InferDM.bestfits"
                 result = get_bestfit_params(
                     path=args.output_prefix + ".InferDM.opts.*",
                     lbounds=args.lbounds,
@@ -431,6 +433,8 @@ def run_infer_dm(args):
             for worker in workers:
                 worker.terminate()
     fid.close()
+    if args.email is not None:
+        send_email(args.email, results_file)
     # TODO: Stop the remaining work_queue workers
 
 
@@ -492,7 +496,8 @@ def run_infer_dfe(args):
         newest_file_num = max([int(ele.split(".")[-1]) for ele in existing_files]) + 1
     except:
         newest_file_num = 0
-    fid = open(args.output_prefix + ".InferDFE.opts.{0}".format(newest_file_num), "a")
+    results_file = args.output_prefix + ".InferDFE.opts.{0}".format(newest_file_num)
+    fid = open(results_file, "a")
     # Write command line to results file
     import sys
 
@@ -639,6 +644,7 @@ def run_infer_dfe(args):
             )
             fid.flush()
             if args.check_convergence or args.force_convergence:
+                results_file = args.output_prefix + ".InferDFE.bestfits"
                 result = get_bestfit_params(
                     path=args.output_prefix + ".InferDFE.opts.*",
                     lbounds=args.lbounds,
@@ -654,7 +660,8 @@ def run_infer_dfe(args):
             for worker in workers:
                 worker.terminate()
     fid.close()
-
+    if args.email is not None:
+        send_email(args.email, results_file)
 
 def run_bestfit(args):
     from dadi_cli.BestFit import get_bestfit_params
@@ -976,11 +983,17 @@ def add_inference_argument(parser):
     )
     parser.add_argument(
         "--work-queue",
-        nargs=2,
+        nargs=3,
         default=[],
         action="store",
         dest="work_queue",
-        help="Enable Work Queue. Additional arguments are the WorkQueue project name and the name of the password file.",
+        help="Enable Work Queue. Additional arguments are the WorkQueue project name, the name of the password file.",
+    )
+    parser.add_argument(
+        "--email",
+        type=str,
+        dest="email",
+        help="Enter user email address for terraform to send inference results to user.",
     )
     parser.add_argument(
         "--port",
@@ -1594,6 +1607,43 @@ def _top_opts(filename):
 
     if not is_here: print('No file found.')
     return opts
+
+from os.path import basename
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.application import MIMEApplication
+
+def send_email(user_email, results_file):
+    #The mail addresses and password
+    sender_address = "strucktravis@gmail.com"
+    sender_pass = "uqsppidvyihyvvzr"
+    #Setup the MIME
+    message = MIMEMultipart()
+    message['From'] = sender_address
+    message['To'] = user_email
+    message['Subject'] = 'Dadi-cli results for ' + results_file   #The subject line
+    #The body and the attachments for the mail
+    message.attach(MIMEText('', 'plain'))
+
+
+    with open(results_file, "rb") as res:
+        part = MIMEApplication(
+            res.read(),
+            Name=basename(results_file)
+        )
+    # After the file is closed
+    part['Content-Disposition'] = 'attachment; filename="%s"' % basename(results_file)
+    message.attach(part)
+
+    #Create SMTP session for sending the mail
+    session = smtplib.SMTP('smtp.gmail.com', 587) #use gmail with port
+    session.starttls() #enable security
+    session.login(sender_address, sender_pass) #login with mail_id and password
+    text = message.as_string()
+    session.sendmail(sender_address, user_email, text)
+    session.quit()
+    print('Mail Sent')
 
 # Main function
 def main(arg_list=None):
