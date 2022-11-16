@@ -71,9 +71,7 @@ def get_model(model_name, model_file=None):
         params = func.__param_names__
     except:
         raise ValueError(
-            f"Demographic model needs a .__param_names__ attribute!\nAdd one by adding the line "
-            + model_name0
-            + ".__param_name__ = [LIST_OF_PARAMS]\nReplacing LIST_OF_PARAMS with the names of the parameters as strings."
+            f"Demographic model needs a .__param_names__ attribute!\nAdd one by adding the line {model_name0}.__param_name__ = [LIST_OF_PARAMS]\nReplacing LIST_OF_PARAMS with the names of the parameters as strings."
         )
 
     return func, params
