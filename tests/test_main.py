@@ -115,6 +115,7 @@ def infer_dm_args():
     pytest.delta_ll = 0.001
     pytest.global_optimization = False
     pytest.seed = None
+    pytest.email = None
 
 def test_run_infer_dm(infer_dm_args):
     dadi_cli.run_infer_dm(pytest)
@@ -196,6 +197,7 @@ def infer_dfe_args():
     pytest.work_queue = []
     pytest.debug_wq = False
     pytest.port = 9123
+    pytest.email = None
 
 def test_run_infer_dfe_1d(infer_dfe_args):
     pytest.fs = pytest.fs_1d_lognorm
