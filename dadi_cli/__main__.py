@@ -1616,8 +1616,8 @@ from email.mime.application import MIMEApplication
 
 def send_email(user_email, results_file):
     #The mail addresses and password
-    sender_address = "strucktravis@gmail.com"
-    sender_pass = "uqsppidvyihyvvzr"
+    sender_address = "dadi.results@gmail.com"
+    sender_pass = "yfjbdeaijwaosdck"
     #Setup the MIME
     message = MIMEMultipart()
     message['From'] = sender_address
