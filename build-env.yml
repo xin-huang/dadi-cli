@@ -2,12 +2,10 @@ name: dadi-cli
 channels:
   - conda-forge
   - bioconda
-  - nvidia
 dependencies:
-  - cuda
+  - codecov
   - gcc
   - gfortran
-  - gxx==11.3
   - demes
   - dill==0.3.4
   - matplotlib
@@ -15,9 +13,10 @@ dependencies:
   - nlopt
   - numpy
   - pip
-  - pycuda
+  - pytest-cov
+  - python==3.8
   - scipy
+  - snakemake==7.1.1
   - pip:
       - dadi>2.1.0
-      - scikit-cuda
       - .
