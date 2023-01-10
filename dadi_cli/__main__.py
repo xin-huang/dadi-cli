@@ -122,6 +122,37 @@ def run_simulate_demes(args):
 
 def run_infer_dm(args):
     fs = dadi.Spectrum.from_file(args.fs)
+
+    # Because basic standard neutral models do not need to optimized
+    # we can calculate the log-likelihood and theta
+    if args.model in ['snm_1d', 'snm_2d'] and args.p0 == -1 and args.lbounds == None and args.ubounds == None:
+        # Start file for results
+        existing_files = glob.glob(args.output_prefix + ".InferDM.opts.*")
+        try:
+            newest_file_num = max([int(ele.split(".")[-1]) for ele in existing_files]) + 1
+        except:
+            newest_file_num = 0
+        fid = open(args.output_prefix + ".InferDM.opts.{0}".format(newest_file_num), "a")
+        # Write command line to results file
+        import sys
+        fid.write("# {0}\n".format(" ".join(sys.argv)))
+
+        # Extract model function and parameter names, from custom model_file if necessary
+        func, param_names = get_model(args.model, args.model_file)
+
+        fid.write("# Log(likelihood)\t" + "\t".join(param_names) + "\ttheta\n")
+        from sys import exit
+        print(fs.sample_sizes, args.grids)
+        model = dadi.Numerics.make_extrap_func(func)([], fs.sample_sizes, args.grids)
+        ll_model = dadi.Inference.ll_multinom(model, fs)
+        theta = dadi.Inference.optimal_sfs_scaling(model, fs)
+        print(type(ll_model), type(theta))
+        fid.write('\t'.join(str(_) for _ in [ll_model, theta])+'\n')
+        fid.close()
+        exit()
+    else:
+        pass
+
     # Due to development history, much of the code expects a args.misid variable, so create it.
     args.misid = not (fs.folded or args.nomisid)
 
@@ -790,18 +821,26 @@ def add_output_argument(parser):
     )
 
 def add_bounds_argument(parser):
+    # Check that the model is not a 
+    if 'snm_1d' not in sys.argv and 'snm_2d' not in sys.argv:
+        boundary_req = True
+    else:
+        if '--p0' in sys.argv:
+            boundary_req = True
+        else:
+            boundary_req = False
     parser.add_argument(
         "--lbounds",
         type=float,
         nargs="+",
-        required=True,
+        required=boundary_req,
         help="Lower bounds of the optimized parameters.",
     )
     parser.add_argument(
         "--ubounds",
         type=float,
         nargs="+",
-        required=True,
+        required=boundary_req,
         help="Upper bounds of the optimized parameters.",
     )
 
