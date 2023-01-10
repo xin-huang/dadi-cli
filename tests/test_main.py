@@ -159,6 +159,17 @@ def test_run_infer_dm_global_bestfit(infer_dm_args):
     for ele in glob.glob(pytest.output_prefix+"*"):
         os.remove(ele)
 
+def boundary_test_run_infer_dm_simple_snm(infer_dm_args):
+    pytest.model = "snm_1d"
+    pytest.nomisid = True
+    pytest.output_prefix = "tests/test_results/main.test.snm.no.boundaries.demo_misid.params"
+    pytest.p0 = -1
+    pytest.ubounds = None
+    pytest.lbounds = None
+    dadi_cli.run_infer_dm(pytest)
+    for ele in glob.glob(pytest.output_prefix+"*"):
+        os.remove(ele)
+
 @pytest.fixture
 def infer_dfe_args():
     pytest.fs_mix = "tests/example_data/split_mig_non_mix.fs"
