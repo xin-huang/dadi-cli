@@ -126,13 +126,7 @@ def run_infer_dm(args):
     # Because basic standard neutral models do not need to optimized
     # we can calculate the log-likelihood and theta
     if args.model in ['snm_1d', 'snm_2d'] and args.p0 == -1 and args.lbounds == None and args.ubounds == None:
-        # Start file for results
-        existing_files = glob.glob(args.output_prefix + ".InferDM.opts.*")
-        try:
-            newest_file_num = max([int(ele.split(".")[-1]) for ele in existing_files]) + 1
-        except:
-            newest_file_num = 0
-        fid = open(args.output_prefix + ".InferDM.opts.{0}".format(newest_file_num), "a")
+        fid = open(args.output_prefix + ".InferDM.simple.snm.txt", "w")
         # Write command line to results file
         import sys
         fid.write("# {0}\n".format(" ".join(sys.argv)))
@@ -142,11 +136,9 @@ def run_infer_dm(args):
 
         fid.write("# Log(likelihood)\t" + "\t".join(param_names) + "\ttheta\n")
         from sys import exit
-        print(fs.sample_sizes, args.grids)
         model = dadi.Numerics.make_extrap_func(func)([], fs.sample_sizes, args.grids)
         ll_model = dadi.Inference.ll_multinom(model, fs)
         theta = dadi.Inference.optimal_sfs_scaling(model, fs)
-        print(type(ll_model), type(theta))
         fid.write('\t'.join(str(_) for _ in [ll_model, theta])+'\n')
         fid.close()
         exit()
