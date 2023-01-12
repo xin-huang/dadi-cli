@@ -133,10 +133,12 @@ def run_infer_dm(args):
 
         # Extract model function and parameter names, from custom model_file if necessary
         func, param_names = get_model(args.model, args.model_file)
+        if args.grids is None:
+            pts_l = pts_l_func(fs.sample_sizes)
 
         fid.write("# Log(likelihood)\t" + "\t".join(param_names) + "\ttheta\n")
         from sys import exit
-        model = dadi.Numerics.make_extrap_func(func)([], fs.sample_sizes, args.grids)
+        model = dadi.Numerics.make_extrap_func(func)([], fs.sample_sizes, pts_l)
         ll_model = dadi.Inference.ll_multinom(model, fs)
         theta = dadi.Inference.optimal_sfs_scaling(model, fs)
         fid.write('\t'.join(str(_) for _ in [ll_model, theta])+'\n')
