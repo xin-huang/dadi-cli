@@ -71,26 +71,34 @@ def infer_demography(
     if pts_l is None:
         pts_l = pts_l_func(fs.sample_sizes)
 
-    popt, _ = dadi.Inference.opt(
-        p0,
-        fs,
-        func_ex,
-        pts_l,
-        lower_bound=lower_bounds,
-        upper_bound=upper_bounds,
-        fixed_params=fixed_params,
-        algorithm=nlopt.LN_BOBYQA,
-        maxeval=maxeval,
-        maxtime=maxtime,
-        verbose=0,
-    )
+    try:
+        popt, _ = dadi.Inference.opt(
+            p0,
+            fs,
+            func_ex,
+            pts_l,
+            lower_bound=lower_bounds,
+            upper_bound=upper_bounds,
+            fixed_params=fixed_params,
+            algorithm=nlopt.LN_BOBYQA,
+            maxeval=maxeval,
+            maxtime=maxtime,
+            verbose=0,
+        )
 
-    # Calculate the best-fit model to get ll and theta
-    model = func_ex(popt, fs.sample_sizes, pts_l)
-    ll_model = dadi.Inference.ll_multinom(model, fs)
-    theta = dadi.Inference.optimal_sfs_scaling(model, fs)
+        # Calculate the best-fit model to get ll and theta
+        model = func_ex(popt, fs.sample_sizes, pts_l)
+        ll_model = dadi.Inference.ll_multinom(model, fs)
+        theta = dadi.Inference.optimal_sfs_scaling(model, fs)
+    except nlopt.RoundoffLimited:
+        print('nlopt.RoundoffLimited occured, other jobs still running. Users might want to adjust their boundaries or starting parameters if this message occures many times.')
+        ll_model = -np.inf
+        theta = np.nan
+        popt = [np.nan for ele in p0]
+
 
     return ll_model, popt, theta
+
 
 
 def infer_global_opt(
