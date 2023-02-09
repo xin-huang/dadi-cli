@@ -9,6 +9,9 @@ def test_pts_l_func():
     fs = dadi.Spectrum([0, 1, 2, 3])
     assert utilities.pts_l_func(fs.sample_sizes) == (5, 7, 9)
 
+def test_cache_pts_l_func():
+    fs = dadi.Spectrum([0, 1, 2, 3])
+    assert utilities.cache_pts_l_func(fs.sample_sizes) == (8, 11, 13)
 
 def test_convert_to_None():
     inference_input = [1, 2, 3, 4]

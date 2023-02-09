@@ -18,6 +18,22 @@ def pts_l_func(sample_sizes):
     return grid_sizes
 
 
+def cache_pts_l_func(sample_sizes):
+    """
+    Description:
+        Calculates plausible grid sizes for modeling a frequency spectrum.
+
+    Arguments:
+        sample_sizes list: Sample sizes.
+
+    Returns:
+        grid_sizes tuple: Grid sizes for modeling.
+    """
+    n = max(sample_sizes)
+    grid_sizes = (int(n * 2.2) + 2, int(n * 2.4) + 4, int(n * 2.6) + 6)
+    return grid_sizes
+
+
 def convert_to_None(inference_input, p0_len):
     """
     Description:
