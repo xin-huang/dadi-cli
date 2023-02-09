@@ -49,7 +49,7 @@ def test_run_simulate_dm():
     simulate_args.p0 = [1, 0.5]
     simulate_args.sample_sizes = [10]
     simulate_args.grids = [20, 30, 40]
-    simulate_args.misid = False
+    simulate_args.nomisid = True
     simulate_args.output = "tests/test_results/main_simulate_two_epoch.fs"
     simulate_args.inference_file = False
 
@@ -65,7 +65,7 @@ def test_run_simulate_dfe():
     simulate_args.pdf1d = "lognormal"
     simulate_args.pdf2d = "biv_lognormal"
     simulate_args.ratio = 2.31
-    simulate_args.misid = True
+    simulate_args.nomisid = False
     simulate_args.output = "tests/test_results/main_simulate_mix_dfe.fs"
 
     dadi_cli.run_simulate_dfe(simulate_args)
