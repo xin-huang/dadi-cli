@@ -58,7 +58,7 @@ def test_generate_cache_custom_model_code(capsys):
     )
     generate_cache(
         func=sel_func,
-        grids=[120, 140, 160],
+        grids=None,
         popt="./tests/example_data/example.split_mig_fix_T.demo.params.InferDM.bestfits",
         gamma_bounds=[1e-4, 20],
         gamma_pts=5,

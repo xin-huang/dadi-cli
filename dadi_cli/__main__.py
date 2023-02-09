@@ -75,7 +75,8 @@ def run_generate_cache(args):
 
 def run_simulate_dm(args):
     from dadi_cli.SimulateFs import simulate_demography
-
+    # Due to development history, much of the code expects a args.misid variable, so create it.
+    args.misid = not args.nomisid
     simulate_demography(
         args.model,
         args.model_file,
@@ -101,6 +102,9 @@ def run_simulate_dfe(args):
         cache2d = pickle.load(open(args.cache2d, "rb"))
     else:
         cache2d = args.cache2d
+
+    # Due to development history, much of the code expects a args.misid variable, so create it.
+    args.misid = not args.nomisid
 
     simulate_dfe(
         args.p0,
