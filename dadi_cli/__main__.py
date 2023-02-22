@@ -561,6 +561,11 @@ def run_infer_dfe(args):
     while not converged:
         if not args.force_convergence:
             converged = True
+
+        # Check if we can get a list of top fits
+        if args.bestfit_p0 is not None: 
+            bestfits = _top_opts(args.bestfit_p0)
+
         if args.work_queue:
             import work_queue as wq
 
@@ -594,6 +599,7 @@ def run_infer_dfe(args):
                     None,
                     args.maxeval,
                     args.maxtime,
+                    bestfits,
                     new_seed,
                 )
                 # # If using a custom model, need to include the file from which it comes
@@ -618,6 +624,7 @@ def run_infer_dfe(args):
                 None,
                 args.maxeval,
                 args.maxtime,
+                bestfits,
             )
 
             # Queues to manage input and output
