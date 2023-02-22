@@ -57,6 +57,8 @@ def run_generate_fs(args):
 
 
 def run_generate_cache(args):
+    if args.model_file is None and args.model not in [m[0] for m in getmembers(DFE.DemogSelModels, isfunction)]:
+        raise ValueError(f"{args.model} is not in dadi.DFE.DemogSelModels, did you mean to include _sel or _single_sel in the model name or specify a --model-file?")
     func, _ = get_model(args.model, args.model_file)
     generate_cache(
         func=func,
