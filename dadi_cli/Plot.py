@@ -185,7 +185,7 @@ def plot_fitted_dfe(
             projections = ns
         fs = fs.project(projections)
         model = model.project(projections)
-        dadi.Plotting.plot_2d_comp_Poisson(model, fs)
+        dadi.Plotting.plot_1d_comp_multinom(model, fs)
     if len(ns) == 2:
         if projections == None:
             projections = ns
