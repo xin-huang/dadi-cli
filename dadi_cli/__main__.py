@@ -565,6 +565,8 @@ def run_infer_dfe(args):
         # Check if we can get a list of top fits
         if args.bestfit_p0 is not None: 
             bestfits = _top_opts(args.bestfit_p0)
+        else:
+            bestfits = None
 
         if args.work_queue:
             import work_queue as wq
