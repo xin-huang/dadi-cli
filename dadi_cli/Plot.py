@@ -69,7 +69,7 @@ def plot_comparison(fs, fs2, projections, output, vmin, resid_range):
 
 
 def plot_fitted_demography(
-    fs, model, popt, projections, nomisid, output, vmin, resid_range
+    fs, func, popt, projections, nomisid, output, vmin, resid_range
 ):
     """
     Description:
@@ -85,7 +85,6 @@ def plot_fitted_demography(
         vmin float: Minimum value in the colorbar.
         resid_range list: Range of the residuals.
     """
-    func, params = get_model(model, None)
 
     popt, _ = get_opts_and_theta(popt)
 
@@ -120,7 +119,6 @@ def plot_fitted_dfe(
     fs,
     cache1d,
     cache2d,
-    demo_popt,
     sele_popt,
     projections,
     pdf,
@@ -138,7 +136,6 @@ def plot_fitted_dfe(
         fs str: Name of the file containing frequency spectrum from dadi.
         cache1d str: Name of the file containing 1d frequency spectra cache from dadi.
         cache2d str: Name of the file containing 2d frequency spectra cache from dadi.
-        demo_popt str: Name of the file containing the best-fit demographic parameters.
         sele_popt str: Name of the file containing the best-fit DFE parameters.
         projections list: Sample sizes after projection.
         pdf str: Name of the 1d PDF for modeling DFE.
