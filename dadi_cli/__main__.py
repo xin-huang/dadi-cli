@@ -789,6 +789,8 @@ def run_plot(args):
             output=args.output,
         )
     elif args.demo_popt != None:
+        if args.model is None:
+            raise ValueError("--model is missing")
         func, _ = get_model(args.model, args.model_file)
         plot_fitted_demography(
             fs=args.fs,
@@ -891,10 +893,16 @@ def add_misid_argument(parser):
 
 
 def add_model_argument(parser):
+    # Because most of the functions for Plot
+    # do not require a model, we make it
+    # conditionally required.
+    req_model_arg = True
+    if 'Plot' in sys.argv:
+        req_model_arg = False
     parser.add_argument(
         "--model",
         type=str,
-        required=True,
+        required=req_model_arg,
         help="Name of the demographic model. To check available demographic models, please use `dadi-cli Model`.",
     )
     parser.add_argument(
