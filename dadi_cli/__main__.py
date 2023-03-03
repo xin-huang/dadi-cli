@@ -891,10 +891,16 @@ def add_misid_argument(parser):
 
 
 def add_model_argument(parser):
+    # Because most of the functions for Plot
+    # do not require a model, we make it
+    # conditionally required.
+    req_model_arg = True
+    if 'Plot' in sys.argv:
+        req_model_arg = False
     parser.add_argument(
         "--model",
         type=str,
-        required=True,
+        required=req_model_arg,
         help="Name of the demographic model. To check available demographic models, please use `dadi-cli Model`.",
     )
     parser.add_argument(
