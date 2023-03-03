@@ -789,6 +789,8 @@ def run_plot(args):
             output=args.output,
         )
     elif args.demo_popt != None:
+        if args.model is None:
+            raise ValueError("--model is missing")
         func, _ = get_model(args.model, args.model_file)
         plot_fitted_demography(
             fs=args.fs,
