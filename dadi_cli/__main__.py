@@ -59,6 +59,12 @@ def run_generate_fs(args):
 def run_generate_cache(args):
     if args.model_file is None and args.model not in [m[0] for m in getmembers(DFE.DemogSelModels, isfunction)]:
         raise ValueError(f"{args.model} is not in dadi.DFE.DemogSelModels, did you mean to include _sel or _single_sel in the model name or specify a --model-file?")
+    if "://" in args.model_file:
+        model_fi = open("dadi_models.py","w")
+        with urllib.request.urlopen(args.model_file) as f:
+            model_fi.write(f.read().decode('utf-8'))
+        model_fi.close()
+        args.model_file = "dadi_models"
     func, _ = get_model(args.model, args.model_file)
     generate_cache(
         func=func,
@@ -79,6 +85,12 @@ def run_simulate_dm(args):
     from dadi_cli.SimulateFs import simulate_demography
     # Due to development history, much of the code expects a args.misid variable, so create it.
     args.misid = not args.nomisid
+    if "://" in args.model_file:
+        model_fi = open("dadi_models.py","w")
+        with urllib.request.urlopen(args.model_file) as f:
+            model_fi.write(f.read().decode('utf-8'))
+        model_fi.close()
+        args.model_file = "dadi_models"
     simulate_demography(
         args.model,
         args.model_file,
@@ -127,6 +139,21 @@ def run_simulate_demes(args):
 
 
 def run_infer_dm(args):
+
+    if "://" in args.fs:
+        import urllib.request
+        sfs_fi = open("sfs.fs","w")
+        with urllib.request.urlopen(args.fs) as f:
+            sfs_fi.write(f.read().decode('utf-8'))
+        sfs_fi.close()
+        args.fs ="sfs.fs"
+        if args.model_file != None:
+            model_fi = open("dadi_models.py","w")
+            with urllib.request.urlopen(args.model_file) as f:
+                model_fi.write(f.read().decode('utf-8'))
+            model_fi.close()
+            args.model_file = "dadi_models"
+
     fs = dadi.Spectrum.from_file(args.fs)
 
     # Because basic standard neutral models do not need to optimized
@@ -470,6 +497,14 @@ def run_infer_dm(args):
 
 
 def run_infer_dfe(args):
+    if "://" in args.fs:
+        import urllib.request
+        sfs_fi = open("sfs.fs","w")
+        with urllib.request.urlopen(args.fs) as f:
+            sfs_fi.write(f.read().decode('utf-8'))
+        sfs_fi.close()
+        args.fs ="sfs.fs"
+
     fs = dadi.Spectrum.from_file(args.fs)
     # Due to development history, much of the code expects a args.misid variable, so create it.
     args.misid = not (fs.folded or args.nomisid)
@@ -718,6 +753,13 @@ def run_bestfit(args):
 def run_stat_demography(args):
     from dadi_cli.Stat import godambe_stat_demograpy
 
+    if "://" in args.model_file:
+        model_fi = open("dadi_models.py","w")
+        with urllib.request.urlopen(args.model_file) as f:
+            model_fi.write(f.read().decode('utf-8'))
+        model_fi.close()
+        args.model_file = "dadi_models"
+
     # Extract model function, from custom model_file if necessary
     func, _ = get_model(args.model, args.model_file)
 
@@ -791,6 +833,12 @@ def run_plot(args):
     elif args.demo_popt != None:
         if args.model is None:
             raise ValueError("--model is missing")
+        if "://" in args.model_file:
+            model_fi = open("dadi_models.py","w")
+            with urllib.request.urlopen(args.model_file) as f:
+                model_fi.write(f.read().decode('utf-8'))
+            model_fi.close()
+            args.model_file = "dadi_models"
         func, _ = get_model(args.model, args.model_file)
         plot_fitted_demography(
             fs=args.fs,
@@ -910,7 +958,7 @@ def add_model_argument(parser):
         type=str,
         required=False,
         dest="model_file",
-        help="Name of python module file (not including .py) that contains custom models to use. Default: None.",
+        help="Name of python module file (not including .py) that contains custom models to use. Can be an HTML link. Default: None.",
     )
 
 
@@ -919,7 +967,7 @@ def add_fs_argument(parser):
         "--fs",
         type=str,
         required=True,
-        help="Frequency spectrum of mutations used for inference. To generate the frequency spectrum, please use `dadi-cli GenerateFs`.",
+        help="Frequency spectrum of mutations used for inference. To generate the frequency spectrum, please use `dadi-cli GenerateFs`. Can be an HTML link.",
     )
 
 
