@@ -59,12 +59,13 @@ def run_generate_fs(args):
 def run_generate_cache(args):
     if args.model_file is None and args.model not in [m[0] for m in getmembers(DFE.DemogSelModels, isfunction)]:
         raise ValueError(f"{args.model} is not in dadi.DFE.DemogSelModels, did you mean to include _sel or _single_sel in the model name or specify a --model-file?")
-    if "://" in args.model_file:
-        model_fi = open("dadi_models.py","w")
-        with urllib.request.urlopen(args.model_file) as f:
-            model_fi.write(f.read().decode('utf-8'))
-        model_fi.close()
-        args.model_file = "dadi_models"
+    if args.model_file is not None:
+        if "://" in args.model_file:
+            model_fi = open("dadi_models.py","w")
+            with urllib.request.urlopen(args.model_file) as f:
+                model_fi.write(f.read().decode('utf-8'))
+            model_fi.close()
+            args.model_file = "dadi_models"
     func, _ = get_model(args.model, args.model_file)
     generate_cache(
         func=func,
@@ -85,12 +86,13 @@ def run_simulate_dm(args):
     from dadi_cli.SimulateFs import simulate_demography
     # Due to development history, much of the code expects a args.misid variable, so create it.
     args.misid = not args.nomisid
-    if "://" in args.model_file:
-        model_fi = open("dadi_models.py","w")
-        with urllib.request.urlopen(args.model_file) as f:
-            model_fi.write(f.read().decode('utf-8'))
-        model_fi.close()
-        args.model_file = "dadi_models"
+    if args.model_file is not None:
+        if "://" in args.model_file:
+            model_fi = open("dadi_models.py","w")
+            with urllib.request.urlopen(args.model_file) as f:
+                model_fi.write(f.read().decode('utf-8'))
+            model_fi.close()
+            args.model_file = "dadi_models"
     simulate_demography(
         args.model,
         args.model_file,
@@ -147,12 +149,13 @@ def run_infer_dm(args):
             sfs_fi.write(f.read().decode('utf-8'))
         sfs_fi.close()
         args.fs ="sfs.fs"
-        if args.model_file != None:
-            model_fi = open("dadi_models.py","w")
-            with urllib.request.urlopen(args.model_file) as f:
-                model_fi.write(f.read().decode('utf-8'))
-            model_fi.close()
-            args.model_file = "dadi_models"
+        if args.model_file is not None:
+            if "://" in args.model_file:
+                model_fi = open("dadi_models.py","w")
+                with urllib.request.urlopen(args.model_file) as f:
+                    model_fi.write(f.read().decode('utf-8'))
+                model_fi.close()
+                args.model_file = "dadi_models"
 
     fs = dadi.Spectrum.from_file(args.fs)
 
@@ -753,12 +756,13 @@ def run_bestfit(args):
 def run_stat_demography(args):
     from dadi_cli.Stat import godambe_stat_demograpy
 
-    if "://" in args.model_file:
-        model_fi = open("dadi_models.py","w")
-        with urllib.request.urlopen(args.model_file) as f:
-            model_fi.write(f.read().decode('utf-8'))
-        model_fi.close()
-        args.model_file = "dadi_models"
+    if args.model_file is not None:
+        if "://" in args.model_file:
+            model_fi = open("dadi_models.py","w")
+            with urllib.request.urlopen(args.model_file) as f:
+                model_fi.write(f.read().decode('utf-8'))
+            model_fi.close()
+            args.model_file = "dadi_models"
 
     # Extract model function, from custom model_file if necessary
     func, _ = get_model(args.model, args.model_file)
@@ -833,12 +837,13 @@ def run_plot(args):
     elif args.demo_popt != None:
         if args.model is None:
             raise ValueError("--model is missing")
-        if "://" in args.model_file:
-            model_fi = open("dadi_models.py","w")
-            with urllib.request.urlopen(args.model_file) as f:
-                model_fi.write(f.read().decode('utf-8'))
-            model_fi.close()
-            args.model_file = "dadi_models"
+        if args.model_file is not None:
+            if "://" in args.model_file:
+                model_fi = open("dadi_models.py","w")
+                with urllib.request.urlopen(args.model_file) as f:
+                    model_fi.write(f.read().decode('utf-8'))
+                model_fi.close()
+                args.model_file = "dadi_models"
         func, _ = get_model(args.model, args.model_file)
         plot_fitted_demography(
             fs=args.fs,
