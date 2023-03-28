@@ -338,6 +338,10 @@ dadi-cli InferDM --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfol
 
 `dadi-cli` will send the number of workers as the number of optimizations you request. The `check-convergence` and `force-convergence` options work with `Work Queue` as well.
 
+### Using Terraform for distributed inference with dadi-cli
+
+The dadi-cli GitHub source code comes with a folder called `terraform`, which containes scripts users can use to launch Amazon Web Services (AWS) Elastic Clompute Cloud (EC2) instances to remotely run dadi-cli and `Work Queue`. Users can find installation and usage documentation [here](https://docs.google.com/document/d/1yw0h89CvCSH8Hx2BBeNI33chAl2AMgJ2uHfoslP6BT8/edit#).
+
 ### Available demographic models
 
 `dadi-cli` provides a subcommand `Model` to help users finding available demographic models in `dadi`. To find out available demographic models, users can use
