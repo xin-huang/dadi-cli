@@ -341,9 +341,35 @@ dadi-cli InferDM --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfol
 
 ### Using Terraform for distributed inference with dadi-cli
 
-The dadi-cli GitHub source code comes with a folder called `terraform`, which containes scripts users can use to launch Amazon Web Services (AWS) Elastic Clompute Cloud (EC2) instances to remotely run dadi-cli and `Work Queue`. Users can find installation and usage documentation [here](https://docs.google.com/document/d/1yw0h89CvCSH8Hx2BBeNI33chAl2AMgJ2uHfoslP6BT8/edit#).
+The dadi-cli GitHub source code comes with a folder called `terraform`, which containes scripts users can use to launch Amazon Web Services (AWS) Elastic Clompute Cloud (EC2) instances to remotely run dadi-cli and `Work Queue`. Users will need to install [Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) and the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html). If users have not already signed up for AWS and gotten an access key ID and secret access key, more infor can be found [here](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-prereqs.html).
 
-When submitting the parameters for Terraform, users can include an email to send results to with the `--email` flag.
+Users will need to create an SSH Key to connect Terraform:
+```bash
+ssh-keygen -f ssh-key
+```
+Which will create a privet SSH Key file "ssh-key" and a public SSH Key file "ssh-key.pub".
+
+Users will need to edit the "dadi.auto.tfvars" to setup Terraform to connect to AWS, run dadi-cli and work queue. 
+
+For AWS, users need to choose the [instance_type](https://aws.amazon.com/ec2/instance-types/), the region, and the contense of the public SSH Key file.
+
+If users want to run dadi-cli, set `run = true` and fill in the "parameters" or the dadi-cli subcommand (dadi-cli command minus `dadi-cli` command, `--fs` flag, and `--work-queue` flag) the user wants to run. Ex:
+```bash
+InferDM --fs two_epoch_syn.fs --model two_epoch --p0 1 1 --ubounds 10 10 --lbounds 10e-3 10e-3 --grids 30 40 50 --output aws.two_epoch.demo.params --optimizations 2 --nomisid
+```
+Users will need to include the 
+When filling in the parameters for Terraform, users can include an email to send results to by including the `--email` argument. Otherwise users will need to SSH into the AWS instances Terraform launches.
+
+If users want to run work_queue_factory on an AWS instance, set `run = true`, and fill in the `project_name` and `workqueue_password`. This can be ran independently.
+
+
+If users named the SSH Key something besides "ssh-key" or if it is in a different directory than the "terraform" folder, line 129 in "main.tf", `private_key = "${file("ssh-key")}"`, will need to be edited to the PATH and file name.
+
+
+```
+Error: error creating EC2 VPC: VpcLimitExceeded: The maximum number of VPCs has been reached.
+```
+Means that the requested region has too many instances running.
 
 ### Available demographic models
 
