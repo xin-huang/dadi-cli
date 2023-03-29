@@ -323,6 +323,7 @@ By default, `dadi-cli` projects the sample size down to 20 for each population. 
 ``` bash
 conda install -c conda-forge dill ndcctools
 ```
+Or go to the [CCTools Documentation](https://cctools.readthedocs.io/en/stable/install/). CCTools is only avalible for Mac and Linux computers.
 
 This example has been tested for submitting jobs to a `Slurm Workload Manager`. First we want to submit a factory.
 
@@ -330,7 +331,7 @@ This example has been tested for submitting jobs to a `Slurm Workload Manager`. 
 work_queue_factory -T local -M dm-inference -P ./tests/mypwfile --workers-per-cycle=0 --cores=1
 ```
 
-`dm-inference` is the project name and `mypwfile` is a file containing a password, both of which are needed for `dadi-cli` use. Next you'll want to submit jobs from `dadi-cli`.
+`dm-inference` is the project name and `mypwfile` is a file containing a password, both of which are needed for `dadi-cli` use. `--workers-per-cycle` can be set to zero, as `dadi-cli`'s `--optimizations` argument will determine the total number of workers requested from the factory. `--cores` controls how many CPUs each worker use and can be set to 1, as each worker will preform a singular optimization. Next users will want to submit jobs from `dadi-cli`. By default, `work_queue_factory` will request as many CPUs as avalible, users can control the number of CPUs used by controling the number of workers with `work_queue_factory`'s `--min-workers` and `--max-workers` arguments.
 
 ```bash
 dadi-cli InferDM --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfold.fs --model split_mig --p0 1 1 .5 1 .5 --ubounds 10 10 1 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5 --grids 60 80 100 --output ./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.work_queue.params --optimizations 5 --maxeval 200 --check-convergence --work-queue dm-inference ./tests/mypwfile
