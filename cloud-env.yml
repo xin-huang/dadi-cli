@@ -4,7 +4,9 @@ channels:
 dependencies:
   - dill==0.3.4
   - ndcctools==7.4.3
+  - pycuda
   - dadi
   - pip
   - pip:
+    - scikit-cuda
     - .
