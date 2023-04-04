@@ -1676,14 +1676,14 @@ def _top_opts(filename):
         opts list: Optimized parameters.
         theta float: Population-scaled mutation rate.
     """
-    opts = []
-    is_here = False
     fid = open(filename, 'r')
     for line in fid.readlines():
-        if line.startswith('# Top'):
-            is_here = True
+        if line.startswith('# Log'):
+            # Reset opts variable to avoid repeating entries.
+            opts = []
             continue
-        elif line.startswith('#'): continue
+        elif line.startswith('#'):
+            continue
         else:
             try:
                 opts.append([float(_) for _ in line.rstrip().split("\t")])
@@ -1691,9 +1691,14 @@ def _top_opts(filename):
                 pass
     fid.close()
 
-    opts = [opt[1:-1] for opt in opts]
+    try:
+        # Sort entries by log-likelihood
+        opts = np.array(sorted(opts, reverse=True))
+        # Remove log-likelihood and theta
+        opts = [opt[1:-1] for opt in opts]
+    except UnboundLocalError: 
+        raise ValueError('Fits file found.')
 
-    if not is_here: print('No file found.')
     return opts
 
 from os.path import basename
