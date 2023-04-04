@@ -339,7 +339,7 @@ dadi-cli InferDM --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfol
 
 `dadi-cli` will send the number of workers as the number of optimizations you request. The `check-convergence` and `force-convergence` options work with `Work Queue` as well.
 
-### Using Terraform for distributed inference with dadi-cli
+### Terraform cloud computing for dadi-cli
 
 The dadi-cli GitHub source code comes with a folder called `terraform`, which containes scripts users can use to launch Amazon Web Services (AWS) Elastic Clompute Cloud (EC2) instances to remotely run dadi-cli and `Work Queue`. Users will need to install [Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) and the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html). If users have not already signed up for AWS and gotten an access key ID and secret access key, more infor can be found [here](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-prereqs.html).
 
@@ -348,28 +348,39 @@ Users will need to create an SSH Key to connect Terraform:
 ssh-keygen -f ssh-key
 ```
 Which will create a privet SSH Key file "ssh-key" and a public SSH Key file "ssh-key.pub".
+Users will need to edit the "dadi.auto.tfvars" to setup Terraform to connect to AWS and run dadi-cli and work queue. 
 
-Users will need to edit the "dadi.auto.tfvars" to setup Terraform to connect to AWS, run dadi-cli and work queue. 
-
-For AWS, users need to choose the [instance_type](https://aws.amazon.com/ec2/instance-types/), the region, and the contense of the public SSH Key file.
-
-If users want to run dadi-cli, set `run = true` and fill in the "parameters" or the dadi-cli subcommand (dadi-cli command minus `dadi-cli` command, `--fs` flag, and `--work-queue` flag) the user wants to run. Ex:
+For AWS, users need to choose the [instance_type](https://aws.amazon.com/ec2/instance-types/), the region, and the contente of the public SSH Key file.
+If users want to run dadi-cli, set `run = true` and fill in the "parameters" with the dadi-cli subcommand (dadi-cli command minus `dadi-cli` portion) the user wants to run. Ex:
 ```bash
-InferDM --fs two_epoch_syn.fs --model two_epoch --p0 1 1 --ubounds 10 10 --lbounds 10e-3 10e-3 --grids 30 40 50 --output aws.two_epoch.demo.params --optimizations 2 --nomisid
+InferDM --fs two_epoch_syn.fs --model two_epoch --p0 1 1 --ubounds 10 10 --lbounds 10e-3 10e-3 --grids 30 40 50 --output terra.two_epoch.demo.params --optimizations 2 --nomisid --email username@email.com
 ```
-Users will need to include the 
-When filling in the parameters for Terraform, users can include an email to send results to by including the `--email` argument. Otherwise users will need to SSH into the AWS instances Terraform launches.
+Users will want to include the data they will use in the "uploads" folder, which will be placed in the directory that `dadi-cli` is executed from.
+When filling in the parameters for Terraform, users can include an email to send results to with the `--email` argument. Otherwise users will need to SSH into the AWS instances Terraform launches. An easy way to SSH into the AWS instance is, from inside the "terraform" folder, to run:
+```bash
+ssh dadi@$(terraform output -raw public_ip) -i ssh-key
+```
 
-If users want to run work_queue_factory on an AWS instance, set `run = true`, and fill in the `project_name` and `workqueue_password`. This can be ran independently.
-
+If users want to run work_queue_factory on an AWS instance, set `run = true`, and fill in the `project_name` and `workqueue_password`. This can be ran independently if users want Terraform to launch an AWS instance to be a dedicated work queue factory.
 
 If users named the SSH Key something besides "ssh-key" or if it is in a different directory than the "terraform" folder, line 129 in "main.tf", `private_key = "${file("ssh-key")}"`, will need to be edited to the PATH and file name.
 
-
-```
+```bash
 Error: error creating EC2 VPC: VpcLimitExceeded: The maximum number of VPCs has been reached.
 ```
 Means that the requested region has too many instances running.
+
+
+### Cacao cloud computing for dadi-cli
+
+Another resource for cloud computing with dadi-cli is the University of Arizona CyVerse's [Cacao](http://cacao.jetstream-cloud.org/), which provides a convinient GUI for launching instances to run dadi-cli and/or work queue factories. Cacao is built on Jetstream2, and users will need an account with Advanced Cyberinfrastructure Coordination Ecosystem: Services & Support (ACCESS) and register for allocation.
+
+An overview of ACCESS can be found [here](https://allocations.access-ci.org/get-started-overview) and information on allocating resources for Jetstream2 can be found [here](https://docs.jetstream-cloud.org/alloc/overview/).
+
+Once the user has access to Cacao, they can go to "Deployments" > "Add Deployment" > "launch a DADI OpenStack instance" and choose a region. 
+If users want the instance to automatically run dadi-cli after it launches, they will need to fill in the dadi-cli subcommand in "Parameters". There is no easy way for users to upload frequency spectrum, as such dadi-cli can read https links that contain raw text data for the frequency spectrum, ex. https://tinyurl.com/u38zv4kw.
+<!-- Users can also launch instances that run a work queue factory with or without dadi-cli, as such users can run one instance as a -->
+
 
 ### Available demographic models
 
