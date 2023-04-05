@@ -11,7 +11,12 @@ output:
 
 ## Installation
 
-To install `dadi-cli`, users should clone this repo and use the following command
+Users can install dadi-cli through Conda Forge:
+```
+conda install -c conda-forge dadi-cli
+```
+
+Or, for the latest updates, clone this repo and using the following command
 
 ```         
 python setup.py install
@@ -23,7 +28,7 @@ To get help information, users can use
 dadi-cli -h
 ```
 
-There are nine subcommands in `dadi-cli`: - `GenerateFs` - `GenerateCache` - `InferDM` - `InferDFE` - `BestFit` - `Stat` - `Plot` - `Model` - `Pdf`
+There are thirteen subcommands in `dadi-cli`: - `GenerateFs` - `GenerateCache` - `InferDM` - `InferDFE` - `BestFit` - `StatDM` - `StatDFE` - `Plot` - `SimulateDM` - `SimulateDFE` - `SimulateDemes` - `Model` - `Pdf`
 
 To display help information for each subcommand, users can use `-h`. For example,
 
@@ -35,7 +40,7 @@ dadi-cli GenerateFs -h
 
 ## Usage: An Example
 
-Here we use the data from the 1000 Genomes Project to demonstrate how to apply `dadi-cli` in research.
+Here we use the data from the 1000 Genomes Project and data simulated with dadi-cli to demonstrate how to apply `dadi-cli` in research.
 
 ### Generating allele frequency spectrum from VCF files
 
@@ -70,7 +75,7 @@ While making the spectrum, users can also mask the singleton calls that are excl
 
 In this example, we infer a demographic model from the spectrum for synonymous SNPs. Here, we use the `split_mig` model. In this model, the ancestral population diverges into two populations, which then have an instantaneous change of population size with migration between the two populations over time. To see descriptions of the four parameters of the `split_mig` model, use `dadi-cli Model --names split_mig`. By default, with unfolded data an additional parameter is added, which quantifies the proportion of sites for which the ancestral state was misidentified. (To disable this, use the `--nomisid` option.) Therefore, we have five parameters in total.
 
-To start the inference, users should specify the lower bounds and upper bounds for these parameters with `--lbounds` and `--ubounds`. For demographic models, setting parameter boundaries prevents optimizers from going into parameter spaces that are hard for `dadi` to calculate, such as low population size, high time, and high migration. In this case, we set the range of relative population sizes to be explored as 1e-3 to 100, the range of divergence time to 0 to 1, the range of migration rates from 0 to 10, and the range of misidentification proportions to 0 to 0.5. (Parameters can be fixed to certain values with `--constants`. In that case, `-1` indicates that a parameter is free to vary.) Because we need to run optimization several times to find a converged result with maximum likelihood, we use `--optimizations` to specify how many times the optimization will run. `dadi-cli` can use multiprocessing to run optimizations in parallel and by default the max number of CPUs available will be utilized. If users want fewer CPUs to be used, they can use the `--cpus` option to pass in the number of CPUs they want utilized for multiprocessing. If GPUs are available, they can be used by passing the `--gpus` option with the number of GPUs to be used.
+To start the inference, users should specify the lower bounds and upper bounds for these parameters with `--lbounds` and `--ubounds`. For demographic models, setting parameter boundaries prevents optimizers from going into parameter spaces that are hard for `dadi` to calculate, such as low population size, high time, and high migration. In this case, we set the range of relative population sizes to be explored as 1e-3 to 100, the range of divergence time to 0 to 1, the range of migration rates from 0 to 10, and the range of misidentification proportions to 0 to 0.5. dadi-cli will by default calculate starting parameters between the boundaries, but users can specify starting parameters with `--p0`. Parameters can be fixed to certain values with `--constants`. If a parameter value passed into `--constants` is `-1`, it is free to vary. Because we need to run optimization several times to find a converged result with maximum likelihood, we use `--optimizations` to specify how many times the optimization will run. `dadi-cli` can use multiprocessing to run optimizations in parallel and by default the max number of CPUs available will be utilized. If users want fewer CPUs to be used, they can use the `--cpus` option to pass in the number of CPUs they want utilized for multiprocessing. If GPUs are available, they can be used by passing the `--gpus` option with the number of GPUs to be used.
 
 <!--- As well, because our 1000 Genomes data is fairly large we can increase the maximum number of parameter sets each optimization will use with `--maxeval` and use our own grid points with `--grids`. -->
 
@@ -119,7 +124,7 @@ Because there is randomness built into dadi-cli for where the starting parameter
 
 Using `BestFit`, users can adjust the criteria for convergence. By default optimizations are considered convergent if there are two other optimizations with a log-likelihood within 0.01% units of the optimization with the best log-likelihood. This criteria can be adjusted using the `--delta-ll` option and passing in the percentage difference in decimal form (so the default is 0.0001, rather than 0.01). Generally a higher `--delta-ll` can result in a false positive convergence, but this is dependent on the data being used (especially the sample size can effect the size of the log-likelihood). Optimizations in the bestfit file will be ordered by log-likelihood and should be examined closely for similarity of parameter values in convergent fits.
 
-Finally, if you have experience with the data you are using, you can use the `--check-convergence` or `--force-convergence` option in `InferDM`. The `--check-convergence` option will run `BestFit` after each optimization to check for convergence and stop running optimizations once convergence is reached. The `--force-convergence` option will constantly add new optimization runs until convergence is reached. When using `--check-convergence` or `--force-convergence` you can pass in a value with `--delta-ll` as well to change the convergence criteria.
+Finally, if users have experience with the data they are using, they can use the `--check-convergence` or `--force-convergence` option in `InferDM`. The `--check-convergence` option will run `BestFit` after each optimization to check for convergence and stop running optimizations once convergence is reached. The `--force-convergence` option will constantly add new optimization runs until convergence is reached. When using `--check-convergence` or `--force-convergence` users can pass in a value with `--delta-ll` to change the convergence criteria. Users can use the output files from `InferDM` or `BastFit` as a starting position for the starting parameters with the `--bestfit-p0-file` flag and passing in the file you want to use. The starting parameters will be randomly chosen from the top ten fits.
 
 Sometimes parameters may be close to the boundaries. Users should be cautious and test increasing the boundaries to examine whether these boundaries would affect the results significantly. The best fit parameters are shown below mirroring the bestfits file. The first column is the log-likelihood, then the corresponding to these parameters, and the last column is the population-scaled mutation rate of the synonymous SNPs.
 
@@ -382,9 +387,39 @@ If users want the instance to automatically run dadi-cli after it launches, they
 <!-- Users can also launch instances that run a work queue factory with or without dadi-cli, as such users can run one instance as a -->
 
 
+### Simulating frequency spectrum with dadi-cli
+
+Users can simulate frequence spectra based on dadi demography or DFE code or on [Demes](https://popsim-consortium.github.io/demes-spec-docs/main/introduction.html) YMAL files.
+
+`dadi-cli` can simulate dadi demography with `dadi-cli SimulateDM`. Users need to pass in a `--model`, and `--model-file` if it is a custom model, `--sample-sizes`, parameters for the model (`--p0`), and spectrum file name (`--output`).
+```
+dadi-cli SimulateDM --model two_epoch --sample-sizes 20 --p0 10 0.1 --nomisid --output two_epoch.simDM.fs
+```
+A file with the simulated demography `two_epoch.simDM.fs`, will be produced. If users want to generate caches and simulate a DFE based on a simulated demography, users can include `--inference-file` which will produce a file based on the text passed in `--output`, ex the command:
+```
+dadi-cli SimulateDM --model three_epoch --sample-sizes 20 --p0 10 5 0.02 0.1 --nomisid --output three_epoch.simDM.fs --inference-file
+```
+Will produce the frequency spectrum `three_epoch.simDM.fs` and the optimization file `three_epoch.simDM.fs.SimulateDM.pseudofit`.
+
+Users can also simulate demography frequency spectrum with Demes. To simulate with Demes, users will need to install it:
+```
+pip install demes
+```
+When users have a [Demes YAML file](https://popsim-consortium.github.io/demes-spec-docs/main/tutorial.html) made, they can simulate frequency spectra that is readable by dadi:
+```
+dadi-cli SimulateDemes --demes-file examples/data/gutenkunst_ooa.yml --pop-ids YRI --sample-sizes 30 --output ooa.YRI.30.fs
+```
+A file, `ooa.YRI.30.fs`, with the spectrum will be made.
+
+Users can simulate a DFE frequency spectrum if they have the caches (`--cache1d` and/or `--cache2d`). Users will also need to define the PDF(s) (`--pdf1d` and/or `--pdf2d`), the `--ratio` of nonsynonymous to synonymous mutation rate, and the file name (`--output`):
+```
+dadi-cli SimulateDFE --cache1d examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.single.gamma.spectra.bpkl --pdf1d lognormal --ratio 2.31 --p0 2 4 --nomisid --output lognormal.split_mig.simDFE.fs
+```
+Which will produce a frequency spectrum file, `lognormal.split_mig.simDFE.fs`.
+
 ### Available demographic models
 
-`dadi-cli` provides a subcommand `Model` to help users finding available demographic models in `dadi`. To find out available demographic models, users can use
+`dadi-cli` provides a subcommand `Model` to help users finding available demographic models in `dadi`. To find out available demographic models, users can use:
 
 ```         
 dadi-cli Model --names
