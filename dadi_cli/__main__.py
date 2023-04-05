@@ -931,7 +931,7 @@ def add_grids_argument(parser):
         "--grids",
         type=_check_positive_int,
         nargs=3,
-        help="Sizes of grids. Default: None.",
+        help="Sizes of grids. Default is based on sample size.",
     )
 
 
