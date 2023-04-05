@@ -263,7 +263,7 @@ def test_run_infer_dfe_mix(infer_dfe_args):
     for fi in fids:
         os.remove(fi)
 
-
+# May want third top_tops test to make sure log-likelihood sorted, but that would require changing the function
 def test_top_opts_error():
     filename = "tests/example_data/_top_opts_test_files/top_opts.empty.txt"
     with pytest.raises(ValueError) as exc_info:
