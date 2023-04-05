@@ -1,0 +1,35 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "dadi-cli"
+version = "0.8.1"
+description = "A command line interface for dadi"
+readme = "README.md"
+license = "Apache-2.0"
+authors = [
+    { name = "Xin Huang", email = "xinhuang.res@gmail.com" },
+]
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "dadi",
+]
+
+[project.scripts]
+dadi-cli = "dadi_cli.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/xin-huang/dadi-cli"
+
+[tool.hatch.version]
+path = "dadi_cli/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/dadi_cli",
+]

@@ -263,6 +263,23 @@ def test_run_infer_dfe_mix(infer_dfe_args):
     for fi in fids:
         os.remove(fi)
 
+
+def test_top_opts_error():
+    filename = "tests/example_data/_top_opts_test_files/top_opts.empty.txt"
+    with pytest.raises(ValueError) as exc_info:
+        dadi_cli._top_opts(filename)
+
+    print(f"Fits not found in file {filename}.")
+    assert exc_info.type is ValueError
+    assert exc_info.value.args[0] == f"Fits not found in file {filename}."
+
+def test_top_opts_func():
+    filename = "tests/example_data/_top_opts_test_files/top_opts.bestfits.txt"
+    opts = dadi_cli._top_opts(filename)
+    opt = list(opts[0])
+    for ele in opts[1:]:
+        assert opt != list(ele)
+
 try:
     import work_queue as wq
     skip = False
