@@ -1697,7 +1697,7 @@ def _top_opts(filename):
         # Remove log-likelihood and theta
         opts = [opt[1:-1] for opt in opts]
     except UnboundLocalError: 
-        raise ValueError('Fits file found.')
+        raise ValueError(f"Fits not found in file {filename}.")
 
     return opts
 
