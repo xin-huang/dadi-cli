@@ -56,6 +56,14 @@ def test_run_simulate_dm():
     dadi_cli.run_simulate_dm(simulate_args)
     os.remove(simulate_args.output)
 
+
+try:
+    import demes
+    demesskip = False
+except:
+    demesskip = True
+
+@pytest.mark.skipif(demesskip, reason="Could not load demes")
 def test_run_simulate_demes():
     def simulate_args():
         return
@@ -294,14 +302,14 @@ def test_top_opts_func():
 
 try:
     import work_queue as wq
-    skip = False
+    wqskip = False
 except:
-    skip = True
+    wqskip = True
 
 if os.path.exists("/home/runner/work/dadi-cli/dadi-cli"):
-    skip = True
+    wqskip = True
 
-@pytest.mark.skipif(skip, reason="Could not load Work Queue or in GitAction environments")
+@pytest.mark.skipif(wqskip, reason="Could not load Work Queue or in GitAction environments")
 def test_run_infer_dm_workqueue(infer_dm_args):
     import subprocess
     factory = subprocess.Popen(
