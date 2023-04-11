@@ -1,8 +1,3 @@
----
-output:
-  html_document: default
-  pdf_document: default
----
 # dadi-cli
 
 [![license](https://img.shields.io/badge/license-Apache%202.0-red.svg)](LICENSE) [![language](http://img.shields.io/badge/language-python-blue.svg)](https://www.python.org/) [![build Status](https://github.com/xin-huang/dadi-cli/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/xin-huang/dadi-cli/actions) [![codecov](https://codecov.io/gh/xin-huang/dadi-cli/branch/master/graph/badge.svg?token=GI66f4R3RF)](https://codecov.io/gh/xin-huang/dadi-cli)
@@ -359,12 +354,12 @@ ssh-keygen -f ssh-key
 The above command will create a private SSH Key file "ssh-key" and a public SSH Key file "ssh-key.pub".
 Users will need to edit the "dadi.auto.tfvars" to setup Terraform to connect to AWS and run dadi-cli and work queue. 
 
-For AWS, users need to choose the [instance_type](https://aws.amazon.com/ec2/instance-types/), the region, and the contente of the public SSH Key file.
+For AWS, users need to choose the [instance_type](https://aws.amazon.com/ec2/instance-types/), the region, and the content of the public SSH Key file.
 If users want to run dadi-cli, set `run = true` and fill in the "parameters" with the dadi-cli subcommand (dadi-cli command minus `dadi-cli` portion) the user wants to run. Ex:
 ```bash
 InferDM --fs two_epoch_syn.fs --model two_epoch --p0 1 1 --ubounds 10 10 --lbounds 10e-3 10e-3 --grids 30 40 50 --output terra.two_epoch.demo.params --optimizations 2 --nomisid --email username@email.com
 ```
-Users will want to include the data they will use in the "uploads" folder, which will be placed in the directory that `dadi-cli` is executed from.
+Users will want to include any data they will use in the "uploads" folder, which will be placed in the directory that `dadi-cli` is executed from.
 When filling in the parameters for Terraform, users can include an email to send results to with the `--email` argument. Otherwise users will need to SSH into the AWS instances Terraform launches. An easy way to SSH into the AWS instance is, from inside the "terraform" folder, to run:
 ```bash
 ssh dadi@$(terraform output -raw public_ip) -i ssh-key
@@ -382,7 +377,7 @@ Means that the requested region has too many instances running.
 
 ### Cacao cloud computing for dadi-cli
 
-Another resource for cloud computing with dadi-cli is the University of Arizona CyVerse's [Cacao](http://cacao.jetstream-cloud.org/), which provides a convinient GUI for launching instances to run dadi-cli and/or work queue factories. Cacao is built on Jetstream2, and users will need an account with Advanced Cyberinfrastructure Coordination Ecosystem: Services & Support (ACCESS) and register for allocation.
+Another resource for cloud computing with dadi-cli is the University of Arizona CyVerse's [Cacao](http://cacao.jetstream-cloud.org/), which provides a convinient GUI for launching instances to run dadi-cli and work queue factories. Cacao is built on Jetstream2, and users will need an account with Advanced Cyberinfrastructure Coordination Ecosystem: Services & Support (ACCESS) and register for allocation.
 
 A step-by-step guide for getting started on Cacao can be found [here](https://docs.jetstream-cloud.org/ui/cacao/getting_started/#1-login-to-cacao). For researchers that need more out of Cacao/Jetstream2, an overview of ACCESS can be found [here](https://allocations.access-ci.org/get-started-overview) and information on allocating resources for Jetstream2 can be found [here](https://docs.jetstream-cloud.org/alloc/overview/).
 
@@ -395,15 +390,15 @@ If users want the instance to automatically run dadi-cli after it launches, they
 
 Users can simulate frequence spectra based on dadi demography or DFE code or on [Demes](https://popsim-consortium.github.io/demes-spec-docs/main/introduction.html) YMAL files.
 
-`dadi-cli` can simulate dadi demography with `dadi-cli SimulateDM`. Users need to pass in a `--model`, and `--model-file` if it is a custom model, `--sample-sizes`, parameters for the model (`--p0`), and spectrum file name (`--output`).
+`dadi-cli` can simulate dadi demography with `dadi-cli SimulateDM`. Users need to pass in a `--model` (and `--model-file` if it is a custom model), `--sample-sizes`, parameters for the model (`--p0`), and spectrum file name (`--output`). Running
 ```
 dadi-cli SimulateDM --model two_epoch --sample-sizes 20 --p0 10 0.1 --nomisid --output two_epoch.simDM.fs
 ```
-A file with the simulated demography `two_epoch.simDM.fs`, will be produced. If users want to generate caches and simulate a DFE based on a simulated demography, users can include `--inference-file` which will produce a file based on the text passed in `--output`, ex the command:
+Will produce a file with the simulated demography `two_epoch.simDM.fs`. If users want to generate caches and simulate a DFE based on a simulated demography, users can include `--inference-file` which will produce a file based on the text passed in `--output`, ex the command
 ```
 dadi-cli SimulateDM --model three_epoch --sample-sizes 20 --p0 10 5 0.02 0.1 --nomisid --output three_epoch.simDM.fs --inference-file
 ```
-Will produce the frequency spectrum `three_epoch.simDM.fs` and the optimization file `three_epoch.simDM.fs.SimulateDM.pseudofit`.
+will produce the frequency spectrum `three_epoch.simDM.fs` and the optimization file `three_epoch.simDM.fs.SimulateDM.pseudofit`.
 
 Users can also simulate demography frequency spectrum with Demes. To simulate with Demes, users will need to install it:
 ```
@@ -415,11 +410,11 @@ dadi-cli SimulateDemes --demes-file examples/data/gutenkunst_ooa.yml --pop-ids Y
 ```
 A file, `ooa.YRI.30.fs`, with the spectrum will be made.
 
-Users can simulate a DFE frequency spectrum if they have the caches (`--cache1d` and/or `--cache2d`). Users will also need to define the PDF(s) (`--pdf1d` and/or `--pdf2d`), the `--ratio` of nonsynonymous to synonymous mutation rate, and the file name (`--output`):
+Users can simulate a DFE frequency spectrum if they have the caches (`--cache1d` and/or `--cache2d`). Users will also need to define the PDF(s) (`--pdf1d` and/or `--pdf2d`), the `--ratio` of nonsynonymous to synonymous mutation rate, and the file name (`--output`). Running:
 ```
 dadi-cli SimulateDFE --cache1d examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.single.gamma.spectra.bpkl --pdf1d lognormal --ratio 2.31 --p0 2 4 --nomisid --output lognormal.split_mig.simDFE.fs
 ```
-Which will produce a frequency spectrum file, `lognormal.split_mig.simDFE.fs`.
+will produce a frequency spectrum file based on a lognormal DFE, `lognormal.split_mig.simDFE.fs`.
 
 ### Available demographic models
 
@@ -432,36 +427,50 @@ dadi-cli Model --names
 Then the available demographic models will be displayed in the screen:
 
 ```         
-Available 1D demographic models:
+Built-in 1D demographic models:
 - bottlegrowth_1d
 - growth
 - snm_1d
 - three_epoch
+- three_epoch_inbreeding
 - two_epoch
 
-Available 2D demographic models:
+Built-in 2D demographic models:
+- IM
+- IM_mscore
+- IM_pre
+- IM_pre_mscore
 - bottlegrowth_2d
 - bottlegrowth_split
 - bottlegrowth_split_mig
-- IM
-- IM_pre
-- split_mig
-- split_asym_mig
 - snm_2d
+- split_asym_mig
+- split_delay_mig
+- split_mig
+- split_mig_mscore
 
-Available demographic models with selection:
-- equil
-- equil_X
-- IM_sel
-- IM_sel_single_gamma
+Built-in demographic models with selection:
 - IM_pre_sel
 - IM_pre_sel_single_gamma
-- split_mig_sel
-- split_mig_sel_single_gamma
+- IM_sel
+- IM_sel_single_gamma
+- bottlegrowth_1d_sel
+- bottlegrowth_2d_sel
+- bottlegrowth_2d_sel_single_gamma
+- bottlegrowth_split_mig_sel
+- bottlegrowth_split_mig_sel_single_gamma
+- bottlegrowth_split_sel
+- bottlegrowth_split_sel_single_gamma
+- equil
+- growth_sel
 - split_asym_mig_sel
 - split_asym_mig_sel_single_gamma
-- two_epoch_sel
+- split_delay_mig_sel
+- split_delay_mig_sel_single_gamma
+- split_mig_sel
+- split_mig_sel_single_gamma
 - three_epoch_sel
+- two_epoch_sel
 ```
 
 To find out the parameters and detail of a specific model, users can use the name of the demograpic model as the parameter after `--names`. For example,
@@ -475,15 +484,14 @@ Then the detail of the model will be displayed in the screen:
 ```         
 - split_mig:
 
-        Split into two populations of specifed size, with symmetric migration.
-        Two populations in this model.
-
-        params = [nu1,nu2,T,m]
-
-            nu1: Size of population 1 after split (in units of Na)
-            nu2: Size of population 2 after split (in units of Na)
-              T: Time in the past of split (in units of 2*Na generations)
-              m: Migration rate between populations (2*Na*m)
+        params = (nu1,nu2,T,m)
+        
+        Split into two populations of specifed size, with migration.
+        
+        nu1: Size of population 1 after split.
+        nu2: Size of population 2 after split.
+        T: Time in the past of split (in units of 2*Na generations)
+        m: Migration rate between populations (2*Na*m)
 ```
 
 ### Available DFE distributions
