@@ -73,9 +73,9 @@ While making the spectrum, users can also mask the singleton calls that are excl
 
 ### Inferring demographic models
 
-In this example, we infer a demographic model from the spectrum for synonymous SNPs. Here, we use the `split_mig` model. In this model, the ancestral population diverges into two populations, which then have an instantaneous change of population size with migration between the two populations over time. To see descriptions of the four parameters of the `split_mig` model, use `dadi-cli Model --names split_mig`. By default, with unfolded data an additional parameter is added, which quantifies the proportion of sites for which the ancestral state was misidentified. (To disable this, use the `--nomisid` option.) Therefore, we have five parameters in total.
+In this example, we infer a demographic model from the spectrum for synonymous SNPs. Here, we use the `split_mig` model. In this model, the ancestral population diverges into two populations, which then have an instantaneous change of population size with migration between the two populations over time. To see descriptions of the four parameters of the `split_mig` model, use `dadi-cli Model --names split_mig`. By default, with unfolded data an additional parameter is added, which quantifies the proportion of sites for which the ancestral state was misidentified. (To disable this, use the `--nomisid` option.) Therefore, we have five parameters in total: `nu1`, `nu2`, `T`, `m`, `misid`.
 
-To start the inference, users should specify the lower bounds and upper bounds for these parameters with `--lbounds` and `--ubounds`. For demographic models, setting parameter boundaries prevents optimizers from going into parameter spaces that are hard for `dadi` to calculate, such as low population size, high time, and high migration. In this case, we set the range of relative population sizes to be explored as 1e-3 to 100, the range of divergence time to 0 to 1, the range of migration rates from 0 to 10, and the range of misidentification proportions to 0 to 0.5. dadi-cli will by default calculate starting parameters between the boundaries, but users can specify starting parameters with `--p0`. Parameters can be fixed to certain values with `--constants`. If a parameter value passed into `--constants` is `-1`, it is free to vary. Because we need to run optimization several times to find a converged result with maximum likelihood, we use `--optimizations` to specify how many times the optimization will run. `dadi-cli` can use multiprocessing to run optimizations in parallel and by default the max number of CPUs available will be utilized. If users want fewer CPUs to be used, they can use the `--cpus` option to pass in the number of CPUs they want utilized for multiprocessing. If GPUs are available, they can be used by passing the `--gpus` option with the number of GPUs to be used.
+To start the inference, users should specify the boundaries for the model parameters with `--lbounds` and `--ubounds`. For demographic models, setting parameter boundaries prevents optimizers from going into parameter spaces that are hard for `dadi` to calculate, such as low population size, high time, and high migration. In this case, we set the range of relative population sizes to be explored as 1e-3 to 100, the range of divergence time to 0 to 1, the range of migration rates from 0 to 10, and the range of misidentification proportions to 0 to 0.5. dadi-cli will by default calculate starting parameters between the boundaries, but users can specify starting parameters with `--p0`. Parameters can be fixed to certain values with `--constants`. If a parameter value passed into `--constants` is `-1`, it will not be fixed to a value. Because we need to run optimization several times to find a converged result with maximum likelihood, we use `--optimizations` to specify how many times the optimization will run. `dadi-cli` can use multiprocessing to run optimizations in parallel and by default the max number of CPUs available will be utilized. If users want fewer CPUs to be used, they can use the `--cpus` option to pass in the number of CPUs they want utilized for multiprocessing. If GPUs are available, they can be used by passing the `--gpus` option with the number of GPUs to be used.
 
 <!--- As well, because our 1000 Genomes data is fairly large we can increase the maximum number of parameter sets each optimization will use with `--maxeval` and use our own grid points with `--grids`. -->
 
@@ -96,8 +96,8 @@ The result is in a file `./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.p
 The results look like:
 
 ```         
-# /Users/tjstruck/anaconda3/envs/dadicli/bin/dadi-cli BestFit --input-prefix ./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params.InferDM --ubounds 10 10 1 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5
-# /Users/tjstruck/anaconda3/envs/dadicli/bin/dadi-cli InferDM --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfold.fs --model split_mig --p0 1 1 .5 1 .5 --ubounds 10 10 1 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5 --grids 60 80 100 --output ./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params --optimizations 10 --maxeval 200
+# /Users/user/anaconda3/envs/dadicli/bin/dadi-cli BestFit --input-prefix ./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params.InferDM --lbounds 1e-3 1e-3 0 0 0 --ubounds 100 100 1 10 0.5
+# /Users/user/anaconda3/envs/dadicli/bin/dadi-cli InferDM --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfold.fs --model split_mig --lbounds 1e-3 1e-3 0 0 0 --ubounds 100 100 1 10 0.5  --output ./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params --optimizations 10
 #
 # Converged results
 # Log(likelihood)   nu1 nu2 T   m   misid   theta
@@ -120,11 +120,11 @@ The results look like:
 -2008.8420038152385 4.223980226535977   0.7590647581822983  0.2679298140727045  0.7488053157919355  0.01757046441838214 5977.616341188507A
 ```
 
-Because there is randomness built into dadi-cli for where the starting parameters are for each optimization, it is possible the results could have not converged. Some things that can be done when using `InferDM` are increasing the max number of parameter sets each optimization will attempt with the `--maxeval` option. Users can also try to use a global optimization before moving onto the local optimization with the `--global-optimization` option. 25% of the number of optimizations the user passes in will be used for the global and the remaining will be used for the local optimization.
+Because there is randomness built into dadi-cli for where the starting parameters are for each optimization, it is possible the results could have not converged. Some things that can be done when using `InferDM` are increasing the max number of parameter sets each optimization will attempt with the `--maxeval` option. Users can also try to use a global optimization before moving onto the local optimization with the `--global-optimization` option. 25% of the number of optimizations the user passes in will be used for the global optimization and the remaining will be used for the local optimization.
 
-Using `BestFit`, users can adjust the criteria for convergence. By default optimizations are considered convergent if there are two other optimizations with a log-likelihood within 0.01% units of the optimization with the best log-likelihood. This criteria can be adjusted using the `--delta-ll` option and passing in the percentage difference in decimal form (so the default is 0.0001, rather than 0.01). Generally a higher `--delta-ll` can result in a false positive convergence, but this is dependent on the data being used (especially the sample size can effect the size of the log-likelihood). Optimizations in the bestfit file will be ordered by log-likelihood and should be examined closely for similarity of parameter values in convergent fits.
+When using `BestFit`, users can adjust the criteria for convergence. By default optimizations are considered convergent if there are two other optimizations with a log-likelihood within 0.01% units of the optimization with the best log-likelihood. This criteria can be adjusted using the `--delta-ll` option and passing in the percentage difference in decimal form (so the default is 0.0001, rather than 0.01). Generally a higher `--delta-ll` can result in a false positive convergence, but this is dependent on the data being used (for example, the sample size can have a big effect on the size of the log-likelihood). Optimizations in the bestfit file will be ordered by log-likelihood and should be examined closely for similarity of parameter values in convergent fits.
 
-Finally, if users have experience with the data they are using, they can use the `--check-convergence` or `--force-convergence` option in `InferDM`. The `--check-convergence` option will run `BestFit` after each optimization to check for convergence and stop running optimizations once convergence is reached. The `--force-convergence` option will constantly add new optimization runs until convergence is reached. When using `--check-convergence` or `--force-convergence` users can pass in a value with `--delta-ll` to change the convergence criteria. Users can use the output files from `InferDM` or `BastFit` as a starting position for the starting parameters with the `--bestfit-p0-file` flag and passing in the file you want to use. The starting parameters will be randomly chosen from the top ten fits.
+Finally, if users have experience with the data they are using, they can use the `--check-convergence` or `--force-convergence` option in `InferDM`. The `--check-convergence` option will run `BestFit` after each optimization to check for convergence and stop running optimizations once convergence is reached. The `--force-convergence` option will constantly add new optimization runs until convergence is reached. When using `--check-convergence` or `--force-convergence` users can pass in a value with `--delta-ll` to change the convergence criteria. Users can use the output files from `InferDM` or `BestFit` as a starting position for the starting parameters with the `--bestfit-p0-file` flag and passing in the file you want to use. The starting parameters will be randomly chosen from the top ten fits.
 
 Sometimes parameters may be close to the boundaries. Users should be cautious and test increasing the boundaries to examine whether these boundaries would affect the results significantly. The best fit parameters are shown below mirroring the bestfits file. The first column is the log-likelihood, then the corresponding to these parameters, and the last column is the population-scaled mutation rate of the synonymous SNPs.
 
@@ -136,13 +136,17 @@ Sometimes parameters may be close to the boundaries. Users should be cautious an
 
 After inferring a best fit demographic model, users may also infer distributions of fitness effects (DFEs) from data. To perform DFE inference, users need to first generate of cache of frequency spectra. Because we use the `split_mig` model in the demographic inference, we need to use the same demographic model plus selection, the `split_mig_sel` model or the `split_mig_sel_single_gamma` model. The `split_mig_sel` model is used for inferring the DFE from two populations by assuming the population-scaled selection coefficients are different in the two populations, while the `split_mig_sel_single_gamma` model assumes the population-scaled selection coefficients are the same in the two populations.
 
-Here, `--model` specifies the demographic model plus selection used in the inference. `--demo-popt` specifies the demographic parameters, which are stored in `./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params.InferDM.bestfits`. `--sample-size` defines the population size of each population. `--cpus 2` indicates that the computation will use 2 CPUs. The output is pickled and can access through the `pickle` module in `Python`. By default `GenerateCache` will make the cache for the situation where the selection coefficients are the same in the two populations. If you want to to make the cache for the situation where the selection coefficients are independent from one another, use the `--dimensionality 2` option. You can use the `--gamma-bounds` option to choose the range of the gamma distribution and the `--gamma-pts` option can be used to specify the number of selection coefficients that will be selected in that range to generate your cache. Note that the higher (more negative) you make the `--gamma-bounds`, the bigger the grid points you will want to use.
+Here, `--model` specifies the demographic model plus selection used in the inference. `--demo-popt` specifies the demographic parameters, which are stored in `./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params.InferDM.bestfits`. `--sample-size` defines the population size of each population. The output is pickled and can access through the `pickle` module in `Python`. By default `GenerateCache` will make the cache for the situation where the selection coefficients are the same in the two populations. If users want to to make the cache for the situation where the selection coefficients are independent from one another, they should use the `--dimensionality 2` option. Users can use the `--gamma-bounds` option to choose the range of the gamma distribution and the `--gamma-pts` option can be used to specify the number of selection coefficients that will be selected in that range to generate the cache. Note that the higher (more negative) you make the `--gamma-bounds`, the bigger the grid points, altered via the `--grids` option, users will want to use.
 
+Here is an example command to generate a cache with shared selection coefficients:
 ```         
 dadi-cli GenerateCache --model split_mig_sel_single_gamma --demo-popt ./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params.InferDM.bestfits --sample-size 20 20 --grids 60 80 100 --gamma-pts 10 --gamma-bounds 1e-4 200 --output ./examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.single.gamma.spectra.bpkl --cpus 4
-
+```
+Here is an example command to generate a cache with independent selection coefficients:
+```
 dadi-cli GenerateCache --model split_mig_sel --dimensionality 2 --demo-popt ./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params.InferDM.bestfits --sample-size 20 20 --grids 60 80 100 --gamma-pts 10 --gamma-bounds 1e-4 200 --output ./examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.spectra.bpkl --cpus 4
 ```
+Users will likely want to use larger `--gamma-bounds` and `--gamma-pts` than the example.
 
 ### User defined demographic models
 
@@ -152,7 +156,7 @@ Users can also import their own models into dadi-cli. In the `examples/data` fol
 from dadi import Numerics, Integration, PhiManip, Spectrum
 ```
 
-Then defines the demographic model:
+Then defines a demographic model:
 
 ```         
 def split_mig_fix_T(params, ns, pts):
@@ -190,7 +194,7 @@ And for integration steps, ex:
 dadi.Integration.two_pops(phi, xx, T, nu1, nu2, m12=m, m21=m, gamma1=gamma_Pop1, gamma2=gamma_Pop2)
 ```
 
-When making your demographic models with selection and setting the inital $\phi$, take care to consider which population is is the ancestral population for the gamma argument in `dadi.PhiManip.phi_1D`.
+When making demographic models with selection and setting the inital $\phi$, users should consider which population will share the selection coefficientwith the ancestral population for the gamma argument in `dadi.PhiManip.phi_1D`.
 
 Because custom model files can have multiple models in them, users will still want to use `--model` to pass in the model for demographic inference and cache generation. Here are some quick examples for users to run:
 
@@ -307,23 +311,23 @@ To compare two frequency spectra from data, users can use
 dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfold.fs --fs2 ./examples/results/fs/1KG.YRI.CEU.20.nonsynonymous.snps.unfold.fs --output ./examples/results/plots/1KG.YRI.CEU.20.synonymous.vs.nonsynonymous.snps.unfold.fs.pdf --model None
 ```
 
-To compare frequency spectra between a demographic model without selection and data, users can use
+To compare frequency spectra between a demographic model without selection and data, users will need a file from inferring the demography, `--demo-popt`, and the `--model` inferred:
 
 ```         
 dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfold.fs --demo-popt ./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params.InferDM.bestfits --output ./examples/results/plots/1KG.YRI.CEU.20.synonymous.snps.vs.split_mig.pdf --model split_mig
 ```
 
-To compare frequency spectra between a demographic model with selection and data, users can use
+To compare frequency spectra between a demographic model with selection and data, users will need the `--dfe-popt` file from inferring the DFE, the cache(s), `--cache1d` and/or `--cache2d`, and the PDF(s), `--pdf1d` and/or `--pdf2d`.
 
 ```         
-dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.20.nonsynonymous.snps.unfold.fs --model split_mig --pdf1d lognormal --pdf2d biv_lognormal --dfe-popt ./examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.lognormal_mixture.params.InferDFE.bestfits --cache1d ./examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.spectra.bpkl --output ./examples/results/plots/1KG.YRI.CEU.20.nonsynonymous.snps.vs.lognormal_mixture.pdf
+dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.20.nonsynonymous.snps.unfold.fs --pdf1d lognormal --pdf2d biv_lognormal --dfe-popt ./examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.lognormal_mixture.params.InferDFE.bestfits --cache1d ./examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.spectra.bpkl --output ./examples/results/plots/1KG.YRI.CEU.20.nonsynonymous.snps.vs.lognormal_mixture.pdf
 ```
 
-By default, `dadi-cli` projects the sample size down to 20 for each population. Users can use `--projections` to lower the sample size for visualization purposes.
+By default, `dadi-cli` will use the sample size of the provided frequency spectrum, or smallest sample size(s) for each population if multiple frequency spectra are used. Users can use `--projections` to lower the sample size for visualization purposes.
 
 ### Using Work Queue for distributed inference with dadi-cli
 
-`dadi-cli` `InferDM` and `InferDFE` has built in options to work with Cooperative Computing Tools (`CCTools`)'s `Work Queue` for launching independent optimizations across multiple machines. To use Work Queue, users can use conda to install the required packages:
+`dadi-cli`'s subcommands `InferDM` and `InferDFE` have built in options to work with Cooperative Computing Tools (`CCTools`)'s `Work Queue` for launching independent optimizations across multiple machines. To use `Work Queue`, users can use conda to install the required packages:
 
 ``` bash
 conda install -c conda-forge dill ndcctools
@@ -336,7 +340,7 @@ This example has been tested for submitting jobs to a `Slurm Workload Manager`. 
 work_queue_factory -T local -M dm-inference -P ./tests/mypwfile --workers-per-cycle=0 --cores=1
 ```
 
-`dm-inference` is the project name and `mypwfile` is a file containing a password, both of which are needed for `dadi-cli` use. `--workers-per-cycle` can be set to zero, as `dadi-cli`'s `--optimizations` argument will determine the total number of workers requested from the factory. `--cores` controls how many CPUs each worker use and can be set to 1, as each worker will preform a singular optimization. Next users will want to submit jobs from `dadi-cli`. By default, `work_queue_factory` will request as many CPUs as avalible, users can control the number of CPUs used by controling the number of workers with `work_queue_factory`'s `--min-workers` and `--max-workers` arguments.
+`dm-inference` is the project name and `mypwfile` is a file containing a password, both of which are needed for `dadi-cli` use. They can be passed into dadi-cli with the `--work-queue` flag, where users pass in the project name and then the password file. `--workers-per-cycle` can be set to zero, as `dadi-cli`'s `--optimizations` argument will determine the total number of workers requested from the factory. `--cores` controls how many CPUs each worker use and can be set to 1, as each worker will preform a singular optimization. Next users will want to submit jobs from `dadi-cli`. By default, `work_queue_factory` will request as many CPUs as avalible, users can control the number of CPUs used by controling the number of workers with `work_queue_factory`'s `--min-workers` and `--max-workers` arguments.
 
 ```bash
 dadi-cli InferDM --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfold.fs --model split_mig --p0 1 1 .5 1 .5 --ubounds 10 10 1 10 1 --lbounds 10e-3 10e-3 10e-3 10e-3 10e-5 --grids 60 80 100 --output ./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.work_queue.params --optimizations 5 --maxeval 200 --check-convergence --work-queue dm-inference ./tests/mypwfile
@@ -346,13 +350,13 @@ dadi-cli InferDM --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfol
 
 ### Terraform cloud computing for dadi-cli
 
-The dadi-cli GitHub source code comes with a folder called `terraform`, which containes scripts users can use to launch Amazon Web Services (AWS) Elastic Clompute Cloud (EC2) instances to remotely run dadi-cli and `Work Queue`. Users will need to install [Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) and the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html). If users have not already signed up for AWS and gotten an access key ID and secret access key, more infor can be found [here](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-prereqs.html).
+The dadi-cli GitHub source code comes with a folder called `terraform`, which containes scripts users can use to launch Amazon Web Services (AWS) Elastic Clompute Cloud (EC2) instances to remotely run dadi-cli and `Work Queue`. Users will need to install [Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) and the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html). If users have not already signed up for AWS and gotten an access key ID and secret access key, more information can be found [here](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-prereqs.html).
 
 Users will need to create an SSH Key to connect Terraform:
 ```bash
 ssh-keygen -f ssh-key
 ```
-Which will create a privet SSH Key file "ssh-key" and a public SSH Key file "ssh-key.pub".
+The above command will create a private SSH Key file "ssh-key" and a public SSH Key file "ssh-key.pub".
 Users will need to edit the "dadi.auto.tfvars" to setup Terraform to connect to AWS and run dadi-cli and work queue. 
 
 For AWS, users need to choose the [instance_type](https://aws.amazon.com/ec2/instance-types/), the region, and the contente of the public SSH Key file.
@@ -370,7 +374,7 @@ If users want to run work_queue_factory on an AWS instance, set `run = true`, an
 
 If users named the SSH Key something besides "ssh-key" or if it is in a different directory than the "terraform" folder, line 129 in "main.tf", `private_key = "${file("ssh-key")}"`, will need to be edited to the PATH and file name.
 
-```bash
+```consol
 Error: error creating EC2 VPC: VpcLimitExceeded: The maximum number of VPCs has been reached.
 ```
 Means that the requested region has too many instances running.
@@ -380,7 +384,7 @@ Means that the requested region has too many instances running.
 
 Another resource for cloud computing with dadi-cli is the University of Arizona CyVerse's [Cacao](http://cacao.jetstream-cloud.org/), which provides a convinient GUI for launching instances to run dadi-cli and/or work queue factories. Cacao is built on Jetstream2, and users will need an account with Advanced Cyberinfrastructure Coordination Ecosystem: Services & Support (ACCESS) and register for allocation.
 
-An overview of ACCESS can be found [here](https://allocations.access-ci.org/get-started-overview) and information on allocating resources for Jetstream2 can be found [here](https://docs.jetstream-cloud.org/alloc/overview/).
+A step-by-step guide for getting started on Cacao can be found [here](https://docs.jetstream-cloud.org/ui/cacao/getting_started/#1-login-to-cacao). For researchers that need more out of Cacao/Jetstream2, an overview of ACCESS can be found [here](https://allocations.access-ci.org/get-started-overview) and information on allocating resources for Jetstream2 can be found [here](https://docs.jetstream-cloud.org/alloc/overview/).
 
 Once the user has access to Cacao, they can go to "Deployments" > "Add Deployment" > "launch a DADI OpenStack instance" and choose a region. 
 If users want the instance to automatically run dadi-cli after it launches, they will need to fill in the dadi-cli subcommand in "Parameters". There is no easy way for users to upload frequency spectrum, as such dadi-cli can read https links that contain raw text data for the frequency spectrum, ex. https://tinyurl.com/u38zv4kw.
