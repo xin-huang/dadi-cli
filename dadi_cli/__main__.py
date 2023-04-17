@@ -1157,11 +1157,18 @@ def add_inference_argument(parser):
     )
 
 def add_p0_argument(parser):
+    p0_req = False
+    if 'snm_1d' not in sys.argv and 'snm_2d' not in sys.argv:
+        p0_req = True
+    else:
+        if '--nomisid' not in sys.argv:
+            p0_req = True
+
     parser.add_argument(
         "--p0",
         type=float,
         nargs="+",
-        required=True,
+        required=p0_req,
         help="Parameters for simulated demography or dfe.",
     )
 
