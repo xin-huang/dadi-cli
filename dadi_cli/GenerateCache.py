@@ -3,7 +3,7 @@ import dadi.DFE as DFE
 import pickle, glob
 import numpy as np
 from dadi_cli.Models import get_model
-from dadi_cli.utilities import get_opts_and_theta, pts_l_func
+from dadi_cli.utilities import get_opts_and_theta, cache_pts_l_func
 
 
 def generate_cache(
@@ -40,7 +40,7 @@ def generate_cache(
     popt, theta = get_opts_and_theta(popt, gen_cache=True)
 
     if grids == None:
-        grids = pts_l_func(sample_sizes)
+        grids = cache_pts_l_func(sample_sizes)
 
     if dimensionality == 1:
         spectra = DFE.Cache1D(

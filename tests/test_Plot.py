@@ -105,7 +105,7 @@ def test_plot_comparison(files):
 def test_plot_fitted_demography(files):
     plot_fitted_demography(
         fs=pytest.fs1_1d,
-        model="two_epoch",
+        func=dadi.Demographics1D.two_epoch,
         popt=pytest.fs1d_demo_popt,
         projections=[8],
         nomisid=True,
@@ -115,7 +115,7 @@ def test_plot_fitted_demography(files):
     )
     plot_fitted_demography(
         fs=pytest.fs_syn_2d,
-        model="split_mig",
+        func=dadi.Demographics2D.split_mig,
         popt=pytest.fs2d_demo_popt,
         projections=[8, 8],
         nomisid=True,
@@ -125,7 +125,7 @@ def test_plot_fitted_demography(files):
     )
     plot_fitted_demography(
         fs=pytest.fs1_1d,
-        model="two_epoch",
+        func=dadi.Demographics1D.two_epoch,
         popt=pytest.fs1d_demo_popt,
         projections=None,
         nomisid=True,
@@ -135,7 +135,7 @@ def test_plot_fitted_demography(files):
     )
     plot_fitted_demography(
         fs=pytest.fs_syn_2d,
-        model="split_mig",
+        func=dadi.Demographics2D.split_mig,
         popt=pytest.fs2d_demo_popt,
         projections=None,
         nomisid=True,
@@ -151,7 +151,6 @@ def test_plot_fitted_dfe(files):
         fs=pytest.fs_mixture,
         cache1d=pytest.fs2d_cache1d,
         cache2d=pytest.fs2d_cache2d,
-        demo_popt=pytest.fs2d_demo_popt,
         sele_popt=pytest.fs2d_dfe_popt,
         projections=[8, 8],
         pdf="lognormal",

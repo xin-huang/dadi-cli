@@ -22,6 +22,7 @@ def infer_dfe(
     cuda,
     maxeval,
     maxtime,
+    bestfits=None,
     seed=None,
 ):
     """
@@ -55,6 +56,9 @@ def infer_dfe(
     # Randomize starting parameter values
     if seed != None:
         np.random.seed(seed)
+
+    if bestfits != None:
+        p0 = bestfits[np.random.randint(len(bestfits))%10]
 
     if cache1d != None:
         func = cache1d.integrate

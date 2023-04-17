@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from dadi_cli.utilities import get_opts_and_theta
 from dadi_cli.Models import get_model
 from dadi_cli.Pdfs import get_dadi_pdf
+from dadi_cli.utilities import pts_l_func
 
 fig = plt.figure(figsize=(8, 6))
 
@@ -21,17 +22,12 @@ def plot_single_sfs(fs, projections, output, vmin):
         vmin float: Minimum value in the colorbar.
     """
     fs = dadi.Spectrum.from_file(fs)
-
+    if projections == None:
+        projections = fs.sample_sizes
     fig = plt.figure(219033)
     if len(fs.sample_sizes) == 1:
-        if projections == None:
-            projections = [20]
-        fs = fs.project(projections)
         dadi.Plotting.plot_1d_fs(fs)
     if len(fs.sample_sizes) == 2:
-        if projections == None:
-            projections = [20, 20]
-        fs = fs.project(projections)
         dadi.Plotting.plot_single_2d_sfs(fs, vmin=vmin)
     fig.savefig(output)
 
@@ -52,16 +48,18 @@ def plot_comparison(fs, fs2, projections, output, vmin, resid_range):
     fs = dadi.Spectrum.from_file(fs)
     fs2 = dadi.Spectrum.from_file(fs2)
 
+    if projections == None:
+        if fs.sample_sizes is not fs2.sample_sizes:
+            projections = [min([fs.sample_sizes[i], fs2.sample_sizes[i]]) for i in range(len(fs.sample_sizes))]
+        else:
+            projections = fs.sample_sizes
+
     fig = plt.figure(219033)
     if len(fs.sample_sizes) == 1:
-        if projections == None:
-            projections = [20]
         fs = fs.project(projections)
         fs2 = fs2.project(projections)
         dadi.Plotting.plot_1d_comp_Poisson(model=fs, data=fs2)
     if len(fs.sample_sizes) == 2:
-        if projections == None:
-            projections = [20, 20]
         fs = fs.project(projections)
         fs2 = fs2.project(projections)
         dadi.Plotting.plot_2d_comp_Poisson(
@@ -71,7 +69,7 @@ def plot_comparison(fs, fs2, projections, output, vmin, resid_range):
 
 
 def plot_fitted_demography(
-    fs, model, popt, projections, nomisid, output, vmin, resid_range
+    fs, func, popt, projections, nomisid, output, vmin, resid_range
 ):
     """
     Description:
@@ -87,7 +85,6 @@ def plot_fitted_demography(
         vmin float: Minimum value in the colorbar.
         resid_range list: Range of the residuals.
     """
-    func, params = get_model(model, None)
 
     popt, _ = get_opts_and_theta(popt)
 
@@ -96,20 +93,20 @@ def plot_fitted_demography(
         func = dadi.Numerics.make_anc_state_misid_func(func)
     func_ex = dadi.Numerics.make_extrap_func(func)
     ns = fs.sample_sizes
-    pts_l = [int(max(ns) + 10), int(max(ns) + 20), int(max(ns) + 30)]
+    pts_l = pts_l_func(ns)
 
     model = func_ex(popt, ns, pts_l)
 
     fig = plt.figure(219033)
     if len(ns) == 1:
         if projections == None:
-            projections = [20]
+            projections = ns
         fs = fs.project(projections)
         model = model.project(projections)
         dadi.Plotting.plot_1d_comp_multinom(model, fs)
     if len(ns) == 2:
         if projections == None:
-            projections = [20, 20]
+            projections = ns
         fs = fs.project(projections)
         model = model.project(projections)
         dadi.Plotting.plot_2d_comp_multinom(
@@ -122,7 +119,6 @@ def plot_fitted_dfe(
     fs,
     cache1d,
     cache2d,
-    demo_popt,
     sele_popt,
     projections,
     pdf,
@@ -140,7 +136,6 @@ def plot_fitted_dfe(
         fs str: Name of the file containing frequency spectrum from dadi.
         cache1d str: Name of the file containing 1d frequency spectra cache from dadi.
         cache2d str: Name of the file containing 2d frequency spectra cache from dadi.
-        demo_popt str: Name of the file containing the best-fit demographic parameters.
         sele_popt str: Name of the file containing the best-fit DFE parameters.
         projections list: Sample sizes after projection.
         pdf str: Name of the 1d PDF for modeling DFE.
@@ -163,7 +158,7 @@ def plot_fitted_dfe(
 
     ns = fs.sample_sizes
     # Integrate over a range of gammas
-    pts_l = [max(ns) + 10, max(ns) + 20, max(ns) + 30]
+    pts_l = pts_l_func(ns)
     if cache1d != None:
         spectra1d = pickle.load(open(cache1d, "rb"))
         func = spectra1d.integrate
@@ -184,13 +179,13 @@ def plot_fitted_dfe(
     fig = plt.figure(219033)
     if len(ns) == 1:
         if projections == None:
-            projections = [20]
+            projections = ns
         fs = fs.project(projections)
         model = model.project(projections)
-        dadi.Plotting.plot_2d_comp_Poisson(model, fs)
+        dadi.Plotting.plot_1d_comp_Poisson(model, fs)
     if len(ns) == 2:
         if projections == None:
-            projections = [20, 20]
+            projections = ns
         fs = fs.project(projections)
         model = model.project(projections)
         dadi.Plotting.plot_2d_comp_Poisson(

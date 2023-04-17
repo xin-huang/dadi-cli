@@ -49,7 +49,7 @@ def test_run_simulate_dm():
     simulate_args.p0 = [1, 0.5]
     simulate_args.sample_sizes = [10]
     simulate_args.grids = [20, 30, 40]
-    simulate_args.misid = False
+    simulate_args.nomisid = True
     simulate_args.output = "tests/test_results/main_simulate_two_epoch.fs"
     simulate_args.inference_file = False
 
@@ -65,7 +65,7 @@ def test_run_simulate_dfe():
     simulate_args.pdf1d = "lognormal"
     simulate_args.pdf2d = "biv_lognormal"
     simulate_args.ratio = 2.31
-    simulate_args.misid = True
+    simulate_args.nomisid = False
     simulate_args.output = "tests/test_results/main_simulate_mix_dfe.fs"
 
     dadi_cli.run_simulate_dfe(simulate_args)
@@ -115,6 +115,7 @@ def infer_dm_args():
     pytest.delta_ll = 0.001
     pytest.global_optimization = False
     pytest.seed = None
+    pytest.email = None
 
 def test_run_infer_dm(infer_dm_args):
     dadi_cli.run_infer_dm(pytest)
@@ -207,6 +208,7 @@ def infer_dfe_args():
     pytest.work_queue = []
     pytest.debug_wq = False
     pytest.port = 9123
+    pytest.email = None
 
 def test_run_infer_dfe_1d(infer_dfe_args):
     pytest.fs = pytest.fs_1d_lognorm
@@ -260,6 +262,23 @@ def test_run_infer_dfe_mix(infer_dfe_args):
         assert(ele)
     for fi in fids:
         os.remove(fi)
+
+# May want third top_tops test to make sure log-likelihood sorted, but that would require changing the function
+def test_top_opts_error():
+    filename = "tests/example_data/_top_opts_test_files/top_opts.empty.txt"
+    with pytest.raises(ValueError) as exc_info:
+        dadi_cli._top_opts(filename)
+
+    print(f"Fits not found in file {filename}.")
+    assert exc_info.type is ValueError
+    assert exc_info.value.args[0] == f"Fits not found in file {filename}."
+
+def test_top_opts_func():
+    filename = "tests/example_data/_top_opts_test_files/top_opts.bestfits.txt"
+    opts = dadi_cli._top_opts(filename)
+    opt = list(opts[0])
+    for ele in opts[1:]:
+        assert opt != list(ele)
 
 try:
     import work_queue as wq

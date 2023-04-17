@@ -24,7 +24,7 @@ def simulate_demography(
         inference_file bool: If True, outputs the inference results to generate caches.
     """
     if pts_l == None:
-        pts_l = (int(ns * 1.1) + 2, int(ns * 1.2) + 4, int(ns * 1.3) + 6)
+        pts_l = pts_l_func(ns)
     # fs = dadi.Numerics.make_extrap_func(get_dadi_model_func(model, model_file))(popt, fs.sample_sizes, pts_l)*theta
     func, params = get_model(model, model_file)
     if misid:
@@ -58,7 +58,7 @@ def simulate_demes(demes_file, ns, pts_l, pop_ids, output):
         output str: Name of the output file.
     """
     if pts_l == None:
-        pts_l = (int(ns * 1.1) + 2, int(ns * 1.2) + 4, int(ns * 1.3) + 6)
+        pts_l = pts_l_func(ns)
     fs = dadi.Spectrum.from_demes(
         demes_file, sampled_demes=pop_ids, sample_sizes=ns, pts=pts_l
     )

@@ -57,6 +57,15 @@ def run_generate_fs(args):
 
 
 def run_generate_cache(args):
+    if args.model_file is None and args.model not in [m[0] for m in getmembers(DFE.DemogSelModels, isfunction)]:
+        raise ValueError(f"{args.model} is not in dadi.DFE.DemogSelModels, did you mean to include _sel or _single_sel in the model name or specify a --model-file?")
+    if args.model_file is not None:
+        if "://" in args.model_file:
+            model_fi = open("dadi_models.py","w")
+            with urllib.request.urlopen(args.model_file) as f:
+                model_fi.write(f.read().decode('utf-8'))
+            model_fi.close()
+            args.model_file = "dadi_models"
     func, _ = get_model(args.model, args.model_file)
     generate_cache(
         func=func,
@@ -75,7 +84,15 @@ def run_generate_cache(args):
 
 def run_simulate_dm(args):
     from dadi_cli.SimulateFs import simulate_demography
-
+    # Due to development history, much of the code expects a args.misid variable, so create it.
+    args.misid = not args.nomisid
+    if args.model_file is not None:
+        if "://" in args.model_file:
+            model_fi = open("dadi_models.py","w")
+            with urllib.request.urlopen(args.model_file) as f:
+                model_fi.write(f.read().decode('utf-8'))
+            model_fi.close()
+            args.model_file = "dadi_models"
     simulate_demography(
         args.model,
         args.model_file,
@@ -102,6 +119,9 @@ def run_simulate_dfe(args):
     else:
         cache2d = args.cache2d
 
+    # Due to development history, much of the code expects a args.misid variable, so create it.
+    args.misid = not args.nomisid
+
     simulate_dfe(
         args.p0,
         cache1d,
@@ -121,6 +141,22 @@ def run_simulate_demes(args):
 
 
 def run_infer_dm(args):
+
+    if "://" in args.fs:
+        import urllib.request
+        sfs_fi = open("sfs.fs","w")
+        with urllib.request.urlopen(args.fs) as f:
+            sfs_fi.write(f.read().decode('utf-8'))
+        sfs_fi.close()
+        args.fs ="sfs.fs"
+        if args.model_file is not None:
+            if "://" in args.model_file:
+                model_fi = open("dadi_models.py","w")
+                with urllib.request.urlopen(args.model_file) as f:
+                    model_fi.write(f.read().decode('utf-8'))
+                model_fi.close()
+                args.model_file = "dadi_models"
+
     fs = dadi.Spectrum.from_file(args.fs)
 
     # Because basic standard neutral models do not need to optimized
@@ -173,7 +209,8 @@ def run_infer_dm(args):
         newest_file_num = max([int(ele.split(".")[-1]) for ele in existing_files]) + 1
     except:
         newest_file_num = 0
-    fid = open(args.output_prefix + ".InferDM.opts.{0}".format(newest_file_num), "a")
+    results_file = args.output_prefix + ".InferDM.opts.{0}".format(newest_file_num)
+    fid = open(results_file, "a")
     # Write command line to results file
     import sys
 
@@ -441,6 +478,7 @@ def run_infer_dm(args):
             )
             fid.flush()
             if args.check_convergence or args.force_convergence:
+                results_file = args.output_prefix + ".InferDM.bestfits"
                 result = get_bestfit_params(
                     path=args.output_prefix + ".InferDM.opts.*",
                     lbounds=args.lbounds,
@@ -456,10 +494,20 @@ def run_infer_dm(args):
             for worker in workers:
                 worker.terminate()
     fid.close()
+    if args.email is not None:
+        send_email(args.email, results_file)
     # TODO: Stop the remaining work_queue workers
 
 
 def run_infer_dfe(args):
+    if "://" in args.fs:
+        import urllib.request
+        sfs_fi = open("sfs.fs","w")
+        with urllib.request.urlopen(args.fs) as f:
+            sfs_fi.write(f.read().decode('utf-8'))
+        sfs_fi.close()
+        args.fs ="sfs.fs"
+
     fs = dadi.Spectrum.from_file(args.fs)
     # Due to development history, much of the code expects a args.misid variable, so create it.
     args.misid = not (fs.folded or args.nomisid)
@@ -517,7 +565,8 @@ def run_infer_dfe(args):
         newest_file_num = max([int(ele.split(".")[-1]) for ele in existing_files]) + 1
     except:
         newest_file_num = 0
-    fid = open(args.output_prefix + ".InferDFE.opts.{0}".format(newest_file_num), "a")
+    results_file = args.output_prefix + ".InferDFE.opts.{0}".format(newest_file_num)
+    fid = open(results_file, "a")
     # Write command line to results file
     import sys
 
@@ -550,6 +599,13 @@ def run_infer_dfe(args):
     while not converged:
         if not args.force_convergence:
             converged = True
+
+        # Check if we can get a list of top fits
+        if args.bestfit_p0 is not None: 
+            bestfits = _top_opts(args.bestfit_p0)
+        else:
+            bestfits = None
+
         if args.work_queue:
             import work_queue as wq
 
@@ -583,6 +639,7 @@ def run_infer_dfe(args):
                     None,
                     args.maxeval,
                     args.maxtime,
+                    bestfits,
                     new_seed,
                 )
                 # # If using a custom model, need to include the file from which it comes
@@ -607,6 +664,7 @@ def run_infer_dfe(args):
                 None,
                 args.maxeval,
                 args.maxtime,
+                bestfits,
             )
 
             # Queues to manage input and output
@@ -664,6 +722,7 @@ def run_infer_dfe(args):
             )
             fid.flush()
             if args.check_convergence or args.force_convergence:
+                results_file = args.output_prefix + ".InferDFE.bestfits"
                 result = get_bestfit_params(
                     path=args.output_prefix + ".InferDFE.opts.*",
                     lbounds=args.lbounds,
@@ -679,7 +738,8 @@ def run_infer_dfe(args):
             for worker in workers:
                 worker.terminate()
     fid.close()
-
+    if args.email is not None:
+        send_email(args.email, results_file)
 
 def run_bestfit(args):
     from dadi_cli.BestFit import get_bestfit_params
@@ -695,6 +755,14 @@ def run_bestfit(args):
 
 def run_stat_demography(args):
     from dadi_cli.Stat import godambe_stat_demograpy
+
+    if args.model_file is not None:
+        if "://" in args.model_file:
+            model_fi = open("dadi_models.py","w")
+            with urllib.request.urlopen(args.model_file) as f:
+                model_fi.write(f.read().decode('utf-8'))
+            model_fi.close()
+            args.model_file = "dadi_models"
 
     # Extract model function, from custom model_file if necessary
     func, _ = get_model(args.model, args.model_file)
@@ -760,7 +828,6 @@ def run_plot(args):
             pdf=args.pdf1d,
             pdf2=args.pdf2d,
             nomisid=args.nomisid,
-            demo_popt=args.demo_popt,
             sele_popt=args.dfe_popt,
             vmin=args.vmin,
             resid_range=args.resid_range,
@@ -768,9 +835,19 @@ def run_plot(args):
             output=args.output,
         )
     elif args.demo_popt != None:
+        if args.model is None:
+            raise ValueError("--model is missing")
+        if args.model_file is not None:
+            if "://" in args.model_file:
+                model_fi = open("dadi_models.py","w")
+                with urllib.request.urlopen(args.model_file) as f:
+                    model_fi.write(f.read().decode('utf-8'))
+                model_fi.close()
+                args.model_file = "dadi_models"
+        func, _ = get_model(args.model, args.model_file)
         plot_fitted_demography(
             fs=args.fs,
-            model=args.model,
+            func=func,
             popt=args.demo_popt,
             vmin=args.vmin,
             projections=args.projections,
@@ -869,11 +946,24 @@ def add_misid_argument(parser):
 
 
 def add_model_argument(parser):
+    # Because most of the functions for Plot
+    # do not require a model, we make it
+    # conditionally required.
+    req_model_arg = True
+    if 'Plot' in sys.argv:
+        req_model_arg = False
     parser.add_argument(
         "--model",
         type=str,
-        required=True,
+        required=req_model_arg,
         help="Name of the demographic model. To check available demographic models, please use `dadi-cli Model`.",
+    )
+    parser.add_argument(
+        "--model-file",
+        type=str,
+        required=False,
+        dest="model_file",
+        help="Name of python module file (not including .py) that contains custom models to use. Can be an HTML link. Default: None.",
     )
 
 
@@ -882,7 +972,7 @@ def add_fs_argument(parser):
         "--fs",
         type=str,
         required=True,
-        help="Frequency spectrum of mutations used for inference. To generate the frequency spectrum, please use `dadi-cli GenerateFs`.",
+        help="Frequency spectrum of mutations used for inference. To generate the frequency spectrum, please use `dadi-cli GenerateFs`. Can be an HTML link.",
     )
 
 
@@ -1013,7 +1103,13 @@ def add_inference_argument(parser):
         default=[],
         action="store",
         dest="work_queue",
-        help="Enable Work Queue. Additional arguments are the WorkQueue project name and the name of the password file.",
+        help="Enable Work Queue. Additional arguments are the WorkQueue project name, the name of the password file.",
+    )
+    parser.add_argument(
+        "--email",
+        type=str,
+        dest="email",
+        help="Enter user email address for terraform to send inference results to user.",
     )
     parser.add_argument(
         "--port",
@@ -1198,13 +1294,6 @@ def dadi_cli_parser():
         help="Determine whether using demographic model plus selection with the same gamma in both the two populations or not. Default: 1.",
         dest="dimensionality",
     )
-    parser.add_argument(
-        "--model-file",
-        type=str,
-        required=False,
-        dest="model_file",
-        help="Name of python module file (not including .py) that contains custom models to use. Default: None.",
-    )
     add_sample_sizes_argument(parser)
     add_output_argument(parser)
     add_demo_popt_argument(parser)
@@ -1217,13 +1306,6 @@ def dadi_cli_parser():
     )
     add_model_argument(parser)
     add_sample_sizes_argument(parser)
-    parser.add_argument(
-        "--model-file",
-        type=str,
-        required=False,
-        dest="model_file",
-        help="Name of python module file (not including .py) that contains custom models to use. Default: None.",
-    )
     add_p0_argument(parser)
     add_misid_argument(parser)
     add_grids_argument(parser)
@@ -1284,13 +1366,6 @@ def dadi_cli_parser():
     add_inference_argument(parser)
     add_delta_ll_argument(parser)
     add_model_argument(parser)
-    parser.add_argument(
-        "--model-file",
-        type=str,
-        required=False,
-        dest="model_file",
-        help="Name of python module file (not including .py) that contains custom models to use. Default: None.",
-    )
     add_grids_argument(parser)
     add_misid_argument(parser)
     add_constant_argument(parser)
@@ -1402,13 +1477,6 @@ def dadi_cli_parser():
         type=str,
         dest="demo_popt",
         help="File contains the bestfit demographic parameters, generated by `dadi-cli BestFit`.",
-    )
-    parser.add_argument(
-        "--model-file",
-        type=str,
-        required=False,
-        dest="model_file",
-        help="Name of python module file (not including .py) that contains custom models to use. Default: None.",
     )
     parser.add_argument(
         "--bootstrapping-dir",
@@ -1608,14 +1676,14 @@ def _top_opts(filename):
         opts list: Optimized parameters.
         theta float: Population-scaled mutation rate.
     """
-    opts = []
-    is_here = False
     fid = open(filename, 'r')
     for line in fid.readlines():
-        if line.startswith('# Top'):
-            is_here = True
+        if line.startswith('# Log'):
+            # Reset opts variable to avoid repeating entries.
+            opts = []
             continue
-        elif line.startswith('#'): continue
+        elif line.startswith('#'):
+            continue
         else:
             try:
                 opts.append([float(_) for _ in line.rstrip().split("\t")])
@@ -1623,10 +1691,52 @@ def _top_opts(filename):
                 pass
     fid.close()
 
-    opts = [opt[1:-1] for opt in opts]
+    try:
+        # Sort entries by log-likelihood
+        opts = np.array(sorted(opts, reverse=True))
+        # Remove log-likelihood and theta
+        opts = [opt[1:-1] for opt in opts]
+    except UnboundLocalError: 
+        raise ValueError(f"Fits not found in file {filename}.")
 
-    if not is_here: print('No file found.')
     return opts
+
+from os.path import basename
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.application import MIMEApplication
+
+def send_email(user_email, results_file):
+    #The mail addresses and password
+    sender_address = "dadi.results@gmail.com"
+    sender_pass = "yfjbdeaijwaosdck"
+    #Setup the MIME
+    message = MIMEMultipart()
+    message['From'] = sender_address
+    message['To'] = user_email
+    message['Subject'] = 'Dadi-cli results for ' + results_file   #The subject line
+    #The body and the attachments for the mail
+    message.attach(MIMEText('', 'plain'))
+
+
+    with open(results_file, "rb") as res:
+        part = MIMEApplication(
+            res.read(),
+            Name=basename(results_file)
+        )
+    # After the file is closed
+    part['Content-Disposition'] = 'attachment; filename="%s"' % basename(results_file)
+    message.attach(part)
+
+    #Create SMTP session for sending the mail
+    session = smtplib.SMTP('smtp.gmail.com', 587) #use gmail with port
+    session.starttls() #enable security
+    session.login(sender_address, sender_pass) #login with mail_id and password
+    text = message.as_string()
+    session.sendmail(sender_address, user_email, text)
+    session.quit()
+    print('Mail Sent')
 
 # Main function
 def main(arg_list=None):

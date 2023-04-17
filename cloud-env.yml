@@ -1,0 +1,11 @@
+name: dadi-cli
+channels:
+  - conda-forge
+dependencies:
+  - dadi-cli
+  - dill==0.3.4
+  - ndcctools==7.4.3
+  - pycuda
+  - pip
+  - pip:
+    - scikit-cuda
