@@ -892,7 +892,7 @@ def add_output_argument(parser):
     )
 
 def add_bounds_argument(parser):
-    # Check that the model is not a 
+    # Check that the model is not a standard neutral model
     if 'snm_1d' not in sys.argv and 'snm_2d' not in sys.argv:
         boundary_req = True
     else:
@@ -917,10 +917,14 @@ def add_bounds_argument(parser):
 
 
 def add_demo_popt_argument(parser):
+    # Check that the model is not a standard neutral model
+    bestfit_req = False
+    if 'equil' not in sys.argv:
+        bestfit_req = True
     parser.add_argument(
         "--demo-popt",
         type=str,
-        required=True,
+        required=bestfit_req,
         help="File containing the bestfit parameters for the demographic model.",
         dest="demo_popt",
     )
