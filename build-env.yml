@@ -19,4 +19,5 @@ dependencies:
   - snakemake==7.1.1
   - dadi
   - pip:
+      - demes
       - .

@@ -137,7 +137,7 @@ def run_simulate_dfe(args):
 def run_simulate_demes(args):
     from dadi_cli.SimulateFs import simulate_demes
 
-    simulate_demes(args.demes_file, atgs.sample_sizes, args.grids, args.output)
+    simulate_demes(args.demes_file, args.sample_sizes, args.grids, args.pop_ids, args.output)
 
 
 def run_infer_dm(args):
@@ -931,7 +931,7 @@ def add_grids_argument(parser):
         "--grids",
         type=_check_positive_int,
         nargs=3,
-        help="Sizes of grids. Default: None.",
+        help="Sizes of grids. Default is based on sample size.",
     )
 
 
