@@ -99,3 +99,26 @@ def test_generate_cache_custom_model_bash(capsys):
     )
     assert int(np.min(s.gammas)) == -2000
     assert len(s.gammas) == 50
+
+
+def test_generate_cache_equil_code(capsys):
+    generate_cache(
+        func=DFE.DemogSelModels.equil,
+        grids=None,
+        popt=None,
+        gamma_bounds=[1e-4, 20],
+        gamma_pts=50,
+        output="./tests/test_results/cache_equil_code.bpkl",
+        sample_sizes=[10],
+        additional_gammas=[],
+        cpus=None,
+        gpus=0,
+        dimensionality=1,
+    )
+
+    assert os.path.exists("./tests/test_results/cache_equil_code.bpkl")
+    s = pickle.load(open("./tests/test_results/cache_equil_code.bpkl", "rb"))
+    assert int(np.min(s.gammas)) == -20
+    assert len(s.gammas) == 50
+
+
