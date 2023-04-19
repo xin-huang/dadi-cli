@@ -162,7 +162,7 @@ def run_infer_dm(args):
     # Because basic standard neutral models do not need to optimized
     # we can calculate the log-likelihood and theta
     if args.model in ['snm_1d', 'snm_2d'] and args.p0 == -1 and args.lbounds == None and args.ubounds == None:
-        fid = open(args.output_prefix + ".InferDM.simple.snm.txt", "w")
+        fid = open(args.output_prefix + ".InferDM.bestfits", "w")
         # Write command line to results file
         import sys
         fid.write("# {0}\n".format(" ".join(sys.argv)))
@@ -170,11 +170,11 @@ def run_infer_dm(args):
         # Extract model function and parameter names, from custom model_file if necessary
         func, param_names = get_model(args.model, args.model_file)
         if args.grids is None:
-            pts_l = pts_l_func(fs.sample_sizes)
+            args.grids = pts_l_func(fs.sample_sizes)
 
         fid.write("# Log(likelihood)\t" + "\t".join(param_names) + "\ttheta\n")
         from sys import exit
-        model = dadi.Numerics.make_extrap_func(func)([], fs.sample_sizes, pts_l)
+        model = dadi.Numerics.make_extrap_func(func)([], fs.sample_sizes, args.grids)
         ll_model = dadi.Inference.ll_multinom(model, fs)
         theta = dadi.Inference.optimal_sfs_scaling(model, fs)
         fid.write('\t'.join(str(_) for _ in [ll_model, theta])+'\n')
@@ -892,14 +892,14 @@ def add_output_argument(parser):
     )
 
 def add_bounds_argument(parser):
-    # Check that the model is not a 
+    # Check that the model is not a standard neutral model
     if 'snm_1d' not in sys.argv and 'snm_2d' not in sys.argv:
         boundary_req = True
     else:
-        if '--p0' in sys.argv:
-            boundary_req = True
-        else:
+        if '--nomisid' in sys.argv:
             boundary_req = False
+        else:
+            boundary_req = True
     parser.add_argument(
         "--lbounds",
         type=float,
@@ -917,10 +917,14 @@ def add_bounds_argument(parser):
 
 
 def add_demo_popt_argument(parser):
+    # Check that the model is not a standard neutral model
+    bestfit_req = False
+    if 'equil' not in sys.argv:
+        bestfit_req = True
     parser.add_argument(
         "--demo-popt",
         type=str,
-        required=True,
+        required=bestfit_req,
         help="File containing the bestfit parameters for the demographic model.",
         dest="demo_popt",
     )
@@ -1157,11 +1161,18 @@ def add_inference_argument(parser):
     )
 
 def add_p0_argument(parser):
+    p0_req = False
+    if 'snm_1d' not in sys.argv and 'snm_2d' not in sys.argv:
+        p0_req = True
+    else:
+        if '--nomisid' not in sys.argv:
+            p0_req = True
+
     parser.add_argument(
         "--p0",
         type=float,
         nargs="+",
-        required=True,
+        required=p0_req,
         help="Parameters for simulated demography or dfe.",
     )
 

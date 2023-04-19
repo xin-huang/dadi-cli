@@ -37,7 +37,10 @@ def generate_cache(
         dimensionality int: Dimensionality of the frequency spectrum.
     """
 
-    popt, theta = get_opts_and_theta(popt, gen_cache=True)
+    if func is not getattr(DFE.DemogSelModels, 'equil'):
+        popt, theta = get_opts_and_theta(popt, gen_cache=True)
+    else:
+        popt = []
 
     if grids == None:
         grids = cache_pts_l_func(sample_sizes)

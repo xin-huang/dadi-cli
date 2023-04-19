@@ -211,7 +211,14 @@ def test_simulate_demes_args():
     assert args.pop_ids == pop_ids
     assert args.output == output
 
-def test_infer_dm_args():
+
+@pytest.mark.parametrize("model, model_file, nomisid",
+                        [
+                        ("split_mig_fix_T", "tests/example_data/example_models", False),
+                        ("snm_1d", None, True)
+                         ]
+                         )
+def test_infer_dm_args(model, model_file, nomisid):
     parser = cli.dadi_cli_parser()
     cmd = "InferDM"
     fs = "tests/example_data/two_epoch_syn.fs"
@@ -227,10 +234,10 @@ def test_infer_dm_args():
     cpus = 5
     delta_ll = 0.01
     gpus = 0
-    model = "split_mig_fix_T"
-    model_file = "tests/example_data/example_models"
+    # model = "split_mig_fix_T"
+    # model_file = "tests/example_data/example_models"
     grids = [130, 140, 150]
-    nomisid = False
+    # nomisid = False
     constants = "-1"
     lbounds = [0.01, 0.01, 0.0001, 0.1, 0.001]
     ubounds = [3, 3, 1, 3, 1]
@@ -293,7 +300,7 @@ def test_infer_dm_args():
     assert args.delta_ll == delta_ll
     assert args.gpus == gpus
     assert args.model == model
-    assert args.model_file == model_file
+    assert args.model_file == str(model_file)
     assert args.grids == grids
     assert args.nomisid == False
     assert args.constants == -1
