@@ -494,8 +494,6 @@ def run_infer_dm(args):
             for worker in workers:
                 worker.terminate()
     fid.close()
-    if args.email is not None:
-        send_email(args.email, results_file)
     # TODO: Stop the remaining work_queue workers
 
 
@@ -738,8 +736,6 @@ def run_infer_dfe(args):
             for worker in workers:
                 worker.terminate()
     fid.close()
-    if args.email is not None:
-        send_email(args.email, results_file)
 
 def run_bestfit(args):
     from dadi_cli.BestFit import get_bestfit_params
@@ -1108,12 +1104,6 @@ def add_inference_argument(parser):
         action="store",
         dest="work_queue",
         help="Enable Work Queue. Additional arguments are the WorkQueue project name, the name of the password file.",
-    )
-    parser.add_argument(
-        "--email",
-        type=str,
-        dest="email",
-        help="Enter user email address for terraform to send inference results to user.",
     )
     parser.add_argument(
         "--port",
@@ -1712,42 +1702,6 @@ def _top_opts(filename):
 
     return opts
 
-from os.path import basename
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email.mime.application import MIMEApplication
-
-def send_email(user_email, results_file):
-    #The mail addresses and password
-    sender_address = "dadi.results@gmail.com"
-    sender_pass = "yfjbdeaijwaosdck"
-    #Setup the MIME
-    message = MIMEMultipart()
-    message['From'] = sender_address
-    message['To'] = user_email
-    message['Subject'] = 'Dadi-cli results for ' + results_file   #The subject line
-    #The body and the attachments for the mail
-    message.attach(MIMEText('', 'plain'))
-
-
-    with open(results_file, "rb") as res:
-        part = MIMEApplication(
-            res.read(),
-            Name=basename(results_file)
-        )
-    # After the file is closed
-    part['Content-Disposition'] = 'attachment; filename="%s"' % basename(results_file)
-    message.attach(part)
-
-    #Create SMTP session for sending the mail
-    session = smtplib.SMTP('smtp.gmail.com', 587) #use gmail with port
-    session.starttls() #enable security
-    session.login(sender_address, sender_pass) #login with mail_id and password
-    text = message.as_string()
-    session.sendmail(sender_address, user_email, text)
-    session.quit()
-    print('Mail Sent')
 
 # Main function
 def main(arg_list=None):
