@@ -29,4 +29,5 @@ extra_javascript:
 nav:
 - Home: 'index.md'
 - User Guide:
+        - Overview: 'userguide/overview.md'
 - References: 'references.md'
