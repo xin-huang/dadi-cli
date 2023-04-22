@@ -1,0 +1,26 @@
+name: dadi-cli
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - codecov
+  - gcc
+  - gfortran
+  - demes
+  - dill==0.3.4
+  - jinja2=3.0.0
+  - matplotlib
+  - mkdocstrings=0.17.0
+  - mkdocs-material
+  - ndcctools==7.4.3
+  - nlopt
+  - numpy
+  - pip
+  - pytest-cov
+  - python==3.8
+  - python-markdown-math
+  - scipy
+  - dadi
+  - pip:
+      - .

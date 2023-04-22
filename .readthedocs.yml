@@ -6,7 +6,7 @@ build:
                 python: "mambaforge-4.10"
 
 conda:
-        environment: build-env.yml
+        environment: mkdocs-env.yml
 
 mkdocs:
         configuration: mkdocs.yml
