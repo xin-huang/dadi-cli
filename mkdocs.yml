@@ -6,8 +6,8 @@ docs_dir: 'docs'
 theme:
         name: "material"
         palette:
-                primary: cyan
-                accent: cyan
+                primary: black
+                accent: black
 plugins:
   - search
   - mkdocstrings:
@@ -17,7 +17,7 @@ plugins:
           rendering:
             show_source: true
       watch:
-        - sstar
+        - dadi-cli
 markdown_extensions:
   - extra
   - tables
@@ -28,3 +28,5 @@ extra_javascript:
   - 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML'
 nav:
 - Home: 'index.md'
+- User Guide:
+- References: 'references.md'
