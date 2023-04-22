@@ -28,6 +28,9 @@ extra_javascript:
   - 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML'
 nav:
 - Home: 'index.md'
-- User Guide:
-        - Overview: 'userguide/overview.md'
+- Examples:
+        - Demographic inference: 'examples/demog.md'
+        - DFE inference: 'examples/dfe.md'
+        - Joint DFE inference: 'examples/jdfe.md'
+        - Cloud computing: 'examples/cloudcomputing.md'
 - References: 'references.md'
