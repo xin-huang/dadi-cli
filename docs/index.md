@@ -4,4 +4,19 @@
 
 ## Requirements
 
+`dadi-cli` works on UNIX/LINUX operating systems and tested with the following:
+
+- Python 3.8
+- Python packages:
+	- dadi > 2.1.0
+	- demes
+	- dill == 0.3.4
+	- matplotlib
+	- ndcctools == 7.4.3
+	- nlopt
+	- numpy
+	- pycuda
+	- scipy
+	- scikit-cuda
+
 ## Installation
