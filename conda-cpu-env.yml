@@ -3,7 +3,6 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - cuda
   - gcc
   - gfortran
   - gxx==11.3

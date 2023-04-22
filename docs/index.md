@@ -8,6 +8,7 @@
 
 - Python 3.8
 - Python packages:
+	- cuda
 	- dadi > 2.1.0
 	- demes
 	- dill == 0.3.4
@@ -19,11 +20,11 @@
 	- scipy
 	- scikit-cuda
 
-Only Nvidia GPUs are supported if users want to accelerate their inference with GPUs.
+Only [NVIDIA](https://www.nvidia.com) GPUs are supported if users want to accelerate their inference with GPUs.
 
 ## Installation
 
-Users can install dadi-cli through Conda Forge:
+Users can install dadi-cli through [conda-forge](https://conda-forge.org/):
 ```
 conda install -c conda-forge dadi-cli
 ```
@@ -48,21 +49,21 @@ dadi-cli -h
 
 There are thirteen subcommands in `dadi-cli`:
 
-- `GenerateFs` 
-- `GenerateCache` 
-- `InferDM` 
-- `InferDFE` 
-- `BestFit` 
-- `StatDM` 
-- `StatDFE` 
-- `Plot` 
-- `SimulateDM` 
-- `SimulateDFE` 
-- `SimulateDemes` 
-- `Model` 
-- `Pdf`
+- GenerateFs 
+- GenerateCache 
+- InferDM 
+- InferDFE 
+- BestFit 
+- StatDM 
+- StatDFE 
+- Plot 
+- SimulateDM 
+- SimulateDFE 
+- SimulateDemes 
+- Model 
+- Pdf
 
-To display help information for each subcommand, users can use `-h`. For example,
+To display help information for each subcommand, users can use the `-h` option. For example,
 
 ```         
 dadi-cli GenerateFs -h
