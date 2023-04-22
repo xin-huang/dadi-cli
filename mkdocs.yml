@@ -1,0 +1,30 @@
+site_name: dadi-cli
+site_url: "https://dadi-cli.readthedocs.io"
+repo_url: "https://github.com/xin-huang/dadi-cli"
+edit_uri: ""
+docs_dir: 'docs'
+theme:
+        name: "material"
+        palette:
+                primary: cyan
+                accent: cyan
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          rendering:
+            show_source: true
+      watch:
+        - sstar
+markdown_extensions:
+  - extra
+  - tables
+  - fenced_code
+  - admonition
+  - codehilite
+extra_javascript:
+  - 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML'
+nav:
+- Home: 'index.md'
