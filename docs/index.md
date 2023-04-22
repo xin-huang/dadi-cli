@@ -20,3 +20,41 @@
 	- scikit-cuda
 
 ## Installation
+
+Users can install dadi-cli through Conda Forge:
+```
+conda install -c conda-forge dadi-cli
+```
+
+Or, for the latest updates, clone this repo and using the following command
+
+```         
+python setup.py install
+```
+
+To get help information, users can use
+
+```         
+dadi-cli -h
+```
+
+There are thirteen subcommands in `dadi-cli`: 
+- `GenerateFs` 
+- `GenerateCache` 
+- `InferDM` 
+- `InferDFE` 
+- `BestFit` 
+- `StatDM` 
+- `StatDFE` 
+- `Plot` 
+- `SimulateDM` 
+- `SimulateDFE` 
+- `SimulateDemes` 
+- `Model` 
+- `Pdf`
+
+To display help information for each subcommand, users can use `-h`. For example,
+
+```         
+dadi-cli GenerateFs -h
+```
