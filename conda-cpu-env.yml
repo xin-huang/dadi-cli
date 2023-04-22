@@ -1,0 +1,20 @@
+name: dadi-cli-cpu
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - cuda
+  - gcc
+  - gfortran
+  - gxx==11.3
+  - demes
+  - dill==0.3.4
+  - matplotlib
+  - ndcctools==7.4.3
+  - nlopt
+  - numpy
+  - pip
+  - scipy
+  - pip:
+      - dadi>2.1.0
+      - .
