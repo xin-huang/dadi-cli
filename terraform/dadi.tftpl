@@ -32,14 +32,18 @@ runcmd:
   - su - dadi -c 'echo "export CATALOG_UPDATE_PROTOCOL=tcp" >> /home/dadi/.profile'
   - su - dadi -c 'echo ". /home/dadi/mambaforge/etc/profile.d/conda.sh" >> /home/dadi/.profile'
   - su - dadi -c 'echo ". /home/dadi/mambaforge/etc/profile.d/mamba.sh" >> /home/dadi/.profile'
-  - su - dadi -c "git clone https://github.com/xin-huang/dadi-cli"
-  - su - dadi -c "mamba env create -f /home/dadi/dadi-cli/cloud-env.yml"
+  - su - dadi -c "wget https://raw.githubusercontent.com/xin-huang/dadi-cli/terraform-update/cloud-env.yml"
+  - su - dadi -c "mamba env create -f /home/dadi/cloud-env.yml"
   - su - dadi -c 'echo "conda activate dadi-cli" >> /home/dadi/.profile'
+%{ if cuda.gpus != ""  }
+  - su - dadi -c "pip install scikit-cuda"
+  - su - dadi -c "mamba install -y pycuda"
+%{ endif }
 %{ if workqueue_password != "" }
   - su - dadi -c 'echo "${workqueue_password}" > /home/dadi/wqpw'
 %{ endif }
 %{ if dadi_cli.run }
-  - su - dadi -c 'dadi-cli ${dadi_cli.parameters} --work-queue "${project_name}" /home/dadi/wqpw &'
+  - su - dadi -c 'dadi-cli ${dadi_cli.parameters} %{ if dadi_cli.use_workqueue} --work-queue "${dadi_cli.project_name}" /home/dadi/wqpw %{ endif } %{ if cuda.gpus != "" } --gpus ${cuda.gpus} %{ endif }  &'
 %{ endif }
 %{ if workqueue_factory.run }
   - su - dadi -c 'work_queue_factory -T local -M "${project_name}" --password /home/dadi/wqpw -E "--connection-mode by_apparent_ip"'
