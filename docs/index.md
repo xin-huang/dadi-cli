@@ -24,7 +24,7 @@ Only [NVIDIA](https://www.nvidia.com) GPUs are supported if users want to accele
 
 ## Installation
 
-Users can install dadi-cli through [conda-forge](https://conda-forge.org/):
+Users can install `dadi-cli` through [conda-forge](https://conda-forge.org/):
 ```
 conda install -c conda-forge dadi-cli
 ```
@@ -68,3 +68,5 @@ To display help information for each subcommand, users can use the `-h` option. 
 ```         
 dadi-cli GenerateFs -h
 ```
+
+In this manual, we use the data from the 1000 Genomes Project and data simulated with `dadi-cli` to demonstrate how to apply `dadi-cli` in research.

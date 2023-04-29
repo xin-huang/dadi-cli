@@ -29,6 +29,7 @@ extra_javascript:
 nav:
 - Home: 'index.md'
 - Examples:
+        - Generating allele frequency spectra: 'examples/fs.md'
         - Demographic inference: 'examples/demog.md'
         - DFE inference: 'examples/dfe.md'
         - Joint DFE inference: 'examples/jdfe.md'
