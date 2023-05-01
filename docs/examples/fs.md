@@ -1,5 +1,7 @@
 # Generating allele frequency spectra
 
+### Input
+
 `dadi-cli` only accepts VCF files to generate allele frequency spectra. To generate a spectrum, users can use
 
 ```
@@ -20,6 +22,11 @@ NA19095 YRI
 NA19096 YRI
 NA19107 YRI
 ```
+
+### Output
+
+
+### Settings
 
 `--pop-ids` specifies the ID of the population. Here we have two populations YRI and CEU. The population IDs should match those listed in the population information file above.
 
