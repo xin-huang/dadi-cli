@@ -34,5 +34,5 @@ nav:
         - DFE inference: 'examples/dfe.md'
         - Joint DFE inference: 'examples/jdfe.md'
         - Cloud computing: 'examples/cloudcomputing.md'
-        - Built-in models: 'examples/models.md'
+        - Models: 'examples/models.md'
 - References: 'references.md'
