@@ -123,11 +123,20 @@ def run_simulate_dfe(args):
     import pickle
 
     if args.cache1d != None:
-        cache1d = pickle.load(open(args.cache1d, "rb"))
+        if "://" in args.cache1d:
+            from urllib.request import urlopen
+            cache1d = pickle.load(urlopen(args.cache1d))
+        else:
+            cache1d = pickle.load(open(args.cache1d, "rb"))
     else:
         cache1d = args.cache1d
+
     if args.cache2d != None:
-        cache2d = pickle.load(open(args.cache2d, "rb"))
+        if "://" in args.cache2d:
+            from urllib.request import urlopen
+            cache2d = pickle.load(urlopen(args.cache2d))
+        else:
+            cache2d = pickle.load(open(args.cache2d, "rb"))
     else:
         cache2d = args.cache2d
 
@@ -148,7 +157,13 @@ def run_simulate_dfe(args):
 
 def run_simulate_demes(args):
     from dadi_cli.SimulateFs import simulate_demes
-
+    if "://" in args.demes_file:
+        import urllib.request
+        model_fi = open("demes_file.yml","w")
+        with urllib.request.urlopen(args.demes_file) as f:
+            model_fi.write(f.read().decode('utf-8'))
+        model_fi.close()
+        args.demes_file = "demes_file.yml"
     simulate_demes(args.demes_file, args.sample_sizes, args.grids, args.pop_ids, args.output)
 
 
@@ -546,18 +561,36 @@ def run_infer_dfe(args):
 
     from dadi_cli.utilities import get_opts_and_theta
 
+    if "://" in args.demo_popt:
+        import urllib.request
+        popt_fi = open("demo-popt.bestfits","w")
+        with urllib.request.urlopen(args.demo_popt) as f:
+            popt_fi.write(f.read().decode('utf-8'))
+        popt_fi.close()
+        args.demo_popt = "demo-popt.bestfits"
+
     _, theta = get_opts_and_theta(args.demo_popt)
     theta *= args.ratio
 
     import pickle
 
+
     if args.cache1d != None:
-        cache1d = pickle.load(open(args.cache1d, "rb"))
+        if "://" in args.cache1d:
+            from urllib.request import urlopen
+            cache1d = pickle.load(urlopen(args.cache1d))
+        else:
+            cache1d = pickle.load(open(args.cache1d, "rb"))
         cache_ns = cache1d.ns
     else:
         cache1d = args.cache1d
+
     if args.cache2d != None:
-        cache2d = pickle.load(open(args.cache2d, "rb"))
+        if "://" in args.cache2d:
+            from urllib.request import urlopen
+            cache2d = pickle.load(urlopen(args.cache2d))
+        else:
+            cache2d = pickle.load(open(args.cache2d, "rb"))
         cache_ns = cache2d.ns
     else:
         cache2d = args.cache2d
