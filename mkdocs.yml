@@ -28,11 +28,14 @@ extra_javascript:
   - 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML'
 nav:
 - Home: 'index.md'
-- Examples:
-        - Generating allele frequency spectra: 'examples/fs.md'
-        - Demographic inference: 'examples/demog.md'
-        - DFE inference: 'examples/dfe.md'
-        - Joint DFE inference: 'examples/jdfe.md'
-        - Cloud computing: 'examples/cloudcomputing.md'
-        - Models: 'examples/models.md'
+- User Guide:
+        - Generating allele frequency spectra: 'userguide/fs.md'
+        - Demographic inference: 'userguide/demog.md'
+        - DFE inference: 'userguide/dfe.md'
+        - Joint DFE inference: 'userguide/jdfe.md'
+        - Statistical testing: 'userguide/stat.md'
+        - Cloud computing: 'userguide/cloud.md'
+        - Simulation: 'userguide/simulation.md'
+        - Models: 'userguide/models.md'
+        - Plotting: 'userguide/plot.md'
 - References: 'references.md'

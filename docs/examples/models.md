@@ -2,6 +2,124 @@
 
 ## Built-in models
 
+### Available demographic models
+
+`dadi-cli` provides a subcommand `Model` to help users finding available demographic models in `dadi`. To find out available demographic models, users can use:
+
+```         
+dadi-cli Model --names
+```
+
+Then the available demographic models will be displayed in the screen:
+
+```         
+Built-in 1D demographic models:
+- bottlegrowth_1d
+- growth
+- snm_1d
+- three_epoch
+- three_epoch_inbreeding
+- two_epoch
+
+Built-in 2D demographic models:
+- IM
+- IM_mscore
+- IM_pre
+- IM_pre_mscore
+- bottlegrowth_2d
+- bottlegrowth_split
+- bottlegrowth_split_mig
+- snm_2d
+- split_asym_mig
+- split_delay_mig
+- split_mig
+- split_mig_mscore
+
+Built-in demographic models with selection:
+- IM_pre_sel
+- IM_pre_sel_single_gamma
+- IM_sel
+- IM_sel_single_gamma
+- bottlegrowth_1d_sel
+- bottlegrowth_2d_sel
+- bottlegrowth_2d_sel_single_gamma
+- bottlegrowth_split_mig_sel
+- bottlegrowth_split_mig_sel_single_gamma
+- bottlegrowth_split_sel
+- bottlegrowth_split_sel_single_gamma
+- equil
+- growth_sel
+- split_asym_mig_sel
+- split_asym_mig_sel_single_gamma
+- split_delay_mig_sel
+- split_delay_mig_sel_single_gamma
+- split_mig_sel
+- split_mig_sel_single_gamma
+- three_epoch_sel
+- two_epoch_sel
+```
+
+To find out the parameters and detail of a specific model, users can use the name of the demograpic model as the parameter after `--names`. For example,
+
+```         
+dadi-cli Model --names split_mig
+```
+
+Then the detail of the model will be displayed in the screen:
+
+```         
+- split_mig:
+
+        params = (nu1,nu2,T,m)
+        
+        Split into two populations of specifed size, with migration.
+        
+        nu1: Size of population 1 after split.
+        nu2: Size of population 2 after split.
+        T: Time in the past of split (in units of 2*Na generations)
+        m: Migration rate between populations (2*Na*m)
+```
+
+### Available DFE distributions
+
+`dadi-cli` provides a subcommand `Pdf` to help users finding available probability density functions for DFE inference in `dadi`.
+
+To find out available probability density functions, users can use
+
+```         
+dadi-cli Pdf --names
+```
+
+Then the availalbe functions will be displayed in the screen:
+
+```         
+Available probability density functions:
+- beta
+- biv_ind_gamma
+- biv_lognormal
+- exponential
+- gamma
+- lognormal
+- normal
+- mixture
+```
+
+To find out the parameters and the detail of a specific function, users can use the name of the function as the parameter after `--names`. For example,
+
+```         
+dadi-cli Pdf --names lognormal
+```
+
+Then the detail of the function will be displayed in the screen:
+
+```         
+- lognormal:
+
+        Lognormal probability density function.
+
+        params = [log_mu, log_sigma]
+```
+
 ## User-defined models
 
 Users can also import their own models into dadi-cli. In the `examples/data` folder, there is a file `split_mig_fix_T_models.py` which has a custom demographic model and demographic models with selection. The file imports various functions from dadi that are used to build demographic models.
