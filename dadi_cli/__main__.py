@@ -59,13 +59,24 @@ def run_generate_fs(args):
 def run_generate_cache(args):
     if args.model_file is None and args.model not in [m[0] for m in getmembers(DFE.DemogSelModels, isfunction)]:
         raise ValueError(f"{args.model} is not in dadi.DFE.DemogSelModels, did you mean to include _sel or _single_sel in the model name or specify a --model-file?")
+
     if args.model_file is not None:
         if "://" in args.model_file:
+            import urllib.request
             model_fi = open("dadi_models.py","w")
             with urllib.request.urlopen(args.model_file) as f:
                 model_fi.write(f.read().decode('utf-8'))
             model_fi.close()
             args.model_file = "dadi_models"
+
+    if "://" in args.demo_popt:
+        import urllib.request
+        popt_fi = open("demo-popt.bestfits","w")
+        with urllib.request.urlopen(args.demo_popt) as f:
+            popt_fi.write(f.read().decode('utf-8'))
+        popt_fi.close()
+        args.demo_popt = "demo-popt.bestfits"
+
     func, _ = get_model(args.model, args.model_file)
     generate_cache(
         func=func,
@@ -88,6 +99,7 @@ def run_simulate_dm(args):
     args.misid = not args.nomisid
     if args.model_file is not None:
         if "://" in args.model_file:
+            import urllib.request
             model_fi = open("dadi_models.py","w")
             with urllib.request.urlopen(args.model_file) as f:
                 model_fi.write(f.read().decode('utf-8'))
@@ -754,6 +766,7 @@ def run_stat_demography(args):
 
     if args.model_file is not None:
         if "://" in args.model_file:
+            import urllib.request
             model_fi = open("dadi_models.py","w")
             with urllib.request.urlopen(args.model_file) as f:
                 model_fi.write(f.read().decode('utf-8'))
@@ -835,6 +848,7 @@ def run_plot(args):
             raise ValueError("--model is missing")
         if args.model_file is not None:
             if "://" in args.model_file:
+                import urllib.request
                 model_fi = open("dadi_models.py","w")
                 with urllib.request.urlopen(args.model_file) as f:
                     model_fi.write(f.read().decode('utf-8'))
