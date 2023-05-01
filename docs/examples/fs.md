@@ -2,7 +2,7 @@
 
 ## Input
 
-`dadi-cli` only accepts VCF files to generate allele frequency spectra. To generate a spectrum, users can use
+`dadi-cli` only accepts [VCF](https://samtools.github.io/hts-specs/VCFv4.2.pdf) files to generate allele frequency spectra. To generate a spectrum, users can use
 
 ```
 dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 20 20 --polarized --output ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfold.fs
