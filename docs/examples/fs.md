@@ -27,7 +27,7 @@ NA19107 YRI
 
 The format of the output file is the same as those created by [dadi](https://dadi.readthedocs.io).
 
-An example for an unfolded allele frequency spectrum is below.
+An example for an unfolded allele frequency spectrum from one population is below.
 
 ```
 5 unfolded "pop1"
@@ -41,7 +41,7 @@ The second line displays the allele frequency spectrum. The first element indica
 
 The third line acts as a "mask" that determines if an element in the allele frequency spectrum will be used during inference. Here, "1" means the corresponding element will not be used, while "0" indicates the corresponding element will be utilized. Typically, fixed variants are excluded; thus, the first and last elements are masked in the allele frequency spectrum.
 
-An example for a folded allele frequency spectrum is below.
+An example for a folded allele frequency spectrum from one population is below.
 
 ```
 5 folded "pop1"
