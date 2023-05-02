@@ -374,8 +374,8 @@ def test_run_infer_dfe_mix_html(infer_dfe_args):
     fix_check = [float(ele.split('\t')[3]) == 0.0 for ele in opt[2:]]
     for ele in fix_check:
         assert(ele)
-    # for fi in fids:
-    #     os.remove(fi)
+    for fi in fids:
+        os.remove(fi)
 
 # May want third top_tops test to make sure log-likelihood sorted, but that would require changing the function
 def test_top_opts_error():
