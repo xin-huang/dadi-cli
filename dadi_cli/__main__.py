@@ -420,6 +420,13 @@ def run_infer_dm(args):
 
         # Check if we can get a list of top fits
         if args.bestfit_p0 is not None: 
+            if "://" in args.bestfit_p0:
+                import urllib.request
+                best_fi = open("bestfits_file.bestfits","w")
+                with urllib.request.urlopen(args.bestfit_p0) as f:
+                    best_fi.write(f.read().decode('utf-8'))
+                best_fi.close()
+                args.bestfit_p0 = "bestfits_file.bestfits"
             bestfits = _top_opts(args.bestfit_p0)
             # args.p0 = bestfits[np.random.randint(len(bestfits)%10)]
         else:
@@ -645,6 +652,13 @@ def run_infer_dfe(args):
 
         # Check if we can get a list of top fits
         if args.bestfit_p0 is not None: 
+            if "://" in args.bestfit_p0:
+                import urllib.request
+                best_fi = open("bestfits_file.bestfits","w")
+                with urllib.request.urlopen(args.bestfit_p0) as f:
+                    best_fi.write(f.read().decode('utf-8'))
+                best_fi.close()
+                args.bestfit_p0 = "bestfits_file.bestfits"
             bestfits = _top_opts(args.bestfit_p0)
         else:
             bestfits = None
