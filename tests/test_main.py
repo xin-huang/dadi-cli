@@ -257,6 +257,9 @@ def test_run_infer_dm_html(infer_dm_args):
     pytest.model = "three_epoch_bottleneck"
     pytest.model_file = "https://raw.githubusercontent.com/xin-huang/dadi-cli/master/tests/example_data/example_models.py"
     pytest.bestfit_p0 = "https://raw.githubusercontent.com/xin-huang/dadi-cli/master/tests/example_data/example.bestfit.two_epoch.demo.params.InferDM.opts.0"
+    pytest.nomisid = False
+    pytest.ubounds = [10, 10, 0.999]
+    pytest.lbounds = [1e-3, 1e-3, 1e-4]
     pytest.output_prefix += ".html"
     dadi_cli.run_infer_dm(pytest)
     for ele in glob.glob(pytest.output_prefix+"*"):
@@ -337,13 +340,13 @@ def test_run_infer_dfe_2d_lognormal(infer_dfe_args):
 def test_run_infer_dfe_mix(infer_dfe_args):
     pytest.fs = pytest.fs_2d_lognorm
     pytest.mix_pdf = 'mixture_lognormal'
-    pytest.output_prefix += "mix_lognormal_dfe_html"
+    pytest.output_prefix += "mix_lognormal_dfe"
     pytest.p0 = [1, 1, 0, 0.5]
     pytest.ubounds = [10, 10, None, 0.999]
     pytest.lbounds = [1e-3, 1e-3, None, 1e-3]
     pytest.constants = [None, None, 0, None]
     dadi_cli.run_infer_dfe(pytest)
-    fids = glob.glob(pytest.output_prefix+"*.opts.0")
+    fids = glob.glob(pytest.output_prefix+"*")
     print(fids)
     opt = open(fids[-1],'r').readlines()
     print(opt)
@@ -360,15 +363,14 @@ def test_run_infer_dfe_mix_html(infer_dfe_args):
     pytest.cache2d = "https://github.com/xin-huang/dadi-cli/blob/master/tests/example_data/cache_split_mig_2d.bpkl?raw=true"
     pytest.bestfit_p0 = "https://raw.githubusercontent.com/xin-huang/dadi-cli/master/tests/example_data/example.split_mig.dfe.lognormal_mixture.params.with.misid.InferDFE.bestfits"
     pytest.mix_pdf = 'mixture_lognormal'
-    pytest.output_prefix += "mix_lognormal_dfe"
+    pytest.output_prefix += "mix_lognormal_dfe_html"
     pytest.nomisid = False
     # pytest.p0 = None
     pytest.ubounds = [10, 10, None, 0.999, 0.4]
     pytest.lbounds = [1e-3, 1e-3, None, 1e-3, 1e-3]
     pytest.constants = [None, None, 0, None, None]
     dadi_cli.run_infer_dfe(pytest)
-    fids = glob.glob(pytest.output_prefix+"*.opts.0")
-    print(fids)
+    fids = glob.glob(pytest.output_prefix+"*")
     opt = open(fids[-1],'r').readlines()
     print(opt)
     fix_check = [float(ele.split('\t')[3]) == 0.0 for ele in opt[2:]]
