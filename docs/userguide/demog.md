@@ -8,28 +8,28 @@ To start the inference, users should specify the boundaries for the model parame
 
 
 ```
-dadi-cli InferDM --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfold.fs --model split_mig --lbounds 1e-3 1e-3 0 0 0 --ubounds 100 100 1 10 0.5  --output ./examples/results/demog/1KG.YRI.CEU.20.split_mig.demo.params --optimizations 10
+dadi-cli InferDM --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfold.fs --model split_mig --lbounds 1e-3 1e-3 0 0 0 --ubounds 100 100 1 10 0.5  --output ./examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params --optimizations 10
 ```
 
 Please make sure the directory `./examples/results/demog/` exist before running the above command.
 
 ## Output
 
-After the optimization, a file `./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params.InferDM.opts.0` will be made. Any subsequent optimzations using the same output argument will be number `.1`, `.2`, etc.
+After the optimization, a file `./examples/results/demo/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.opts.0` will be made. Any subsequent optimzations using the same output argument will be number `.1`, `.2`, etc.
 
 Users can use `BestFit` to obtain the best fit parameters across all optimization runs with a matching prefix.
 
 ```         
-dadi-cli BestFit --input-prefix ./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params.InferDM --lbounds 1e-3 1e-3 0 0 0 --ubounds 100 100 1 10 0.5
+dadi-cli BestFit --input-prefix ./examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM --lbounds 1e-3 1e-3 0 0 0 --ubounds 100 100 1 10 0.5
 ```
 
-The result is in a file `./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params.InferDM.bestfits`. This file contains the 100 highest likelihood parameter sets found (if at least that many optimizations have been carried out). If optimization converged, then the file also contains the converged results.
+The result is in a file `./examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits`. This file contains the 100 highest likelihood parameter sets found (if at least that many optimizations have been carried out). If optimization converged, then the file also contains the converged results.
 
 The results look like:
 
 ```         
-# /Users/user/anaconda3/envs/dadicli/bin/dadi-cli BestFit --input-prefix ./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params.InferDM --lbounds 1e-3 1e-3 0 0 0 --ubounds 100 100 1 10 0.5
-# /Users/user/anaconda3/envs/dadicli/bin/dadi-cli InferDM --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfold.fs --model split_mig --lbounds 1e-3 1e-3 0 0 0 --ubounds 100 100 1 10 0.5  --output ./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params --optimizations 10
+# /Users/user/anaconda3/envs/dadicli/bin/dadi-cli BestFit --input-prefix ./examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM --lbounds 1e-3 1e-3 0 0 0 --ubounds 100 100 1 10 0.5
+# /Users/user/anaconda3/envs/dadicli/bin/dadi-cli InferDM --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfold.fs --model split_mig --lbounds 1e-3 1e-3 0 0 0 --ubounds 100 100 1 10 0.5  --output ./examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params --optimizations 10
 #
 # Converged results
 # Log(likelihood)   nu1 nu2 T   m   misid   theta
