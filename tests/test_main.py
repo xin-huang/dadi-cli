@@ -56,6 +56,20 @@ def test_run_simulate_dm():
     dadi_cli.run_simulate_dm(simulate_args)
     os.remove(simulate_args.output)
 
+def test_run_simulate_dm_html():
+    def simulate_args():
+        return
+    simulate_args.model = "three_epoch_bottleneck"
+    simulate_args.model_file = "https://raw.githubusercontent.com/xin-huang/dadi-cli/master/tests/example_data/example_models.py"
+    simulate_args.p0 = [1, 0.5, 0.05]
+    simulate_args.sample_sizes = [10]
+    simulate_args.grids = [20, 30, 40]
+    simulate_args.nomisid = False
+    simulate_args.output = "tests/test_results/main_simulate_three_epoch_bottleneck_html.fs"
+    simulate_args.inference_file = False
+
+    dadi_cli.run_simulate_dm(simulate_args)
+    os.remove(simulate_args.output)
 
 try:
     import demes
@@ -76,6 +90,19 @@ def test_run_simulate_demes():
     dadi_cli.run_simulate_demes(simulate_args)
     os.remove(simulate_args.output)
 
+@pytest.mark.skipif(demesskip, reason="Could not load demes")
+def test_run_simulate_demes_html():
+    def simulate_args():
+        return
+    simulate_args.demes_file = "https://raw.githubusercontent.com/xin-huang/dadi-cli/master/examples/data/gutenkunst_ooa.yml"
+    simulate_args.pop_ids = ["YRI"]
+    simulate_args.sample_sizes = [10]
+    simulate_args.grids = [20, 30, 40]
+    simulate_args.output = "tests/test_results/main_simulate_demes_ooa_html.fs"
+
+    dadi_cli.run_simulate_demes(simulate_args)
+    os.remove(simulate_args.output)
+
 def test_run_simulate_dfe():
     def simulate_args():
         return
@@ -91,6 +118,21 @@ def test_run_simulate_dfe():
     dadi_cli.run_simulate_dfe(simulate_args)
     os.remove(simulate_args.output)
 
+def test_run_simulate_dfe_html():
+    def simulate_args():
+        return
+    simulate_args.p0 = [1, 1.5, 0, 0.01, 0.05]
+    simulate_args.cache1d = "https://github.com/xin-huang/dadi-cli/blob/master/tests/example_data/cache_split_mig_1d.bpkl?raw=true"
+    simulate_args.cache2d = "https://github.com/xin-huang/dadi-cli/blob/master/tests/example_data/cache_split_mig_2d.bpkl?raw=true"
+    simulate_args.pdf1d = "lognormal"
+    simulate_args.pdf2d = "biv_lognormal"
+    simulate_args.ratio = 2.31
+    simulate_args.nomisid = False
+    simulate_args.output = "tests/test_results/main_simulate_mix_dfe_html.fs"
+
+    dadi_cli.run_simulate_dfe(simulate_args)
+    os.remove(simulate_args.output)
+
 def test_run_generate_cache():
     def generate_cache_args():
         return
@@ -102,6 +144,25 @@ def test_run_generate_cache():
     generate_cache_args.gamma_pts = 5
     generate_cache_args.additional_gammas = []
     generate_cache_args.output = "tests/test_results/test.cache.bpkl"
+    generate_cache_args.sample_sizes = [10, 10]
+    generate_cache_args.cpus = 1
+    generate_cache_args.gpus = 0
+    generate_cache_args.dimensionality = 1
+    dadi_cli.run_generate_cache(generate_cache_args)
+    os.remove(generate_cache_args.output)
+
+
+def test_run_generate_cache_html():
+    def generate_cache_args():
+        return
+    generate_cache_args.model = "split_mig_fix_T_one_s"
+    generate_cache_args.model_file = "https://raw.githubusercontent.com/xin-huang/dadi-cli/master/tests/example_data/example_models.py"
+    generate_cache_args.grids = [20, 40, 60]
+    generate_cache_args.demo_popt = "https://raw.githubusercontent.com/xin-huang/dadi-cli/master/tests/example_data/example.split_mig_fix_T.demo.params.InferDM.bestfits"
+    generate_cache_args.gamma_bounds = (1e-4, 10)
+    generate_cache_args.gamma_pts = 5
+    generate_cache_args.additional_gammas = []
+    generate_cache_args.output = "tests/test_results/test.html.cache.bpkl"
     generate_cache_args.sample_sizes = [10, 10]
     generate_cache_args.cpus = 1
     generate_cache_args.gpus = 0
@@ -151,6 +212,7 @@ def test_run_infer_no_custom_model_dm(infer_dm_args):
     pytest.maxeval = False
     pytest.inbreeding = True
     pytest.global_optimization = True
+    pytest.output_prefix += ".no_custom_model"
     dadi_cli.run_infer_dm(pytest)
     for ele in glob.glob(pytest.output_prefix+"*"):
         os.remove(ele)
@@ -186,6 +248,19 @@ def boundary_test_run_infer_dm_simple_snm(infer_dm_args):
     pytest.p0 = -1
     pytest.ubounds = None
     pytest.lbounds = None
+    dadi_cli.run_infer_dm(pytest)
+    for ele in glob.glob(pytest.output_prefix+"*"):
+        os.remove(ele)
+
+def test_run_infer_dm_html(infer_dm_args):
+    pytest.fs = "https://raw.githubusercontent.com/xin-huang/dadi-cli/master/tests/example_data/two_epoch_syn.fs"
+    pytest.model = "three_epoch_bottleneck"
+    pytest.model_file = "https://raw.githubusercontent.com/xin-huang/dadi-cli/master/tests/example_data/example_models.py"
+    pytest.bestfit_p0 = "https://raw.githubusercontent.com/xin-huang/dadi-cli/master/tests/example_data/example.bestfit.two_epoch.demo.params.InferDM.opts.0"
+    pytest.nomisid = False
+    pytest.ubounds = [10, 10, 0.999]
+    pytest.lbounds = [1e-3, 1e-3, 1e-4]
+    pytest.output_prefix += ".html"
     dadi_cli.run_infer_dm(pytest)
     for ele in glob.glob(pytest.output_prefix+"*"):
         os.remove(ele)
@@ -271,8 +346,31 @@ def test_run_infer_dfe_mix(infer_dfe_args):
     pytest.lbounds = [1e-3, 1e-3, None, 1e-3]
     pytest.constants = [None, None, 0, None]
     dadi_cli.run_infer_dfe(pytest)
-    fids = glob.glob(pytest.output_prefix+"*.opts.0")
+    fids = glob.glob(pytest.output_prefix+"*")
     print(fids)
+    opt = open(fids[-1],'r').readlines()
+    print(opt)
+    fix_check = [float(ele.split('\t')[3]) == 0.0 for ele in opt[2:]]
+    for ele in fix_check:
+        assert(ele)
+    for fi in fids:
+        os.remove(fi)
+
+def test_run_infer_dfe_mix_html(infer_dfe_args):
+    pytest.fs = "https://raw.githubusercontent.com/xin-huang/dadi-cli/master/tests/example_data/split_mig_non_2d.fs"
+    pytest.demo_popt = "https://raw.githubusercontent.com/xin-huang/dadi-cli/master/tests/example_data/example.split_mig_fix_T.demo.params.InferDM.bestfits"
+    pytest.cache1d = "https://github.com/xin-huang/dadi-cli/blob/master/tests/example_data/cache_split_mig_1d.bpkl?raw=true"
+    pytest.cache2d = "https://github.com/xin-huang/dadi-cli/blob/master/tests/example_data/cache_split_mig_2d.bpkl?raw=true"
+    pytest.bestfit_p0 = "https://raw.githubusercontent.com/xin-huang/dadi-cli/master/tests/example_data/example.split_mig.dfe.lognormal_mixture.params.with.misid.InferDFE.bestfits"
+    pytest.mix_pdf = 'mixture_lognormal'
+    pytest.output_prefix += "mix_lognormal_dfe_html"
+    pytest.nomisid = False
+    # pytest.p0 = None
+    pytest.ubounds = [10, 10, None, 0.999, 0.4]
+    pytest.lbounds = [1e-3, 1e-3, None, 1e-3, 1e-3]
+    pytest.constants = [None, None, 0, None, None]
+    dadi_cli.run_infer_dfe(pytest)
+    fids = glob.glob(pytest.output_prefix+"*")
     opt = open(fids[-1],'r').readlines()
     print(opt)
     fix_check = [float(ele.split('\t')[3]) == 0.0 for ele in opt[2:]]

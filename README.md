@@ -357,10 +357,10 @@ Users will need to edit the "dadi.auto.tfvars" to setup Terraform to connect to 
 For AWS, users need to choose the [instance_type](https://aws.amazon.com/ec2/instance-types/), the region, and the content of the public SSH Key file.
 If users want to run dadi-cli, set `run = true` and fill in the "parameters" with the dadi-cli subcommand (dadi-cli command minus `dadi-cli` portion) the user wants to run. Ex:
 ```bash
-InferDM --fs two_epoch_syn.fs --model two_epoch --p0 1 1 --ubounds 10 10 --lbounds 10e-3 10e-3 --grids 30 40 50 --output terra.two_epoch.demo.params --optimizations 2 --nomisid --email username@email.com
+InferDM --fs two_epoch_syn.fs --model two_epoch --p0 1 1 --ubounds 10 10 --lbounds 10e-3 10e-3 --grids 30 40 50 --output terra.two_epoch.demo.params --optimizations 2 --nomisid
 ```
 Users will want to include any data they will use in the "uploads" folder, which will be placed in the directory that `dadi-cli` is executed from.
-When filling in the parameters for Terraform, users can include an email to send results to with the `--email` argument. Otherwise users will need to SSH into the AWS instances Terraform launches. An easy way to SSH into the AWS instance is, from inside the "terraform" folder, to run:
+To get results, users will need to SSH into the AWS instances Terraform launches. An easy way to SSH into the AWS instance is, from inside the "terraform" folder, to run:
 ```bash
 ssh dadi@$(terraform output -raw public_ip) -i ssh-key
 ```
@@ -383,8 +383,13 @@ A step-by-step guide for getting started on Cacao can be found [here](https://do
 
 Once the user has access to Cacao, they can go to "Deployments" > "Add Deployment" > "launch a DADI OpenStack instance" and choose a region. 
 If users want the instance to automatically run dadi-cli after it launches, they will need to fill in the dadi-cli subcommand in "Parameters". There is no easy way for users to upload frequency spectrum, as such dadi-cli can read https links that contain raw text data for the frequency spectrum, ex. https://tinyurl.com/u38zv4kw.
-<!-- Users can also launch instances that run a work queue factory with or without dadi-cli, as such users can run one instance as a -->
+Users can also launch instances that run a work queue factory with or without dadi-cli, as such users can run one instance as a work queue factory and another instance running dadi-cli with work queue.
 
+Users can access results via the Cacao deployment's Webshell or Webdesktop. If users provide a public ssh-key under [credentials](https://cacao.jetstream-cloud.org/credentials), they can also ssh into the instance with:
+```
+ssh USERNAME@PUBLIC_IP -i SSHKEY
+```
+Where `USERNAME` is the username for Cacao, `PUBLIC_IP` is the public IP of the deployment, and `SSHKEY` is the file that contains the private ssh-key information paired with the public key used for the deployment.
 
 ### Simulating frequency spectrum with dadi-cli
 

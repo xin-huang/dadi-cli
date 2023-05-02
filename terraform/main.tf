@@ -100,6 +100,7 @@ locals {
     public_key = "${var.AWS.public_key}"
     workqueue_factory = var.workqueue_factory
     workqueue_password = "${var.workqueue_password}"
+    cuda = "${var.cuda}"
   }
 }
 
