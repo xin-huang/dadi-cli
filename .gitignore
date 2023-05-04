@@ -1,8 +1,9 @@
 build/*
 dadi_cli.egg-info/*
 dist/*
-examples/snakepipe/*/.snakemake/*
+examples/snakepipe/.snakemake/*
 examples/snakepipe/*/1KG.*
+examples/snakepipe/results/*
 */.DS_Store
 *__pycache__*
 .coverage
