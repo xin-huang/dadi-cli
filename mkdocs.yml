@@ -1,0 +1,41 @@
+site_name: dadi-cli
+site_url: "https://dadi-cli.readthedocs.io"
+repo_url: "https://github.com/xin-huang/dadi-cli"
+edit_uri: ""
+docs_dir: 'docs'
+theme:
+        name: "material"
+        palette:
+                primary: black
+                accent: black
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          rendering:
+            show_source: true
+      watch:
+        - dadi-cli
+markdown_extensions:
+  - extra
+  - tables
+  - fenced_code
+  - admonition
+  - codehilite
+extra_javascript:
+  - 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML'
+nav:
+- Home: 'index.md'
+- User Guide:
+        - Generating allele frequency spectra: 'userguide/fs.md'
+        - Demographic inference: 'userguide/demog.md'
+        - DFE inference: 'userguide/dfe.md'
+        - Joint DFE inference: 'userguide/jdfe.md'
+        - Statistical testing: 'userguide/stat.md'
+        - Cloud computing: 'userguide/cloud.md'
+        - Simulation: 'userguide/simulation.md'
+        - Models: 'userguide/models.md'
+        - Plotting: 'userguide/plot.md'
+- References: 'references.md'

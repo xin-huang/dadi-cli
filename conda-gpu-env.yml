@@ -1,0 +1,23 @@
+name: dadi-cli-gpu
+channels:
+  - conda-forge
+  - bioconda
+  - nvidia
+dependencies:
+  - cuda
+  - gcc
+  - gfortran
+  - gxx==11.3
+  - demes
+  - dill==0.3.4
+  - matplotlib
+  - ndcctools==7.4.3
+  - nlopt
+  - numpy
+  - pip
+  - pycuda
+  - scipy
+  - pip:
+      - dadi>2.1.0
+      - scikit-cuda
+      - .
