@@ -16,8 +16,8 @@ setup(
     long_description=README,
     long_description_content_type="text/markdown",
     url="https://github.com/xin-huang/dadi-cli",
-    author="Xin Huang",
-    author_email="xinhuang.res@gmail.com",
+    author="Xin Huang; Travis J. Struck; Sean W. Davey; Ryan N. Gutenkunst",
+    author_email="xinhuang.res@gmail.com; rgutenk@arizona.edu",
     license="Apache-2.0",
     classifiers=[
         "License :: OSI Approved :: Apache Software License",
