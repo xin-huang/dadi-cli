@@ -462,8 +462,6 @@ def test_plot_args():
     pdf2d = "biv_lognormal"
     nomisid = True
     output = "tests/test_results/plot_cli_test.png"
-    mut_rate = 1.8e-8
-    seq_len = 38157840
     projections = [10, 10]
     resid_range = 3
     vmin = 1e-5
@@ -493,10 +491,6 @@ def test_plot_args():
             "--nomisid",
             "--output",
             output,
-            "--mut-rate",
-            str(mut_rate),
-            "--seq-len",
-            str(seq_len),
             "--projections",
             "10", "10",
             "--resid-range",
@@ -519,8 +513,6 @@ def test_plot_args():
     assert args.pdf2d == pdf2d
     assert args.nomisid == nomisid
     assert args.output == output
-    assert args.mut_rate == mut_rate
-    assert args.seq_len == seq_len
     assert args.projections == projections
     assert args.resid_range == resid_range
     assert args.vmin == vmin

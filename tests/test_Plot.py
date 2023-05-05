@@ -164,10 +164,7 @@ def test_plot_fitted_dfe(files):
 
 def test_plot_mut_prop(files):
     plot_mut_prop(
+        pdf='lognormal',
         dfe_popt=pytest.fs2d_dfe_popt,
-        nomisid=True,
-        mut_rate=1.8e-8,
-        seq_len=38157840,
-        ratio=2.31,
         output="tests/test_results/plot_mut_prop.png",
     )

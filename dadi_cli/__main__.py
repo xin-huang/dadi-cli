@@ -865,15 +865,9 @@ def run_plot(args):
     )
 
     if args.fs == None:
-        if args.ratio == False:
-            raise Exception("Need to pass value to --ratio option")
         plot_mut_prop(
+            pdf=args.pdf1d,
             dfe_popt=args.dfe_popt,
-            pdf1d=args.pdf1d,
-            nomisid=args.nomisid,
-            mut_rate=args.mut_rate,
-            seq_len=args.seq_len,
-            ratio=args.ratio,
             output=args.output,
         )
     elif args.dfe_popt != None:
@@ -1477,7 +1471,11 @@ def dadi_cli_parser():
     parser.set_defaults(runner=run_infer_dfe)
 
     parser = subparsers.add_parser("Plot", help="Plot 1D/2D frequency spectrum.")
-    add_fs_argument(parser)
+    parser.add_argument(
+        "--fs",
+        type=str,
+        help="Frequency spectrum of mutations used for inference. To generate the frequency spectrum, please use `dadi-cli GenerateFs`. Can be an HTML link.",
+    )
     parser.add_argument(
         "--fs2",
         type=str,
@@ -1488,18 +1486,6 @@ def dadi_cli_parser():
     add_dfe_argument(parser)
     add_misid_argument(parser)
     add_output_argument(parser)
-    parser.add_argument(
-        "--mut-rate",
-        type=float,
-        dest="mut_rate",
-        help="Mutation rate for estimating the ancestral population size.",
-    )
-    parser.add_argument(
-        "--seq-len",
-        type=int,
-        dest="seq_len",
-        help="Sequence length for estimating the ancestral population size.",
-    )
     parser.add_argument(
         "--projections", type=int, nargs="+", help="Sample sizes after projection."
     )
