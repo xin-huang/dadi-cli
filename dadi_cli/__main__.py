@@ -808,12 +808,8 @@ def run_plot(args):
         if args.ratio == False:
             raise Exception("Need to pass value to --ratio option")
         plot_mut_prop(
+            pdf=args.pdf1d,
             dfe_popt=args.dfe_popt,
-            pdf1d=args.pdf1d,
-            nomisid=args.nomisid,
-            mut_rate=args.mut_rate,
-            seq_len=args.seq_len,
-            ratio=args.ratio,
             output=args.output,
         )
     elif args.dfe_popt != None:
