@@ -9,8 +9,15 @@ variable "AWS" {
 
 variable "dadi_cli" {
   type = object({
-    run        = bool,
-    parameters = string,
+    run           = bool,
+    use_workqueue = bool,
+    parameters    = string,
+  })
+}
+
+variable "cuda" {
+  type = object({
+    gpus = string
   })
 }
 

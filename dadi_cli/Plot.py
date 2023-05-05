@@ -194,50 +194,48 @@ def plot_fitted_dfe(
     fig.savefig(output)
 
 
-def plot_mut_prop(dfe_popt, nomisid, mut_rate, seq_len, ratio, output):
+def plot_mut_prop(pdf, dfe_popt, output):
     """
     Description:
-        Plots proportions of mutations with different selection coefficients given a DFE.
+        Plots proportions of mutations with different selection coefficients given a DFE in 2Ns unit.
 
     Arguments:
+        pdf: Type of the probability distribution for the best-fit DFE.
         dfe_popt str: Name of the file containing the best-fit DFE parameters.
-        nomisid bool: If False, add a parameter for modeling ancestral state misidentification when data are polarized.
-        mut_rate float: Mutation rate per base.
-        seq_len float: Sequence length.
-        ratio float: Ratio of synonymous to non-synonymous mutations.
         output str: Name of the output file.
     """
+    from scipy import stats
+
     dfe_params, theta = get_opts_and_theta(dfe_popt)
 
-    Na = theta / (4 * mut_rate * seq_len * (ratio / (1 + ratio)))
-
-    def mut_prop(shape, scale, Na):
-        from scipy import stats
-
-        scale = scale / (2 * Na)
-        p1 = stats.gamma.cdf(1e-5, a=shape, scale=scale)
-        p2 = stats.gamma.cdf(1e-4, a=shape, scale=scale)
-        p3 = stats.gamma.cdf(1e-3, a=shape, scale=scale)
-        p4 = stats.gamma.cdf(1e-2, a=shape, scale=scale)
-
-        return p1, p2 - p1, p3 - p2, p4 - p3, 1 - p4
-
-    props = mut_prop(dfe_params[0], dfe_params[1], Na)
-
+    if pdf == 'beta':
+        ps = stats.beta.cdf([1, 10, 100], dfe_params[0], dfe_params[1])
+    elif pdf == 'exponential':
+        ps = stats.expon.cdf([1, 10, 100], scale=dfe_params[0])
+    elif pdf == 'gamma':
+        ps = stats.gamma.cdf([1, 10, 100], dfe_params[0], scale=dfe_params[1])
+    elif pdf == 'lognormal':
+        ps = stats.lognorm.cdf([1, 10, 100], dfe_params[1], scale=np.exp(dfe_params[0]))
+    elif pdf == 'normal':
+        ps = stats.norm.cdf([1, 10, 100], loc=dfe_params[0], scale=dfe_params[1])
+    else:
+        raise Exception(f'The {pdf} distribution is NOT supported!')
+    
+    props = [ps[0], ps[1]-ps[0], ps[2]-ps[1], 1-ps[2]]
+    
     fig = plt.figure(219033)
-    plt.bar([0, 1, 2, 3, 4], props, alpha=0.7)
+    plt.bar([0, 1, 2, 3], props, alpha=0.7)
     plt.ylabel("Proportion")
-    plt.xlabel("Selection coefficient")
+    plt.xlabel("2N|s|")
     plt.xticks(
-        [0, 1, 2, 3, 4],
+        [0, 1, 2, 3],
         [
-            "0<=|s|<1e-5",
-            "1e-5<=|s|<1e-4",
-            "1e-4<=|s|<1e-3",
-            "1e-3<=|s|<1e-2",
-            "1e-2<=|s|",
+            "<1",
+            "1–10",
+            "10–100",
+            ">100",
         ],
-        rotation=45,
     )
     plt.grid(alpha=0.3)
+
     fig.savefig(output, bbox_inches="tight")

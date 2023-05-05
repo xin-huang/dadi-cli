@@ -59,13 +59,24 @@ def run_generate_fs(args):
 def run_generate_cache(args):
     if args.model_file is None and args.model not in [m[0] for m in getmembers(DFE.DemogSelModels, isfunction)]:
         raise ValueError(f"{args.model} is not in dadi.DFE.DemogSelModels, did you mean to include _sel or _single_sel in the model name or specify a --model-file?")
+
     if args.model_file is not None:
         if "://" in args.model_file:
+            import urllib.request
             model_fi = open("dadi_models.py","w")
             with urllib.request.urlopen(args.model_file) as f:
                 model_fi.write(f.read().decode('utf-8'))
             model_fi.close()
             args.model_file = "dadi_models"
+
+    if "://" in args.demo_popt:
+        import urllib.request
+        popt_fi = open("demo-popt.bestfits","w")
+        with urllib.request.urlopen(args.demo_popt) as f:
+            popt_fi.write(f.read().decode('utf-8'))
+        popt_fi.close()
+        args.demo_popt = "demo-popt.bestfits"
+
     func, _ = get_model(args.model, args.model_file)
     generate_cache(
         func=func,
@@ -88,6 +99,7 @@ def run_simulate_dm(args):
     args.misid = not args.nomisid
     if args.model_file is not None:
         if "://" in args.model_file:
+            import urllib.request
             model_fi = open("dadi_models.py","w")
             with urllib.request.urlopen(args.model_file) as f:
                 model_fi.write(f.read().decode('utf-8'))
@@ -111,11 +123,20 @@ def run_simulate_dfe(args):
     import pickle
 
     if args.cache1d != None:
-        cache1d = pickle.load(open(args.cache1d, "rb"))
+        if "://" in args.cache1d:
+            from urllib.request import urlopen
+            cache1d = pickle.load(urlopen(args.cache1d))
+        else:
+            cache1d = pickle.load(open(args.cache1d, "rb"))
     else:
         cache1d = args.cache1d
+
     if args.cache2d != None:
-        cache2d = pickle.load(open(args.cache2d, "rb"))
+        if "://" in args.cache2d:
+            from urllib.request import urlopen
+            cache2d = pickle.load(urlopen(args.cache2d))
+        else:
+            cache2d = pickle.load(open(args.cache2d, "rb"))
     else:
         cache2d = args.cache2d
 
@@ -136,7 +157,13 @@ def run_simulate_dfe(args):
 
 def run_simulate_demes(args):
     from dadi_cli.SimulateFs import simulate_demes
-
+    if "://" in args.demes_file:
+        import urllib.request
+        model_fi = open("demes_file.yml","w")
+        with urllib.request.urlopen(args.demes_file) as f:
+            model_fi.write(f.read().decode('utf-8'))
+        model_fi.close()
+        args.demes_file = "demes_file.yml"
     simulate_demes(args.demes_file, args.sample_sizes, args.grids, args.pop_ids, args.output)
 
 
@@ -393,6 +420,13 @@ def run_infer_dm(args):
 
         # Check if we can get a list of top fits
         if args.bestfit_p0 is not None: 
+            if "://" in args.bestfit_p0:
+                import urllib.request
+                best_fi = open("bestfits_file.bestfits","w")
+                with urllib.request.urlopen(args.bestfit_p0) as f:
+                    best_fi.write(f.read().decode('utf-8'))
+                best_fi.close()
+                args.bestfit_p0 = "bestfits_file.bestfits"
             bestfits = _top_opts(args.bestfit_p0)
             # args.p0 = bestfits[np.random.randint(len(bestfits)%10)]
         else:
@@ -534,18 +568,36 @@ def run_infer_dfe(args):
 
     from dadi_cli.utilities import get_opts_and_theta
 
+    if "://" in args.demo_popt:
+        import urllib.request
+        popt_fi = open("demo-popt.bestfits","w")
+        with urllib.request.urlopen(args.demo_popt) as f:
+            popt_fi.write(f.read().decode('utf-8'))
+        popt_fi.close()
+        args.demo_popt = "demo-popt.bestfits"
+
     _, theta = get_opts_and_theta(args.demo_popt)
     theta *= args.ratio
 
     import pickle
 
+
     if args.cache1d != None:
-        cache1d = pickle.load(open(args.cache1d, "rb"))
+        if "://" in args.cache1d:
+            from urllib.request import urlopen
+            cache1d = pickle.load(urlopen(args.cache1d))
+        else:
+            cache1d = pickle.load(open(args.cache1d, "rb"))
         cache_ns = cache1d.ns
     else:
         cache1d = args.cache1d
+
     if args.cache2d != None:
-        cache2d = pickle.load(open(args.cache2d, "rb"))
+        if "://" in args.cache2d:
+            from urllib.request import urlopen
+            cache2d = pickle.load(urlopen(args.cache2d))
+        else:
+            cache2d = pickle.load(open(args.cache2d, "rb"))
         cache_ns = cache2d.ns
     else:
         cache2d = args.cache2d
@@ -600,6 +652,13 @@ def run_infer_dfe(args):
 
         # Check if we can get a list of top fits
         if args.bestfit_p0 is not None: 
+            if "://" in args.bestfit_p0:
+                import urllib.request
+                best_fi = open("bestfits_file.bestfits","w")
+                with urllib.request.urlopen(args.bestfit_p0) as f:
+                    best_fi.write(f.read().decode('utf-8'))
+                best_fi.close()
+                args.bestfit_p0 = "bestfits_file.bestfits"
             bestfits = _top_opts(args.bestfit_p0)
         else:
             bestfits = None
@@ -754,6 +813,7 @@ def run_stat_demography(args):
 
     if args.model_file is not None:
         if "://" in args.model_file:
+            import urllib.request
             model_fi = open("dadi_models.py","w")
             with urllib.request.urlopen(args.model_file) as f:
                 model_fi.write(f.read().decode('utf-8'))
@@ -805,15 +865,9 @@ def run_plot(args):
     )
 
     if args.fs == None:
-        if args.ratio == False:
-            raise Exception("Need to pass value to --ratio option")
         plot_mut_prop(
+            pdf=args.pdf1d,
             dfe_popt=args.dfe_popt,
-            pdf1d=args.pdf1d,
-            nomisid=args.nomisid,
-            mut_rate=args.mut_rate,
-            seq_len=args.seq_len,
-            ratio=args.ratio,
             output=args.output,
         )
     elif args.dfe_popt != None:
@@ -835,6 +889,7 @@ def run_plot(args):
             raise ValueError("--model is missing")
         if args.model_file is not None:
             if "://" in args.model_file:
+                import urllib.request
                 model_fi = open("dadi_models.py","w")
                 with urllib.request.urlopen(args.model_file) as f:
                     model_fi.write(f.read().decode('utf-8'))
@@ -1416,7 +1471,11 @@ def dadi_cli_parser():
     parser.set_defaults(runner=run_infer_dfe)
 
     parser = subparsers.add_parser("Plot", help="Plot 1D/2D frequency spectrum.")
-    add_fs_argument(parser)
+    parser.add_argument(
+        "--fs",
+        type=str,
+        help="Frequency spectrum of mutations used for inference. To generate the frequency spectrum, please use `dadi-cli GenerateFs`. Can be an HTML link.",
+    )
     parser.add_argument(
         "--fs2",
         type=str,
@@ -1427,18 +1486,6 @@ def dadi_cli_parser():
     add_dfe_argument(parser)
     add_misid_argument(parser)
     add_output_argument(parser)
-    parser.add_argument(
-        "--mut-rate",
-        type=float,
-        dest="mut_rate",
-        help="Mutation rate for estimating the ancestral population size.",
-    )
-    parser.add_argument(
-        "--seq-len",
-        type=int,
-        dest="seq_len",
-        help="Sequence length for estimating the ancestral population size.",
-    )
     parser.add_argument(
         "--projections", type=int, nargs="+", help="Sample sizes after projection."
     )
