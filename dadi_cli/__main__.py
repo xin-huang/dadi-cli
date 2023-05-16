@@ -1,4 +1,4 @@
-import argparse, glob, os.path, sys, signal
+import argparse, glob, os.path, sys, signal, warnings
 import numpy as np
 import random
 import dadi
@@ -268,7 +268,7 @@ def run_infer_dm(args):
 
     if args.global_optimization:
         if inbreeding:
-            print("Warning: can't down project inbreeding data for global optimization")
+            warnings.warn("Warning: can't down project inbreeding data for global optimization\n")
         else:
             existing_files = glob.glob(args.output_prefix + ".global.InferDM.opts.*")
             try:
@@ -399,9 +399,10 @@ def run_infer_dm(args):
                     output=args.output_prefix + ".global.InferDM.bestfits",
                     delta=args.delta_ll,
                 )
-                if result is not None:
-                    args.force_convergence = False
-                    break
+                # # Place holder if we want check convergence for global optimization
+                # if result is not None:
+                #     args.force_convergence = False
+                #     break
             if not args.work_queue:
                 # Stop the workers
                 for worker in workers:
@@ -413,7 +414,17 @@ def run_infer_dm(args):
                 args.output_prefix + ".global.InferDM.bestfits"
             )
 
+    # Keep track of number of optimizations before checking convergence
+    num_opts = 0
+
+    # Keep track when optimization happens with force-convergence
     converged = False
+
+    # Raise warning if --check-convergence larger than --optimizations
+    # This isn't required for --force-convergence, as it optimizes until convergence occures.
+    if args.optimizations < args.check_convergence:
+        warnings.warn("WARNING: Number of optimizations is less than the number requested before checking convergence. Convergence will not be checked. \n" +
+            "Note: if using --global-optimization, ~25% of requested optimizations are used for the gloabal optimization.\n")
     while not converged:
         if not args.force_convergence:
             converged = True
@@ -494,8 +505,7 @@ def run_infer_dm(args):
 
         # Collect and process results
         from dadi_cli.BestFit import get_bestfit_params
-        # Keep track of number of optimizations before checking convergence
-        num_opts = 0
+
         for _ in range(args.optimizations):
             if args.work_queue:
                 result = q.wait().output
@@ -523,8 +533,9 @@ def run_infer_dm(args):
                     delta=args.delta_ll,
                 )
                 if result is not None:
-                    args.force_convergence = False
+                    converged = True
                     break
+
         if not args.work_queue:
             # Stop the workers
             for worker in workers:
@@ -647,7 +658,18 @@ def run_infer_dfe(args):
 
     np.random.seed(args.seed)
 
+    # Keep track of number of optimizations before checking convergence
+    num_opts = 0
+
+    # Keep track when optimization happens with force-convergence
     converged = False
+
+    # Raise warning if --check-convergence larger than --optimizations
+    # This isn't required for --force-convergence, as it optimizes until convergence occures.
+    if args.optimizations < args.check_convergence:
+        warnings.warn("WARNING: Number of optimizations is less than the number requested before checking convergence. Convergence will not be checked. \n" +
+            "Note: if using --global-optimization, ~25% of requested optimizations are used for the gloabal optimization.\n")
+
     while not converged:
         if not args.force_convergence:
             converged = True
@@ -764,9 +786,7 @@ def run_infer_dfe(args):
                     independent_selection = False
                 else:
                     independent_selection = True
-        
-        # Keep track of number of optimizations before checking convergence
-        num_opts = 0
+
         for _ in range(args.optimizations):
             if args.work_queue:
                 result = q.wait().output
