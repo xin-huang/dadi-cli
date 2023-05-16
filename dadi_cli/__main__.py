@@ -1,4 +1,4 @@
-import argparse, glob, os.path, sys, signal
+import argparse, glob, os.path, sys, signal, warnings
 import numpy as np
 import random
 import dadi
@@ -268,7 +268,7 @@ def run_infer_dm(args):
 
     if args.global_optimization:
         if inbreeding:
-            print("Warning: can't down project inbreeding data for global optimization")
+            warnings.warn("Warning: can't down project inbreeding data for global optimization\n")
         else:
             existing_files = glob.glob(args.output_prefix + ".global.InferDM.opts.*")
             try:
@@ -399,9 +399,10 @@ def run_infer_dm(args):
                     output=args.output_prefix + ".global.InferDM.bestfits",
                     delta=args.delta_ll,
                 )
-                if result is not None:
-                    args.force_convergence = False
-                    break
+                # # Place holder if we want check convergence for global optimization
+                # if result is not None:
+                #     args.force_convergence = False
+                #     break
             if not args.work_queue:
                 # Stop the workers
                 for worker in workers:
@@ -413,7 +414,17 @@ def run_infer_dm(args):
                 args.output_prefix + ".global.InferDM.bestfits"
             )
 
+    # Keep track of number of optimizations before checking convergence
+    num_opts = 0
+
+    # Keep track when optimization happens with force-convergence
     converged = False
+
+    # Raise warning if --check-convergence larger than --optimizations
+    # This isn't required for --force-convergence, as it optimizes until convergence occures.
+    if args.optimizations < args.check_convergence:
+        warnings.warn("WARNING: Number of optimizations is less than the number requested before checking convergence. Convergence will not be checked. \n" +
+            "Note: if using --global-optimization, ~25% of requested optimizations are used for the gloabal optimization.\n")
     while not converged:
         if not args.force_convergence:
             converged = True
@@ -500,6 +511,7 @@ def run_infer_dm(args):
                 result = q.wait().output
             else:
                 result = out_queue.get()
+            num_opts += 1
             # Write latest result to file
             # Check that the log-likelihood is not a weird value
             if result[0] in [np.ma.core.MaskedConstant, np.inf]:
@@ -511,7 +523,7 @@ def run_infer_dm(args):
                 )
             )
             fid.flush()
-            if args.check_convergence or args.force_convergence:
+            if (args.check_convergence or args.force_convergence) and num_opts >= (args.check_convergence or args.force_convergence):
                 results_file = args.output_prefix + ".InferDM.bestfits"
                 result = get_bestfit_params(
                     path=args.output_prefix + ".InferDM.opts.*",
@@ -521,8 +533,9 @@ def run_infer_dm(args):
                     delta=args.delta_ll,
                 )
                 if result is not None:
-                    args.force_convergence = False
+                    converged = True
                     break
+
         if not args.work_queue:
             # Stop the workers
             for worker in workers:
@@ -645,7 +658,18 @@ def run_infer_dfe(args):
 
     np.random.seed(args.seed)
 
+    # Keep track of number of optimizations before checking convergence
+    num_opts = 0
+
+    # Keep track when optimization happens with force-convergence
     converged = False
+
+    # Raise warning if --check-convergence larger than --optimizations
+    # This isn't required for --force-convergence, as it optimizes until convergence occures.
+    if args.optimizations < args.check_convergence:
+        warnings.warn("WARNING: Number of optimizations is less than the number requested before checking convergence. Convergence will not be checked. \n" +
+            "Note: if using --global-optimization, ~25% of requested optimizations are used for the gloabal optimization.\n")
+
     while not converged:
         if not args.force_convergence:
             converged = True
@@ -762,11 +786,13 @@ def run_infer_dfe(args):
                     independent_selection = False
                 else:
                     independent_selection = True
+
         for _ in range(args.optimizations):
             if args.work_queue:
                 result = q.wait().output
             else:
                 result = out_queue.get()
+            num_opts += 1
             # Write latest result to file
             # Check that the log-likelihood is not a weird value
             # print('\n\n\n\n\n\nCACHE LL:',float(result[0]),'\n\n\n\n\n')
@@ -778,7 +804,7 @@ def run_infer_dfe(args):
                 )
             )
             fid.flush()
-            if args.check_convergence or args.force_convergence:
+            if (args.check_convergence or args.force_convergence) and num_opts >= (args.check_convergence or args.force_convergence):
                 results_file = args.output_prefix + ".InferDFE.bestfits"
                 result = get_bestfit_params(
                     path=args.output_prefix + ".InferDFE.opts.*",
@@ -1140,17 +1166,17 @@ def add_inference_argument(parser):
     )
     parser.add_argument(
         "--check-convergence",
-        default=False,
-        action="store_true",
+        default=0,
+        type=_check_positive_int,
         dest="check_convergence",
-        help="Stop optimization runs when convergence criteria are reached. BestFit results file will be call <output_prefix>.InferDM.bestfits. Default: False.",
+        help="Start checking for convergence after a chosen number of optimizations. Stop optimization runs when convergence criteria are reached. BestFit results file will be call <output_prefix>.InferDM.bestfits. Convergence not checked by default.",
     )
     parser.add_argument(
         "--force-convergence",
-        default=False,
-        action="store_true",
+        default=0,
+        type=_check_positive_int,
         dest="force_convergence",
-        help="Only stop optimization once convergence criteria is reached. BestFit results file will be call <output_prefix>.InferDM.bestfits. Default: False.",
+        help="Start checking for convergence after a chosen number of optimizations. Only stop optimization once convergence criteria is reached. BestFit results file will be call <output_prefix>.InferDM.bestfits. Convergence not checked by default.",
     )
     parser.add_argument(
         "--work-queue",
