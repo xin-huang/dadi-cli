@@ -255,8 +255,8 @@ def test_infer_dm_args(model, model_file, nomisid):
             output_prefix,
             "--optimizations",
             str(optimizations),
-            "--check-convergence",
-            "--force-convergence",
+            "--check-convergence", "5",
+            "--force-convergence", "5",
             "--work-queue",
             "cli-test", "tests/mypwfile",
             "--debug-wq",
@@ -290,8 +290,8 @@ def test_infer_dm_args(model, model_file, nomisid):
     assert args.p0 == p0
     assert args.output_prefix == output_prefix
     assert args.optimizations == optimizations
-    assert args.check_convergence == True
-    assert args.force_convergence == True
+    assert args.check_convergence == 5
+    assert args.force_convergence == 5
     assert args.work_queue == ["cli-test", "tests/mypwfile"]
     assert args.debug_wq == True
     assert args.maxeval == maxeval
@@ -374,8 +374,8 @@ def test_infer_dfe_args():
             output_prefix,
             "--optimizations",
             str(optimizations),
-            "--check-convergence",
-            "--force-convergence",
+            "--check-convergence", "3",
+            "--force-convergence", "3",
             "--work-queue",
             "cli-dfe-test", "tests/mypwfile",
             "--debug-wq",
@@ -407,8 +407,8 @@ def test_infer_dfe_args():
     assert args.p0 == p0
     assert args.output_prefix == output_prefix
     assert args.optimizations == optimizations
-    assert args.check_convergence == True
-    assert args.force_convergence == True
+    assert args.check_convergence == 3
+    assert args.force_convergence == 3
     assert args.work_queue == ["cli-dfe-test", "tests/mypwfile"]
     assert args.debug_wq == True
     assert args.maxeval == maxeval

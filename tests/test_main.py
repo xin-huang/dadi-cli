@@ -176,17 +176,17 @@ def infer_dm_args():
     pytest.model = "three_epoch_bottleneck"
     pytest.model_file = "tests/example_data/example_models"
     pytest.p0 = [1, 0.5]
-    pytest.grids = [120, 140, 160]
+    pytest.grids = [30, 40, 50]
     pytest.ubounds = [10, 10]
     pytest.lbounds = [1e-3, 1e-3]
     pytest.constants = -1
     pytest.nomisid = True
     pytest.cuda = False
-    pytest.maxeval = 10
-    pytest.maxtime = 10
+    pytest.maxeval = 200
+    pytest.maxtime = 200
     pytest.output_prefix = "tests/test_results/main.test.two_epoch.demo.params"
-    pytest.check_convergence = True
-    pytest.force_convergence = False
+    pytest.check_convergence = 1
+    pytest.force_convergence = 0
     pytest.work_queue = []
     pytest.debug_wq = False
     pytest.cpus = 1
@@ -199,6 +199,36 @@ def infer_dm_args():
 
 def test_run_infer_dm(infer_dm_args):
     dadi_cli.run_infer_dm(pytest)
+    for ele in glob.glob(pytest.output_prefix+"*"):
+        os.remove(ele)
+
+@pytest.mark.parametrize("check_convergence, force_convergence, optimizations",
+                        [
+                        (10, 0, 5),
+                        (0, 15, 5)
+                         ]
+                         )
+def test_run_infer_dm_convergence(check_convergence, force_convergence, optimizations, infer_dm_args, recwarn):
+    pytest.model = "two_epoch"
+    pytest.model_file = None
+    pytest.check_convergence = check_convergence
+    pytest.force_convergence = force_convergence
+    pytest.optimizations = optimizations
+    pytest.output_prefix += ".convergence_update"
+
+    dadi_cli.run_infer_dm(pytest)
+
+    if check_convergence > optimizations:
+        w = recwarn.pop(UserWarning)
+        assert str(w.message) == "WARNING: Number of optimizations is less than the number requested before checking convergence. Convergence will not be checked. \n" +\
+            "Note: if using --global-optimization, ~25% of requested optimizations are used for the gloabal optimization.\n"
+        # + 2 for the commented out lines
+        assert len(open(pytest.output_prefix+".InferDM.opts.0", "r").readlines()) == optimizations + 2
+
+    if force_convergence > 0:
+        # + 2 for the commented out lines
+        assert len(open(pytest.output_prefix+".InferDM.opts.0", "r").readlines()) >= force_convergence + 2
+
     for ele in glob.glob(pytest.output_prefix+"*"):
         os.remove(ele)
 
@@ -290,8 +320,8 @@ def infer_dfe_args():
     pytest.maxeval = 100
     pytest.maxtime = 300
     pytest.output_prefix = "tests/test_results/main.test.split_mig_fix_T."
-    pytest.check_convergence = True
-    pytest.force_convergence = False
+    pytest.check_convergence = 1
+    pytest.force_convergence = 0
     pytest.cpus = 1
     pytest.gpus = 0
     pytest.optimizations = 3
@@ -312,6 +342,41 @@ def test_run_infer_dfe_1d(infer_dfe_args):
     dadi_cli.run_infer_dfe(pytest)
     for ele in glob.glob(pytest.output_prefix+"*"):
         os.remove(ele)
+
+
+@pytest.mark.parametrize("check_convergence, force_convergence, optimizations",
+                        [
+                        (10, 0, 5),
+                        (0, 15, 5)
+                         ]
+                         )
+def test_run_infer_dfe_convergence(check_convergence, force_convergence, optimizations, infer_dfe_args, recwarn):
+    pytest.fs = pytest.fs_1d_lognorm
+    pytest.pdf2d = None
+    pytest.cache2d = None
+    pytest.mix_pdf = None
+
+    pytest.check_convergence = check_convergence
+    pytest.force_convergence = force_convergence
+    pytest.optimizations = optimizations
+    pytest.output_prefix += "1d_lognormal_dfe.convergence_update"
+
+    dadi_cli.run_infer_dfe(pytest)
+
+    if check_convergence > optimizations:
+        w = recwarn.pop(UserWarning)
+        assert str(w.message) == "WARNING: Number of optimizations is less than the number requested before checking convergence. Convergence will not be checked. \n" +\
+            "Note: if using --global-optimization, ~25% of requested optimizations are used for the gloabal optimization.\n"
+        # + 2 for the commented out lines
+        assert len(open(pytest.output_prefix+".InferDFE.opts.0", "r").readlines()) == optimizations + 2
+
+    if force_convergence > 0:
+        # + 2 for the commented out lines
+        assert len(open(pytest.output_prefix+".InferDFE.opts.0", "r").readlines()) >= force_convergence + 2
+
+    for ele in glob.glob(pytest.output_prefix+"*"):
+        os.remove(ele)
+
 
 def test_run_infer_dfe_1d_gamma(infer_dfe_args):
     pytest.fs = pytest.fs_1d_lognorm
