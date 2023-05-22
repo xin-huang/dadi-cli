@@ -19,7 +19,7 @@ dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfold.f
 To compare frequency spectra between a demographic model without selection and data, users will need a file from inferring the demography, `--demo-popt`, and the `--model` inferred:
 
 ```         
-dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfold.fs --demo-popt ./examples/results/demo/1KG.YRI.CEU.20.split_mig.demo.params.InferDM.bestfits --output ./examples/results/plots/1KG.YRI.CEU.20.synonymous.snps.vs.split_mig.pdf --model split_mig
+dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfold.fs --demo-popt ./examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits --output ./examples/results/plots/1KG.YRI.CEU.20.synonymous.snps.vs.split_mig.pdf --model split_mig
 ```
 
 To compare frequency spectra between a demographic model with selection and data, users will need the `--dfe-popt` file from inferring the DFE, the cache(s), `--cache1d` and/or `--cache2d`, and the PDF(s), `--pdf1d` and/or `--pdf2d`.
