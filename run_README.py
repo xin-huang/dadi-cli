@@ -8,7 +8,7 @@
 #SBATCH --ntasks=4
 #SBATCH --time=24:00:00
 
-import os, shutil, subprocess, time 
+import os, shutil, subprocess, time, glob
 
 try:
     shutil.rmtree('examples/results')
@@ -18,28 +18,37 @@ except FileNotFoundError:
 for dir in ['examples/results/fs',
             'examples/results/fs/bootstrapping_syn',
             'examples/results/fs/bootstrapping_non',
-            'examples/results/demo',
+            'examples/results/demog',
             'examples/results/caches',
             'examples/results/dfe',
             'examples/results/plots',
             'examples/results/stat']:
     os.makedirs(dir)
 
-with open('README.md', 'r') as fid:
-    for line in fid.readlines():
-        # Skip lines that aren't dadi-cli commands
-        # Note that we assume all dadi-cli commands are indented by 4 spaces
-        if not line.startswith('    dadi-cli'):
-            continue
-        # Skip work_queue commands
-        if 'work_queue' in line:
-            continue
+for module in ["docs/userguide/fs.md",
+               "docs/userguide/demog.md",
+               "docs/userguide/dfe.md",
+               "docs/userguide/jdfe.md",
+               "docs/userguide/models.md",
+               "docs/userguide/stat.md",
+               "docs/userguide/cloud.md",
+               "docs/userguide/plot.md",
+               "docs/userguide/simulation.md"]:
+    with open(module, 'r') as fid:
+        for line in fid.readlines():
+            # Skip lines that aren't dadi-cli commands
+            # Note that all dadi-cli commands do not have `` around dadi-cli
+            if not line.startswith('dadi-cli'):
+                continue
+            # Skip work_queue commands
+            if 'work_queue' in line:
+                continue
 
-        # Execute the dadi-cli line
-        start_t = time.time()
-        subprocess.run(line.strip(), check=True, shell=True)
-        end_t = time.time()
+            # Execute the dadi-cli line
+            start_t = time.time()
+            subprocess.run(line.strip(), check=True, shell=True)
+            end_t = time.time()
 
-        print('*'*80)
-        print('{0:.1f}s for command: {1}'.format(end_t-start_t, line.strip()))
-        print('*'*80)
+            print('*'*80)
+            print('{0:.1f}s for command: {1}'.format(end_t-start_t, line.strip()))
+            print('*'*80)
