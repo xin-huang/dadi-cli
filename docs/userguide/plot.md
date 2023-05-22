@@ -5,9 +5,9 @@
 To plot frequency spectrum from data, users can use
 
 ```         
-dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfold.fs --output ./examples/results/plots/1KG.YRI.CEU.20.synonymous.snps.unfold.fs.pdf --model split_mig
+dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfold.fs --output ./examples/results/plots/1KG.YRI.CEU.20.synonymous.snps.unfold.fs.pdf
 
-dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.20.nonsynonymous.snps.unfold.fs --output ./examples/results/plots/1KG.YRI.CEU.20.nonsynonymous.snps.unfold.fs.pdf --model split_mig
+dadi-cli Plot --fs ./examples/results/fs/1KG.YRI.CEU.20.nonsynonymous.snps.unfold.fs --output ./examples/results/plots/1KG.YRI.CEU.20.nonsynonymous.snps.unfold.fs.pdf
 ```
 
 To compare two frequency spectra from data, users can use
