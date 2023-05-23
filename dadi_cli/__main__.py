@@ -1612,7 +1612,20 @@ def dadi_cli_parser():
         dest="input_prefix",
         help='Prefix for input files, which is named <input-prefix ending with ".InferDM">.opts.<N> or <input-prefix ending with "InferDFE">.opts.<N>, containing the inferred demographic or DFE parameters.',
     )
-    add_bounds_argument(parser)
+    parser.add_argument(
+        "--lbounds",
+        type=float,
+        nargs="+",
+        required=False,
+        help="Lower bounds of the optimized parameters.",
+    )
+    parser.add_argument(
+        "--ubounds",
+        type=float,
+        nargs="+",
+        required=False,
+        help="Upper bounds of the optimized parameters.",
+    )
     add_delta_ll_argument(parser)
     parser.set_defaults(runner=run_bestfit)
 
