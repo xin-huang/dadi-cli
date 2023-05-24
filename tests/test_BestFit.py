@@ -2,6 +2,7 @@ import pytest
 import subprocess
 from dadi_cli import BestFit
 import os
+import numpy as np
 
 try:
     if not os.path.exists("./tests/test_results"):
@@ -18,7 +19,14 @@ def files():
     pytest.example_output = (
         "./tests/test_results/example.bestfit.two_epoch.demo.params.InferDM.bestfits"
     )
-
+    pytest.res = np.array([
+        [-np.inf, 10, 10, 10, np.inf],
+        [-np.inf, 5, 5, 5, np.inf],
+        [-np.inf, 1, 1, 1, np.inf]
+        ])
+#     pytest.res = BestFit.get_bestfit_params("./tests/example_data/example.bestfit.two_epoch.demo.params.InferDM.opts.0", 
+#         None, None, "./tests/test_results/not_used", 0.00001)
+# os.remove("./tests/test_results/not_used")
 
 @pytest.mark.skip()
 def test_BestFit(capsys):
@@ -84,3 +92,31 @@ def test_opt_params_converged():
 
 def test_close2boundaries():
     pass
+
+@pytest.mark.parametrize("test_type, ubounds, lbounds",
+                        [
+                        ("normal_all", [15, 15, 15], [1e-3, 1e-3, 1e-3]),
+                        ("normal_upper", [7, 7, 7], [1e-3, 1e-3, 1e-3]),
+                        ("normal_lower", [15, 15, 15], [3, 3, 3]),
+                        ("bound_error", [15, 15], [1e-3, 1e-3, 1e-3]),
+                        ("res_error", [15, 15], [1e-3, 1e-3]),
+                         ]
+                         )
+def test_boundary_filter(files, test_type, ubounds, lbounds):
+    if "normal" not in test_type:
+        with pytest.raises(ValueError) as exc_info:
+            BestFit.boundary_filter(pytest.res, ubounds, lbounds)
+        assert exc_info.type is ValueError
+        if test_type == "bound_error":
+            assert exc_info.value.args[0]== "Number of upper boundaries do not match number of lower boundaries."
+        if test_type == "res_error":
+            assert exc_info.value.args[0] == "Number of boundaries do not match number of model parameters."
+    else:
+        filtered_res = BestFit.boundary_filter(pytest.res, ubounds, lbounds)
+        if "_all" in test_type:
+            assert np.all(filtered_res == pytest.res)
+        if "_upper" in test_type:
+            assert np.all(filtered_res == pytest.res[1:,:])
+        if "_lower" in test_type:
+            assert np.all(filtered_res == pytest.res[:2,:])
+
