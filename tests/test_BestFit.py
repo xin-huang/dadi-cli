@@ -87,8 +87,14 @@ def test_opt_params_converged():
     pass
 
 
-def test_close2boundaries():
-    pass
+@pytest.mark.parametrize("test_type, params, ubounds, lbounds",
+                        [
+                        (False, [10, 10, 10], [15, 15, 15], [1e-3, 1e-3, 1e-3]),
+                        (True, [10, 10, 10], [10.1, 10.1, 10.1,], [1e-3, 1e-3, 1e-3]),
+                         ]
+                         )
+def test_close2boundaries(test_type, params, ubounds, lbounds):
+    assert BestFit.close2boundaries(params, ubounds, lbounds) == test_type
 
 @pytest.mark.parametrize("test_type, ubounds, lbounds",
                         [
