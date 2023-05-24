@@ -24,9 +24,6 @@ def files():
         [-np.inf, 5, 5, 5, np.inf],
         [-np.inf, 1, 1, 1, np.inf]
         ])
-#     pytest.res = BestFit.get_bestfit_params("./tests/example_data/example.bestfit.two_epoch.demo.params.InferDM.opts.0", 
-#         None, None, "./tests/test_results/not_used", 0.00001)
-# os.remove("./tests/test_results/not_used")
 
 @pytest.mark.skip()
 def test_BestFit(capsys):
