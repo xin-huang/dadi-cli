@@ -37,6 +37,7 @@ def get_bestfit_params(path, lbounds, ubounds, output, delta, Nclose=3, Nbest=10
                 continue
             # Parse numerical result
             try:
+                
                 res.append([float(_) for _ in line.rstrip().split()])
             except ValueError:
                 # Ignore lines with a parsing error
@@ -47,7 +48,13 @@ def get_bestfit_params(path, lbounds, ubounds, output, delta, Nclose=3, Nbest=10
         print("No optimization results found.")
         return
 
+    # Need to have res as a numpy array for boundary filter
     res = np.array(sorted(res, reverse=True))
+
+    # Filter results by boundary
+    if ubounds is not None and lbounds is not None:
+        res = boundary_filter(res, ubounds, lbounds)
+
     opt_ll = res[0][0]
     # Filter out those results within delta threshold
     close_enough = res[1 - (opt_ll / res[:, 0]) <= delta]
@@ -60,8 +67,9 @@ def get_bestfit_params(path, lbounds, ubounds, output, delta, Nclose=3, Nbest=10
 
         if len(close_enough) >= Nclose:
             print("Converged")
-            if close2boundaries(close_enough[0][1:-1], lbounds, ubounds):
-                print("WARNING: The converged parameters are close to the boundaries")
+            if ubounds is not None and lbounds is not None:
+                if close2boundaries(close_enough[0][1:-1], lbounds, ubounds):
+                    print("WARNING: The converged parameters are close to the boundaries")
             # Spacer
             fid.write("#\n# Converged results\n")
             fid.write(params + "\n")
@@ -102,3 +110,34 @@ def close2boundaries(params, lbounds, ubounds):
             ) / bound_range < 0.01:
                 is_close2boundaries = True
     return is_close2boundaries
+
+
+def boundary_filter(res, ubounds, lbounds):
+    """
+    Description:
+        Helper function to filter out results where the params are outside the boundaries.
+
+    Arguments:
+        res numpy.array: Inference results stored as an array.
+        lbounds list: Lower bounds for the parameters.
+        ubounds list: Upper bounds for the parameters.
+
+    Returns:
+        res: Numpy array with values filtered based on boundaries
+    """
+    # Filter out results where the params are outside the boundaries
+    # Doing this before getting opt_ll so it doesn't throw off convergence check
+    if len(ubounds) != len(lbounds):
+        raise ValueError("Number of upper boundaries do not match number of lower boundaries.")
+    if len(ubounds) != len(res[0,1:-1]):
+        raise ValueError("Number of boundaries do not match number of model parameters.")
+    # ub_bool = res[:,1] <= ubounds[0]
+    # lb_bool = res[:,1] >= lbounds[0]
+    bool_filter = (res[:,1] <= ubounds[0]) & (res[:,1] >= lbounds[0])
+    for i in range(1,len(res[0,1:-1])):
+        if ubounds[i] is not None and lbounds[i] is not None:
+            # ub_bool = np.logical_and(ub_bool, res[:,i+1] <= ubounds[i])
+            # lb_bool = np.logical_and(lb_bool, res[:,i+1] >= lbounds[i])
+            bool_filter = np.logical_and(bool_filter, (res[:,i+1] <= ubounds[i]) & (res[:,i+1] >= lbounds[i]))
+    # return res[np.logical_and(ub_bool, lb_bool)]
+    return res[bool_filter]
