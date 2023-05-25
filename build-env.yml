@@ -5,11 +5,10 @@ channels:
 dependencies:
   - codecov
   - gcc
-  - gfortran
   - demes
-  - dill==0.3.4
+  - dill
   - matplotlib
-  - ndcctools==7.4.3
+  - ndcctools
   - nlopt
   - numpy
   - pip
