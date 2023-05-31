@@ -1740,8 +1740,11 @@ def _calc_p0_from_bounds(lb, ub):
     for l, u in zip(lb, ub):
         if l == 0:
             p0.append((l + u) / 2)
-        else:
+        elif l*u > 0:
             p0.append(np.sqrt(l * u))
+        else:
+            p0.append((l+u) / 2)
+
     return p0
 
 
