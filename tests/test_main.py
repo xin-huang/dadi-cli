@@ -415,9 +415,9 @@ def test_run_infer_dfe_mix(infer_dfe_args):
     print(fids)
     opt = open(fids[-1],'r').readlines()
     print(opt)
-    # Check line 4 instead of line 3, because sometimes an extra line for running pytest
+    # Check line 5 instead of line 3, because sometimes extra lines for running pytest
     # appears when running test GitHub Actions
-    fix_check = [float(ele.split('\t')[3]) == 0.0 for ele in opt[3:]]
+    fix_check = [float(ele.split('\t')[3]) == 0.0 for ele in opt[4:]]
     for ele in fix_check:
         assert(ele)
     for fi in fids:
@@ -440,9 +440,9 @@ def test_run_infer_dfe_mix_html(infer_dfe_args):
     fids = glob.glob(pytest.output_prefix+"*")
     opt = open(fids[-1],'r').readlines()
     print(opt)
-    # Check line 4 instead of line 3, because sometimes an extra line for running pytest
+    # Check line 5 instead of line 3, because sometimes extra lines for running pytest
     # appears when running test GitHub Actions
-    fix_check = [float(ele.split('\t')[3]) == 0.0 for ele in opt[3:]]
+    fix_check = [float(ele.split('\t')[3]) == 0.0 for ele in opt[4:]]
     for ele in fix_check:
         assert(ele)
     for fi in fids:
