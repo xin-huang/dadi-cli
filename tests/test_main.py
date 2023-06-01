@@ -324,7 +324,7 @@ def infer_dfe_args():
     pytest.force_convergence = 0
     pytest.cpus = 1
     pytest.gpus = 0
-    pytest.optimizations = 3
+    pytest.optimizations = 5
     pytest.bestfit_p0 = None
     pytest.delta_ll = 0.001
     pytest.global_optimization = False
@@ -415,7 +415,9 @@ def test_run_infer_dfe_mix(infer_dfe_args):
     print(fids)
     opt = open(fids[-1],'r').readlines()
     print(opt)
-    fix_check = [float(ele.split('\t')[3]) == 0.0 for ele in opt[2:]]
+    # Check line 5 instead of line 4, because sometimes an extra line for running pytest
+    # appears when running test GitHub Actions
+    fix_check = [float(ele.split('\t')[4]) == 0.0 for ele in opt[2:]]
     for ele in fix_check:
         assert(ele)
     for fi in fids:
@@ -438,7 +440,9 @@ def test_run_infer_dfe_mix_html(infer_dfe_args):
     fids = glob.glob(pytest.output_prefix+"*")
     opt = open(fids[-1],'r').readlines()
     print(opt)
-    fix_check = [float(ele.split('\t')[3]) == 0.0 for ele in opt[2:]]
+    # Check line 5 instead of line 4, because sometimes an extra line for running pytest
+    # appears when running test GitHub Actions
+    fix_check = [float(ele.split('\t')[4]) == 0.0 for ele in opt[2:]]
     for ele in fix_check:
         assert(ele)
     for fi in fids:
