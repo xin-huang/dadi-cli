@@ -4,6 +4,6 @@
 
 The manual can be found [here](https://dadi-cli.readthedocs.io/en/latest/).
 
-If you need further help, you can submit questions about usage to the dadi-user Google Group (http://groups.google.com/group/dadi-user).
+If you need further help, you can submit questions about usage to the [dadi-user Google Group](http://groups.google.com/group/dadi-user).
 
-If you've found an apparent bug, please submit an Issue so we can address it.
+If you've found an apparent bug or want to suggest a feature, please submit an [Issue](https://github.com/xin-huang/dadi-cli/issues) so we can address it.
