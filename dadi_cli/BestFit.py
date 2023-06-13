@@ -55,6 +55,11 @@ def get_bestfit_params(path, lbounds, ubounds, output, delta, Nclose=3, Nbest=10
     if ubounds is not None and lbounds is not None:
         res = boundary_filter(res, ubounds, lbounds)
 
+    if res == []:
+        ### If an error is raised in this function,
+        ### causes dadi-cli to not exit properly.
+        # raise ValueError("Results empty.")
+        return None
     opt_ll = res[0][0]
     # Filter out those results within delta threshold
     close_enough = res[1 - (opt_ll / res[:, 0]) <= delta]

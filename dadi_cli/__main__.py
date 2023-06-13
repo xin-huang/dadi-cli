@@ -399,10 +399,10 @@ def run_infer_dm(args):
                     output=args.output_prefix + ".global.InferDM.bestfits",
                     delta=args.delta_ll,
                 )
-                # # Place holder if we want check convergence for global optimization
+                ### Place holder if we want check convergence for global optimization
                 # if result is not None:
-                #     args.force_convergence = False
-                #     break
+                #    args.force_convergence = False
+                #    break
             if not args.work_queue:
                 # Stop the workers
                 for worker in workers:
