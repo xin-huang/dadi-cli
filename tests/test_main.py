@@ -222,12 +222,10 @@ def test_run_infer_dm_convergence(check_convergence, force_convergence, optimiza
         w = recwarn.pop(UserWarning)
         assert str(w.message) == "WARNING: Number of optimizations is less than the number requested before checking convergence. Convergence will not be checked. \n" +\
             "Note: if using --global-optimization, ~25% of requested optimizations are used for the gloabal optimization.\n"
-        # + 2 for the commented out lines
-        assert len(open(pytest.output_prefix+".InferDM.opts.0", "r").readlines()) == optimizations + 2
+        assert len([ele for ele in open(pytest.output_prefix+".InferDM.opts.0", "r").readlines() if not ele.startswith("#")]) == optimizations
 
     if force_convergence > 0:
-        # + 2 for the commented out lines
-        assert len(open(pytest.output_prefix+".InferDM.opts.0", "r").readlines()) >= force_convergence + 2
+        assert len([ele for ele in open(pytest.output_prefix+".InferDM.opts.0", "r").readlines() if not ele.startswith("#")]) >= force_convergence
 
     for ele in glob.glob(pytest.output_prefix+"*"):
         os.remove(ele)
@@ -367,12 +365,10 @@ def test_run_infer_dfe_convergence(check_convergence, force_convergence, optimiz
         w = recwarn.pop(UserWarning)
         assert str(w.message) == "WARNING: Number of optimizations is less than the number requested before checking convergence. Convergence will not be checked. \n" +\
             "Note: if using --global-optimization, ~25% of requested optimizations are used for the gloabal optimization.\n"
-        # + 2 for the commented out lines
-        assert len(open(pytest.output_prefix+".InferDFE.opts.0", "r").readlines()) == optimizations + 2
+        assert len([ele for ele in open(pytest.output_prefix+".InferDFE.opts.0", "r").readlines() if not ele.startswith("#")]) == optimizations
 
     if force_convergence > 0:
-        # + 2 for the commented out lines
-        assert len(open(pytest.output_prefix+".InferDFE.opts.0", "r").readlines()) >= force_convergence + 2
+        assert len([ele for ele in open(pytest.output_prefix+".InferDFE.opts.0", "r").readlines() if not ele.startswith("#")]) >= force_convergence
 
     for ele in glob.glob(pytest.output_prefix+"*"):
         os.remove(ele)
