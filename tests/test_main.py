@@ -414,10 +414,7 @@ def test_run_infer_dfe_mix(infer_dfe_args):
     fids = glob.glob(pytest.output_prefix+"*")
     print(fids)
     opt = open(fids[-1],'r').readlines()
-    print(opt)
-    # Check line 5 instead of line 3, because sometimes extra lines for running pytest
-    # appears when running test GitHub Actions
-    fix_check = [float(ele.split('\t')[3]) == 0.0 for ele in opt[5:]]
+    fix_check = [float(ele.split('\t')[3]) == 0.0 for ele in opt if not ele.startswith("#")]
     for ele in fix_check:
         assert(ele)
     for fi in fids:
@@ -439,10 +436,7 @@ def test_run_infer_dfe_mix_html(infer_dfe_args):
     dadi_cli.run_infer_dfe(pytest)
     fids = glob.glob(pytest.output_prefix+"*")
     opt = open(fids[-1],'r').readlines()
-    print(opt)
-    # Check line 5 instead of line 3, because sometimes extra lines for running pytest
-    # appears when running test GitHub Actions
-    fix_check = [float(ele.split('\t')[3]) == 0.0 for ele in opt[5:]]
+    fix_check = [float(ele.split('\t')[3]) == 0.0 for ele in opt if not ele.startswith("#")]
     for ele in fix_check:
         assert(ele)
     for fi in fids:
