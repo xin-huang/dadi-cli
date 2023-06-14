@@ -55,7 +55,11 @@ def get_bestfit_params(path, lbounds, ubounds, output, delta, Nclose=3, Nbest=10
     if ubounds is not None and lbounds is not None:
         res = boundary_filter(res, ubounds, lbounds)
 
-    opt_ll = res[0][0]
+    try:
+        opt_ll = res[0][0]
+    except IndexError:
+        return None
+
     # Filter out those results within delta threshold
     close_enough = res[1 - (opt_ll / res[:, 0]) <= delta]
 

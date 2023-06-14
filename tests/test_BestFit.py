@@ -111,7 +111,7 @@ def test_boundary_filter(files, test_type, ubounds, lbounds):
             BestFit.boundary_filter(pytest.res, ubounds, lbounds)
         assert exc_info.type is ValueError
         if test_type == "bound_error":
-            assert exc_info.value.args[0]== "Number of upper boundaries do not match number of lower boundaries."
+            assert exc_info.value.args[0] == "Number of upper boundaries do not match number of lower boundaries."
         if test_type == "res_error":
             assert exc_info.value.args[0] == "Number of boundaries do not match number of model parameters."
     else:
@@ -123,3 +123,29 @@ def test_boundary_filter(files, test_type, ubounds, lbounds):
         if "_lower" in test_type:
             assert np.all(filtered_res == pytest.res[:2,:])
 
+def test_bad_res_file(files):
+    with pytest.raises(ValueError) as exc_info:
+        BestFit.get_bestfit_params(
+        path="does_not_exist_bestfit.opt.0",
+        lbounds=[1e-3, 1e-3, 1e-5],
+        ubounds=[10, 10, 1],
+        output=pytest.example_output,
+        delta=0,
+        Nclose=3,
+        Nbest=10,
+        )
+    assert exc_info.value.args[0] == "No files or incorrect path naming (--input-prefix path name should end with InferDM)."
+
+def test_empty_res_file(files):
+    open("empty_bestfit.opt.0","w")
+    results = BestFit.get_bestfit_params(
+        path="empty_bestfit.opt.0",
+        lbounds=[1e-3, 1e-3, 1e-5],
+        ubounds=[10, 10, 1],
+        output=pytest.example_output,
+        delta=0,
+        Nclose=3,
+        Nbest=10,
+    )
+    assert results == None
+    os.remove("empty_bestfit.opt.0")
