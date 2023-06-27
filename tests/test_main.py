@@ -478,6 +478,19 @@ def test_run_infer_dm_workqueue(infer_dm_args):
     for ele in glob.glob(pytest.output_prefix+"*"):
         os.remove(ele)
 
+def test_run_stat_demography():
+    dadi_cli.run_stat_demography(
+        fs=args.fs,
+        func=func,
+        bootstrap_dir=args.bootstrapping_dir,
+        grids=args.grids,
+        nomisid=args.nomisid,
+        demo_popt=args.demo_popt,
+        fixed_params=args.constants,
+        logscale=args.logscale,
+        output=args.output
+        )
+
 @pytest.mark.parametrize("dir_path, dir_exists",
                         [
                         ("fake.fs", False),
@@ -488,6 +501,8 @@ def test_make_dir(dir_path, dir_exists):
     dadi_cli._make_dir(dir_path)
     parent_dir = os.path.dirname(dir_path)
     assert os.path.exists(parent_dir) == dir_exists
+    if os.path.exists(parent_dir):
+        os.rmdir(parent_dir)
 
 
 
