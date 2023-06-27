@@ -1764,7 +1764,8 @@ def _calc_p0_from_bounds(lb, ub):
 
 def _make_dir(path):
     parent_dir = os.path.dirname(path)
-    os.makedirs(parent_dir, exist_ok=True)
+    if parent_dir != '':
+        os.makedirs(parent_dir, exist_ok=True)
 
 
 def _top_opts(filename):
