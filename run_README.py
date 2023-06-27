@@ -5,7 +5,7 @@
 #SBATCH --job-name="test_readme_full"
 #SBATCH --output=%x-%j.out
 #SBATCH --nodes=1
-#SBATCH --ntasks=4
+#SBATCH --ntasks=90
 #SBATCH --time=24:00:00
 
 import os, shutil, subprocess, time, glob
@@ -14,16 +14,6 @@ try:
     shutil.rmtree('examples/results')
 except FileNotFoundError:
     pass
-
-for dir in ['examples/results/fs',
-            'examples/results/fs/bootstrapping_syn',
-            'examples/results/fs/bootstrapping_non',
-            'examples/results/demog',
-            'examples/results/caches',
-            'examples/results/dfe',
-            'examples/results/plots',
-            'examples/results/stat']:
-    os.makedirs(dir)
 
 for module in ["docs/userguide/fs.md",
                "docs/userguide/demog.md",
