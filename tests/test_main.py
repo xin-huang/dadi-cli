@@ -479,17 +479,104 @@ def test_run_infer_dm_workqueue(infer_dm_args):
         os.remove(ele)
 
 def test_run_stat_demography():
-    dadi_cli.run_stat_demography(
-        fs=args.fs,
-        func=func,
-        bootstrap_dir=args.bootstrapping_dir,
-        grids=args.grids,
-        nomisid=args.nomisid,
-        demo_popt=args.demo_popt,
-        fixed_params=args.constants,
-        logscale=args.logscale,
-        output=args.output
-        )
+    def stat_args():
+        return
+    stat_args.fs="tests/example_data/split_mig_syn.fs"
+    stat_args.model="split_mig"
+    stat_args.model_file=None
+    stat_args.bootstrapping_dir="tests/example_data/split_mig_bootstrap_syn/"
+    stat_args.grids=[30, 40, 50]
+    stat_args.nomisid=True
+    stat_args.demo_popt="tests/example_data/example.split_mig.demo.params.InferDM.bestfits"
+    stat_args.constants=-1
+    stat_args.logscale=False
+    stat_args.output="tests/test_results/main_demo_godambe.txt"
+    dadi_cli.run_stat_demography(stat_args)
+    os.remove(stat_args.output)
+
+def test_run_stat_dfe():
+    def stat_args():
+        return
+    stat_args.fs="tests/example_data/split_mig_non.fs"
+    stat_args.model="split_mig"
+    stat_args.model_file=None
+    stat_args.cache1d="tests/example_data/cache_split_mig_1d.bpkl"
+    stat_args.cache2d=None
+    stat_args.pdf1d="lognormal"
+    stat_args.pdf2d=None
+    stat_args.bootstrapping_syn_dir="tests/example_data/split_mig_bootstrap_syn/"
+    stat_args.bootstrapping_non_dir="tests/example_data/split_mig_bootstrap_non/bootstrap_non_1d/"
+    stat_args.grids=[30, 40, 50]
+    stat_args.nomisid=True
+    stat_args.dfe_popt="tests/example_data/example.split_mig.dfe.1D_lognormal.params.InferDFE.bestfits"
+    stat_args.constants=-1
+    stat_args.logscale=False
+    stat_args.output="tests/test_results/main_dfe_godambe.txt"
+    dadi_cli.run_stat_dfe(stat_args)
+    os.remove(stat_args.output)
+
+
+
+@pytest.fixture
+def plot_args():
+    pytest.model = "split_mig"
+    # pytest.fs1_1d = "tests/example_data/two_epoch_syn.fs"
+    # pytest.fs2_1d = "tests/example_data/two_epoch_non.fs"
+    pytest.pdf1d = "lognormal"
+    pytest.pdf2d = "biv_lognormal"
+    pytest.output = "tests/test_results/main_test_plot.pdf"
+    # pytest.demo_popt = "tests/example_data/example.two_epoch.demo.params.InferDM.bestfits"
+    # pytest.fs1d_cache1d = "tests/example_data/cache_two_epoch_1d.bpkl"
+    pytest.fs = "tests/example_data/split_mig_syn.fs"
+    pytest.fs2 = "tests/example_data/split_mig_non_1d.fs"
+    # plot_args.fs2_2d = "tests/example_data/split_mig_non_2d.fs"
+    # plot_args.fs_mixture = "tests/example_data/split_mig_non_mix.fs"
+    pytest.demo_popt = "tests/example_data/example.split_mig.demo.params.InferDM.bestfits"
+    pytest.dfe_popt = "tests/example_data/example.split_mig.dfe.lognormal_mixture.params.InferDFE.bestfits"
+    pytest.cache1d = "tests/example_data/cache_split_mig_1d.bpkl"
+    pytest.cache2d = "tests/example_data/cache_split_mig_2d.bpkl"
+    pytest.nomisid = True
+    pytest.vmin = 1e-3
+    pytest.resid_range = 10
+    pytest.projections = None
+    pytest.model_file = None
+
+def test_plot_mut_prop(plot_args):
+    pytest.fs = None
+    dadi_cli.run_plot(pytest)
+    os.remove(pytest.output)
+
+def test_plot_fitted_dfe(plot_args):
+    dadi_cli.run_plot(pytest)
+    os.remove(pytest.output)
+
+def test_plot_fitted_demography(plot_args):
+    pytest.dfe_popt = None
+    dadi_cli.run_plot(pytest)
+    os.remove(pytest.output)
+
+# Unit test code start incase html functionality for Plot is requested
+# def test_plot_fitted_demography_html(plot_args):
+#     pytest.dfe_popt = None
+#     pytest.fs = "https://raw.githubusercontent.com/xin-huang/dadi-cli/master/tests/example_data/two_epoch_syn.fs"
+#     pytest.model = "three_epoch_bottleneck"
+#     pytest.model_file = "https://raw.githubusercontent.com/xin-huang/dadi-cli/master/tests/example_data/example_models.py"
+#     pytest.demo_popt
+#     dadi_cli.run_plot(pytest)
+#     # os.remove(pytest.output)
+
+def test_plot_single_sfs(plot_args):
+    pytest.dfe_popt = None
+    pytest.demo_popt = None
+    pytest.fs2 = None
+    dadi_cli.run_plot(pytest)
+    os.remove(pytest.output)
+
+def test_plot_comparison(plot_args):
+    pytest.dfe_popt = None
+    pytest.demo_popt = None
+    dadi_cli.run_plot(pytest)
+    os.remove(pytest.output)
 
 @pytest.mark.parametrize("dir_path, dir_exists",
                         [
