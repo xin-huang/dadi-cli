@@ -180,13 +180,13 @@ def run_infer_dm(args):
             sfs_fi.write(f.read().decode('utf-8'))
         sfs_fi.close()
         args.fs ="sfs.fs"
-        if args.model_file is not None:
-            if "://" in args.model_file:
-                model_fi = open("dadi_models.py","w")
-                with urllib.request.urlopen(args.model_file) as f:
-                    model_fi.write(f.read().decode('utf-8'))
-                model_fi.close()
-                args.model_file = "dadi_models"
+    if args.model_file is not None:
+        if "://" in args.model_file:
+            model_fi = open("dadi_models.py","w")
+            with urllib.request.urlopen(args.model_file) as f:
+                model_fi.write(f.read().decode('utf-8'))
+            model_fi.close()
+            args.model_file = "dadi_models"
 
     fs = dadi.Spectrum.from_file(args.fs)
 
@@ -845,14 +845,29 @@ def run_bestfit(args):
 def run_stat_demography(args):
     from dadi_cli.Stat import godambe_stat_demograpy
 
-    if args.model_file is not None:
-        if "://" in args.model_file:
-            import urllib.request
-            model_fi = open("dadi_models.py","w")
-            with urllib.request.urlopen(args.model_file) as f:
-                model_fi.write(f.read().decode('utf-8'))
-            model_fi.close()
-            args.model_file = "dadi_models"
+    # # Code kept just in case user requests functionality if the future
+    # if args.fs is not None:
+    #     if "://" in args.fs:
+    #         import urllib.request
+    #         sfs_fi = open("sfs.fs","w")
+    #         with urllib.request.urlopen(args.fs) as f:
+    #             sfs_fi.write(f.read().decode('utf-8'))
+    #         sfs_fi.close()
+    #         args.fs ="sfs.fs"
+    # if args.model_file is not None:
+    #     if "://" in args.model_file:
+    #         model_fi = open("dadi_models.py","w")
+    #         with urllib.request.urlopen(args.model_file) as f:
+    #             model_fi.write(f.read().decode('utf-8'))
+    #         model_fi.close()
+    #         args.model_file = "dadi_models"
+    # if args.demo_popt is not None:
+    #     if "://" in args.model_file:
+    #         model_fi = open("demo_popt.bestfits","w")
+    #         with urllib.request.urlopen(args.model_file) as f:
+    #             model_fi.write(f.read().decode('utf-8'))
+    #         model_fi.close()
+    #         args.model_file = "demo_popt.bestfits"
 
     # Extract model function, from custom model_file if necessary
     func, _ = get_model(args.model, args.model_file)
@@ -874,6 +889,23 @@ def run_stat_demography(args):
 
 def run_stat_dfe(args):
     from dadi_cli.Stat import godambe_stat_dfe
+
+    # # Code kept just in case user requests functionality if the future
+    # if args.fs is not None:
+    #     if "://" in args.fs:
+    #         import urllib.request
+    #         sfs_fi = open("sfs.fs","w")
+    #         with urllib.request.urlopen(args.fs) as f:
+    #             sfs_fi.write(f.read().decode('utf-8'))
+    #         sfs_fi.close()
+    #         args.fs ="sfs.fs"
+    # if args.dfe_popt is not None:
+    #     if "://" in args.model_file:
+    #         model_fi = open("dfe_popt.bestfits","w")
+    #         with urllib.request.urlopen(args.model_file) as f:
+    #             model_fi.write(f.read().decode('utf-8'))
+    #         model_fi.close()
+    #         args.model_file = "dfe_popt.bestfits"
 
     _make_dir(args.output)
 
@@ -902,6 +934,37 @@ def run_plot(args):
         plot_mut_prop,
     )
 
+    # # Code kept just in case user requests functionality if the future
+    # if args.fs is not None:
+    #     if "://" in args.fs:
+    #         import urllib.request
+    #         sfs_fi = open("sfs.fs","w")
+    #         with urllib.request.urlopen(args.fs) as f:
+    #             sfs_fi.write(f.read().decode('utf-8'))
+    #         sfs_fi.close()
+    #         args.fs ="sfs.fs"
+    # if args.model_file is not None:
+    #     if "://" in args.model_file:
+    #         model_fi = open("dadi_models.py","w")
+    #         with urllib.request.urlopen(args.model_file) as f:
+    #             model_fi.write(f.read().decode('utf-8'))
+    #         model_fi.close()
+    #         args.model_file = "dadi_models"
+    # if args.demo_popt is not None:
+    #     if "://" in args.model_file:
+    #         model_fi = open("demo_popt.bestfits","w")
+    #         with urllib.request.urlopen(args.model_file) as f:
+    #             model_fi.write(f.read().decode('utf-8'))
+    #         model_fi.close()
+    #         args.model_file = "demo_popt.bestfits"
+    # if args.dfe_popt is not None:
+    #     if "://" in args.model_file:
+    #         model_fi = open("dfe_popt.bestfits","w")
+    #         with urllib.request.urlopen(args.model_file) as f:
+    #             model_fi.write(f.read().decode('utf-8'))
+    #         model_fi.close()
+    #         args.model_file = "dfe_popt.bestfits"
+
     _make_dir(args.output)
 
     if args.fs == None:
@@ -927,14 +990,6 @@ def run_plot(args):
     elif args.demo_popt != None:
         if args.model is None:
             raise ValueError("--model is missing")
-        if args.model_file is not None:
-            if "://" in args.model_file:
-                import urllib.request
-                model_fi = open("dadi_models.py","w")
-                with urllib.request.urlopen(args.model_file) as f:
-                    model_fi.write(f.read().decode('utf-8'))
-                model_fi.close()
-                args.model_file = "dadi_models"
         func, _ = get_model(args.model, args.model_file)
         plot_fitted_demography(
             fs=args.fs,
