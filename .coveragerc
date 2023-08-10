@@ -1,2 +1,2 @@
 [run]
-omit = ./tests/*,setup.py,*__init__.py,*conftest.py,src/Gui.py,run_README.py
+omit = ./tests/*,setup.py,*__init__.py,*conftest.py,src/Gui.py,run_README.py,dadi_cli/custom_models.py,dadi_cli/portik_models/*
