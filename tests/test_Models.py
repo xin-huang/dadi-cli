@@ -3,15 +3,20 @@ import dadi.DFE as DFE
 import pytest
 import textwrap
 from dadi_cli.Models import *
+import dadi_cli.portik_models.portik_models_2d
+import dadi_cli.portik_models.portik_models_3d
+import dadi_cli.custom_models
 from inspect import isfunction, getmembers
 
 
 # Define varibles to hold list of all dadi model names and functions
 @pytest.fixture
 def model_list():
-    pytest.demo_model_list = getmembers(dadi.Demographics1D, isfunction) + getmembers(
-        dadi.Demographics2D, isfunction
-    )
+    pytest.demo_model_list = getmembers(dadi.Demographics1D, isfunction) + \
+    getmembers(dadi.Demographics2D, isfunction) + \
+    getmembers(dadi_cli.portik_models.portik_models_2d, isfunction) + \
+    getmembers(dadi_cli.portik_models.portik_models_3d, isfunction) + \
+    getmembers(dadi_cli.custom_models, isfunction)
     pytest.sel_model_list = getmembers(DFE.DemogSelModels, isfunction)
 
 
