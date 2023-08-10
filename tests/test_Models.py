@@ -36,7 +36,7 @@ def test_print_built_in_models(capfd, model_list):
     print_built_in_models()
     out, err = capfd.readouterr()
     expected = """\
-    Built-in 1D demographic models:
+    Built-in 1D dadi demographic models:
     - bottlegrowth_1d
     - growth
     - snm_1d
@@ -44,7 +44,7 @@ def test_print_built_in_models(capfd, model_list):
     - three_epoch_inbreeding
     - two_epoch
 
-    Built-in 2D demographic models:
+    Built-in 2D dadi demographic models:
     - IM
     - IM_mscore
     - IM_pre
@@ -57,6 +57,115 @@ def test_print_built_in_models(capfd, model_list):
     - split_delay_mig
     - split_mig
     - split_mig_mscore
+    - anc_asym_mig
+    - anc_asym_mig_size
+    - anc_sym_mig
+    - anc_sym_mig_size
+    - asym_mig
+    - asym_mig_size
+    - asym_mig_twoepoch
+    - founder_asym
+    - founder_nomig
+    - founder_nomig_admix_early
+    - founder_nomig_admix_late
+    - founder_nomig_admix_two_epoch
+    - founder_sym
+    - no_mig
+    - no_mig_size
+    - sec_contact_asym_mig
+    - sec_contact_asym_mig_size
+    - sec_contact_asym_mig_size_three_epoch
+    - sec_contact_asym_mig_three_epoch
+    - sec_contact_sym_mig
+    - sec_contact_sym_mig_size
+    - sec_contact_sym_mig_size_three_epoch
+    - sec_contact_sym_mig_three_epoch
+    - sym_mig
+    - sym_mig_size
+    - sym_mig_twoepoch
+    - vic_anc_asym_mig
+    - vic_anc_sym_mig
+    - vic_no_mig
+    - vic_no_mig_admix_early
+    - vic_no_mig_admix_late
+    - vic_sec_contact_asym_mig
+    - vic_sec_contact_sym_mig
+    - vic_two_epoch_admix
+
+    Built-in 2D Portik et al. (2017) demographic models:
+    - anc_asym_mig
+    - anc_asym_mig_size
+    - anc_sym_mig
+    - anc_sym_mig_size
+    - asym_mig
+    - asym_mig_size
+    - asym_mig_twoepoch
+    - founder_asym
+    - founder_nomig
+    - founder_nomig_admix_early
+    - founder_nomig_admix_late
+    - founder_nomig_admix_two_epoch
+    - founder_sym
+    - no_mig
+    - no_mig_size
+    - sec_contact_asym_mig
+    - sec_contact_asym_mig_size
+    - sec_contact_asym_mig_size_three_epoch
+    - sec_contact_asym_mig_three_epoch
+    - sec_contact_sym_mig
+    - sec_contact_sym_mig_size
+    - sec_contact_sym_mig_size_three_epoch
+    - sec_contact_sym_mig_three_epoch
+    - sym_mig
+    - sym_mig_size
+    - sym_mig_twoepoch
+    - vic_anc_asym_mig
+    - vic_anc_sym_mig
+    - vic_no_mig
+    - vic_no_mig_admix_early
+    - vic_no_mig_admix_late
+    - vic_sec_contact_asym_mig
+    - vic_sec_contact_sym_mig
+    - vic_two_epoch_admix
+
+    Built-in 3D Gutenkunst et al. (2009) Out-of-Africa demographic model:
+    - out_of_africa
+    - out_of_africa_no_mig
+
+    Built-in 3D Portik et al. (2017) demographic models:
+    - admix_origin_no_mig
+    - admix_origin_sym_mig_adj
+    - admix_origin_uni_mig_adj
+    - ancmig_2_size
+    - ancmig_adj_1
+    - ancmig_adj_2
+    - ancmig_adj_3
+    - refugia_adj_1
+    - refugia_adj_2
+    - refugia_adj_2_var_sym
+    - refugia_adj_2_var_uni
+    - refugia_adj_3
+    - refugia_adj_3_var_sym
+    - refugia_adj_3_var_uni
+    - sim_split_no_mig
+    - sim_split_no_mig_size
+    - sim_split_refugia_sym_mig_adjacent
+    - sim_split_refugia_sym_mig_adjacent_size
+    - sim_split_refugia_sym_mig_adjacent_var
+    - sim_split_refugia_sym_mig_all
+    - sim_split_refugia_uni_mig_adjacent_var
+    - sim_split_sym_mig_adjacent
+    - sim_split_sym_mig_adjacent_var
+    - sim_split_sym_mig_all
+    - sim_split_uni_mig_adjacent_var
+    - split_nomig
+    - split_nomig_size
+    - split_sym_mig_adjacent_var1
+    - split_sym_mig_adjacent_var2
+    - split_symmig_adjacent
+    - split_symmig_all
+    - split_uni_mig_adjacent_var1
+    - split_uni_mig_adjacent_var2
 
     Built-in demographic models with selection:
     - IM_pre_sel
