@@ -16,7 +16,7 @@ dependencies:
   - python==3.8
   - scipy
   - snakemake==7.1.1
-  - dadi
   - pip:
+      - git+https://bitbucket.org/gutenkunstlab/dadi
       - demes
       - .
