@@ -20,7 +20,11 @@ duplicated_sele_models = [
 ]
 oned_models = [m[0] for m in getmembers(dadi.Demographics1D, isfunction)]
 twod_models = [m[0] for m in getmembers(dadi.Demographics2D, isfunction)]
-threed_models = [m[0] for m in getmembers(dadi.Demographics3D, isfunction)]
+try:
+    threed_models = [m[0] for m in getmembers(dadi.Demographics3D, isfunction)]
+except AttributeError:
+    print("dadi version is < 2.3.2, upgrade for easy access to 3D models added to dadi.")
+    threed_models = []
 sele_models = [m[0] for m in getmembers(DFE.DemogSelModels, isfunction)]
 # portik_models_2d = [m[0] for m in getmembers(dadi_cli.portik_models.portik_models_2d, isfunction)]
 # portik_models_3d = [m[0] for m in getmembers(dadi_cli.portik_models.portik_models_3d, isfunction)]
