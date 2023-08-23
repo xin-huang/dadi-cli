@@ -23,7 +23,6 @@ twod_models = [m[0] for m in getmembers(dadi.Demographics2D, isfunction)]
 try:
     threed_models = [m[0] for m in getmembers(dadi.Demographics3D, isfunction)]
 except AttributeError:
-    print("dadi version is < 2.3.2, upgrade for easy access to 3D models added to dadi.")
     threed_models = []
 sele_models = [m[0] for m in getmembers(DFE.DemogSelModels, isfunction)]
 # portik_models_2d = [m[0] for m in getmembers(dadi_cli.portik_models.portik_models_2d, isfunction)]
@@ -103,6 +102,8 @@ def print_built_in_models():
     print("Built-in 3D dadi and Portik et al. (2017) demographic models:")
     for m in threed_models:
         print(f"- {m}")
+    if threed_models == []:
+        print("- dadi version is < 2.3.2, upgdate for simple access to 3D models added to dadi.")
     print()
 
     print("Built-in demographic models with selection:")
