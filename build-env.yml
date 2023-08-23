@@ -3,6 +3,7 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
+  - dadi
   - codecov
   - gcc
   - demes
@@ -16,7 +17,6 @@ dependencies:
   - python==3.8
   - scipy
   - snakemake==7.1.1
-  - dadi
   - pip:
       - demes
       - .
