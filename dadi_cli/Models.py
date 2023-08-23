@@ -103,7 +103,7 @@ def print_built_in_models():
     for m in threed_models:
         print(f"- {m}")
     if threed_models == []:
-        print("- dadi version is < 2.3.2, upgrade for easy access to 3D models added to dadi.")
+        print("- dadi version is < 2.3.2, upgdate for simple access to 3D models added to dadi.")
     print()
 
     print("Built-in demographic models with selection:")
