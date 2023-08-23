@@ -141,7 +141,6 @@ def infer_global_opt(
         popt list: Optimized parameters.
         theta float: Population-scaled mutation rate inferred from the demographic model.
     """
-
     # Randomize starting parameter values
     if seed != None:
         np.random.seed(seed)
@@ -186,5 +185,8 @@ def infer_global_opt(
     popt = dadi.Misc.perturb_params(
         popt, fold=0, upper_bound=upper_bounds, lower_bound=lower_bounds
     )
-    theta = 0
+    pts_l = pts_l_func(fs.sample_sizes)
+    model = func_ex(popt, fs.sample_sizes, pts_l)
+    ll_global = dadi.Inference.ll_multinom(model, fs)
+    theta = dadi.Inference.optimal_sfs_scaling(model, fs)
     return ll_global, popt, theta
