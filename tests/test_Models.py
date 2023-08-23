@@ -3,9 +3,6 @@ import dadi.DFE as DFE
 import pytest
 import textwrap
 from dadi_cli.Models import *
-import dadi_cli.portik_models.portik_models_2d
-import dadi_cli.portik_models.portik_models_3d
-import dadi_cli.custom_models
 from inspect import isfunction, getmembers
 
 
@@ -14,9 +11,7 @@ from inspect import isfunction, getmembers
 def model_list():
     pytest.demo_model_list = getmembers(dadi.Demographics1D, isfunction) + \
     getmembers(dadi.Demographics2D, isfunction) + \
-    getmembers(dadi_cli.portik_models.portik_models_2d, isfunction) + \
-    getmembers(dadi_cli.portik_models.portik_models_3d, isfunction) + \
-    getmembers(dadi_cli.custom_models, isfunction)
+    getmembers(dadi.Demographics3D, isfunction)
     pytest.sel_model_list = getmembers(DFE.DemogSelModels, isfunction)
 
 
@@ -49,42 +44,42 @@ def test_print_built_in_models(capfd, model_list):
     - three_epoch_inbreeding
     - two_epoch
 
-    Built-in 2D dadi demographic models:
+    Built-in 2D dadi and Portik et al. (2017) demographic models:
     - IM
     - IM_mscore
     - IM_pre
     - IM_pre_mscore
+    - anc_asym_mig
+    - anc_asym_mig_size
+    - anc_sym_mig
+    - anc_sym_mig_size
+    - asym_mig
+    - asym_mig_size
+    - asym_mig_twoepoch
     - bottlegrowth_2d
     - bottlegrowth_split
     - bottlegrowth_split_mig
+    - founder_asym
+    - founder_nomig
+    - founder_nomig_admix_early
+    - founder_nomig_admix_late
+    - founder_nomig_admix_two_epoch
+    - founder_sym
+    - no_mig
+    - no_mig_size
+    - sec_contact_asym_mig
+    - sec_contact_asym_mig_size
+    - sec_contact_asym_mig_size_three_epoch
+    - sec_contact_asym_mig_three_epoch
+    - sec_contact_sym_mig
+    - sec_contact_sym_mig_size
+    - sec_contact_sym_mig_size_three_epoch
+    - sec_contact_sym_mig_three_epoch
     - snm_2d
     - split_asym_mig
     - split_delay_mig
     - split_mig
     - split_mig_mscore
-    - anc_asym_mig
-    - anc_asym_mig_size
-    - anc_sym_mig
-    - anc_sym_mig_size
-    - asym_mig
-    - asym_mig_size
-    - asym_mig_twoepoch
-    - founder_asym
-    - founder_nomig
-    - founder_nomig_admix_early
-    - founder_nomig_admix_late
-    - founder_nomig_admix_two_epoch
-    - founder_sym
-    - no_mig
-    - no_mig_size
-    - sec_contact_asym_mig
-    - sec_contact_asym_mig_size
-    - sec_contact_asym_mig_size_three_epoch
-    - sec_contact_asym_mig_three_epoch
-    - sec_contact_sym_mig
-    - sec_contact_sym_mig_size
-    - sec_contact_sym_mig_size_three_epoch
-    - sec_contact_sym_mig_three_epoch
     - sym_mig
     - sym_mig_size
     - sym_mig_twoepoch
@@ -97,47 +92,7 @@ def test_print_built_in_models(capfd, model_list):
     - vic_sec_contact_sym_mig
     - vic_two_epoch_admix
 
-    Built-in 2D Portik et al. (2017) demographic models:
-    - anc_asym_mig
-    - anc_asym_mig_size
-    - anc_sym_mig
-    - anc_sym_mig_size
-    - asym_mig
-    - asym_mig_size
-    - asym_mig_twoepoch
-    - founder_asym
-    - founder_nomig
-    - founder_nomig_admix_early
-    - founder_nomig_admix_late
-    - founder_nomig_admix_two_epoch
-    - founder_sym
-    - no_mig
-    - no_mig_size
-    - sec_contact_asym_mig
-    - sec_contact_asym_mig_size
-    - sec_contact_asym_mig_size_three_epoch
-    - sec_contact_asym_mig_three_epoch
-    - sec_contact_sym_mig
-    - sec_contact_sym_mig_size
-    - sec_contact_sym_mig_size_three_epoch
-    - sec_contact_sym_mig_three_epoch
-    - sym_mig
-    - sym_mig_size
-    - sym_mig_twoepoch
-    - vic_anc_asym_mig
-    - vic_anc_sym_mig
-    - vic_no_mig
-    - vic_no_mig_admix_early
-    - vic_no_mig_admix_late
-    - vic_sec_contact_asym_mig
-    - vic_sec_contact_sym_mig
-    - vic_two_epoch_admix
-
-    Built-in 3D Gutenkunst et al. (2009) Out-of-Africa demographic model:
-    - out_of_africa
-    - out_of_africa_no_mig
-
-    Built-in 3D Portik et al. (2017) demographic models:
+    Built-in 3D dadi and Portik et al. (2017) demographic models:
     - admix_origin_no_mig
     - admix_origin_sym_mig_adj
     - admix_origin_uni_mig_adj
@@ -145,6 +100,7 @@ def test_print_built_in_models(capfd, model_list):
     - ancmig_adj_1
     - ancmig_adj_2
     - ancmig_adj_3
+    - out_of_africa
     - refugia_adj_1
     - refugia_adj_2
     - refugia_adj_2_var_sym

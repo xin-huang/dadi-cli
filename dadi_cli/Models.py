@@ -4,9 +4,6 @@ import sys
 import os
 import importlib
 from inspect import getmembers, isfunction
-import dadi_cli.portik_models.portik_models_2d
-import dadi_cli.portik_models.portik_models_3d
-import dadi_cli.custom_models
 
 duplicated_models = ["snm", "bottlegrowth"]
 duplicated_sele_models = [
@@ -23,10 +20,15 @@ duplicated_sele_models = [
 ]
 oned_models = [m[0] for m in getmembers(dadi.Demographics1D, isfunction)]
 twod_models = [m[0] for m in getmembers(dadi.Demographics2D, isfunction)]
+try:
+    threed_models = [m[0] for m in getmembers(dadi.Demographics3D, isfunction)]
+except AttributeError:
+    print("dadi version is < 2.3.2, upgrade for easy access to 3D models added to dadi.")
+    threed_models = []
 sele_models = [m[0] for m in getmembers(DFE.DemogSelModels, isfunction)]
-portik_models_2d = [m[0] for m in getmembers(dadi_cli.portik_models.portik_models_2d, isfunction)]
-portik_models_3d = [m[0] for m in getmembers(dadi_cli.portik_models.portik_models_3d, isfunction)]
-custom_models = [m[0] for m in getmembers(dadi_cli.custom_models, isfunction)]
+# portik_models_2d = [m[0] for m in getmembers(dadi_cli.portik_models.portik_models_2d, isfunction)]
+# portik_models_3d = [m[0] for m in getmembers(dadi_cli.portik_models.portik_models_3d, isfunction)]
+# custom_models = [m[0] for m in getmembers(dadi_cli.custom_models, isfunction)]
 for m in duplicated_models:
     oned_models.remove(m)
 for m in duplicated_models:
@@ -66,12 +68,8 @@ def get_model(model_name, model_file=None):
         func = getattr(dadi.Demographics1D, model_name)
     elif model_name in twod_models:
         func = getattr(dadi.Demographics2D, model_name)
-    elif model_name in portik_models_2d:
-        func = getattr(dadi_cli.portik_models.portik_models_2d, model_name)
-    elif model_name in portik_models_3d:
-        func = getattr(dadi_cli.portik_models.portik_models_3d, model_name)
-    elif model_name in custom_models:
-        func = getattr(dadi_cli.custom_models, model_name)
+    elif model_name in threed_models:
+        func = getattr(dadi.Demographics3D, model_name)
     elif model_name in sele_models:
         func = getattr(DFE.DemogSelModels, model_name)
     else:
@@ -97,25 +95,13 @@ def print_built_in_models():
         print(f"- {m}")
     print()
 
-    print("Built-in 2D dadi demographic models:")
+    print("Built-in 2D dadi and Portik et al. (2017) demographic models:")
     for m in twod_models:
         print(f"- {m}")
-    for m in portik_models_2d:
-        print(f"- {m}")
     print()
 
-    print("Built-in 2D Portik et al. (2017) demographic models:")
-    for m in portik_models_2d:
-        print(f"- {m}")
-    print()
-
-    print("Built-in 3D Gutenkunst et al. (2009) Out-of-Africa demographic model:")
-    for m in custom_models:
-        print(f"- {m}")
-    print()
-
-    print("Built-in 3D Portik et al. (2017) demographic models:")
-    for m in portik_models_3d:
+    print("Built-in 3D dadi and Portik et al. (2017) demographic models:")
+    for m in threed_models:
         print(f"- {m}")
     print()
 
