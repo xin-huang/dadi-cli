@@ -491,6 +491,7 @@ def test_run_stat_demography():
     stat_args.constants=-1
     stat_args.logscale=False
     stat_args.output="tests/test_results/main_demo_godambe.txt"
+    stat_args.eps=[0.1]
     dcli.run_stat_demography(stat_args)
     os.remove(stat_args.output)
 
@@ -512,6 +513,7 @@ def test_run_stat_dfe():
     stat_args.constants=-1
     stat_args.logscale=False
     stat_args.output="tests/test_results/main_dfe_godambe.txt"
+    stat_args.eps=[0.1]
     dcli.run_stat_dfe(stat_args)
     os.remove(stat_args.output)
 

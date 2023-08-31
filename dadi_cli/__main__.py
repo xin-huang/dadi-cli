@@ -884,6 +884,7 @@ def run_stat_demography(args):
         fixed_params=args.constants,
         logscale=args.logscale,
         output=args.output,
+        eps_l=args.eps,
     )
 
 
@@ -922,6 +923,7 @@ def run_stat_dfe(args):
         fixed_params=args.constants,
         logscale=args.logscale,
         output=args.output,
+        eps_l=args.eps,
     )
 
 
@@ -1160,7 +1162,15 @@ def add_sample_sizes_argument(parser):
         help="Sample sizes of populations.",
         dest="sample_sizes",
     )
-
+def add_eps_argument(parser):
+    parser.add_argument(
+        "--eps",
+        default=[0.1, 0.01, 0.001],
+        type=_check_nonnegative_float,
+        nargs="+",
+        required=False,
+        help="Step sizes to try for Godambe analysis. Default: [0.1, 0.01, 0.001]",
+    )
 
 def add_popt_argument(parser):
     parser.add_argument(
@@ -1615,6 +1625,7 @@ def dadi_cli_parser():
     add_misid_argument(parser)
     add_output_argument(parser)
     add_constant_argument(parser)
+    add_eps_argument(parser)
     parser.add_argument(
         "--demo-popt",
         type=str,
@@ -1634,6 +1645,7 @@ def dadi_cli_parser():
         action="store_true",
         help="Determine whether estimating the uncertainties by assuming log-normal distribution of parameters; Default: False.",
     )
+
     parser.set_defaults(runner=run_stat_demography)
 
     parser = subparsers.add_parser(
@@ -1645,6 +1657,7 @@ def dadi_cli_parser():
     add_misid_argument(parser)
     add_output_argument(parser)
     add_constant_argument(parser)
+    add_eps_argument(parser)
     parser.add_argument(
         "--dfe-popt",
         type=str,
@@ -1803,6 +1816,14 @@ def _check_positive_num(value):
         )
     return fvalue
 
+def _check_nonnegative_float(value):
+    # for value in values:
+    fvalue = float(value)
+    if fvalue < 0:
+        raise argparse.ArgumentTypeError(
+            "only accepts postive numbers; %s is an invalid value" % value
+        )
+    return fvalue
 
 def _calc_p0_from_bounds(lb, ub):
     p0 = []

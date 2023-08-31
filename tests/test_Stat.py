@@ -26,6 +26,7 @@ def test_StatDM_code():
     fixed_params = -1
     nomisid = True
     logscale = False
+    eps = [0.1]
     godambe_stat_demograpy(
         fs,
         func,
@@ -36,6 +37,7 @@ def test_StatDM_code():
         fixed_params,
         nomisid,
         logscale,
+        eps,
     )
 
 
@@ -51,6 +53,7 @@ def test_StatDM_fix_code():
     fixed_params = [-1, -1, 0.00984767, -1, -1]
     nomisid = False
     logscale = True
+    eps = [0.01, 0.1]
     godambe_stat_demograpy(
         fs,
         func,
@@ -60,7 +63,8 @@ def test_StatDM_fix_code():
         demo_popt,
         fixed_params,
         nomisid,
-        logscale
+        logscale,
+        eps,
     )
 
 
@@ -77,6 +81,7 @@ def test_StatDFE_code_mix_lognormal():
     fixed_params = [-1, -1, 0, -1, -1]
     nomisid = False
     logscale = False
+    eps = [0.01]
     godambe_stat_dfe(
         fs,
         cache1d,
@@ -90,6 +95,7 @@ def test_StatDFE_code_mix_lognormal():
         fixed_params,
         nomisid,
         logscale,
+        eps,
     )
 
 
@@ -108,6 +114,7 @@ def test_StatDFE_code_1d_lognormal():
     fixed_params = -1
     nomisid = False
     logscale = True
+    eps = [0.01]
     godambe_stat_dfe(
         fs,
         cache1d,
@@ -121,6 +128,7 @@ def test_StatDFE_code_1d_lognormal():
         fixed_params,
         nomisid,
         logscale,
+        eps,
     )
 
 
@@ -139,6 +147,7 @@ def test_StatDFE_code_2d_lognormal():
     fixed_params = -1
     nomisid = True
     logscale = False
+    eps = [0.01]
     godambe_stat_dfe(
         fs,
         cache1d,
@@ -152,6 +161,7 @@ def test_StatDFE_code_2d_lognormal():
         fixed_params,
         nomisid,
         logscale,
+        eps,
     )
 
 
@@ -166,6 +176,7 @@ def test_StatDFE_terminal_1d_lognormal():
     dfe_popt = (
         "tests/example_data/example.split_mig.dfe.1d_lognormal.params.InferDFE.bestfits"
     )
+    eps = " 0.1 "
     subprocess.run(
         "dadi-cli StatDFE --nomisid"
         + " --fs "
@@ -181,7 +192,9 @@ def test_StatDFE_terminal_1d_lognormal():
         + " --bootstrapping-nonsynonymous-dir "
         + bootstrap_non_dir
         + " --output "
-        + output,
+        + output
+        + " --eps "
+        + eps,
         shell=True,
     )
 
