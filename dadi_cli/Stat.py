@@ -9,7 +9,7 @@ from dadi_cli.utilities import get_opts_and_theta, convert_to_None
 
 
 def godambe_stat_demograpy(
-    fs, func, grids, output, bootstrap_dir, demo_popt, fixed_params, nomisid, logscale
+    fs, func, grids, output, bootstrap_dir, demo_popt, fixed_params, nomisid, logscale, eps_l
 ):
     """
     Description:
@@ -49,7 +49,7 @@ def godambe_stat_demograpy(
         return func_ex(params, ns, pts)
 
     f = open(output, "w")
-    for eps in [0.01, 0.001, 0.0001]:
+    for eps in eps_l:
         popt = np.array(free_params)
         uncerts_adj = dadi.Godambe.GIM_uncert(
             gfunc, grids, all_boot, popt, fs, multinom=True, log=logscale, eps=eps
@@ -106,6 +106,7 @@ def godambe_stat_dfe(
     fixed_params,
     nomisid,
     logscale,
+    eps_l,
 ):
     """
     Description:
@@ -186,7 +187,7 @@ def godambe_stat_dfe(
             return sfunc(params, None, sele_dist, theta, None, exterior_int=True)
 
     f = open(output, "w")
-    for eps in [0.01, 0.001, 0.0001]:
+    for eps in eps_l:
         free_params = np.array(free_params)
         boot_theta_adjusts = [b.sum() / fs.sum() for b in all_syn_boot]
         uncerts_adj = dadi.Godambe.GIM_uncert(
