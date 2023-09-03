@@ -35,9 +35,8 @@ Or, for the latest updates, clone this repo and using the following command
 pip install .
 ```
 
-Users can also use `conda` to create a virtual environment and install the latest `dadi-cli` with these two conda environment files [conda-cpu-env.yml](https://github.com/xin-huang/dadi-cli/blob/master/conda-cpu-env.yml) and [conda-gpu-env.yml](https://github.com/xin-huang/dadi-cli/blob/master/conda-gpu-env.yml) in this repo. To install `conda`, please follow the [instruction](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html). We recommend users use [mamba](https://github.com/mamba-org/mamba) to create the virtual environment, because `mamba` is much faster than `conda`. Then users can use the following commands:
+Users can also use `conda` to create a virtual environment and install the latest `dadi-cli` with these two conda environment files [conda-cpu-env.yml](https://github.com/xin-huang/dadi-cli/blob/master/conda-cpu-env.yml) and [conda-gpu-env.yml](https://github.com/xin-huang/dadi-cli/blob/master/conda-gpu-env.yml) in this repo. To install `conda`, please follow the [instruction](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html). We recommend users install and use [mamba](https://mamba.readthedocs.io/en/latest/mamba-installation.html#mamba-install) to create the virtual environment, because `mamba` is much faster than `conda`. Then users can use the following commands:
 
-	conda install mamba -n base -c conda-forge
 	mamba env create -f conda-cpu-env.yml
 	conda activate dadi-cli-cpu
 
