@@ -1,0 +1,4 @@
+# /Users/tjstruck/software/mambaforge/envs/dadi-tools/bin/donni infer --input_fs tests/example_data/ooa_fold.fs --export_dadi_cli tests/example_data/ooa_fold --model out_of_africa --mlpr_dir ooa_10_folded
+# grid points used: (29, 36, 42)
+# Log(likelihood)	nuAf	nuB	nuEu0	nuEu	nuAs0	nuAs	mAfB	mAfEu	mAfAs	mEuAs	TAf	TB	TEuAs	misid	theta
+-0	1.2911600309454843	0.14028802499179158	0.08949501532754288	0.6368058020624665	0.07928030013031408	1.1912459197505276	5.232519766477177	0.8940335411406186	0.8134403767480465	6.307450210383845	0.3206075077416202	0.29161874433463136	0.1499297295606375	0.05	1.1442002960170805	

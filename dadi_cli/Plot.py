@@ -29,6 +29,8 @@ def plot_single_sfs(fs, projections, output, vmin):
         dadi.Plotting.plot_1d_fs(fs)
     if len(fs.sample_sizes) == 2:
         dadi.Plotting.plot_single_2d_sfs(fs, vmin=vmin)
+    if len(fs.sample_sizes) > 2:
+        raise Exception("dadi-cli does not support plotting a single fs with more than two populations")
     fig.savefig(output)
 
 
@@ -65,6 +67,14 @@ def plot_comparison(fs, fs2, projections, output, vmin, resid_range):
         dadi.Plotting.plot_2d_comp_Poisson(
             model=fs, data=fs2, vmin=vmin, resid_range=resid_range
         )
+    if len(fs.sample_sizes) == 3:
+        fs = fs.project(projections)
+        fs2 = fs2.project(projections)
+        dadi.Plotting.plot_3d_comp_Poisson(
+            model=fs, data=fs2, vmin=vmin, resid_range=resid_range
+        )
+    if len(fs.sample_sizes) > 3:
+        raise Exception("dadi-cli does not support comparing fs with more than three populations")
     fig.savefig(output)
 
 
@@ -112,6 +122,16 @@ def plot_fitted_demography(
         dadi.Plotting.plot_2d_comp_multinom(
             model, fs, vmin=vmin, resid_range=resid_range
         )
+    if len(ns) == 3:
+        if projections == None:
+            projections = ns
+        fs = fs.project(projections)
+        model = model.project(projections)
+        dadi.Plotting.plot_3d_comp_multinom(
+            model, fs, vmin=vmin, resid_range=resid_range
+        )
+    if len(ns) > 3:
+        raise Exception("dadi-cli does not support comparing fs and model with more than three populations")
     fig.savefig(output)
 
 
@@ -191,6 +211,16 @@ def plot_fitted_dfe(
         dadi.Plotting.plot_2d_comp_Poisson(
             model, fs, vmin=vmin, resid_range=resid_range
         )
+    if len(ns) == 3:
+        if projections == None:
+            projections = ns
+        fs = fs.project(projections)
+        model = model.project(projections)
+        dadi.Plotting.plot_3d_comp_Poisson(
+            model, fs, vmin=vmin, resid_range=resid_range
+        )
+    if len(ns) > 3:
+        raise Exception("dadi-cli does not support comparing fs and model with more than three populations")
     fig.savefig(output)
 
 

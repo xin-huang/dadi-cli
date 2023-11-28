@@ -39,6 +39,9 @@ def files():
     pytest.fs2d_cache1d = "tests/example_data/cache_split_mig_1d.bpkl"
     pytest.fs2d_cache2d = "tests/example_data/cache_split_mig_2d.bpkl"
 
+    pytest.fs3d_model = "tests/example_data/ooa.fs"
+    pytest.fs3d_sampled = "tests/example_data/ooa_10000_sampled.fs"
+    pytest.fs3d_popt = "tests/example_data/example.ooa.donni.pseudofit"
 
 def test_plot_single_sfs(files):
     plot_single_sfs(
@@ -100,7 +103,14 @@ def test_plot_comparison(files):
         vmin=1e-3,
         resid_range=3,
     )
-
+    plot_comparison(
+        fs=pytest.fs3d_model,
+        fs2=pytest.fs3d_sampled,
+        projections=None,
+        output="tests/test_results/plot_comparison_3d_no_proj.png",
+        vmin=1e-3,
+        resid_range=3,
+    )
 
 def test_plot_fitted_demography(files):
     plot_fitted_demography(
@@ -143,7 +153,16 @@ def test_plot_fitted_demography(files):
         vmin=1e-3,
         resid_range=3,
     )
-
+    plot_fitted_demography(
+        fs=pytest.fs3d_sampled,
+        func=dadi.Demographics3D.out_of_africa,
+        popt=pytest.fs3d_popt,
+        projections=None,
+        nomisid=False,
+        output="tests/test_results/plot_plot_fitted_demography_3d_no_proj.png",
+        vmin=1e-3,
+        resid_range=3,
+    )
 
 def test_plot_fitted_dfe(files):
     # plot_fitted_dfe(fs, cache1d=pytest.fs1d_cache1d, cache2d=None, demo_popt=pytest.fs1d_demo_popt, sele_popt, projections, pdf, pdf2, nomisid, output, vmin, resid_range)
