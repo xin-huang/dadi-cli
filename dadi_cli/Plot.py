@@ -31,7 +31,6 @@ def plot_single_sfs(fs, projections, output, vmin):
         fig = plt.figure(219033)
         dadi.Plotting.plot_single_2d_sfs(fs, vmin=vmin)
     if len(fs.sample_sizes) == 3:
-        # plt.clf()
         try:
             fig = plt.figure(219033, figsize=(10,4))
             dadi.Plotting.plot_3d_pairwise(fs, vmin=vmin)
