@@ -24,13 +24,20 @@ def plot_single_sfs(fs, projections, output, vmin):
     fs = dadi.Spectrum.from_file(fs)
     if projections == None:
         projections = fs.sample_sizes
-    fig = plt.figure(219033)
     if len(fs.sample_sizes) == 1:
+        fig = plt.figure(219033)
         dadi.Plotting.plot_1d_fs(fs)
     if len(fs.sample_sizes) == 2:
+        fig = plt.figure(219033)
         dadi.Plotting.plot_single_2d_sfs(fs, vmin=vmin)
-    if len(fs.sample_sizes) > 2:
-        raise Exception("dadi-cli does not support plotting a single fs with more than two populations")
+    if len(fs.sample_sizes) == 3:
+        try:
+            fig = plt.figure(219033, figsize=(10,4))
+            dadi.Plotting.plot_3d_pairwise(fs, vmin=vmin)
+        except AttributeError:
+            raise AttributeError("Update to dadi 2.3.3 to use plot_3d_pairwise function")
+    if len(fs.sample_sizes) > 3:
+        raise Exception("dadi-cli does not support plotting a single fs with more than three populations")
     fig.savefig(output)
 
 

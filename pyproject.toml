@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "dadi-cli"
-version = "0.9.4"
+version = "0.9.4b"
 description = "A command line interface for dadi"
 readme = "README.md"
 license = "Apache-2.0"
