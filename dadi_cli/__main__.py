@@ -242,8 +242,11 @@ def run_infer_dm(args):
     func = dadi.Numerics.make_extrap_func(func)
 
     if args.cov_args[0] != None:
-        from dadi.LowCoverage.LowCoverage import *
-        cov_dd, nseq, nsub, sim_threshold, Fx = cov_args
+        try:
+            from dadi.LowCoverage.LowCoverage import make_low_cov_func
+        except ModuleNotFoundError:
+            raise ImportError("ERROR:\nCurrent dadi version does not support coverage model\n")
+        cov_dd, nseq, nsub, sim_threshold, Fx = args.cov_args
         cov_dd = pickle.load(open(cov_dd, 'rb'))
         func_ex = make_low_cov_func(func, cov_dd, fs.pop_ids, [nseq], [nsub], sim_threshold=sim_threshold, Fx=Fx)
 
