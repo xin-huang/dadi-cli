@@ -13,6 +13,7 @@ def infer_demography(
     lower_bounds,
     fixed_params,
     misid,
+    cov_args,
     cuda,
     maxeval,
     maxtime,
@@ -60,6 +61,12 @@ def infer_demography(
         func = dadi.Numerics.make_anc_state_misid_func(func)
 
     func_ex = dadi.Numerics.make_extrap_func(func)
+
+    # if cov_args[0] != None:
+    #     from dadi.LowCoverage.LowCoverage import *
+    #     cov_dd, nseq, nsub, sim_threshold, Fx = cov_args
+    #     func_ex = make_low_cov_func(func_ex, cov_dd, fs.pop_ids, [nseq], [nsub], sim_threshold=sim_threshold, Fx=Fx)
+
     p0_len = len(p0)
     lower_bounds = convert_to_None(lower_bounds, p0_len)
     upper_bounds = convert_to_None(upper_bounds, p0_len)

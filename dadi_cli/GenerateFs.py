@@ -14,6 +14,7 @@ def generate_fs(
     bootstrap,
     chunk_size,
     masking,
+    calc_coverage,
     seed,
 ):
     """
@@ -43,10 +44,16 @@ def generate_fs(
         for i in range(len(pop_ids)):
             subsample_dict[pop_ids[i]] = projections[i]
         dd = dadi.Misc.make_data_dict_vcf(
-            vcf_filename=vcf, popinfo_filename=pop_info, subsample=subsample_dict
+            vcf_filename=vcf, popinfo_filename=pop_info, subsample=subsample_dict, calc_coverage=calc_coverage
         )
     else:
-        dd = dadi.Misc.make_data_dict_vcf(vcf_filename=vcf, popinfo_filename=pop_info)
+        dd = dadi.Misc.make_data_dict_vcf(vcf_filename=vcf, popinfo_filename=pop_info, calc_coverage=calc_coverage)
+    if calc_coverage:    
+        import pickle
+        coverage_dd = {chrom_pos:{'coverage':dd[chrom_pos]['coverage']} for chrom_pos in dd}
+        print(f"\nSaving coverage dictionary in pickle named:\n{output}.coverage.pickle\n")
+        pickle.dump(coverage_dd, open(f"{output}.coverage.pickle","wb"))
+
 
     if bootstrap is None:
         fs = dadi.Spectrum.from_data_dict(

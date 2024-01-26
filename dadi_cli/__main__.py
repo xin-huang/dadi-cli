@@ -54,6 +54,7 @@ def run_generate_fs(args):
         marginalize_pops=args.marginalize_pops,
         subsample=args.subsample,
         masking=mask,
+        calc_coverage=args.calc_coverage,
     )
 
 
@@ -233,6 +234,18 @@ def run_infer_dm(args):
 
     # Extract model function and parameter names, from custom model_file if necessary
     func, param_names = get_model(args.model, args.model_file)
+
+    # Move function modification outside the InferDM module
+    if args.misid:
+        func = dadi.Numerics.make_anc_state_misid_func(func)
+
+    func = dadi.Numerics.make_extrap_func(func)
+
+    if args.cov_args[0] != None:
+        from dadi.LowCoverage.LowCoverage import *
+        cov_dd, nseq, nsub, sim_threshold, Fx = cov_args
+        cov_dd = pickle.load(open(cov_dd, 'rb'))
+        func_ex = make_low_cov_func(func, cov_dd, fs.pop_ids, [nseq], [nsub], sim_threshold=sim_threshold, Fx=Fx)
 
     if args.maxeval == False:
         args.maxeval = max(len(args.p0) * 50, 1)
@@ -458,6 +471,7 @@ def run_infer_dm(args):
                        args.lbounds,
                        args.constants,
                        args.misid,
+                       args.cov_args,
                        None,
                        args.maxeval,
                        args.maxtime,
@@ -1117,7 +1131,19 @@ def add_model_argument(parser):
         dest="model_file",
         help="Name of python module file (not including .py) that contains custom models to use. Can be an HTML link. Default: None.",
     )
-
+    parser.add_argument(
+        "--coverage-model",
+        nargs=3,
+        default=[None, None, None, None, None],
+        action="store",
+        dest="cov_args",
+        help="Enable coverage model.\nArguments are:\
+        \n1. The name of the <>.coverage.pickle file produced by GenerateFs --calc-coverage.\
+        \n2. The total number of samples sequenced for the VCF.\
+        \n3. The sample size used to generate the fs (can this be gotten from the fs???)\
+        \n4. The sim_threshold, which is????\
+        \n5. The inbreeding coefficient, if the user wants to model inbreeding (users can estimate the inbreeding coefficent).",
+    )
 
 def add_fs_argument(parser):
     parser.add_argument(
@@ -1405,6 +1431,13 @@ def dadi_cli_parser():
         nargs="+",
         help="Population names you want to marginalize (remove) from the full fs. Default: None.",
         dest="marginalize_pops",
+    )
+    parser.add_argument(
+        "--calc-coverage",
+        default=False,
+        action="store_true",
+        dest="calc_coverage",
+        help="Store coverage information of sites in <output>.coverage.pickle object. Default: None.",
     )
     add_output_argument(parser)
     add_seed_argument(parser)
