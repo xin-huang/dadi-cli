@@ -13,7 +13,7 @@ def infer_demography(
     lower_bounds,
     fixed_params,
     misid,
-    cov_args,
+    # cov_args,
     cuda,
     maxeval,
     maxtime,

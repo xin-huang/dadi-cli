@@ -235,20 +235,20 @@ def run_infer_dm(args):
     # Extract model function and parameter names, from custom model_file if necessary
     func, param_names = get_model(args.model, args.model_file)
 
-    # Move function modification outside the InferDM module
-    if args.misid:
-        func = dadi.Numerics.make_anc_state_misid_func(func)
+    # # Move function modification outside the InferDM module
+    # if args.misid:
+    #     func = dadi.Numerics.make_anc_state_misid_func(func)
 
-    func = dadi.Numerics.make_extrap_func(func)
+    # func = dadi.Numerics.make_extrap_func(func)
 
-    if args.cov_args[0] != None:
-        try:
-            from dadi.LowCoverage.LowCoverage import make_low_cov_func
-        except ModuleNotFoundError:
-            raise ImportError("ERROR:\nCurrent dadi version does not support coverage model\n")
-        cov_dd, nseq, nsub, sim_threshold, Fx = args.cov_args
-        cov_dd = pickle.load(open(cov_dd, 'rb'))
-        func_ex = make_low_cov_func(func, cov_dd, fs.pop_ids, [nseq], [nsub], sim_threshold=sim_threshold, Fx=Fx)
+    # if args.cov_args[0] != None:
+    #     try:
+    #         from dadi.LowCoverage.LowCoverage import make_low_cov_func
+    #     except ModuleNotFoundError:
+    #         raise ImportError("ERROR:\nCurrent dadi version does not support coverage model\n")
+    #     cov_dd, nseq, nsub, sim_threshold, Fx = args.cov_args
+    #     cov_dd = pickle.load(open(cov_dd, 'rb'))
+    #     func_ex = make_low_cov_func(func, cov_dd, fs.pop_ids, [nseq], [nsub], sim_threshold=sim_threshold, Fx=Fx)
 
     if args.maxeval == False:
         args.maxeval = max(len(args.p0) * 50, 1)
@@ -474,7 +474,7 @@ def run_infer_dm(args):
                        args.lbounds,
                        args.constants,
                        args.misid,
-                       args.cov_args,
+                       # args.cov_args,
                        None,
                        args.maxeval,
                        args.maxtime,

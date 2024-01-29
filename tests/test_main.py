@@ -33,6 +33,7 @@ def test_run_generate_fs():
     gen_fs_args.subsample = False
     gen_fs_args.mask_shared = False
     gen_fs_args.mask = False
+    gen_fs_args.calc_coverage = False
     dcli.run_generate_fs(gen_fs_args)
     gen_fs_args.mask = True
     dcli.run_generate_fs(gen_fs_args)
@@ -195,6 +196,7 @@ def infer_dm_args():
     pytest.bestfit_p0 = None
     pytest.delta_ll = 0.001
     pytest.global_optimization = False
+    pytest.cov_args = [None]
     pytest.seed = None
 
 def test_run_infer_dm(infer_dm_args):

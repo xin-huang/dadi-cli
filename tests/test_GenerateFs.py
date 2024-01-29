@@ -49,6 +49,7 @@ def test_generate_fs(data):
         bootstrap=None,
         chunk_size=None,
         masking="",
+        calc_coverage=False,
         seed=None,
     )
     dadi_cli_fs = dadi.Spectrum.from_file(pytest.unfolded_output)
@@ -72,6 +73,7 @@ def test_generate_fs(data):
         bootstrap=None,
         chunk_size=None,
         masking="",
+        calc_coverage=False,
         seed=None,
     )
     dadi_cli_fs = dadi.Spectrum.from_file(pytest.folded_output)
@@ -95,6 +97,7 @@ def test_generate_fs(data):
         bootstrap=None,
         chunk_size=None,
         masking="",
+        calc_coverage=False,
         seed=None,
     )
     dadi_cli_fs = dadi.Spectrum.from_file(pytest.unfolded_output)
@@ -117,6 +120,7 @@ def test_generate_fs_subsample(data):
         bootstrap=None,
         chunk_size=None,
         masking="",
+        calc_coverage=False,
         seed=None,
     )
     dadi_cli_fs = dadi.Spectrum.from_file(pytest.subsample_output)
@@ -146,6 +150,7 @@ def test_generate_fs_bootstrap(data):
         bootstrap=10,
         chunk_size=100000,
         masking="",
+        calc_coverage=False,
         seed=123,
     )
 
@@ -177,6 +182,7 @@ def test_generate_fs_masks(data):
         bootstrap=None,
         chunk_size=None,
         masking="singletons",
+        calc_coverage=False,
         seed=None,
     )
     dadi_cli_fs = dadi.Spectrum.from_file(pytest.marginalize_CEU_output)
@@ -197,6 +203,7 @@ def test_generate_fs_masks(data):
         bootstrap=None,
         chunk_size=None,
         masking="singletons",
+        calc_coverage=False,
         seed=None,
     )
     dadi_cli_fs = dadi.Spectrum.from_file(pytest.singleton_mask_output)
@@ -228,6 +235,7 @@ def test_generate_fs_masks(data):
         bootstrap=None,
         chunk_size=None,
         masking="shared",
+        calc_coverage=False,
         seed=None,
     )
     dadi_cli_fs = dadi.Spectrum.from_file(pytest.shared_singleton_mask_output)
@@ -257,6 +265,7 @@ def test_generate_fs_masks(data):
         bootstrap=None,
         chunk_size=None,
         masking="singletons",
+        calc_coverage=False,
         seed=None,
     )
     dadi_cli_fs = dadi.Spectrum.from_file(pytest.shared_singleton_mask_output)
@@ -280,6 +289,7 @@ def test_generate_fs_masks(data):
         bootstrap=None,
         chunk_size=None,
         masking="shared",
+        calc_coverage=False,
         seed=None,
     )
     dadi_cli_fs = dadi.Spectrum.from_file(pytest.shared_singleton_mask_output)
@@ -305,6 +315,7 @@ def test_generate_fs_masks(data):
             bootstrap=None,
             chunk_size=None,
             masking="shared",
+            calc_coverage=False,
             seed=None,
         )
 
@@ -327,6 +338,7 @@ def test_generate_fs_marginalize(data):
         bootstrap=None,
         chunk_size=None,
         masking="",
+        calc_coverage=False,
         seed=None,
     )
     dadi_cli_fs = dadi.Spectrum.from_file(pytest.marginalize_CEU_output)
