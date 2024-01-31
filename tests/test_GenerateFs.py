@@ -126,8 +126,8 @@ def test_generate_fs_subsample(data):
     dadi_cli_fs = dadi.Spectrum.from_file(pytest.subsample_output)
 
     subsample_dict = {
-        "YRI": 216,
-        "CEU": 198,
+        "YRI": projections[0]//2,
+        "CEU": projections[1]//2,
     }
     dd = dadi.Misc.make_data_dict_vcf(
         pytest.vcf, pytest.pop_info, subsample=subsample_dict

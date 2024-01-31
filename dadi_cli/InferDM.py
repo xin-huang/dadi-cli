@@ -13,7 +13,8 @@ def infer_demography(
     lower_bounds,
     fixed_params,
     misid,
-    # cov_args,
+    cov_args,
+    cov_inbreeding,
     cuda,
     maxeval,
     maxtime,
@@ -61,11 +62,21 @@ def infer_demography(
         func = dadi.Numerics.make_anc_state_misid_func(func)
 
     func_ex = dadi.Numerics.make_extrap_func(func)
+    print(cov_args)
+    if cov_args != []:
+        try:
+            from dadi.LowCoverage.LowCoverage import make_low_cov_func
+            import pickle
+        except ModuleNotFoundError:
+            raise ImportError("ERROR:\nCurrent dadi version does not support coverage model\n")
+        cov_dd, sim_threshold = cov_args[:2]
+        sim_threshold = float(sim_threshold)
+        nseq = [int(ele) for ele in cov_args[2:]]
+        if cov_inbreeding == []:
+            Fx = None
 
-    # if cov_args[0] != None:
-    #     from dadi.LowCoverage.LowCoverage import *
-    #     cov_dd, nseq, nsub, sim_threshold, Fx = cov_args
-    #     func_ex = make_low_cov_func(func_ex, cov_dd, fs.pop_ids, [nseq], [nsub], sim_threshold=sim_threshold, Fx=Fx)
+        cov_dd = pickle.load(open(cov_dd, 'rb'))
+        func_ex = make_low_cov_func(func_ex, cov_dd, fs.pop_ids, nseq, fs.sample_sizes, sim_threshold=sim_threshold, Fx=Fx)
 
     p0_len = len(p0)
     lower_bounds = convert_to_None(lower_bounds, p0_len)

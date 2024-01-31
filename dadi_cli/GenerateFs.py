@@ -42,7 +42,7 @@ def generate_fs(
     if subsample:
         subsample_dict = {}
         for i in range(len(pop_ids)):
-            subsample_dict[pop_ids[i]] = projections[i]
+            subsample_dict[pop_ids[i]] = projections[i]//2
         dd = dadi.Misc.make_data_dict_vcf(
             vcf_filename=vcf, popinfo_filename=pop_info, subsample=subsample_dict, calc_coverage=calc_coverage
         )

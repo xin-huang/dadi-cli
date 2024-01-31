@@ -474,7 +474,8 @@ def run_infer_dm(args):
                        args.lbounds,
                        args.constants,
                        args.misid,
-                       # args.cov_args,
+                       args.cov_args,
+                       args.cov_inbreeding,
                        None,
                        args.maxeval,
                        args.maxtime,
@@ -1134,18 +1135,28 @@ def add_model_argument(parser):
         dest="model_file",
         help="Name of python module file (not including .py) that contains custom models to use. Can be an HTML link. Default: None.",
     )
+
+def add_coverage_model_argument(parser):
     parser.add_argument(
         "--coverage-model",
-        nargs=3,
-        default=[None, None, None, None, None],
+        nargs="+",
+        default=[],
         action="store",
+        required=False,
         dest="cov_args",
         help="Enable coverage model.\nArguments are:\
         \n1. The name of the <>.coverage.pickle file produced by GenerateFs --calc-coverage.\
-        \n2. The total number of samples sequenced for the VCF.\
-        \n3. The sample size used to generate the fs (can this be gotten from the fs???)\
-        \n4. The sim_threshold, which is????\
-        \n5. The inbreeding coefficient, if the user wants to model inbreeding (users can estimate the inbreeding coefficent).",
+        \n2. The sim_threshold, which is????\
+        \n3. The total number of samples sequenced for each population in the VCF.",
+    )
+    parser.add_argument(
+        "--coverage-inbreeding",
+        nargs="+",
+        default=[],
+        action="store",
+        required=False,
+        dest="cov_inbreeding",
+        help="Pass in optional population inbreeding parameters for the coverage model.",
     )
 
 def add_fs_argument(parser):
@@ -1563,6 +1574,7 @@ def dadi_cli_parser():
     add_inference_argument(parser)
     add_delta_ll_argument(parser)
     add_model_argument(parser)
+    add_coverage_model_argument(parser)
     add_grids_argument(parser)
     add_misid_argument(parser)
     add_constant_argument(parser)
