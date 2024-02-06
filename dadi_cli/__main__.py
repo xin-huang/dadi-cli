@@ -974,6 +974,7 @@ def run_plot(args):
             pdf=args.pdf1d,
             dfe_popt=args.dfe_popt,
             output=args.output,
+            show=args.interactive,
         )
     elif args.dfe_popt != None:
         plot_fitted_dfe(
@@ -988,6 +989,7 @@ def run_plot(args):
             resid_range=args.resid_range,
             projections=args.projections,
             output=args.output,
+            show=args.interactive,
         )
     elif args.demo_popt != None:
         if args.model is None:
@@ -1002,10 +1004,12 @@ def run_plot(args):
             nomisid=args.nomisid,
             resid_range=args.resid_range,
             output=args.output,
+            show=args.interactive,
         )
     elif args.fs2 == None:
         plot_single_sfs(
-            fs=args.fs, projections=args.projections, output=args.output, vmin=args.vmin
+            fs=args.fs, projections=args.projections, output=args.output, 
+            vmin=args.vmin, show=args.interactive,
         )
     else:
         plot_comparison(
@@ -1015,6 +1019,7 @@ def run_plot(args):
             output=args.output,
             vmin=args.vmin,
             resid_range=args.resid_range,
+            show=args.interactive,
         )
 
 
@@ -1612,6 +1617,13 @@ def dadi_cli_parser():
         default=False,
         required=False,
         help="Ratio for the nonsynonymous mutations to the synonymous mutations.",
+    )
+    parser.add_argument(
+        "--interactive",
+        default=False,
+        action="store_true",
+        required=False,
+        help="Display plots in matplotlib window.",
     )
     parser.set_defaults(runner=run_plot)
 

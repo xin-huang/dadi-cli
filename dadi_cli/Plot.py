@@ -10,7 +10,7 @@ from dadi_cli.utilities import pts_l_func
 fig = plt.figure(figsize=(8, 6))
 
 
-def plot_single_sfs(fs, projections, output, vmin):
+def plot_single_sfs(fs, projections, output, vmin, show):
     """
     Description:
         Plots 1d or 2d frequency spectrum.
@@ -26,14 +26,14 @@ def plot_single_sfs(fs, projections, output, vmin):
         projections = fs.sample_sizes
     if len(fs.sample_sizes) == 1:
         fig = plt.figure(219033)
-        dadi.Plotting.plot_1d_fs(fs)
+        dadi.Plotting.plot_1d_fs(fs, show=show)
     if len(fs.sample_sizes) == 2:
         fig = plt.figure(219033)
-        dadi.Plotting.plot_single_2d_sfs(fs, vmin=vmin)
+        dadi.Plotting.plot_single_2d_sfs(fs, vmin=vmin, show=show)
     if len(fs.sample_sizes) == 3:
         try:
             fig = plt.figure(219033, figsize=(10,4))
-            dadi.Plotting.plot_3d_pairwise(fs, vmin=vmin)
+            dadi.Plotting.plot_3d_pairwise(fs, vmin=vmin, show=show)
         except AttributeError:
             raise AttributeError("Update to dadi 2.3.3 to use plot_3d_pairwise function")
     if len(fs.sample_sizes) > 3:
@@ -41,7 +41,7 @@ def plot_single_sfs(fs, projections, output, vmin):
     fig.savefig(output)
 
 
-def plot_comparison(fs, fs2, projections, output, vmin, resid_range):
+def plot_comparison(fs, fs2, projections, output, vmin, resid_range, show):
     """
     Description:
         Plots comparison between two frequence spectra.
@@ -67,18 +67,18 @@ def plot_comparison(fs, fs2, projections, output, vmin, resid_range):
     if len(fs.sample_sizes) == 1:
         fs = fs.project(projections)
         fs2 = fs2.project(projections)
-        dadi.Plotting.plot_1d_comp_Poisson(model=fs, data=fs2)
+        dadi.Plotting.plot_1d_comp_Poisson(model=fs, data=fs2, show=show)
     if len(fs.sample_sizes) == 2:
         fs = fs.project(projections)
         fs2 = fs2.project(projections)
         dadi.Plotting.plot_2d_comp_Poisson(
-            model=fs, data=fs2, vmin=vmin, resid_range=resid_range
+            model=fs, data=fs2, vmin=vmin, resid_range=resid_range, show=show
         )
     if len(fs.sample_sizes) == 3:
         fs = fs.project(projections)
         fs2 = fs2.project(projections)
         dadi.Plotting.plot_3d_comp_Poisson(
-            model=fs, data=fs2, vmin=vmin, resid_range=resid_range
+            model=fs, data=fs2, vmin=vmin, resid_range=resid_range, show=show
         )
     if len(fs.sample_sizes) > 3:
         raise Exception("dadi-cli does not support comparing fs with more than three populations")
@@ -86,7 +86,7 @@ def plot_comparison(fs, fs2, projections, output, vmin, resid_range):
 
 
 def plot_fitted_demography(
-    fs, func, popt, projections, nomisid, output, vmin, resid_range
+    fs, func, popt, projections, nomisid, output, vmin, resid_range, show
 ):
     """
     Description:
@@ -120,14 +120,14 @@ def plot_fitted_demography(
             projections = ns
         fs = fs.project(projections)
         model = model.project(projections)
-        dadi.Plotting.plot_1d_comp_multinom(model, fs)
+        dadi.Plotting.plot_1d_comp_multinom(model, fs, show=show)
     if len(ns) == 2:
         if projections == None:
             projections = ns
         fs = fs.project(projections)
         model = model.project(projections)
         dadi.Plotting.plot_2d_comp_multinom(
-            model, fs, vmin=vmin, resid_range=resid_range
+            model, fs, vmin=vmin, resid_range=resid_range, show=show
         )
     if len(ns) == 3:
         if projections == None:
@@ -135,7 +135,7 @@ def plot_fitted_demography(
         fs = fs.project(projections)
         model = model.project(projections)
         dadi.Plotting.plot_3d_comp_multinom(
-            model, fs, vmin=vmin, resid_range=resid_range
+            model, fs, vmin=vmin, resid_range=resid_range, show=show
         )
     if len(ns) > 3:
         raise Exception("dadi-cli does not support comparing fs and model with more than three populations")
@@ -154,6 +154,7 @@ def plot_fitted_dfe(
     output,
     vmin,
     resid_range,
+    show,
 ):
     """
     Description:
@@ -209,14 +210,14 @@ def plot_fitted_dfe(
             projections = ns
         fs = fs.project(projections)
         model = model.project(projections)
-        dadi.Plotting.plot_1d_comp_Poisson(model, fs)
+        dadi.Plotting.plot_1d_comp_Poisson(model, fs, show=show)
     if len(ns) == 2:
         if projections == None:
             projections = ns
         fs = fs.project(projections)
         model = model.project(projections)
         dadi.Plotting.plot_2d_comp_Poisson(
-            model, fs, vmin=vmin, resid_range=resid_range
+            model, fs, vmin=vmin, resid_range=resid_range, show=show
         )
     if len(ns) == 3:
         if projections == None:
@@ -224,14 +225,14 @@ def plot_fitted_dfe(
         fs = fs.project(projections)
         model = model.project(projections)
         dadi.Plotting.plot_3d_comp_Poisson(
-            model, fs, vmin=vmin, resid_range=resid_range
+            model, fs, vmin=vmin, resid_range=resid_range, show=show
         )
     if len(ns) > 3:
         raise Exception("dadi-cli does not support comparing fs and model with more than three populations")
     fig.savefig(output)
 
 
-def plot_mut_prop(pdf, dfe_popt, output):
+def plot_mut_prop(pdf, dfe_popt, output, show):
     """
     Description:
         Plots proportions of mutations with different selection coefficients given a DFE in 2Ns unit.
@@ -274,5 +275,8 @@ def plot_mut_prop(pdf, dfe_popt, output):
         ],
     )
     plt.grid(alpha=0.3)
+
+    if show:
+        plt.show()
 
     fig.savefig(output, bbox_inches="tight")
