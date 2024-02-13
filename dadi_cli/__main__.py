@@ -1413,11 +1413,15 @@ def dadi_cli_parser():
         help="Name of the file containing the population name of each sample.",
         dest="pop_info",
     )
+    # Check if subsamples are being requested to determin if --projections needed
+    proj_req = True
+    if "--subsample" in sys.argv:
+        proj_req = False
     parser.add_argument(
         "--projections",
         type=_check_positive_int,
         nargs="+",
-        required=True,
+        required=proj_req,
         help="Sample sizes after projection; If you do not want to project down your data, please input the original sample sizes of your data.",
     )
     parser.add_argument(
@@ -1437,6 +1441,7 @@ def dadi_cli_parser():
     )
     parser.add_argument(
         "--subsample",
+        type=_check_positive_int,
         default=[],
         nargs="+",
         dest="subsample",

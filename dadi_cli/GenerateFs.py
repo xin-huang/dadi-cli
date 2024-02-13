@@ -43,11 +43,12 @@ def generate_fs(
         extract_ploidy = True
         subsample_dict = {}
         for i in range(len(pop_ids)):
-            subsample_dict[pop_ids[i]] = int(subsample[i])
+            subsample_dict[pop_ids[i]] = subsample[i]
         dd, ploidy = dadi.Misc.make_data_dict_vcf(
             vcf_filename=vcf, popinfo_filename=pop_info, subsample=subsample_dict, calc_coverage=calc_coverage, extract_ploidy=extract_ploidy
         )
         projections = [individuals*ploidy for individuals in subsample]
+        print(projections, ploidy, subsample)
     else:
         dd = dadi.Misc.make_data_dict_vcf(vcf_filename=vcf, popinfo_filename=pop_info, calc_coverage=calc_coverage)
     if calc_coverage:    
