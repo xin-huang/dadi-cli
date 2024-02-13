@@ -28,6 +28,8 @@ def test_infer_dfe_code():
     lower_bounds = [1e-3, 1e-3]
     fixed_params = -1
     misid = False
+    cov_args = []
+    cov_inbreeding = []
     cuda = False
     maxeval = 100
     maxtime = 300
@@ -43,6 +45,8 @@ def test_infer_dfe_code():
         lower_bounds,
         fixed_params,
         misid,
+        cov_args,
+        cov_inbreeding,
         cuda,
         maxeval,
         maxtime,

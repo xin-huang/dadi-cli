@@ -43,6 +43,9 @@ def files():
     pytest.fs3d_sampled = "tests/example_data/ooa_10000_sampled.fs"
     pytest.fs3d_popt = "tests/example_data/example.ooa.donni.pseudofit"
 
+    pytest.cov_args = []
+    pytest.cov_inbreeding = []
+
 def test_plot_single_sfs(files):
     plot_single_sfs(
         fs=pytest.fs1_1d,
@@ -119,6 +122,8 @@ def test_plot_fitted_demography(files):
         popt=pytest.fs1d_demo_popt,
         projections=[8],
         nomisid=True,
+        cov_args = [],
+        cov_inbreeding=[],
         output="tests/test_results/plot_plot_fitted_demography_1d_w_proj.png",
         vmin=0,
         resid_range=3,
@@ -129,6 +134,8 @@ def test_plot_fitted_demography(files):
         popt=pytest.fs2d_demo_popt,
         projections=[8, 8],
         nomisid=True,
+        cov_args = [],
+        cov_inbreeding=[],
         output="tests/test_results/plot_plot_fitted_demography_2d_w_proj.png",
         vmin=1e-3,
         resid_range=3,
@@ -139,6 +146,8 @@ def test_plot_fitted_demography(files):
         popt=pytest.fs1d_demo_popt,
         projections=None,
         nomisid=True,
+        cov_args = [],
+        cov_inbreeding=[],
         output="tests/test_results/plot_plot_fitted_demography_1d_no_proj.png",
         vmin=0,
         resid_range=3,
@@ -149,6 +158,8 @@ def test_plot_fitted_demography(files):
         popt=pytest.fs2d_demo_popt,
         projections=None,
         nomisid=True,
+        cov_args=[],
+        cov_inbreeding=[],
         output="tests/test_results/plot_plot_fitted_demography_2d_no_proj.png",
         vmin=1e-3,
         resid_range=3,
@@ -159,6 +170,8 @@ def test_plot_fitted_demography(files):
         popt=pytest.fs3d_popt,
         projections=None,
         nomisid=False,
+        cov_args=[],
+        cov_inbreeding=[],
         output="tests/test_results/plot_plot_fitted_demography_3d_no_proj.png",
         vmin=1e-3,
         resid_range=3,
@@ -175,6 +188,8 @@ def test_plot_fitted_dfe(files):
         pdf="lognormal",
         pdf2="biv_lognormal",
         nomisid=True,
+        cov_args=[],
+        cov_inbreeding=[],
         output="tests/test_results/plot_fitted_dfe_mixture_w_proj.png",
         vmin=1e-3,
         resid_range=3,

@@ -239,16 +239,22 @@ def run_infer_dm(args):
     # if args.misid:
     #     func = dadi.Numerics.make_anc_state_misid_func(func)
 
-    # func = dadi.Numerics.make_extrap_func(func)
-
-    # if args.cov_args[0] != None:
+    # func_ex = dadi.Numerics.make_extrap_func(func)
+    # print(args.cov_args)
+    # if args.cov_args != []:
     #     try:
     #         from dadi.LowCoverage.LowCoverage import make_low_cov_func
+    #         # import pickle
     #     except ModuleNotFoundError:
     #         raise ImportError("ERROR:\nCurrent dadi version does not support coverage model\n")
-    #     cov_dd, nseq, nsub, sim_threshold, Fx = args.cov_args
+    #     cov_dd = args.cov_args[0]
+    #     nseq = [int(ele) for ele in args.cov_args[1:]]
+    #     if args.cov_inbreeding == []:
+    #         Fx = None
+    #     print(cov_dd)
     #     cov_dd = pickle.load(open(cov_dd, 'rb'))
-    #     func_ex = make_low_cov_func(func, cov_dd, fs.pop_ids, [nseq], [nsub], sim_threshold=sim_threshold, Fx=Fx)
+    #     func = make_low_cov_func(func_ex, cov_dd, fs.pop_ids, nseq, fs.sample_sizes, Fx=Fx)
+    # # End creating function
 
     if args.maxeval == False:
         args.maxeval = max(len(args.p0) * 50, 1)
@@ -346,6 +352,8 @@ def run_infer_dm(args):
                         args.lbounds,
                         args.constants,
                         args.misid,
+                        args.cov_args,
+                        args.cov_inbreeding,
                         None,
                         args.maxeval,
                         args.maxtime,
@@ -368,6 +376,8 @@ def run_infer_dm(args):
                     args.lbounds,
                     args.constants,
                     args.misid,
+                    args.cov_args,
+                    args.cov_inbreeding,
                     None,
                     args.maxeval,
                     args.maxtime,
@@ -743,6 +753,8 @@ def run_infer_dfe(args):
                     args.lbounds,
                     args.constants,
                     args.misid,
+                    args.cov_args,
+                    args.cov_inbreeding,
                     None,
                     args.maxeval,
                     args.maxtime,
@@ -768,6 +780,8 @@ def run_infer_dfe(args):
                 args.lbounds,
                 args.constants,
                 args.misid,
+                args.cov_args,
+                args.cov_inbreeding,
                 None,
                 args.maxeval,
                 args.maxtime,
@@ -1001,6 +1015,8 @@ def run_plot(args):
             pdf=args.pdf1d,
             pdf2=args.pdf2d,
             nomisid=args.nomisid,
+            cov_args=args.cov_args,
+            cov_inbreeding=args.cov_inbreeding,
             sele_popt=args.dfe_popt,
             vmin=args.vmin,
             resid_range=args.resid_range,
@@ -1018,6 +1034,8 @@ def run_plot(args):
             vmin=args.vmin,
             projections=args.projections,
             nomisid=args.nomisid,
+            cov_args=args.cov_args,
+            cov_inbreeding=args.cov_inbreeding,
             resid_range=args.resid_range,
             output=args.output,
         )
@@ -1146,8 +1164,7 @@ def add_coverage_model_argument(parser):
         dest="cov_args",
         help="Enable coverage model.\nArguments are:\
         \n1. The name of the <>.coverage.pickle file produced by GenerateFs --calc-coverage.\
-        \n2. The sim_threshold, which is????\
-        \n3. The total number of samples sequenced for each population in the VCF.",
+        \n2. The total number of samples sequenced for each population in the VCF.",
     )
     parser.add_argument(
         "--coverage-inbreeding",
@@ -1420,10 +1437,10 @@ def dadi_cli_parser():
     )
     parser.add_argument(
         "--subsample",
-        default=False,
-        action="store_true",
+        default=[],
+        nargs="+",
         dest="subsample",
-        help="Subsample from the VCF when generating the fs using the given pop-ids and subsample calls based on the projections passed in. Default: None.",
+        help="Number of individuals to subsample from the VCF when generating the fs using the given pop-ids. Default: None.",
     )
     parser.add_argument(
         "--mask-singletons",
@@ -1574,9 +1591,9 @@ def dadi_cli_parser():
     add_inference_argument(parser)
     add_delta_ll_argument(parser)
     add_model_argument(parser)
+    add_misid_argument(parser)
     add_coverage_model_argument(parser)
     add_grids_argument(parser)
-    add_misid_argument(parser)
     add_constant_argument(parser)
     add_bounds_argument(parser)
     parser.add_argument(
@@ -1618,6 +1635,7 @@ def dadi_cli_parser():
     add_inference_argument(parser)
     add_delta_ll_argument(parser)
     add_misid_argument(parser)
+    add_coverage_model_argument(parser)
     add_constant_argument(parser)
     add_bounds_argument(parser)
     add_seed_argument(parser)
@@ -1638,6 +1656,7 @@ def dadi_cli_parser():
     add_model_argument(parser)
     add_dfe_argument(parser)
     add_misid_argument(parser)
+    add_coverage_model_argument(parser)
     add_output_argument(parser)
     parser.add_argument(
         "--projections", type=int, nargs="+", help="Sample sizes after projection."

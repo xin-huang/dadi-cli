@@ -86,7 +86,7 @@ def plot_comparison(fs, fs2, projections, output, vmin, resid_range):
 
 
 def plot_fitted_demography(
-    fs, func, popt, projections, nomisid, output, vmin, resid_range
+    fs, func, popt, projections, nomisid, cov_args, cov_inbreeding, output, vmin, resid_range
 ):
     """
     Description:
@@ -109,6 +109,21 @@ def plot_fitted_demography(
     if not nomisid:
         func = dadi.Numerics.make_anc_state_misid_func(func)
     func_ex = dadi.Numerics.make_extrap_func(func)
+
+    if cov_args != []:
+        try:
+            from dadi.LowCoverage.LowCoverage import make_low_cov_func
+            import pickle
+        except ModuleNotFoundError:
+            raise ImportError("ERROR:\nCurrent dadi version does not support coverage model\n")
+        cov_dd = cov_args[0]
+        nseq = [int(ele) for ele in cov_args[1:]]
+        if cov_inbreeding == []:
+            Fx = None
+
+        cov_dd = pickle.load(open(cov_dd, 'rb'))
+        func_ex = make_low_cov_func(func_ex, cov_dd, fs.pop_ids, nseq, fs.sample_sizes, Fx=Fx)
+
     ns = fs.sample_sizes
     pts_l = pts_l_func(ns)
 
@@ -151,6 +166,8 @@ def plot_fitted_dfe(
     pdf,
     pdf2,
     nomisid,
+    cov_args,
+    cov_inbreeding,
     output,
     vmin,
     resid_range,
@@ -197,6 +214,20 @@ def plot_fitted_dfe(
 
     if not nomisid:
         func = dadi.Numerics.make_anc_state_misid_func(func)
+
+    if cov_args != []:
+        try:
+            from dadi.LowCoverage.LowCoverage import make_low_cov_func
+        except ModuleNotFoundError:
+            raise ImportError("ERROR:\nCurrent dadi version does not support coverage model\n")
+        cov_dd = cov_args[0]
+        nseq = [int(ele) for ele in cov_args[1:]]
+        if cov_inbreeding == []:
+            Fx = None
+
+        cov_dd = pickle.load(open(cov_dd, 'rb'))
+        func = make_low_cov_func(func, cov_dd, fs.pop_ids, nseq, fs.sample_sizes, Fx=Fx)
+
     # Get expected SFS for MLE
     if (cache1d != None) and (cache2d != None):
         model = func(sele_popt, None, spectra1d, spectra2d, pdf, pdf2, theta, None)

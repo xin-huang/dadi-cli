@@ -30,7 +30,7 @@ def test_run_generate_fs():
     gen_fs_args.projections = [216, 198]
     gen_fs_args.polarized = True
     gen_fs_args.marginalize_pops = None
-    gen_fs_args.subsample = False
+    gen_fs_args.subsample = []
     gen_fs_args.mask_shared = False
     gen_fs_args.mask = False
     gen_fs_args.calc_coverage = False

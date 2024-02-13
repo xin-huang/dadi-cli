@@ -19,6 +19,8 @@ def infer_dfe(
     lower_bounds,
     fixed_params,
     misid,
+    cov_args,
+    cov_inbreeding,
     cuda,
     maxeval,
     maxtime,
@@ -80,6 +82,20 @@ def infer_dfe(
 
     if misid:
         func = dadi.Numerics.make_anc_state_misid_func(func)
+
+    if cov_args != []:
+        try:
+            from dadi.LowCoverage.LowCoverage import make_low_cov_func
+            import pickle
+        except ModuleNotFoundError:
+            raise ImportError("ERROR:\nCurrent dadi version does not support coverage model\n")
+        cov_dd = cov_args[0]
+        nseq = [int(ele) for ele in cov_args[1:]]
+        if cov_inbreeding == []:
+            Fx = None
+
+        cov_dd = pickle.load(open(cov_dd, 'rb'))
+        func = make_low_cov_func(func, cov_dd, fs.pop_ids, nseq, fs.sample_sizes, Fx=Fx)
 
     p0_len = len(p0)
     lower_bounds = convert_to_None(lower_bounds, p0_len)
