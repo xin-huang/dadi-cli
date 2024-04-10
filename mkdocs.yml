@@ -1,6 +1,6 @@
 site_name: dadi-cli
 site_url: "https://dadi-cli.readthedocs.io"
-repo_url: "https://github.com/xin-huang/dadi-cli"
+repo_url: "https://github.com/xin-huang/dadi-cli/tree/readme-update"
 edit_uri: ""
 docs_dir: 'docs'
 theme:
@@ -38,4 +38,6 @@ nav:
         - Simulation: 'userguide/simulation.md'
         - Models: 'userguide/models.md'
         - Plotting: 'userguide/plot.md'
+- Publication Resources:
+        - Data Preperation: 'docs/paper-resources/data-preperation.md'
 - References: 'references.md'
