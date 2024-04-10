@@ -39,5 +39,5 @@ nav:
         - Models: 'userguide/models.md'
         - Plotting: 'userguide/plot.md'
 - Publication Resources:
-        - Data Preperation: 'docs/paper-resources/data-preperation.md'
+        - Data Preperation: 'paper-resources/data-preperation.md'
 - References: 'references.md'
