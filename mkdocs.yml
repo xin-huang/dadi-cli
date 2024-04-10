@@ -1,5 +1,5 @@
 site_name: dadi-cli
-site_url: "https://dadi-cli.readthedocs.io.test"
+site_url: "https://dadi-cli.readthedocs.io"
 repo_url: "https://github.com/xin-huang/dadi-cli/tree/readme-update"
 edit_uri: ""
 docs_dir: 'docs'
