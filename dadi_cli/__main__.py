@@ -1255,14 +1255,14 @@ def add_inference_argument(parser):
         default=0,
         type=_check_positive_int,
         dest="check_convergence",
-        help="Start checking for convergence after a chosen number of optimizations. Stop optimization runs when convergence criteria are reached. BestFit results file will be call <output_prefix>.InferDM.bestfits. Convergence not checked by default.",
+        help="Start checking for convergence after a chosen number of optimizations. Optimization runs will stop early if convergence criteria are reached. BestFit results file will be call <output_prefix>.InferDM.bestfits. Convergence not checked by default.",
     )
     parser.add_argument(
         "--force-convergence",
         default=0,
         type=_check_positive_int,
         dest="force_convergence",
-        help="Start checking for convergence after a chosen number of optimizations. Only stop optimization once convergence criteria is reached. BestFit results file will be call <output_prefix>.InferDM.bestfits. Convergence not checked by default.",
+        help="Start checking for convergence after a chosen number of optimizations. Optimization runs will continue until convergence criteria is reached (--optimizations flag will be ignored). BestFit results file will be call <output_prefix>.InferDM.bestfits. Convergence not checked by default.",
     )
     parser.add_argument(
         "--work-queue",
