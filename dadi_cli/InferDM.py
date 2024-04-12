@@ -3,7 +3,6 @@ import numpy as np
 import dadi, nlopt
 from dadi_cli.utilities import pts_l_func, convert_to_None
 
-
 def infer_demography(
     fs,
     func,
@@ -61,16 +60,17 @@ def infer_demography(
 
     func_ex = dadi.Numerics.make_extrap_func(func)
     p0_len = len(p0)
-    lower_bounds = convert_to_None(lower_bounds, p0_len)
-    upper_bounds = convert_to_None(upper_bounds, p0_len)
-    fixed_params = convert_to_None(fixed_params, p0_len)
+    print(p0)
+
+    if fixed_params == -1:
+        fixed_params = convert_to_None(fixed_params, p0_len)
 
     p0 = dadi.Misc.perturb_params(
         p0, fold=1, upper_bound=upper_bounds, lower_bound=lower_bounds
     )
     if pts_l is None:
         pts_l = pts_l_func(fs.sample_sizes)
-
+    print(p0)
     try:
         popt, _ = dadi.Inference.opt(
             p0,
@@ -154,9 +154,9 @@ def infer_global_opt(
     func_ex = dadi.Numerics.make_extrap_func(func)
 
     p0_len = len(p0)
-    lower_bounds = convert_to_None(lower_bounds, p0_len)
-    upper_bounds = convert_to_None(upper_bounds, p0_len)
-    fixed_params = convert_to_None(fixed_params, p0_len)
+
+    if fixed_params == -1:
+        fixed_params = convert_to_None(fixed_params, p0_len)
 
     p0 = dadi.Misc.perturb_params(
         p0, fold=1, upper_bound=upper_bounds, lower_bound=lower_bounds

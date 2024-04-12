@@ -4,6 +4,9 @@ import random
 import dadi
 import multiprocessing
 
+# Used to convert strings to floats or None
+import ast
+
 from dadi_cli.GenerateFs import *
 from dadi_cli.GenerateCache import *
 from dadi_cli.InferDM import *
@@ -191,6 +194,8 @@ def run_infer_dm(args):
     fs = dadi.Spectrum.from_file(args.fs)
 
     _make_dir(args.output_prefix)
+
+    args.lbounds, args.ubounds, args.constants = _convert_bounds_and_constants(args.lbounds, args.ubounds, args.constants)
 
     # Because basic standard neutral models do not need to optimized
     # we can calculate the log-likelihood and theta
@@ -564,6 +569,8 @@ def run_infer_dfe(args):
     args.misid = not (fs.folded or args.nomisid)
 
     _make_dir(args.output_prefix)
+
+    args.lbounds, args.ubounds, args.constants = _convert_bounds_and_constants(args.lbounds, args.ubounds, args.constants)
 
     # # Things need to be updated for these to work
     if None not in [args.pdf1d, args.pdf2d]:
@@ -1050,17 +1057,17 @@ def add_bounds_argument(parser):
             boundary_req = True
     parser.add_argument(
         "--lbounds",
-        type=float,
+        type=str,
         nargs="+",
         required=boundary_req,
-        help="Lower bounds of the optimized parameters.",
+        help="Lower bounds of the optimized parameters. Put None if unbound.",
     )
     parser.add_argument(
         "--ubounds",
-        type=float,
+        type=str,
         nargs="+",
         required=boundary_req,
-        help="Upper bounds of the optimized parameters.",
+        help="Upper bounds of the optimized parameters. Put None if unbound.",
     )
 
 
@@ -1136,9 +1143,9 @@ def add_constant_argument(parser):
     parser.add_argument(
         "--constants",
         default=-1,
-        type=float,
+        type=str,
         nargs="+",
-        help="Fixed parameters during the inference or using Godambe analysis. Use -1 to indicate a parameter is NOT fixed. Default: None.",
+        help="Fixed parameters during the inference or using Godambe analysis. Use None to indicate a parameter is NOT fixed. Default: None.",
     )
 
 
@@ -1696,17 +1703,17 @@ def dadi_cli_parser():
     )
     parser.add_argument(
         "--lbounds",
-        type=float,
+        type=str,
         nargs="+",
         required=False,
-        help="Lower bounds of the optimized parameters.",
+        help="Lower bounds of the optimized parameters. Put None if unbound.",
     )
     parser.add_argument(
         "--ubounds",
-        type=float,
+        type=str,
         nargs="+",
         required=False,
-        help="Upper bounds of the optimized parameters.",
+        help="Upper bounds of the optimized parameters. Put None if unbound.",
     )
     add_delta_ll_argument(parser)
     parser.set_defaults(runner=run_bestfit)
@@ -1826,6 +1833,10 @@ def _check_nonnegative_float(value):
     return fvalue
 
 def _calc_p0_from_bounds(lb, ub):
+    if None in lb or None in ub:
+        raise argparse.ArgumentTypeError(
+            "Need to define --p0 if using None in lbounds or ubounds"
+        )
     p0 = []
     for l, u in zip(lb, ub):
         if l == 0:
@@ -1881,6 +1892,26 @@ def _top_opts(filename):
 
     return opts
 
+def _convert_bounds_and_constants(lbounds, ubounds, constants):
+    if lbounds != None:
+        try:
+            lbounds = [ast.literal_eval(ele) for ele in lbounds]
+        except ValueError:
+            raise ValueError("--lbounds must be int, float, or None")
+    
+    if ubounds != None:
+        try:
+            ubounds = [ast.literal_eval(ele) for ele in ubounds]
+        except ValueError:
+            raise ValueError("--ubounds must be int, float, or None")
+    
+    if constants != -1:
+        try:
+            constants = [ast.literal_eval(ele) for ele in constants]
+        except ValueError:
+            raise ValueError("--constants must be int, float, or None")
+    
+    return lbounds, ubounds, constants
 
 # Main function
 def main(arg_list=None):
