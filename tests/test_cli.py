@@ -239,8 +239,8 @@ def test_infer_dm_args(model, model_file, nomisid):
     grids = [130, 140, 150]
     # nomisid = False
     constants = "-1"
-    lbounds = [0.01, 0.01, 0.0001, 0.1, 0.001]
-    ubounds = [3, 3, 1, 3, 1]
+    lbounds = ['0.01', '0.01', '0.0001', '0.1', '0.001']
+    ubounds = ['3', '3', '1', '3', '1']
     global_optimization = True
     seed = 12345
 
@@ -328,9 +328,9 @@ def test_infer_dfe_args():
     pdf_file = False
     p0 = [1, 1, 0, 0.001]
     grids = [120, 140, 160]
-    ubounds = [5, 5, -1, 0.999]
-    lbounds = [1e-4, 1e-4, -1, 1e-4]
-    constants = [-1, -1, 0, -1]
+    ubounds = ['5', '5', 'None', '0.999']
+    lbounds = ['1e-4', '1e-4', 'None', '1e-4']
+    constants = ['None', 'None', '0', 'None']
     nomisid = True
     cuda = False
     maxeval = 100
@@ -393,11 +393,11 @@ def test_infer_dfe_args():
             str(delta_ll),
             "--nomisid",
             "--constants",
-            "-1", "-1", "0", "-1",
+            "None", "None", "0", "None",
             "--lbounds",
-            "1e-4", "1e-4", "-1", "1e-4",
+            "1e-4", "1e-4", "None", "1e-4",
             "--ubounds",
-            "5", "5", "-1", "0.999",
+            "5", "5", "None", "0.999",
             "--seed",
             str(seed),
         ]
@@ -443,8 +443,8 @@ def test_bestfit_args():
         ]
     )
     assert args.input_prefix == input_prefix
-    assert args.lbounds == [1e-4, 1e-4, 1e-4, 1e-4]
-    assert args.ubounds == [10, 10, 1, 5]
+    assert args.lbounds == ['1e-4', '1e-4', '1e-4', '1e-4']
+    assert args.ubounds == ['10', '10', '1', '5']
     assert args.delta_ll == 1e-4
 
 
@@ -576,7 +576,7 @@ def test_stat_dfe_args():
     bootstrapping_synonymous_dir = "tests/example_data/split_mig_bootstrap_syn/"
     bootstrapping_nonsynonymous_dir = "tests/example_data/split_mig_bootstrap_non/bootstrap_non_mix/"
     dfe_popt = "tests/example_data/example.split_mig.dfe.lognormal_mixture.params.with.misid.InferDFE.bestfits"
-    constants = [-1, -1, 0, -1, -1]
+    constants = ["None", "None", "0", "None", "None"]
     nomisid = False
     logscale = False
 
@@ -596,7 +596,7 @@ def test_stat_dfe_args():
             "--output",
             output,
             "--constants",
-            "-1", "-1", "0", "-1", "-1",
+            "None", "None", "0", "None", "None",
             "--dfe-popt",
             dfe_popt,
             "--bootstrapping-synonymous-dir",
