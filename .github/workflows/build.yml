@@ -27,8 +27,9 @@ jobs:
         micromamba run -n dadi-cli pytest --cov=. --cov-report term-missing -vv
         micromamba run -n dadi-cli coverage xml
     - name: upload coverage report to codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
           name: codecov-umbrella
           fail_ci_if_error: true
           env_vars: OS,PYTHON
+          token: ${{ secrets.CODECOV_TOKEN }}
