@@ -43,6 +43,7 @@ def files():
     pytest.fs3d_sampled = "tests/example_data/ooa_10000_sampled.fs"
     pytest.fs3d_popt = "tests/example_data/example.ooa.donni.pseudofit"
 
+
 def test_plot_single_sfs(files):
     plot_single_sfs(
         fs=pytest.fs1_1d,
@@ -112,6 +113,7 @@ def test_plot_comparison(files):
         resid_range=3,
     )
 
+
 def test_plot_fitted_demography(files):
     plot_fitted_demography(
         fs=pytest.fs1_1d,
@@ -163,6 +165,7 @@ def test_plot_fitted_demography(files):
         vmin=1e-3,
         resid_range=3,
     )
+
 
 def test_plot_fitted_dfe(files):
     # plot_fitted_dfe(fs, cache1d=pytest.fs1d_cache1d, cache2d=None, demo_popt=pytest.fs1d_demo_popt, sele_popt, projections, pdf, pdf2, nomisid, output, vmin, resid_range)

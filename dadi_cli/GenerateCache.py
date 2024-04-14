@@ -7,35 +7,54 @@ from dadi_cli.utilities import get_opts_and_theta, cache_pts_l_func
 
 
 def generate_cache(
-    func,
-    grids,
-    popt,
-    gamma_bounds,
-    gamma_pts,
-    additional_gammas,
-    output,
-    sample_sizes,
-    cpus,
-    gpus,
-    dimensionality,
-):
+    func: callable,
+    grids: list[int],
+    popt: str,
+    gamma_bounds: list[str],
+    gamma_pts: int,
+    additional_gammas: list[float],
+    output: str,
+    sample_sizes: list[int],
+    cpus: int,
+    gpus: int,
+    dimensionality: int,
+) -> None:
     """
-    Description:
-        Generates caches of frequency spectra for DFE inference.
+    Generates caches of frequency spectra for DFE inference using demographic models.
 
-    Arguments:
-        func function: dadi demographic models.
-        grids list: Grid sizes.
-        popt str: Name of the file containing demographic parameters for the inference.
-        gamma_bounds list: Range of population-scaled selection coefficients to cache.
-        gamma_pts int: Number of gamma grid points over which to integrate.
-        additional_gammas list: Additional positive population-scaled selection coefficients to cache for.
-        output str: Name of the output file.
-        sample_sizes list: Sample sizes of populations.
-        cpus int: Number of CPUs to use in cache generation.
-        gpus int: Number of GPUs to use in cache generation.
-        dimensionality int: Dimensionality of the frequency spectrum.
+    Parameters
+    ----------
+    func : callable
+        A callable demographic model function from DFE.DemogSelModels.
+    grids : list[int]
+        Grid sizes for the frequency spectrum calculation.
+    popt : str
+        File name containing demographic parameters for inference.
+    gamma_bounds : list[str]
+        Range of population-scaled selection coefficients, specified as strings.
+    gamma_pts : int
+        Number of grid points for gamma integration.
+    additional_gammas : list[float]
+        List of additional gamma values to cache.
+    output : str
+        Output file name where the cache will be saved.
+    sample_sizes : list[int]
+        List of population sample sizes.
+    cpus : int
+        Number of CPUs to utilize.
+    gpus : int
+        Number of GPUs to utilize.
+    dimensionality : int
+        Dimensionality of the frequency spectrum (must be 1 or 2).
+
+    Raises
+    ------
+    ValueError
+        If the dimensionality is not 1 or 2.
+
     """
+    if dimensionality not in [1, 2]:
+        raise ValueError(f"Invalid dimensionality {dimensionality}. Only 1 or 2 are accepted.")
 
     if func is not getattr(DFE.DemogSelModels, 'equil'):
         popt, theta = get_opts_and_theta(popt, gen_cache=True)
@@ -69,8 +88,6 @@ def generate_cache(
             cpus=cpus,
             gpus=gpus
         )
-    else:
-        raise ValueError("--dimensionality only accepts 1 or 2.")
 
     if (spectra.spectra < 0).sum() > 0:
         print(

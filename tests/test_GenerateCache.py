@@ -35,6 +35,27 @@ def test_generate_cache_code(capsys):
     assert len(s.gammas) == 50
 
 
+def test_generate_cache_failure():
+    with pytest.raises(ValueError) as excinfo:
+        dimensionality=10
+
+        generate_cache(
+            func=DFE.DemogSelModels.two_epoch_sel,
+            grids=[120, 140, 160],
+            popt="./tests/example_data/example.two_epoch.demo.params.InferDM.bestfits",
+            gamma_bounds=[1e-4, 2000],
+            gamma_pts=50,
+            output="./tests/test_results/cache_large_two_epoch_code.bpkl",
+            sample_sizes=[20],
+            additional_gammas=[],
+            cpus=None,
+            gpus=0,
+            dimensionality=dimensionality,
+        )
+
+    assert f"Invalid dimensionality {dimensionality}. Only 1 or 2 are accepted." in str(excinfo.value)
+
+
 @pytest.mark.skip()
 def test_generate_cache_bash(capsys):
     import subprocess

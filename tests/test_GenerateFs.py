@@ -103,6 +103,26 @@ def test_generate_fs(data):
     assert dadi_cli_fs.sample_sizes[1] == 20
 
 
+def test_generate_fs_failure(data):
+    with pytest.raises(ValueError) as excinfo:
+        generate_fs(
+            vcf=pytest.vcf,
+            output=pytest.unfolded_output,
+            pop_ids=["YRI", "CEU"],
+            pop_info=pytest.pop_info,
+            projections=[216],
+            marginalize_pops=None,
+            subsample=False,
+            polarized=True,
+            bootstrap=None,
+            chunk_size=None,
+            masking="",
+            seed=None,
+        )
+
+    assert "The lengths of `pop_ids` and `projections` must match." in str(excinfo.value)
+
+
 def test_generate_fs_subsample(data):
     pop_ids, projections = ["YRI", "CEU"], [216, 198]
     generate_fs(
@@ -337,3 +357,21 @@ def test_generate_fs_marginalize(data):
     dadi_fs = dadi_fs.marginalize([1])
 
     assert np.allclose(dadi_cli_fs, dadi_fs)
+
+    with pytest.raises(ValueError) as excinfo:
+        generate_fs(
+            vcf=pytest.vcf,
+            output=pytest.marginalize_CEU_output,
+            pop_ids=["YRI", "CEU"],
+            pop_info=pytest.pop_info,
+            projections=[216, 198],
+            marginalize_pops=["CHB"],
+            subsample=False,
+            polarized=True,
+            bootstrap=None,
+            chunk_size=None,
+            masking="",
+            seed=None,
+        )
+
+    assert "All populations to marginalize must be in the list of population ids." in str(excinfo.value)

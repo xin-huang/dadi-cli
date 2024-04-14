@@ -26,7 +26,16 @@ def test_simulate_demography_code():
     misid = False
     output = "tests/test_results/simulate_two_epoch.fs"
     inference_file = False
-    simulate_demography(model, model_file, p0, ns, pts_l, misid, output, inference_file)
+    simulate_demography(
+        model=model, 
+        model_file=model_file, 
+        p0=p0, 
+        ns=ns, 
+        pts_l=pts_l, 
+        misid=misid, 
+        output=output, 
+        inference_file=inference_file
+    )
     dadi_cli_fs = dadi.Spectrum.from_file(output)
     dadi_fs = dadi.Numerics.make_extrap_func(dadi.Demographics1D.two_epoch)(
         p0, ns, pts_l
@@ -42,7 +51,16 @@ def test_simulate_custom_demography_code():
     misid = False
     output = "tests/test_results/simulate_three_epoch_bottleneck.fs"
     inference_file = False
-    simulate_demography(model, model_file, p0, ns, pts_l, misid, output, inference_file)
+    simulate_demography(
+        model=model, 
+        model_file=model_file, 
+        p0=p0, 
+        ns=ns, 
+        pts_l=pts_l, 
+        misid=misid, 
+        output=output, 
+        inference_file=inference_file
+    )
     dadi_cli_fs = dadi.Spectrum.from_file(output)
     from tests.example_data.example_models import three_epoch_bottleneck
     dadi_fs = dadi.Numerics.make_extrap_func(three_epoch_bottleneck)(
@@ -59,7 +77,16 @@ def test_simulate_demography_misid_code():
     misid = True
     output = "tests/test_results/simulate_two_epoch_with_misid.fs"
     inference_file = True
-    simulate_demography(model, model_file, p0, ns, pts_l, misid, output, inference_file)
+    simulate_demography(
+        model=model, 
+        model_file=model_file, 
+        p0=p0, 
+        ns=ns, 
+        pts_l=pts_l, 
+        misid=misid, 
+        output=output, 
+        inference_file=inference_file
+    )
     dadi_cli_fs = dadi.Spectrum.from_file(output)
     dadi_fs = dadi.Numerics.make_extrap_func(
         dadi.Numerics.make_anc_state_misid_func(dadi.Demographics1D.two_epoch)
@@ -138,7 +165,13 @@ def test_simulate_demes_code():
     pts_l = [20, 30, 40]
     pop_ids = ["YRI", "CEU", "CHB"]
     output = "tests/test_results/demes_gutenkunst_ooa_simulation.fs"
-    simulate_demes(demes_file, ns, pts_l, pop_ids, output)
+    simulate_demes(
+        demes_file=demes_file, 
+        ns=ns, 
+        pts_l=pts_l, 
+        pop_ids=pop_ids, 
+        output=output
+    )
     dadi_cli_fs = dadi.Spectrum.from_file(output)
     dadi_fs = dadi.Spectrum.from_demes(
         demes_file, sampled_demes=pop_ids, sample_sizes=ns, pts=pts_l

@@ -176,21 +176,30 @@ def test_print_built_in_model_details(capfd, model_list):
 
     assert str(e_info.value) == "Cannot find model: mixture."
 
-def test_custome_model_import(capfd):
-    import tests.example_data.example_models as custom
+
+def test_custom_model_import(capfd):
+    # Test importing a non-existing file
+    model_file = 'tests/non_existing_model'
+    with pytest.raises(ImportError) as excinfo:
+        get_model('hallo', model_file)
+
+    assert f"Failed to import module: {model_file}" in str(excinfo.value)
+
+    model_file = 'tests/example_data/example_models'
     custome_model_list = ['three_epoch_bottleneck', 'split_mig_fix_T', 'split_mig_fix_T_sel']
+
     # Test importing good custom models
     for custome_model in custome_model_list:
-        get_model(custome_model, 'tests/example_data/example_models')
+        get_model(custome_model, model_file)
         out, err = capfd.readouterr()
         assert out == "" and err == ""
+        
     # Test importing a custom model without .__param_names__ attribute
     with pytest.raises(ValueError) as e_info:
-        get_model('split_no_mig_missing_param_names', 'tests/example_data/example_models')
+        get_model('split_no_mig_missing_param_names', model_file)
     assert str(e_info.value) == "Demographic model needs a .__param_names__ attribute!\nAdd one by adding the line split_no_mig_missing_param_names.__param_name__ = [LIST_OF_PARAMS]\nReplacing LIST_OF_PARAMS with the names of the parameters as strings."
+
     # Test importing a custom model not in example_models
     with pytest.raises(AttributeError) as e_info:
-        get_model('haha', 'tests/example_data/example_models')
+        get_model('haha', model_file)
     assert str(e_info.value) == "module 'example_models' has no attribute 'haha'"
-
-
