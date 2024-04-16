@@ -7,22 +7,40 @@ from dadi_cli.Models import get_model
 from dadi_cli.Pdfs import get_dadi_pdf
 from dadi_cli.utilities import pts_l_func
 
+
 fig = plt.figure(figsize=(8, 6))
 
 
-def plot_single_sfs(fs, projections, output, vmin):
+def plot_single_sfs(
+    fs: str, 
+    output: str, 
+    vmin: float,
+    projections: list[int] = None, 
+) -> None:
     """
-    Description:
-        Plots 1d or 2d frequency spectrum.
+    Plots 1D, 2D, or 3D frequency spectrum based on the number of sample sizes in the given dadi Spectrum file.
 
-    Arguments:
-        fs str: Name of the file containing frequency spectrum from dadi.
-        projections list: Sample sizes after projection.
-        output str: Name of the output file.
-        vmin float: Minimum value in the colorbar.
+    Parameters
+    ----------
+    fs : str
+        Path to the file containing the frequency spectrum data from dadi.
+    output : str
+        File path where the plot will be saved. The format of the saved plot is determined by the extension of the file path.
+    vmin : float
+        Minimum value in the colorbar. This sets the lower limit for color scaling in 2D and 3D plots.
+    projections : list[int], optional
+        Sample sizes after projection which may be used to adjust plots. If not provided, the original sample sizes from the spectrum file are used.
+
+    Raises
+    ------
+    AttributeError
+        If an outdated version of dadi is used that does not support required plotting functions, specifically 3D plotting.
+    ValueError
+        If the number of sample sizes (populations) in the spectrum exceeds three, as plotting of more than three populations is not supported by dadi-cli.
+
     """
     fs = dadi.Spectrum.from_file(fs)
-    if projections == None:
+    if projections is None:
         projections = fs.sample_sizes
     if len(fs.sample_sizes) == 1:
         fig = plt.figure(219033)
@@ -37,7 +55,8 @@ def plot_single_sfs(fs, projections, output, vmin):
         except AttributeError:
             raise AttributeError("Update to dadi 2.3.3 to use plot_3d_pairwise function")
     if len(fs.sample_sizes) > 3:
-        raise Exception("dadi-cli does not support plotting a single fs with more than three populations")
+        raise ValueError("dadi-cli does not support plotting a single fs with more than three populations")
+
     fig.savefig(output)
 
 

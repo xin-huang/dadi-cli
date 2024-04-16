@@ -48,6 +48,26 @@ def test_infer_dfe_code():
         maxtime,
     )
 
+    with pytest.raises(ValueError) as excinfo:
+        infer_dfe(
+            fs=fs,
+            cache1d=None,
+            cache2d=None,
+            sele_dist=sele_dist,
+            sele_dist2=sele_dist2,
+            theta=theta,
+            p0=p0,
+            upper_bounds=upper_bounds,
+            lower_bounds=lower_bounds,
+            fixed_params=fixed_params,
+            misid=misid,
+            cuda=cuda,
+            maxeval=maxeval,
+            maxtime=maxtime,
+        )
+
+    assert "At least one of cache1d or cache2d must be provided." in str(excinfo.value)
+
 
 @pytest.mark.skip()
 def test_InferDFE_bash(capsys):

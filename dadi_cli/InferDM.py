@@ -5,55 +5,77 @@ from dadi_cli.utilities import pts_l_func, convert_to_None
 
 
 def infer_demography(
-    fs,
-    func,
-    p0,
-    pts_l,
-    upper_bounds,
-    lower_bounds,
-    fixed_params,
-    misid,
-    cuda,
-    maxeval,
-    maxtime,
-    bestfits=None,
-    seed=None,
-):
+    fs: dadi.Spectrum,
+    func: callable,
+    p0: list[float],
+    pts_l: tuple[int],
+    upper_bounds: list[float],
+    lower_bounds: list[float],
+    fixed_params: list[float],
+    misid: bool,
+    cuda: bool,
+    maxeval: int,
+    maxtime: int,
+    bestfits: list[float] = None,
+    seed: int = None,
+) -> tuple[float, list[float], float]:
     """
-    Description:
-        Demographic inference.
+    Performs demographic inference using a frequency spectrum and a demographic model.
 
-    Arguments:
-        fs dadi.Spectrum: Frequence spectrum.
-        func function: Demographic model for modeling.
-        p0 list: Initial parameter values for inference.
-        pts_l tuple: Grid sizes for modeling.
-        upper_bounds list: Upper bounds of the optimized parameters.
-        lower_bounds list: Lower bounds of the optimized parameters.
-        fixed_params list: Fixed parameters during the inference.
-        misid bool: If True, add a parameter for modeling ancestral state misidentification when data are polarized.
-        cuda bool: If True, use GPU to speed up calculation;
-                   Otherwise, use CPU to do calculation.
-        maxeval int: Max number of parameter set evaluations tried for optimization.
-        maxtime int: Max amount of time for optimization.
-        bestfits list: Best-fit parameters.
-        seed int: Seed for generating random numbers.
+    Parameters
+    ----------
+    fs : dadi.Spectrum
+        Frequency spectrum for demographic inference.
+    func : callable
+        Demographic model function used for modeling.
+    p0 : list[float]
+        Initial parameter values for inference.
+    pts_l : tuple[int], optional
+        Grid sizes used in the demographic model.
+    upper_bounds : list[float]
+        Upper bounds of the optimized parameters.
+    lower_bounds : list[float]
+        Lower bounds of the optimized parameters.
+    fixed_params : list[float]
+        Parameters that are held fixed during the inference.
+    misid : bool
+        If True, incorporates a parameter to model ancestral state misidentification.
+    cuda : bool
+        If True, uses GPU acceleration for calculations; otherwise, uses CPU.
+    maxeval : int
+        Maximum number of parameter set evaluations during optimization.
+    maxtime : int
+        Maximum amount of time (in seconds) allowed for optimization.
+    bestfits : list[float], optional
+        List of best-fit parameters from previous runs to use as initial values.
+    seed : int, optional
+        Seed for random number generation, affecting initial parameter perturbation.
 
-    Returns:
-        ll_model float: Log(likelihood) of the inferred model.
-        popt list: Optimized parameters.
-        theta float: Population-scaled mutation rate inferred from the demographic model.
+    Returns
+    -------
+    float
+        Log likelihood of the inferred demographic model.
+    list[float]
+        List of optimized parameters.
+    float
+        Population-scaled mutation rate (theta) inferred from the demographic model.
+
+    Raises
+    ------
+    nlopt.RoundoffLimited
+        If optimization fails due to roundoff errors, likely indicating issues with parameter bounds or initial values.
+
     """
 
     # Set seed for starting parameter values when using WorkQueue
-    if seed != None:
+    if seed is not None:
         np.random.seed(seed)
 
     # TODO: Need to consider appropriate rtol & atol values, and whether these maxeval are appropriate
     if cuda:
         dadi.cuda_enabled(True)
 
-    if bestfits != None:
+    if bestfits is not None:
         p0 = bestfits[np.random.randint(len(bestfits))%10]
 
     if misid:
@@ -100,49 +122,65 @@ def infer_demography(
     return ll_model, popt, theta
 
 
-
 def infer_global_opt(
-    fs,
-    func,
-    p0,
-    pts_l,
-    upper_bounds,
-    lower_bounds,
-    fixed_params,
-    misid,
-    cuda,
-    maxeval,
-    maxtime,
-    global_algorithm,
-    seed=None,
-):
+    fs: dadi.Spectrum,
+    func: callable,
+    p0: list[float],
+    pts_l: tuple[int],
+    upper_bounds: list[float],
+    lower_bounds: list[float],
+    fixed_params: list[float],
+    misid: bool,
+    cuda: bool,
+    maxeval: int,
+    maxtime: int,
+    global_algorithm: str,
+    seed: int = None,
+) -> tuple[float, list[float], float]:
     """
-    Description:
-        Demographic inference with global optimization.
+    Performs demographic inference using global optimization techniques.
 
-    Arguments:
-        fs dadi.Spectrum: Frequence spectrum.
-        func function: Demographic model for modeling.
-        p0 list: Initial parameter values for inference.
-        pts_l tuple: Grid sizes for modeling.
-        upper_bounds list: Upper bounds of the optimized parameters.
-        lower_bounds list: Lower bounds of the optimized parameters.
-        fixed_params list: Fixed parameters during the inference.
-        misid bool: If True, add a parameter for modeling ancestral state misidentification when data are polarized.
-        cuda bool: If True, use GPU to speed up calculation;
-                   Otherwise, use CPU to do calculation.
-        maxeval int: Max number of parameter set evaluations tried for optimization.
-        maxtime int: Max amount of time for optimization.
-        global_algorithm str: Algorithm for global optimization.
-        seed int: Seed for generating random numbers.
+    Parameters
+    ----------
+    fs : dadi.Spectrum
+        Frequency spectrum from which to infer demographics.
+    func : callable
+        Demographic model function to be fitted.
+    p0 : list[float]
+        Initial parameter values for the optimization.
+    pts_l : tuple[int]
+        Grid sizes used in the numerical integration of the demographic model.
+    upper_bounds : list[float]
+        Upper bounds for the parameters during optimization.
+    lower_bounds : list[float]
+        Lower bounds for the parameters during optimization.
+    fixed_params : list[float]
+        Parameters that are held fixed during the optimization; None for parameters that are free.
+    misid : bool
+        If True, incorporate a model for ancestral state misidentification.
+    cuda : bool
+        Enable GPU acceleration for calculations.
+    maxeval : int
+        Maximum number of evaluations for the optimizer.
+    maxtime : int
+        Maximum time (in seconds) allowed for optimization.
+    global_algorithm : str
+        Name of the global optimization algorithm to use.
+    seed : int, optional
+        Random seed for reproducibility.
 
-    Returns:
-        ll_model float: Log(likelihood) of the inferred model.
-        popt list: Optimized parameters.
-        theta float: Population-scaled mutation rate inferred from the demographic model.
+    Returns
+    -------
+    float
+        Log likelihood of the best fit model.
+    list[float]
+        Optimized parameter values.
+    float
+        Population-scaled mutation rate (theta) based on the best fit model.
+
     """
     # Randomize starting parameter values
-    if seed != None:
+    if seed is not None:
         np.random.seed(seed)
 
     if cuda:
@@ -189,4 +227,5 @@ def infer_global_opt(
     model = func_ex(popt, fs.sample_sizes, pts_l)
     ll_global = dadi.Inference.ll_multinom(model, fs)
     theta = dadi.Inference.optimal_sfs_scaling(model, fs)
+
     return ll_global, popt, theta

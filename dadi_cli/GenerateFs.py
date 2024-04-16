@@ -1,43 +1,62 @@
-import dadi
-import random
+import dadi, random
 
 
 def generate_fs(
-    vcf,
-    output,
-    pop_ids,
-    pop_info,
-    projections,
-    subsample,
-    polarized,
-    marginalize_pops,
-    bootstrap,
-    chunk_size,
-    masking,
-    seed,
-):
+    vcf: str,
+    output: str,
+    pop_ids: list[str],
+    pop_info: str,
+    projections: list[int],
+    subsample: bool,
+    polarized: bool,
+    marginalize_pops: list[str],
+    bootstrap: int,
+    chunk_size: int,
+    masking: str,
+    seed: int,
+) -> None:
     """
-    Description:
-        Generates a frequency spectrum from a VCF file.
+    Generates a frequency spectrum from a VCF file using various settings for data manipulation and analysis.
 
-    Arguments:
-        vcf str: Name of the VCF file containing genotype data.
-        output str: Name of the output file containing frequency spectra.
-        pop_ids list: List of population ids.
-        pop_info str: Name of the file containing population information.
-        projections list: List of sample sizes after projection.
-        subsample bool: If True, spectrum is generated with sub-samples;
-                        Otherwise, spectrum is generated with all the samples.
-        polarized bool: If True, unfolded spectrum is generated;
-                        Otherwise, folded spectrum is generated.
-        margnialize_pops list: List of population ids to remove from the frequency spectrum.
-        bootstrap int: Times to perform bootstrapping.
-        chunk_size int: Chunk size to divide the genomes for bootstrapping.
-        masking str: If masking == 'singleton', singletons in each population are masked;
-                     If masking == 'shared', singletons in each population and shared across populations are masked;
-                     Otherwise, singletons are not masked.
-        seed int: Seed for generating random numbers.
+    Parameters
+    ----------
+    vcf : str
+        Name of the VCF file containing genotype data.
+    output : str
+        Name of the output file containing frequency spectra.
+    pop_ids : list[str]
+        List of population ids.
+    pop_info : str
+        Name of the file containing population information.
+    projections : list[int]
+        List of sample sizes after projection.
+    subsample : bool
+        If True, spectrum is generated with sub-samples; otherwise, spectrum is generated with all samples.
+    polarized : bool
+        If True, unfolded spectrum is generated; otherwise, folded spectrum is generated.
+    marginalize_pops : list[str]
+        List of population ids to remove from the frequency spectrum. If None, no populations are marginalized.
+    bootstrap : int
+        Number of times to perform bootstrapping. If None, bootstrapping is not performed.
+    chunk_size : int
+        Chunk size to divide the genomes for bootstrapping.
+    masking : str
+        Determines the masking method for singletons:
+        'singleton' - Masks singletons in each population,
+        'shared' - Masks singletons in each population and those shared across populations,
+        '' - No masking is applied.
+    seed : int
+        Seed for generating random numbers. If None, a random seed is used.
+
+    Raises
+    ------
+    ValueError
+        If the lengths of `pop_ids` and `projections` do not match.
+
     """
+    if len(pop_ids) != len(projections):
+        raise ValueError("The lengths of `pop_ids` and `projections` must match.")
+
     if subsample:
         subsample_dict = {}
         for i in range(len(pop_ids)):
@@ -52,33 +71,42 @@ def generate_fs(
         fs = dadi.Spectrum.from_data_dict(
             dd, pop_ids=pop_ids, projections=projections, polarized=polarized
         )
-        if marginalize_pops != None:
+        if marginalize_pops is not None:
             fs = _marginalized_fs(fs, marginalize_pops, pop_ids)
         if masking != "":
             _mask_entries(fs, masking)
         fs.to_file(output)
     else:
-        if seed != None:
+        if seed is not None:
             random.seed(seed)
         fragments = dadi.Misc.fragment_data_dict(dd, chunk_size)
         bootstrap_list = dadi.Misc.bootstraps_from_dd_chunks(
             fragments, bootstrap, pop_ids, projections, polarized
         )
         for fs, b in zip(bootstrap_list, range(len(bootstrap_list))):
-            if marginalize_pops != None:
+            if marginalize_pops is not None:
                 fs = _marginalized_fs(fs, marginalize_pops, pop_ids)
             if masking != "":
                 _mask_entries(fs, masking)
             fs.to_file(output + ".bootstrapping." + str(b) + ".fs")
 
-def _mask_entries(fs, masking):
-    """
-    Description:
-        Helper function for masking singletons in a frequency spectrum.
 
-    Arguments:
-        fs dadi.Spectrum: Frequency spectrum.
-        masking str: Masking shared singletons if masking == 'shared'.
+def _mask_entries(fs: dadi.Spectrum, masking: str) -> None:
+    """
+    Masks entries in the frequency spectrum based on the number of populations and the specified masking strategy.
+
+    Parameters
+    ----------
+    fs : dadi.Spectrum
+        The frequency spectrum object, which contains genotype frequency data across populations.
+    masking : str
+        Masking shared singletons if masking == 'shared'.
+
+    Raises
+    ------
+    ValueError
+        If the frequency spectrum contains more than 3 populations, as the current implementation does not support more.
+
     """
     if len(fs.sample_sizes) == 1:
         fs.mask[1] = True
@@ -111,19 +139,34 @@ def _mask_entries(fs, masking):
         )
 
 
-def _marginalized_fs(fs, marginalize_pops, pop_ids):
+def _marginalized_fs(fs: dadi.Spectrum, marginalize_pops: list[str], 
+                     pop_ids: list[str]) -> dadi.Spectrum:
     """
-    Description:
-        Helper function for generating a marginalized frequency spectrum.
+    Generates a marginalized frequency spectrum by removing specified populations.
 
-    Arguments:
-        fs dadi.Spectrum: Frequency spectrum for marginalization.
-        marginalize_pops list: List of population ids to remove from the frequency spectrum.
-        pop_ids list: List of all the population ids in the frequency spectrum.
+    Parameters
+    ----------
+    fs : dadi.Spectrum
+        Frequency spectrum for marginalization.
+    marginalize_pops : list[str]
+        List of population ids to remove from the frequency spectrum.
+    pop_ids : list[str]
+        List of all the population ids in the frequency spectrum.
 
-    Returns:
-        mfs dadi.Spectrum: Marginalized frequency spectrum.
+    Returns
+    -------
+    dadi.Spectrum
+        Marginalized frequency spectrum.
+
+    Raises
+    ------
+    ValueError
+        If any of the populations in marginalize_pops are not in pop_ids.
+
     """
+    if not set(marginalize_pops).issubset(set(pop_ids)):
+        raise ValueError("All populations to marginalize must be in the list of population ids.")
+
     marginalize_list = [pop_ids.index(pop) for pop in marginalize_pops]
     mfs = fs.marginalize(marginalize_list)
     return mfs

@@ -22,7 +22,7 @@ setup(
     classifiers=[
         "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.9",
     ],
     packages=["dadi_cli"],
     include_package_data=True,
