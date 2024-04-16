@@ -1,7 +1,20 @@
 import pytest
-import dadi_cli.__main__ as dcli
 import os
 import glob
+
+from dadi_cli.parsers.generate_fs_parsers import _run_generate_fs
+from dadi_cli.parsers.generate_cache_parsers import _run_generate_cache
+from dadi_cli.parsers.simulate_dm_parsers import _run_simulate_dm
+from dadi_cli.parsers.simulate_dfe_parsers import _run_simulate_dfe
+from dadi_cli.parsers.simulate_demes_parsers import _run_simulate_demes
+from dadi_cli.parsers.infer_dm_parsers import _run_infer_dm
+from dadi_cli.parsers.infer_dfe_parsers import _run_infer_dfe
+from dadi_cli.parsers.stat_dm_parsers import _run_stat_demography
+from dadi_cli.parsers.stat_dfe_parsers import _run_stat_dfe
+from dadi_cli.parsers.model_parsers import _run_model
+from dadi_cli.parsers.pdf_parsers import _run_pdf
+from dadi_cli.parsers.plot_parsers import _run_plot
+from dadi_cli.parsers.common_arguments import make_dir
 
 from dadi_cli.GenerateFs import *
 from dadi_cli.GenerateCache import *
@@ -11,11 +24,13 @@ from dadi_cli.Pdfs import *
 from dadi_cli.Models import *
 from dadi_cli.utilities import *
 
+
 try:
     if not os.path.exists("./tests/test_results"):
         os.makedirs("./tests/test_results")
 except:
     pass
+
 
 def test_run_generate_fs():
     def gen_fs_args():
@@ -33,11 +48,12 @@ def test_run_generate_fs():
     gen_fs_args.subsample = False
     gen_fs_args.mask_shared = False
     gen_fs_args.mask = False
-    dcli.run_generate_fs(gen_fs_args)
+
+    _run_generate_fs(gen_fs_args)
     gen_fs_args.mask = True
-    dcli.run_generate_fs(gen_fs_args)
+    _run_generate_fs(gen_fs_args)
     gen_fs_args.mask_shared = True
-    dcli.run_generate_fs(gen_fs_args)
+    _run_generate_fs(gen_fs_args)
     os.remove(gen_fs_args.output)
 
 
@@ -53,8 +69,9 @@ def test_run_simulate_dm():
     simulate_args.output = "tests/test_results/main_simulate_two_epoch.fs"
     simulate_args.inference_file = False
 
-    dcli.run_simulate_dm(simulate_args)
+    _run_simulate_dm(simulate_args)
     os.remove(simulate_args.output)
+
 
 def test_run_simulate_dm_html():
     def simulate_args():
@@ -68,14 +85,16 @@ def test_run_simulate_dm_html():
     simulate_args.output = "tests/test_results/main_simulate_three_epoch_bottleneck_html.fs"
     simulate_args.inference_file = False
 
-    dcli.run_simulate_dm(simulate_args)
+    _run_simulate_dm(simulate_args)
     os.remove(simulate_args.output)
+
 
 try:
     import demes
     demesskip = False
 except:
     demesskip = True
+
 
 @pytest.mark.skipif(demesskip, reason="Could not load demes")
 def test_run_simulate_demes():
@@ -87,8 +106,9 @@ def test_run_simulate_demes():
     simulate_args.grids = [20, 30, 40]
     simulate_args.output = "tests/test_results/main_simulate_demes_ooa.fs"
 
-    dcli.run_simulate_demes(simulate_args)
+    _run_simulate_demes(simulate_args)
     os.remove(simulate_args.output)
+
 
 @pytest.mark.skipif(demesskip, reason="Could not load demes")
 def test_run_simulate_demes_html():
@@ -100,8 +120,9 @@ def test_run_simulate_demes_html():
     simulate_args.grids = [20, 30, 40]
     simulate_args.output = "tests/test_results/main_simulate_demes_ooa_html.fs"
 
-    dcli.run_simulate_demes(simulate_args)
+    _run_simulate_demes(simulate_args)
     os.remove(simulate_args.output)
+
 
 def test_run_simulate_dfe():
     def simulate_args():
@@ -115,8 +136,9 @@ def test_run_simulate_dfe():
     simulate_args.nomisid = False
     simulate_args.output = "tests/test_results/main_simulate_mix_dfe.fs"
 
-    dcli.run_simulate_dfe(simulate_args)
+    _run_simulate_dfe(simulate_args)
     os.remove(simulate_args.output)
+
 
 def test_run_simulate_dfe_html():
     def simulate_args():
@@ -130,8 +152,9 @@ def test_run_simulate_dfe_html():
     simulate_args.nomisid = False
     simulate_args.output = "tests/test_results/main_simulate_mix_dfe_html.fs"
 
-    dcli.run_simulate_dfe(simulate_args)
+    _run_simulate_dfe(simulate_args)
     os.remove(simulate_args.output)
+
 
 def test_run_generate_cache():
     def generate_cache_args():
@@ -148,7 +171,8 @@ def test_run_generate_cache():
     generate_cache_args.cpus = 1
     generate_cache_args.gpus = 0
     generate_cache_args.dimensionality = 1
-    dcli.run_generate_cache(generate_cache_args)
+
+    _run_generate_cache(generate_cache_args)
     os.remove(generate_cache_args.output)
 
 
@@ -167,8 +191,10 @@ def test_run_generate_cache_html():
     generate_cache_args.cpus = 1
     generate_cache_args.gpus = 0
     generate_cache_args.dimensionality = 1
-    dcli.run_generate_cache(generate_cache_args)
+
+    _run_generate_cache(generate_cache_args)
     os.remove(generate_cache_args.output)
+
 
 @pytest.fixture
 def infer_dm_args():
@@ -197,17 +223,19 @@ def infer_dm_args():
     pytest.global_optimization = False
     pytest.seed = None
 
+
 def test_run_infer_dm(infer_dm_args):
-    dcli.run_infer_dm(pytest)
+    _run_infer_dm(pytest)
     for ele in glob.glob(pytest.output_prefix+"*"):
         os.remove(ele)
 
+
 @pytest.mark.parametrize("check_convergence, force_convergence, optimizations",
-                        [
-                        (10, 0, 5),
-                        (0, 15, 5)
-                         ]
-                         )
+    [
+        (10, 0, 5),
+        (0, 15, 5)
+    ]
+)
 def test_run_infer_dm_convergence(check_convergence, force_convergence, optimizations, infer_dm_args, recwarn):
     pytest.model = "two_epoch"
     pytest.model_file = None
@@ -216,7 +244,7 @@ def test_run_infer_dm_convergence(check_convergence, force_convergence, optimiza
     pytest.optimizations = optimizations
     pytest.output_prefix += ".convergence_update"
 
-    dcli.run_infer_dm(pytest)
+    _run_infer_dm(pytest)
 
     if check_convergence > optimizations:
         w = recwarn.pop(UserWarning)
@@ -230,6 +258,7 @@ def test_run_infer_dm_convergence(check_convergence, force_convergence, optimiza
     for ele in glob.glob(pytest.output_prefix+"*"):
         os.remove(ele)
 
+
 def test_run_infer_no_custom_model_dm(infer_dm_args):
     pytest.model = "three_epoch_inbreeding"
     pytest.model_file = None
@@ -241,9 +270,10 @@ def test_run_infer_no_custom_model_dm(infer_dm_args):
     pytest.inbreeding = True
     pytest.global_optimization = True
     pytest.output_prefix += ".no_custom_model"
-    dcli.run_infer_dm(pytest)
+    _run_infer_dm(pytest)
     for ele in glob.glob(pytest.output_prefix+"*"):
         os.remove(ele)
+
 
 def test_run_infer_dm_misid(infer_dm_args):
     pytest.nomisid = False
@@ -251,9 +281,10 @@ def test_run_infer_dm_misid(infer_dm_args):
     pytest.p0 = [1, 0.5, 1e-2]
     pytest.ubounds = [10, 10, 0.999]
     pytest.lbounds = [1e-3, 1e-3, 1e-4]
-    dcli.run_infer_dm(pytest)
+    _run_infer_dm(pytest)
     for ele in glob.glob(pytest.output_prefix+"*"):
         os.remove(ele)
+
 
 def test_run_infer_dm_global_bestfit(infer_dm_args):
     pytest.global_optimization = True
@@ -265,9 +296,10 @@ def test_run_infer_dm_global_bestfit(infer_dm_args):
     pytest.ubounds = [10, 10, 0.999]
     pytest.lbounds = [1e-3, 1e-3, 1e-4]
     pytest.maxeval = 10
-    dcli.run_infer_dm(pytest)
+    _run_infer_dm(pytest)
     for ele in glob.glob(pytest.output_prefix+"*"):
         os.remove(ele)
+
 
 def boundary_test_run_infer_dm_simple_snm(infer_dm_args):
     pytest.model = "snm_1d"
@@ -276,9 +308,10 @@ def boundary_test_run_infer_dm_simple_snm(infer_dm_args):
     pytest.p0 = -1
     pytest.ubounds = None
     pytest.lbounds = None
-    dcli.run_infer_dm(pytest)
+    _run_infer_dm(pytest)
     for ele in glob.glob(pytest.output_prefix+"*"):
         os.remove(ele)
+
 
 def test_run_infer_dm_html(infer_dm_args):
     pytest.fs = "https://raw.githubusercontent.com/xin-huang/dadi-cli/master/tests/example_data/two_epoch_syn.fs"
@@ -289,9 +322,10 @@ def test_run_infer_dm_html(infer_dm_args):
     pytest.ubounds = [10, 10, 0.999]
     pytest.lbounds = [1e-3, 1e-3, 1e-4]
     pytest.output_prefix += ".html"
-    dcli.run_infer_dm(pytest)
+    _run_infer_dm(pytest)
     for ele in glob.glob(pytest.output_prefix+"*"):
         os.remove(ele)
+
 
 @pytest.fixture
 def infer_dfe_args():
@@ -331,23 +365,24 @@ def infer_dfe_args():
     pytest.debug_wq = False
     pytest.port = 9123
 
+
 def test_run_infer_dfe_1d(infer_dfe_args):
     pytest.fs = pytest.fs_1d_lognorm
     pytest.pdf2d = None
     pytest.cache2d = None
     pytest.mix_pdf = None
     pytest.output_prefix += "1d_lognormal_dfe"
-    dcli.run_infer_dfe(pytest)
+    _run_infer_dfe(pytest)
     for ele in glob.glob(pytest.output_prefix+"*"):
         os.remove(ele)
 
 
 @pytest.mark.parametrize("check_convergence, force_convergence, optimizations",
-                        [
-                        (10, 0, 5),
-                        (0, 15, 5)
-                         ]
-                         )
+    [
+        (10, 0, 5),
+        (0, 15, 5)
+    ]
+)
 def test_run_infer_dfe_convergence(check_convergence, force_convergence, optimizations, infer_dfe_args, recwarn):
     pytest.fs = pytest.fs_1d_lognorm
     pytest.pdf2d = None
@@ -359,7 +394,7 @@ def test_run_infer_dfe_convergence(check_convergence, force_convergence, optimiz
     pytest.optimizations = optimizations
     pytest.output_prefix += "1d_lognormal_dfe.convergence_update"
 
-    dcli.run_infer_dfe(pytest)
+    _run_infer_dfe(pytest)
 
     if check_convergence > optimizations:
         w = recwarn.pop(UserWarning)
@@ -381,9 +416,11 @@ def test_run_infer_dfe_1d_gamma(infer_dfe_args):
     pytest.cache2d = None
     pytest.mix_pdf = None
     pytest.output_prefix += "1d_gamma_dfe"
-    dcli.run_infer_dfe(pytest)
+
+    _run_infer_dfe(pytest)
     for ele in glob.glob(pytest.output_prefix+"*"):
         os.remove(ele)
+
 
 def test_run_infer_dfe_2d_lognormal(infer_dfe_args):
     pytest.fs = pytest.fs_2d_lognorm
@@ -394,9 +431,11 @@ def test_run_infer_dfe_2d_lognormal(infer_dfe_args):
     pytest.p0 = [1, 1, 0.5]
     pytest.ubounds = [10, 10, 0.999]
     pytest.lbounds = [1e-3, 1e-3, 1e-3]
-    dcli.run_infer_dfe(pytest)
+
+    _run_infer_dfe(pytest)
     for ele in glob.glob(pytest.output_prefix+"*"):
         os.remove(ele)
+
 
 def test_run_infer_dfe_mix(infer_dfe_args):
     pytest.fs = pytest.fs_2d_lognorm
@@ -406,7 +445,8 @@ def test_run_infer_dfe_mix(infer_dfe_args):
     pytest.ubounds = [10, 10, None, 0.999]
     pytest.lbounds = [1e-3, 1e-3, None, 1e-3]
     pytest.constants = [None, None, 0, None]
-    dcli.run_infer_dfe(pytest)
+
+    _run_infer_dfe(pytest)
     fids = glob.glob(pytest.output_prefix+"*")
     print(fids)
     opt = open(fids[-1],'r').readlines()
@@ -415,6 +455,7 @@ def test_run_infer_dfe_mix(infer_dfe_args):
         assert(ele)
     for fi in fids:
         os.remove(fi)
+
 
 def test_run_infer_dfe_mix_html(infer_dfe_args):
     pytest.fs = "https://raw.githubusercontent.com/xin-huang/dadi-cli/master/tests/example_data/split_mig_non_2d.fs"
@@ -429,7 +470,8 @@ def test_run_infer_dfe_mix_html(infer_dfe_args):
     pytest.ubounds = [10, 10, None, 0.999, 0.4]
     pytest.lbounds = [1e-3, 1e-3, None, 1e-3, 1e-3]
     pytest.constants = [None, None, 0, None, None]
-    dcli.run_infer_dfe(pytest)
+
+    _run_infer_dfe(pytest)
     fids = glob.glob(pytest.output_prefix+"*")
     opt = open(fids[-1],'r').readlines()
     fix_check = [float(ele.split('\t')[3]) == 0.0 for ele in opt if not ele.startswith("#")]
@@ -438,22 +480,25 @@ def test_run_infer_dfe_mix_html(infer_dfe_args):
     for fi in fids:
         os.remove(fi)
 
+
 # May want third top_tops test to make sure log-likelihood sorted, but that would require changing the function
 def test_top_opts_error():
     filename = "tests/example_data/_top_opts_test_files/top_opts.empty.txt"
     with pytest.raises(ValueError) as exc_info:
-        dcli._top_opts(filename)
+        top_opts(filename)
 
     print(f"Fits not found in file {filename}.")
     assert exc_info.type is ValueError
     assert exc_info.value.args[0] == f"Fits not found in file {filename}."
 
+
 def test_top_opts_func():
     filename = "tests/example_data/_top_opts_test_files/top_opts.bestfits.txt"
-    opts = dcli._top_opts(filename)
+    opts = top_opts(filename)
     opt = list(opts[0])
     for ele in opts[1:]:
         assert opt != list(ele)
+
 
 try:
     import work_queue as wq
@@ -464,6 +509,7 @@ except:
 if os.path.exists("/home/runner/work/dadi-cli/dadi-cli"):
     wqskip = True
 
+
 @pytest.mark.skipif(wqskip, reason="Could not load Work Queue or in GitAction environments")
 def test_run_infer_dm_workqueue(infer_dm_args):
     import subprocess
@@ -473,10 +519,12 @@ def test_run_infer_dm_workqueue(infer_dm_args):
     )
     pytest.output_prefix = "tests/test_results/main.test.two_epoch.demo_wq.params"
     pytest.work_queue = ['pytest-dadi-cli', 'tests/mypwfile']
-    dcli.run_infer_dm(pytest)
+
+    _run_infer_dm(pytest)
     factory.kill()
     for ele in glob.glob(pytest.output_prefix+"*"):
         os.remove(ele)
+
 
 def test_run_stat_demography():
     def stat_args():
@@ -492,8 +540,10 @@ def test_run_stat_demography():
     stat_args.logscale=False
     stat_args.output="tests/test_results/main_demo_godambe.txt"
     stat_args.eps=[0.1]
-    dcli.run_stat_demography(stat_args)
+
+    _run_stat_demography(stat_args)
     os.remove(stat_args.output)
+
 
 def test_run_stat_dfe():
     def stat_args():
@@ -514,9 +564,9 @@ def test_run_stat_dfe():
     stat_args.logscale=False
     stat_args.output="tests/test_results/main_dfe_godambe.txt"
     stat_args.eps=[0.1]
-    dcli.run_stat_dfe(stat_args)
-    os.remove(stat_args.output)
 
+    _run_stat_dfe(stat_args)
+    os.remove(stat_args.output)
 
 
 @pytest.fixture
@@ -543,18 +593,23 @@ def plot_args():
     pytest.projections = None
     pytest.model_file = None
 
+
 def test_plot_mut_prop(plot_args):
     pytest.fs = None
-    dcli.run_plot(pytest)
+
+    _run_plot(pytest)
     os.remove(pytest.output)
 
+
 def test_plot_fitted_dfe(plot_args):
-    dcli.run_plot(pytest)
+    _run_plot(pytest)
     os.remove(pytest.output)
+
 
 def test_plot_fitted_demography(plot_args):
     pytest.dfe_popt = None
-    dcli.run_plot(pytest)
+
+    _run_plot(pytest)
     os.remove(pytest.output)
 
 # Unit test code start incase html functionality for Plot is requested
@@ -567,32 +622,31 @@ def test_plot_fitted_demography(plot_args):
 #     dcli.run_plot(pytest)
 #     # os.remove(pytest.output)
 
+
 def test_plot_single_sfs(plot_args):
     pytest.dfe_popt = None
     pytest.demo_popt = None
     pytest.fs2 = None
-    dcli.run_plot(pytest)
+
+    _run_plot(pytest)
     os.remove(pytest.output)
 
 def test_plot_comparison(plot_args):
     pytest.dfe_popt = None
     pytest.demo_popt = None
-    dcli.run_plot(pytest)
+
+    _run_plot(pytest)
     os.remove(pytest.output)
 
 @pytest.mark.parametrize("dir_path, dir_exists",
-                        [
-                        ("fake.fs", False),
-                        ("tests/test_results/make_dir/fake.fs", True)
-                         ]
-                         )
+    [
+        ("fake.fs", False),
+        ("tests/test_results/make_dir/fake.fs", True)
+    ]
+)
 def test_make_dir(dir_path, dir_exists):
-    dcli._make_dir(dir_path)
+    make_dir(dir_path)
     parent_dir = os.path.dirname(dir_path)
     assert os.path.exists(parent_dir) == dir_exists
     if os.path.exists(parent_dir):
         os.rmdir(parent_dir)
-
-
-
-

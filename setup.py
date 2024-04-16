@@ -1,5 +1,5 @@
 import os.path
-from setuptools import setup
+from setuptools import setup, find_packages
 
 # The directory containing this file
 HERE = os.path.abspath(os.path.dirname(__file__))
@@ -11,6 +11,7 @@ with open(os.path.join(HERE, "README.md")) as fid:
 # This call to setup() does all the work
 setup(
     name="dadi-cli",
+    python_requires='>=3.9',
     version="0.9.4b",
     description="A command line interface for dadi",
     long_description=README,
@@ -24,7 +25,7 @@ setup(
         "Programming Language :: Python",
         "Programming Language :: Python :: 3.9",
     ],
-    packages=["dadi_cli"],
+    packages=find_packages(),
     include_package_data=True,
     # install_requires=[
     #    "dadi"

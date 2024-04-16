@@ -1,4 +1,4 @@
-import dadi
+import dadi, multiprocessing
 import numpy as np
 from typing import Optional
 
@@ -136,3 +136,124 @@ def get_opts_and_theta(
         print("No converged optimization results found.")
 
     return opts, theta
+
+
+# Worker functions for multiprocessing with demography/DFE inference
+def worker_func(
+    func: callable, 
+    in_queue: multiprocessing.Queue, 
+    out_queue: multiprocessing.Queue, 
+    args: list, 
+    use_gpu: bool = False
+) -> None:
+    """
+    Worker function for multiprocessing that processes tasks defined by a function
+    and its arguments, and uses queues for input and output handling.
+
+    Parameters
+    ----------
+    func : callable
+        The function to be executed. This function should accept the arguments specified
+        by `args` and any additional parameters passed through the `in_queue`.
+    in_queue : multiprocessing.Queue
+        The input queue from which the worker retrieves tasks or seeds.
+    out_queue : multiprocessing.Queue
+        The output queue where the worker puts the results after processing.
+    args : list
+        A list of arguments that are passed to `func` when called. These should include
+        all necessary parameters needed by `func` except those dynamically provided by
+        the `in_queue`.
+    use_gpu : bool, optional
+        A flag that enables or disables GPU acceleration within the `func`. The default
+        is False, which means GPU acceleration is not used unless explicitly enabled.
+
+    """
+    dadi.cuda_enabled(use_gpu)
+    while True:
+        new_seed = in_queue.get()
+        np.random.seed(new_seed)
+        results = func(*args)
+        out_queue.put(results)
+
+
+def calc_p0_from_bounds(
+    lb: list[float], 
+    ub: list[float]
+) -> list[float]:
+    """
+    Calculates initial parameter values for optimization based on lower and upper bounds.
+
+    Parameters
+    ----------
+    lb : list[float]
+        List of lower bounds for each parameter.
+    ub : list[float]
+        List of upper bounds for each parameter.
+
+    Returns
+    -------
+    list[float]
+        A list of initial parameter estimates calculated from the provided bounds.
+
+    """
+    p0 = []
+    for l, u in zip(lb, ub):
+        if l == 0:
+            p0.append((l + u) / 2)
+        elif l*u > 0:
+            p0.append(np.sqrt(l * u))
+        else:
+            p0.append((l+u) / 2)
+
+    return p0
+
+
+def top_opts(filename: str) -> list[list[float]]:
+    """
+    Reads and extracts optimized parameters from a file that logs parameter optimizations.
+
+    Parameters
+    ----------
+    filename : str
+        Name of the file containing the logged parameter optimizations. Each relevant line
+        in this file should contain values separated by tabs, where the first value is the
+        log-likelihood, followed by the parameter values, and ending with the theta value.
+
+    Returns
+    -------
+    list[list[float]]
+        A list of lists where each inner list contains the parameter values from one line of
+        the file. These parameter values are sorted by their corresponding log-likelihood in
+        descending order to show the best fits first.
+
+    Raises
+    ------
+    ValueError
+        If no fitting data is found in the file, indicating an issue with the file's content
+        or format.
+
+    """
+    fid = open(filename, 'r')
+    for line in fid.readlines():
+        if line.startswith('# Log'):
+            # Reset opts variable to avoid repeating entries.
+            opts = []
+            continue
+        elif line.startswith('#'):
+            continue
+        else:
+            try:
+                opts.append([float(_) for _ in line.rstrip().split("\t")])
+            except ValueError:
+                pass
+    fid.close()
+
+    try:
+        # Sort entries by log-likelihood
+        opts = np.array(sorted(opts, reverse=True))
+        # Remove log-likelihood and theta
+        opts = [opt[1:-1] for opt in opts]
+    except UnboundLocalError:
+        raise ValueError(f"Fits not found in file {filename}.")
+
+    return opts

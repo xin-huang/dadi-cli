@@ -2,6 +2,7 @@ import pytest
 import dadi_cli.__main__ as cli
 import os
 
+
 try:
     if not os.path.exists("./tests/test_results"):
         os.makedirs("./tests/test_results")
@@ -10,10 +11,10 @@ except:
 
 
 def test_generate_fs_args():
-    parser = cli.dadi_cli_parser()
+    parser = cli._dadi_cli_parser()
     cmd = "GenerateFs"
-    vcf = "test.vcf"
-    pop_infos = "test.info"
+    vcf = "tests/example_data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.short.vcf"
+    pop_infos = "tests/example_data/four.popfile.txt"
     output = "test.output"
     args = parser.parse_args(
         [
@@ -38,10 +39,10 @@ def test_generate_fs_args():
 
 
 def test_generate_cache_args():
-    parser = cli.dadi_cli_parser()
+    parser = cli._dadi_cli_parser()
     cmd = "GenerateCache"
     model = "split_mig_fix_T_one_s"
-    model_file = "tests/example_data/example_models"
+    model_file = "tests/example_data/example_models.py"
     grids = [20, 40, 60]
     demo_popt = "tests/example_data/example.split_mig_fix_T.demo.params.InferDM.bestfits"
     gamma_bounds = [1e-4, 10.0]
@@ -93,8 +94,9 @@ def test_generate_cache_args():
     assert args.demo_popt == demo_popt
     assert args.additional_gammas == additional_gammas
 
+
 def test_simulate_dm_args():
-    parser = cli.dadi_cli_parser()
+    parser = cli._dadi_cli_parser()
     cmd = "SimulateDM"
     model = "two_epoch"
     model_file = None
@@ -132,8 +134,9 @@ def test_simulate_dm_args():
     assert args.output == output
     assert args.inference_file == inference_file
 
+
 def test_simulate_dfe_args():
-    parser = cli.dadi_cli_parser()
+    parser = cli._dadi_cli_parser()
     cmd = "SimulateDFE"
     cache1d = "tests/example_data/cache_split_mig_1d.bpkl"
     cache2d = "tests/example_data/cache_split_mig_2d.bpkl"
@@ -173,15 +176,17 @@ def test_simulate_dfe_args():
     assert args.nomisid == nomisid
     assert args.output == output
 
+
 try:
     import demes
     skip = False
 except:
     skip = True
 
+
 @pytest.mark.skipif(skip, reason="Could not load Demes")
 def test_simulate_demes_args():
-    parser = cli.dadi_cli_parser()
+    parser = cli._dadi_cli_parser()
     cmd = "SimulateDemes"
     demes_file = "examples/data/gutenkunst_ooa.yml"
     sample_sizes = [10, 10, 10]
@@ -213,13 +218,13 @@ def test_simulate_demes_args():
 
 
 @pytest.mark.parametrize("model, model_file, nomisid",
-                        [
-                        ("split_mig_fix_T", "tests/example_data/example_models", False),
-                        ("snm_1d", None, True)
-                         ]
-                         )
+    [
+        ("split_mig_fix_T", "tests/example_data/example_models.py", False),
+        ("snm_1d", None, True)
+    ]
+)
 def test_infer_dm_args(model, model_file, nomisid):
-    parser = cli.dadi_cli_parser()
+    parser = cli._dadi_cli_parser()
     cmd = "InferDM"
     fs = "tests/example_data/two_epoch_syn.fs"
     p0 = [1, 1, 0.01, 1, 0.05]
@@ -300,7 +305,8 @@ def test_infer_dm_args(model, model_file, nomisid):
     assert args.delta_ll == delta_ll
     assert args.gpus == gpus
     assert args.model == model
-    assert args.model_file == str(model_file)
+    #assert args.model_file == str(model_file)
+    assert args.model_file == model_file
     assert args.grids == grids
     assert args.nomisid == False
     assert args.constants == -1
@@ -311,7 +317,7 @@ def test_infer_dm_args(model, model_file, nomisid):
 
 
 def test_infer_dfe_args():
-    parser = cli.dadi_cli_parser()
+    parser = cli._dadi_cli_parser()
     cmd = "InferDFE"
     fs_mix = "tests/example_data/split_mig_non_mix.fs"
     fs_1d_lognorm = "tests/example_data/split_mig_non_1d.fs"
@@ -425,8 +431,9 @@ def test_infer_dfe_args():
     assert args.pdf_file == None
     assert args.bestfit_p0 == None
 
+
 def test_bestfit_args():
-    parser = cli.dadi_cli_parser()
+    parser = cli._dadi_cli_parser()
     cmd = "BestFit"
     input_prefix = "tests/example_data/example.split_mig.demo.params.InferDM"
     args = parser.parse_args(
@@ -449,7 +456,7 @@ def test_bestfit_args():
 
 
 def test_plot_args():
-    parser = cli.dadi_cli_parser()
+    parser = cli._dadi_cli_parser()
     cmd = "Plot"
     fs = "tests/example_data/split_mig_non_1d.fs"
     fs2 = "tests/example_data/split_mig_non_2d.fs"
@@ -519,9 +526,8 @@ def test_plot_args():
     assert args.ratio == ratio
 
 
-
 def test_stat_dm_args():
-    parser = cli.dadi_cli_parser()
+    parser = cli._dadi_cli_parser()
     cmd = "StatDM"
     fs = "tests/example_data/split_mig_syn.fs"
     model = "split_mig"
@@ -564,8 +570,9 @@ def test_stat_dm_args():
     assert args.bootstrapping_dir == bootstrapping_dir
     assert args.logscale == logscale
 
+
 def test_stat_dfe_args():
-    parser = cli.dadi_cli_parser()
+    parser = cli._dadi_cli_parser()
     cmd = "StatDFE"
     fs = "tests/example_data/split_mig_non_mix.fs"
     cache1d = "tests/example_data/cache_split_mig_1d.bpkl"
@@ -618,8 +625,9 @@ def test_stat_dfe_args():
     assert args.bootstrapping_non_dir == bootstrapping_nonsynonymous_dir
     assert args.logscale == logscale
 
+
 def test_model_args():
-    parser = cli.dadi_cli_parser()
+    parser = cli._dadi_cli_parser()
     cmd = "Model"
     args = parser.parse_args([cmd, "--names", "two_epoch"])
     assert args.names == "two_epoch"

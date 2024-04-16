@@ -15,3 +15,8 @@ ssh-key
 ssh-key.pub
 terraform.tfstate
 terraform.tfstate.backup
+bestfits_file.bestfits
+dadi_models.py
+demes_file.yml
+sfs.fs
+demo-popt.bestfits
