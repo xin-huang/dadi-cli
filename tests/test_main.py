@@ -1,6 +1,4 @@
-import pytest
-import os
-import glob
+import glob, os, pytest
 
 from dadi_cli.parsers.generate_fs_parsers import _run_generate_fs
 from dadi_cli.parsers.generate_cache_parsers import _run_generate_cache
@@ -23,6 +21,8 @@ from dadi_cli.InferDFE import *
 from dadi_cli.Pdfs import *
 from dadi_cli.Models import *
 from dadi_cli.utilities import *
+
+from importlib.metadata import version
 
 
 try:
@@ -592,6 +592,7 @@ def plot_args():
     pytest.resid_range = 10
     pytest.projections = None
     pytest.model_file = None
+    pytest.interactive = False
 
 
 def test_plot_mut_prop(plot_args):
@@ -623,6 +624,7 @@ def test_plot_fitted_demography(plot_args):
 #     # os.remove(pytest.output)
 
 
+@pytest.mark.skipif(version('dadi') <= '2.3.3', reason="Version of dadi doesn't support interactive plot display for single SFS")
 def test_plot_single_sfs(plot_args):
     pytest.dfe_popt = None
     pytest.demo_popt = None
