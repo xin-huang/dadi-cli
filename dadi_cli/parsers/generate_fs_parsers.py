@@ -15,19 +15,32 @@ def _run_generate_fs(args: argparse.Namespace) -> None:
     args : argparse.Namespace
         A namespace object from argparse containing all the necessary parameters to configure
         the frequency spectrum generation. Expected attributes include:
-        - mask_shared (bool): If True, uses a 'shared' mask.
-        - mask (bool): If True and mask_shared is False, uses a 'singletons' mask.
-        - output (str): The output directory to save results.
-        - vcf (str): Path to the VCF file from which the frequency spectrum is generated.
-        - bootstrap (int): Number of bootstrap resamples to perform.
-        - chunk_size (int): Size of the chunks for processing the VCF file.
-        - seed (int): Random seed for bootstrap resampling.
-        - pop_ids (list): List of population identifiers.
-        - pop_info (dict): Information about populations.
-        - projections (list): List of integers representing projected sample sizes per population.
-        - polarized (bool): Whether to use polarized allele frequencies.
-        - marginalize_pops (bool): Whether to marginalize over populations.
-        - subsample (float): Proportion of data to subsample.
+        - mask_shared : bool
+            If True, uses a 'shared' mask.
+        - mask : bool
+            If True and mask_shared is False, uses a 'singletons' mask.
+        - output : str
+            The output directory to save results.
+        - vcf : str
+            Path to the VCF file from which the frequency spectrum is generated.
+        - bootstrap : int
+            Number of bootstrap resamples to perform.
+        - chunk_size : int
+            Size of the chunks for processing the VCF file.
+        - seed : int
+            Random seed for bootstrap resampling.
+        - pop_ids : list
+            List of population identifiers.
+        - pop_info : str
+            Information about populations.
+        - projections : list
+            List of integers representing projected sample sizes per population.
+        - polarized : bool
+            Whether to use polarized allele frequencies.
+        - marginalize_pops : list
+            Marginalize over a list of populations.
+        - subsample : bool
+            Whether to subsample data.
 
     """
     if args.mask_shared:

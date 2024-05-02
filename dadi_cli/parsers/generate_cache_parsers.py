@@ -16,19 +16,31 @@ def _run_generate_cache(args: argparse.Namespace) -> None:
     args : argparse.Namespace
         A namespace object containing all the necessary parameters to configure the cache generation.
         Expected attributes include:
-        - model (str): The name of the model to use, which should be a function defined in `dadi.DFE.DemogSelModels`.
-        - model_file (str, optional): The path or URL to a Python file defining additional models. If provided, the model
-          specified in `model` will be loaded from this file.
-        - demo_popt (str): The path or URL to the best fit parameters file.
-        - grids (list of int): List specifying the size of the grid points for numerical integration.
-        - gamma_bounds (tuple of float): Bounds for gamma values used in the cache generation.
-        - gamma_pts (int): Number of points for gamma values within the specified bounds.
-        - additional_gammas (list of float, optional): Additional gamma values to include in the cache generation.
-        - output (str): Directory to store the generated cache files.
-        - sample_sizes (list of int): List of sample sizes for which to generate the cache.
-        - cpus (int): Number of CPU cores to use for computation.
-        - gpus (int): Number of GPU devices to use for computation, if applicable.
-        - dimensionality (int): The dimensionality of the demographic model.
+        - model : str
+            The name of the model to use, which should be a function defined in `dadi.DFE.DemogSelModels`.
+        - model_file : str, optional
+            The path or URL to a Python file defining additional models. If provided, the model
+            specified in `model` will be loaded from this file.
+        - demo_popt : str
+            The path or URL to the best fit parameters file.
+        - grids : list
+            List specifying the size of the grid points for numerical integration.
+        - gamma_bounds : tuple
+            Bounds for gamma values used in the cache generation.
+        - gamma_pts : int
+            Number of points for gamma values within the specified bounds.
+        - additional_gammas : list, optional
+            Additional gamma values to include in the cache generation.
+        - output : str
+            Directory to store the generated cache files.
+        - sample_sizes : list
+            List of sample sizes for which to generate the cache.
+        - cpus : int
+            Number of CPU cores to use for computation.
+        - gpus : int
+            Number of GPU devices to use for computation, if applicable.
+        - dimensionality : int
+            The dimensionality of the demographic model.
 
     """
     if args.model_file is None and args.model not in [m[0] for m in getmembers(DFE.DemogSelModels, isfunction)]:
