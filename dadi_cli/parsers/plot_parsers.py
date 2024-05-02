@@ -45,6 +45,8 @@ def _run_plot(args: argparse.Namespace) -> None:
             Projections for frequency spectrum summarization.
         - nomisid : bool, optional
             Whether misidentification corrections are to be considered.
+        - interactive: bool, optional
+            Whether displaying the plot in an interactive window.
 
     """
     # # Code kept just in case user requests functionality if the future
@@ -85,6 +87,7 @@ def _run_plot(args: argparse.Namespace) -> None:
             pdf=args.pdf1d,
             dfe_popt=args.dfe_popt,
             output=args.output,
+            show=args.interactive,
         )
     elif args.dfe_popt is not None:
         plot_fitted_dfe(
@@ -99,6 +102,7 @@ def _run_plot(args: argparse.Namespace) -> None:
             resid_range=args.resid_range,
             projections=args.projections,
             output=args.output,
+            show=args.interactive,
         )
     elif args.demo_popt is not None:
         if args.model is None:
@@ -113,10 +117,15 @@ def _run_plot(args: argparse.Namespace) -> None:
             nomisid=args.nomisid,
             resid_range=args.resid_range,
             output=args.output,
+            show=args.interactive,
         )
     elif args.fs2 is None:
         plot_single_sfs(
-            fs=args.fs, projections=args.projections, output=args.output, vmin=args.vmin
+            fs=args.fs, 
+            projections=args.projections, 
+            output=args.output, 
+            vmin=args.vmin,
+            show=args.interactive,
         )
     else:
         plot_comparison(
@@ -126,6 +135,7 @@ def _run_plot(args: argparse.Namespace) -> None:
             output=args.output,
             vmin=args.vmin,
             resid_range=args.resid_range,
+            show=args.interactive,
         )
 
 
@@ -179,5 +189,12 @@ def add_plot_parsers(subparsers: argparse.ArgumentParser) -> None:
         default=False,
         required=False,
         help="Ratio for the nonsynonymous mutations to the synonymous mutations.",
+    )
+    parser.add_argument(
+        "--interactive",
+        default=False,
+        action="store_true",
+        required=False,
+        help="Display plots in matplotlib window.",
     )
     parser.set_defaults(runner=_run_plot)
