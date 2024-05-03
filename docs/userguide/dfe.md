@@ -47,3 +47,71 @@ Similar to the best fit parameters in `./examples/results/demog/1KG.YRI.CEU.spli
 | likelihood | mu  | sigma | misidentification |
 |------------|-----|-------|-------------------|
 | -1389      | 5.5 | 7.6   | 0.017             |
+
+# Joint DFE inference
+
+## Inferring a bivariate lognormal joint DFE
+
+Here we will infer a joint DFE with selection potentially being different in the two populations. We define the DFE as a bivariate lognormal distribution with `--pdf2d` and pass in a cache that assumes the population-scaled selection coefficients are different in the two populations through `--cache2d`. The bivariate lognormal has an extra parameter `rho`, the correlation of the DFE between the populations. We can allow `mu_log` and `sigma_log` be different or the same in our populations. `dadi-cli` will run either the symmetric (shared `mu_log` and `sigma_log`) or asymmetric (independent `mu_log` and `sigma_log`) bivariate lognormal based on the number of parameters. For the symmetric bivariate lognormal the parameters are `log_mu`, `log_sigma`, and `rho`, the asymmetric bivariate lognormal the parameters are `log_mu1`, `log_mu2`, `log_sigma1`, `log_sigma2`, and `rho`, where 1 denotes the first population and 2 denotes the second population.
+
+An example of running a symmetrical bivariate lognormal is:
+
+```
+dadi-cli InferDFE --fs ./examples/results/fs/1KG.YRI.CEU.20.nonsynonymous.snps.unfold.fs --cache2d ./examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.spectra.bpkl --pdf2d biv_lognormal --p0 1 1 .5 .5 --lbounds -10 0.01 0.001 0 --ubounds 10 10 0.999 0.5 --demo-popt ./examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits --ratio 2.31 --output ./examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.bivariate_sym_lognormal.params --optimizations 15 --maxeval 400 --check-convergence 10
+```
+
+An example of running an asymmetrical bivariate lognormal is:
+
+```
+dadi-cli InferDFE --fs ./examples/results/fs/1KG.YRI.CEU.20.nonsynonymous.snps.unfold.fs --cache2d ./examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.spectra.bpkl --pdf2d biv_lognormal --p0 1 1 1 1 .5 .5 --lbounds -10 -10 0.01 0.01 0.001 0 --ubounds 10 10 10 10 0.999 0.5 --demo-popt ./examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits --ratio 2.31 --output ./examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.bivariate_asym_lognormal.params --optimizations 15 --maxeval 400 --check-convergence 10
+```
+
+## Inferring mixture model joint DFE
+
+Here, we will use a mixture of a univariate lognormal and a bivariate lognormal distribution. To make the mixture we pass in options for both 1D and 2D: `--pdf1d`, `--pdf2d`, `--cache1d`, and `--cache2d`. Because the mixture model is assuming some proportion of the DFE is lognormal and the other is bivariate, the bivariate is symmeteric. The parameters for the mixture lognormal DFE are `log_mu`, `log_sigma`, `rho`,and `w`, the proportional weight of the bivariate lognormal DFE (1-`w` would be the weight of the univariate lognormal distribution). In this example we fix `rho` of the bivariate component to 0 with the `--constants` option.
+
+```
+dadi-cli InferDFE --fs ./examples/results/fs/1KG.YRI.CEU.20.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.single.gamma.spectra.bpkl --cache2d ./examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.spectra.bpkl --pdf1d lognormal --pdf2d biv_lognormal --mix-pdf mixture_lognormal --p0 1 1 0 .5 .5 --lbounds -10 0.01 -1 0.001 0 --ubounds 10 10 -1 0.999 0.5 --constants -1 -1 0 -1 -1 --demo-popt ./examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits --ratio 2.31 --output ./examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.lognormal_mixture.params --optimizations 15 --maxeval 400 --check-convergence 10
+```
+
+Similar to the best fit parameters in `./examples/results/demog/1KG.YRI.CEU.split_mig.bestfit.demog.params`, the first column is the log-likelihood.
+
+| likelihood | mu   | sigma | rho | w   | misidentification |
+|------------|------|-------|-----|-----|-------------------|
+| -1389      | 5.51 | 7.65  | 0   | 0   | 0.017             |
+
+## Settings
+
+| Argument | Description |
+| - | - |
+| `--fs`                  | Frequency spectrum of mutations used for inference. To generate the frequency spectrum, please use `dadi-cli GenerateFs`. Can be an HTML link. |
+| `--demo-popt`           | File contains the bestfit parameters for the demographic model. |
+| `--cache1d`             | File name of the 1D DFE cache. To generate the cache, please use `dadi-cli GenerateCache`. |
+| `--cache2d`             | File name of the 2D DFE cache. To generate the cache, please use `dadi-cli GenerateCache`. |
+| `--pdf1d`               | 1D probability density function for the DFE inference. To check available probability density functions, please use `dadi-cli Pdf`. |
+| `--pdf2d`               | 2D probability density function for the joint DFE inference. To check available probability density functions, please use `dadi-cli Pdf`. |
+| `--ratio`               | Ratio for the nonsynonymous mutations to the synonymous mutations. |
+| `--pdf-file`            | Name of python probability density function module file (not including .py) that contains custom probability density functions to use. Default: None. |
+| `--p0`                  | Initial parameter values for inference. |
+| `--output-prefix`       | Prefix for output files, which will be named <output_prefix>.InferDM.opts.<N>, where N is an increasing integer (to avoid overwriting existing files). |
+| `--optimizations`       | Total number of optimizations to run. Default: 100. |
+| `--check-convergence`   | Start checking for convergence after a chosen number of optimizations. Optimization runs will stop early if convergence criteria are reached. BestFit results file will be call <output_prefix>.InferDM.bestfits. Convergence not checked by default. |
+| `--force-convergence`   | Start checking for convergence after a chosen number of optimizations. Optimization runs will continue until convergence criteria is reached (--optimizations flag will be ignored). BestFit results file will be call <output_prefix>.InferDM.bestfits. Convergence not checked by default. |
+| `--work-queue`          | Enable Work Queue. Additional arguments are the WorkQueue project name, the name of the password file. |
+| `--port`                | Choose a specific port for Work Queue communication. Default 9123. |
+| `--debug-wq`            | Store debug information from WorkQueue to a file called "debug.log". Default: False. |
+| `--maxeval`             | Max number of parameter set evaluations tried for optimizing demography. Default: Number of parameters multiplied by 100. |
+| `--maxtime`             | Max amount of time for optimizing demography. Default: Infinite. |
+| `--cpus`                | Number of CPUs to use in multiprocessing. Default: All available CPUs. |
+| `--gpus`                | Number of GPUs to use in multiprocessing. Default: 0. |
+| `--bestfit-p0-file`     | Pass in a .bestfit or .opt.<N> file name to cycle --p0 between up to the top 10 best fits for each optimization. |
+| `--delta-ll`            | When using --check-convergence argument in InferDM or InferDFE modules or the BestFits module, set the max percentage difference for log-likliehoods compared to the best optimization log-likliehood to be consider convergent (with 1 being 100% difference to the best optimization's log-likelihood). Default: 0.0001. |
+| `--model`               | Name of the demographic model. To check available demographic models, please use `dadi-cli Model`. |
+| `--model-file`          | Name of python module file (not including .py) that contains custom models to use. Can be an HTML link. Default: None. |
+| `--grids`               | Sizes of grids. Default: Based on sample size. |
+| `--nomisid`             | Enable to *not* include a parameter modeling ancestral state misidentification when data are polarized. |
+| `--constants`           | Fixed parameters during the inference or using Godambe analysis. Use -1 to indicate a parameter is NOT fixed. Default: None. |
+| `--lbounds`             | Lower bounds of the optimized parameters. |
+| `--ubounds`             | Upper bounds of the optimized parameters. |
+| `--global-optimization` | Use global optimization before doing local optimization. Default: False. |
+| `--seed`                | Random seed. |
