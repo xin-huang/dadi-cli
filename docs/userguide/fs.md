@@ -25,6 +25,8 @@ NA19107 YRI
 
 `--projections` specifies the sample size of the population. Here we have 108 YRI individuals and 99 CEU individuals. Therefore, we have 216 and 198 haplotypes for YRI and CEU respectively. We use a lower sample size here, because it allows us to speed up examples.
 
+By default, `dadi-cli` generates folded spectra. To generate unfolded spectra, users should add `--polarized` and **the VCF files should have the `AA` in the `INFO` field and header to specify the ancestral allele for each SNP**.
+
 ## Output
 
 The format of the output file is the same as those created by [dadi](https://dadi.readthedocs.io).
@@ -55,7 +57,7 @@ An example for a folded allele frequency spectrum from one population is below.
 
 | Argument | Description |
 | - | - |
-| `--polarized`              | Determine whether the resulting frequency spectrum is polarized or not. Default: False. By default, `dadi-cli` generates folded spectra. To generate unfolded spectra, users should add `--polarized` and **the VCF files should have the `AA` in the `INFO` field and header to specify the ancestral allele for each SNP**. |
+| `--polarized`              | Determine whether the resulting frequency spectrum is polarized or not. Default: False. |
 | `--pop-ids`                | Population names for the samples. The population IDs should match those listed in the population information file. |
 | `--pop-info`               | Name of the file containing the population name of each sample. |
 | `--projections`            | Sample sizes after projection. If you do not want to project down your data, please input the original sample sizes of your data. |
