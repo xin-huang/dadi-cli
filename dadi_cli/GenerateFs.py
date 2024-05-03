@@ -53,7 +53,7 @@ def generate_fs(
     ------
     ValueError
         If the lengths of `pop_ids` and `projections` do not match.
-        If the VCF file does not contain the AA INFO field and polarized is True.
+        If the VCF file does not contain the AA INFO field and `polarized` is True.
 
     """
     if len(pop_ids) != len(projections):
