@@ -49,19 +49,21 @@ dadi-cli -h
 
 There are thirteen subcommands in `dadi-cli`:
 
-- GenerateFs 
-- GenerateCache 
-- InferDM 
-- InferDFE 
-- BestFit 
-- StatDM 
-- StatDFE 
-- Plot 
-- SimulateDM 
-- SimulateDFE 
-- SimulateDemes 
-- Model 
-- Pdf
+| Command | Description |
+| - | - |
+| GenerateFs    | Generate frequency spectrum from VCF files. |
+| GenerateCache | Generate selection coefficient cache for inferring DFE. |
+| SimulateDM    | Generate frequency spectrum based on a demographic history. |
+| SimulateDFE   | Generate frequency spectrum based on a DFE. |
+| SimulateDemes | Generate frequency spectrum based on a Demes .yml file. |
+| InferDM       | Infer a demographic models from an allele frequency spectrum. |
+| InferDFE      | Infer distribution of fitness effects from frequency spectrum. |
+| Plot          | Plot 1D/2D/3D frequency spectrum. |
+| StatDM        | Perform statistical tests using Godambe Information Matrix for demographic models. |
+| StatDFE       | Perform statistical tests using Godambe Information Matrix for DFEs. |
+| BestFit       | Obtain the best fit parameters. |
+| Model         | Display available demographic models. |
+| Pdf           | Display available probability density functions for distribution of fitness effects. |
 
 To display help information for each subcommand, users can use the `-h` option. For example,
 
