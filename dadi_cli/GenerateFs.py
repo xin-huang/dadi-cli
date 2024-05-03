@@ -1,4 +1,5 @@
 import dadi, random
+from cyvcf2 import VCF
 
 
 def generate_fs(
@@ -52,10 +53,18 @@ def generate_fs(
     ------
     ValueError
         If the lengths of `pop_ids` and `projections` do not match.
+        If the VCF file does not contain the AA INFO field and polarized is True.
 
     """
     if len(pop_ids) != len(projections):
         raise ValueError("The lengths of `pop_ids` and `projections` must match.")
+
+    if polarized:
+        if not VCF(vcf).contains('AA'):
+            raise ValueError(
+                f'The AA (Ancestral allele) INFO field cannot be found in the header of {vcf}, ' +
+                'but an unfolded frequency spectrum is requested.'
+            )
 
     if subsample:
         subsample_dict = {}

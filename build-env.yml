@@ -5,6 +5,7 @@ channels:
 dependencies:
   - dadi
   - codecov
+  - cyvcf2
   - gcc
   - demes
   - dill

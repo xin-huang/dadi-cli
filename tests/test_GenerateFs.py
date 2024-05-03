@@ -15,6 +15,7 @@ except:
 @pytest.fixture
 def data():
     pytest.vcf = "./tests/example_data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.short.vcf"
+    pytest.woaa_vcf = "./tests/example_data/1KG.YRI.CEU.biallelic.synonymous.snps.woanc.strict.short.vcf"
     pytest.pop_info = "./examples/data/1KG.YRI.CEU.popfile.txt"
     pytest.three_pop_info = "./tests/example_data/three.popfile.txt"
     pytest.four_pop_info = "./tests/example_data/four.popfile.txt"
@@ -121,6 +122,24 @@ def test_generate_fs_failure(data):
         )
 
     assert "The lengths of `pop_ids` and `projections` must match." in str(excinfo.value)
+
+    with pytest.raises(ValueError) as excinfo:
+        generate_fs(
+            vcf=pytest.woaa_vcf,
+            output=pytest.unfolded_output,
+            pop_ids=["YRI", "CEU"],
+            pop_info=pytest.pop_info,
+            projections=[216, 198],
+            marginalize_pops=None,
+            subsample=False,
+            polarized=True,
+            bootstrap=None,
+            chunk_size=None,
+            masking="",
+            seed=None,
+        )
+
+    assert "The AA (Ancestral allele) INFO field cannot be found" in str(excinfo.value)
 
 
 def test_generate_fs_subsample(data):
