@@ -2,12 +2,14 @@
 
 ## Input
 
-`dadi-cli` only accepts [VCF](https://samtools.github.io/hts-specs/VCFv4.2.pdf) files to generate allele frequency spectra. To generate a spectrum, users can use
+`dadi-cli` only accepts [VCF](https://samtools.github.io/hts-specs/VCFv4.2.pdf) files to generate allele frequency spectra. For example, we provide two sample VCF files: [1KG.YRI.CEU.syn.vcf.gz](https://github.com/xin-huang/dadi-cli/blob/master/examples/data/1KG.YRI.CEU.syn.vcf.gz) containing genotype data from synonymous SNPs, and [1KG.YRI.CEU.non.vcf.gz](https://github.com/xin-huang/dadi-cli/blob/master/examples/data/1KG.YRI.CEU.non.vcf.gz) with genotype data from non-synonymous SNPs.
+
+To generate a spectrum, users can use:
 
 ```
-dadi-cli GenerateFs --vcf examples/data/1KG.YRI.CEU.syn.vcf.gz --pop-info examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 20 20 --polarized --output examples/results/fs/1KG.YRI.CEU.20.syn.unfold.fs
+dadi-cli GenerateFs --vcf examples/data/1KG.YRI.CEU.syn.vcf.gz --pop-info examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 20 20 --polarized --output examples/results/fs/1KG.YRI.CEU.20.syn.unfolded.fs
 
-dadi-cli GenerateFs --vcf examples/data/1KG.YRI.CEU.non.vcf.gz --pop-info examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 20 20 --polarized --output examples/results/fs/1KG.YRI.CEU.20.non.snps.unfold.fs
+dadi-cli GenerateFs --vcf examples/data/1KG.YRI.CEU.non.vcf.gz --pop-info examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 20 20 --polarized --output examples/results/fs/1KG.YRI.CEU.20.non.snps.unfolded.fs
 ```
 
 Please make sure the directory `examples/results/fs/` exist before running the above commands.
