@@ -9,7 +9,7 @@
 - Python 3.9 and 3.10
 - Python packages:
 	- cuda
-        - cyvcf2
+	- cyvcf2
 	- dadi > 2.1.0
 	- demes
 	- dill == 0.3.4
