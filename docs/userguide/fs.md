@@ -1,4 +1,4 @@
-# Generating allele frequency spectra
+# Allele frequency spectrum generation
 
 ## Input
 
