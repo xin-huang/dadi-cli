@@ -51,6 +51,22 @@ An example for a folded allele frequency spectrum from one population is below.
 
 ## Settings
 
+| Argument | Description |
+| - | - |
+| `--polarized`              | Determine whether the resulting frequency spectrum is polarized or not. Default: False. |
+| `--pop-ids`                | Population names for the samples. |
+| `--pop-info`               | Name of the file containing the population name of each sample. |
+| `--projections`            | Sample sizes after projection. If you do not want to project down your data, please input the original sample sizes of your data. |
+| `--vcf`                    | Name of the VCF file for generating frequency spectra. |
+| `--bootstrap`              | Times to perform bootstrapping. |
+| `--chunk-size`             | Chunk size to divide the genomes for bootstrapping. |
+| `--subsample`              | Subsample from the VCF when generating the fs using the given pop-ids and subsample calls based on the projections passed in. Default: None. |
+| `--mask-singletons`        | Mask the singletons that are exclusive to each population. Default: None. |
+| `--mask-shared-singletons` | Mask the singletons that are exclusive to each population and shared between populations. Default: None. |
+| `--marginalize-pop-ids`    | Population names you want to marginalize (remove) from the full fs. Default: None. |
+| `--output`                 | Name of the output file. |
+| `--seed`                   | Random seed. |
+
 `--pop-ids` specifies the ID of the population. Here we have two populations YRI and CEU. The population IDs should match those listed in the population information file above.
 
 `--projections` specifies the sample size of the population. Here we have 108 YRI individuals and 99 CEU individuals. Therefore, we have 216 and 198 haplotypes for YRI and CEU respectively. We use a lower sample size here, because it allows us to speed up examples.
