@@ -65,3 +65,30 @@ Sometimes parameters may be close to the boundaries. Users should be cautious an
 | log-likelihood | nu1 | nu2  | T    | m    | misid | theta |
 |----------------|-----|------|------|------|-------|-------|
 | -1358.66       | 2.2 | 0.52 | 0.29 | 1.24 | 0.021 | 6772  |
+
+| Argument | Description |
+| - | - |
+| `--fs`                  | Frequency spectrum of mutations used for inference. To generate the frequency spectrum, please use `dadi-cli GenerateFs`. Can be an HTML link. |
+| `--p0`                  | Initial parameter values for inference. |
+| `--output-prefix`       | Prefix for output files, which will be named <output_prefix>.InferDM.opts.<N>, where N is an increasing integer (to avoid overwriting existing files). |
+| `--optimizations`       | Total number of optimizations to run. Default: 100. |
+| `--check-convergence`   | Start checking for convergence after a chosen number of optimizations. Optimization runs will stop early if convergence criteria are reached. BestFit results file will be call <output_prefix>.InferDM.bestfits. Convergence not checked by default. |
+| `--force-convergence`   | Start checking for convergence after a chosen number of optimizations. Optimization runs will continue until convergence criteria is reached (--optimizations flag will be ignored). BestFit results file will be call <output_prefix>.InferDM.bestfits. Convergence not checked by default. |
+| `--work-queue`          | Enable Work Queue. Additional arguments are the WorkQueue project name, the name of the password file. |
+| `--port`                | Choose a specific port for Work Queue communication. Default 9123. |
+| `--debug-wq`            | Store debug information from WorkQueue to a file called "debug.log". Default: False. |
+| `--maxeval`             | Max number of parameter set evaluations tried for optimizing demography. Default: Number of parameters multiplied by 100. |
+| `--maxtime`             | Max amount of time for optimizing demography. Default: Infinite. |
+| `--cpus`                | Number of CPUs to use in multiprocessing. Default: All available CPUs. |
+| `--gpus`                | Number of GPUs to use in multiprocessing. Default: 0. |
+| `--bestfit-p0-file`     | Pass in a .bestfit or .opt.<N> file name to cycle --p0 between up to the top 10 best fits for each optimization. |
+| `--delta-ll`            | When using --check-convergence argument in InferDM or InferDFE modules or the BestFits module, set the max percentage difference for log-likliehoods compared to the best optimization log-likliehood to be consider convergent (with 1 being 100% difference to the best optimization's log-likelihood). Default: 0.0001. |
+| `--model`               | Name of the demographic model. To check available demographic models, please use `dadi-cli Model`. |
+| `--model-file`          | Name of python module file (not including .py) that contains custom models to use. Can be an HTML link. Default: None. |
+| `--grids`               | Sizes of grids. Default: Based on sample size. |
+| `--nomisid`             | Enable to *not* include a parameter modeling ancestral state misidentification when data are polarized. |
+| `--constants`           | Fixed parameters during the inference or using Godambe analysis. Use -1 to indicate a parameter is NOT fixed. Default: None. |
+| `--lbounds`             | Lower bounds of the optimized parameters. |
+| `--ubounds`             | Upper bounds of the optimized parameters. |
+| `--global-optimization` | Use global optimization before doing local optimization. Default: False. |
+| `--seed`                | Random seed. |

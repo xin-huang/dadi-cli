@@ -92,7 +92,7 @@ def add_grids_argument(parser: argparse.ArgumentParser) -> None:
         "--grids",
         type=positive_int,
         nargs=3,
-        help="Sizes of grids. Default is based on sample size.",
+        help="Sizes of grids. Default: Based on sample size.",
     )
 
 
@@ -424,7 +424,7 @@ def add_inference_argument(parser: argparse.ArgumentParser) -> None:
         "--maxtime",
         type=positive_int,
         default=np.inf,
-        help="Max amount of time for optimizing demography. Default: infinite.",
+        help="Max amount of time for optimizing demography. Default: Infinite.",
     )
 
     parser.add_argument(
