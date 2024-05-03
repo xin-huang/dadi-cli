@@ -17,7 +17,5 @@ dependencies:
   - pytest-cov
   - python==3.9
   - scipy
-  - snakemake==7.1.1
   - pip:
-      - demes
       - .

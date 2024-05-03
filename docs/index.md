@@ -6,9 +6,10 @@
 
 `dadi-cli` works on UNIX/LINUX operating systems and tested with the following:
 
-- Python 3.8
+- Python 3.9 and 3.10
 - Python packages:
 	- cuda
+        - cyvcf2
 	- dadi > 2.1.0
 	- demes
 	- dill == 0.3.4
