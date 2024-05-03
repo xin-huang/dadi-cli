@@ -12,9 +12,9 @@
 	- cyvcf2
 	- dadi > 2.1.0
 	- demes
-	- dill == 0.3.4
+	- dill
 	- matplotlib
-	- ndcctools == 7.4.3
+	- ndcctools
 	- nlopt
 	- numpy
 	- pycuda

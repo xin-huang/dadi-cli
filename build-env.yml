@@ -3,12 +3,12 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - dadi
   - codecov
   - cyvcf2
-  - gcc
+  - dadi
   - demes
   - dill
+  - gcc
   - matplotlib
   - ndcctools
   - nlopt
