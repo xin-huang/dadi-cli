@@ -8,7 +8,6 @@ dependencies:
   - dadi
   - demes
   - dill
-  - gcc
   - matplotlib
   - ndcctools
   - nlopt
