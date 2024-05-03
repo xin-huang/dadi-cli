@@ -5,14 +5,14 @@
 `dadi-cli` only accepts [VCF](https://samtools.github.io/hts-specs/VCFv4.2.pdf) files to generate allele frequency spectra. To generate a spectrum, users can use
 
 ```
-dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 20 20 --polarized --output ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfold.fs
+dadi-cli GenerateFs --vcf examples/data/1KG.YRI.CEU.syn.vcf.gz --pop-info examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 20 20 --polarized --output examples/results/fs/1KG.YRI.CEU.20.syn.unfold.fs
 
-dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.nonsynonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 20 20 --polarized --output ./examples/results/fs/1KG.YRI.CEU.20.nonsynonymous.snps.unfold.fs
+dadi-cli GenerateFs --vcf examples/data/1KG.YRI.CEU.non.vcf.gz --pop-info examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 20 20 --polarized --output examples/results/fs/1KG.YRI.CEU.20.non.snps.unfold.fs
 ```
 
-Please make sure the directory `./examples/results/fs/` exist before running the above commands.
+Please make sure the directory `examples/results/fs/` exist before running the above commands.
 
-Here `./examples/data/1KG.YRI.CEU.popfile.txt` is a file providing the population information for each individual. In the population information file, each line contains two fields. The first field is the name of the individual, and the second field is the name of the population that the individual belongs to. For example,
+Here `examples/data/1KG.YRI.CEU.popfile.txt` is a file providing the population information for each individual. In the population information file, each line contains two fields. The first field is the name of the individual, and the second field is the name of the population that the individual belongs to. For example,
 
 ```
 NA12718 CEU
@@ -55,6 +55,6 @@ An example for a folded allele frequency spectrum from one population is below.
 
 `--projections` specifies the sample size of the population. Here we have 108 YRI individuals and 99 CEU individuals. Therefore, we have 216 and 198 haplotypes for YRI and CEU respectively. We use a lower sample size here, because it allows us to speed up examples.
 
-By default, `dadi-cli` generates folded spectra. To generate unfolded spectra, users should add `--polarized` and the VCF files should have the `AA` in the `INFO` field to specify the ancestral allele for each SNP.
+By default, `dadi-cli` generates folded spectra. To generate unfolded spectra, users should add `--polarized` and **the VCF files should have the `AA` in the `INFO` field and header to specify the ancestral allele for each SNP**.
 
 While making the spectrum, users can also mask the singleton calls that are exclusive to the population(s) with `--mask-singleton` or mask the exclusive and shared singleton calls with `--mask-singleton-shared`.
