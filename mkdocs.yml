@@ -29,7 +29,7 @@ extra_javascript:
 nav:
 - Home: 'index.md'
 - User Guide:
-        - Generating allele frequency spectra: 'userguide/fs.md'
+        - Allele frequency spectrum generation: 'userguide/fs.md'
         - Demographic inference: 'userguide/demog.md'
         - DFE inference: 'userguide/dfe.md'
         - Joint DFE inference: 'userguide/jdfe.md'
