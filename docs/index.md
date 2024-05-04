@@ -77,4 +77,4 @@ In this manual, we use the data from the 1000 Genomes Project and data simulated
 
 The overview of the workflow implemented in `dadi-cli` is shown below:
 
-![dadi-cli-workflow]()
+![dadi-cli-workflow](https://github.com/xin-huang/dadi-cli/blob/revision/docs/figs/dadi_cli_workflow.png)
