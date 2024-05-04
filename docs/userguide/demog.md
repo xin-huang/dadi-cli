@@ -2,7 +2,7 @@
 
 ## Input
 
-After obtaining the allele frequency spectrum, we can infer a demographic model from the spectrum for synonymous SNPs (e.g. [1KG.YRI.CEU.20.syn.unfolded.fs](https://github.com/xin-huang/dadi-cli/blob/master/examples/results/fs/1KG.YRI.CEU.20.syn.unfolded.fs)), because we usually assume synonymous SNPs are neutral. Here, we use the `split_mig` model:
+After obtaining the allele frequency spectrum, we can infer a demographic model from the spectrum for synonymous SNPs (e.g., [1KG.YRI.CEU.20.syn.unfolded.fs](https://github.com/xin-huang/dadi-cli/blob/master/examples/results/fs/1KG.YRI.CEU.20.syn.unfolded.fs)), because we usually assume synonymous SNPs are neutral. Here, we use the `split_mig` model:
 
 ![split_mig](https://github.com/xin-huang/dadi-cli/blob/revision/docs/figs/split_mig.png?raw=true)
 
@@ -35,9 +35,15 @@ which returns:
 
 By default, with unfolded data an additional parameter is added, which quantifies the proportion of sites for which the ancestral state was misidentified (to disable this, the `--nomisid` option can be specified). Therefore, we have five parameters in total: `nu1`, `nu2`, `T`, `m`, `misid`.
 
-To start the inference, users should specify the boundaries for the model parameters with `--lbounds` and `--ubounds`. For demographic models, setting parameter boundaries prevents optimizers from going into parameter spaces that are hard for `dadi` to calculate, such as low population size, high time, and high migration. In this case, we set the range of relative population sizes to be explored as 1e-3 to 100, the range of divergence time to 0 to 1, the range of migration rates from 0 to 10, and the range of misidentification proportions to 0 to 0.5. `dadi-cli` will by default calculate starting parameters between the boundaries, but users can specify starting parameters with `--p0`. Parameters can be fixed to certain values with `--constants`. If a parameter value passed into `--constants` is `-1`, it will not be fixed to a value. Because we need to run optimization several times to find a converged result with maximum likelihood, we use `--optimizations` to specify how many times the optimization will run. `dadi-cli` can use multiprocessing to run optimizations in parallel and by default the max number of CPUs available will be utilized. If users want fewer CPUs to be used, they can use the `--cpus` option to pass in the number of CPUs they want utilized for multiprocessing. If GPUs are available, they can be used by passing the `--gpus` option with the number of GPUs to be used.
+`--model` specifies the demographic model for inference (e.g., `split_mig`)
 
-Users can specify a demographic model inferred with the `--model` subcommand.
+`--lbounds` and `--ubounds` set the lower and upper boundaries, respectively, for the model parameters during inference. Establishing these boundaries prevents optimizers from going into parameter spaces that are difficult for `dadi` to calculate, such as low population size, high time, and high migration. In this case, we set the range of relative population sizes to be explored as 1e-3 to 100, the range of divergence time to 0 to 1, the range of migration rates from 0 to 10, and the range of misidentification proportions to 0 to 0.5. 
+
+`dadi-cli` will by default calculate starting parameters between the boundaries, but users can specify starting parameters with `--p0`. Parameters can be fixed to certain values with `--constants`. If a parameter value passed into `--constants` is `-1`, it will not be fixed to a value. 
+
+Because we need to run optimization several times to find a converged result with maximum likelihood, we use `--optimizations` to specify how many times the optimization will run. 
+
+`dadi-cli` can use multiprocessing to run optimizations in parallel and by default the max number of CPUs available will be utilized. If users want fewer CPUs to be used, they can use the `--cpus` option to pass in the number of CPUs they want utilized for multiprocessing. If GPUs are available, they can be used by passing the `--gpus` option with the number of GPUs to be used.
 
 ## Output
 
