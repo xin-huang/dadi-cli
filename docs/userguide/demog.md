@@ -49,6 +49,32 @@ Because we need to run optimization several times to find a converged result wit
 
 After the optimization, a file [1KG.YRI.CEU.20.split_mig.demog.params.InferDM.opts.0](https://github.com/xin-huang/dadi-cli/blob/revision/examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.opts.0) will be made. Any subsequent optimzations using the same output argument will be number `.1`, `.2`, etc.
 
+The results in [1KG.YRI.CEU.20.split_mig.demog.params.InferDM.opts.0](https://github.com/xin-huang/dadi-cli/blob/revision/examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.opts.0) are as follows:
+
+```
+# /Users/user/mambaforge/envs/dadi-cli-cpu/bin/dadi-cli InferDM --fs examples/results/fs/1KG.YRI.CEU.20.syn.unfolded.fs --model split_mig --lbounds 1e-3 1e-3 0 0 0 --ubounds 100 100 1 10 0.5 --output-prefix examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params --optimizations 10 --cpus 2
+# Log(likelihood)       nu1     nu2     T       m       misid   theta
+-1363.2200840259638     2.2270712838611826      0.5216637414533595      0.28707487206148485     1.2124631528233945      0.020437855404645933    6804.072401672313
+-1470.5333431072556     1.9662096210813453      0.6035362171867105      0.46423214235747146     1.3147455119553204      0.01757407083077342     6231.485409395597
+-2919.374066741771      0.42018671284017167     0.0756545735822522      1.0     10.0    0.0     23511.32160786105
+-2919.3740667456673     0.4201864967660094      0.07565463514964295     1.0     10.0    0.0     23511.317066913223
+-1366.11680798408       2.326822899078075       0.519968511745911       0.27519836239929885     1.17032575627153        0.020328937284166793    6812.277737041025
+-1364.3007967766132     2.1581920217695116      0.5154897444630471      0.29669890435293783     1.2675575809660455      0.02036332864923114     6811.884146976314
+-1363.1760448023297     2.234010915680658       0.5218924552311363      0.2888644164114447      1.2153316011346929      0.020523786229611048    6792.834074186963
+-1363.2675966704428     2.2049347529056105      0.5220521286638555      0.29578720506141454     1.2375478474168402      0.020477244062454117    6778.545189390314
+-1556.5440465916327     2.269229841357405       0.6000476636552503      0.9817413122334883      1.3599101120794626      0.029327213821618615    5209.335687633874
+-2919.3740667483544     0.4201870261583265      0.07565453551901934     1.0     9.999999999999998       0.0     23511.320211309674
+```
+
+The first line of the header records the command and parameters that create the results. 
+
+The second line of the header records the meaning of each column:
+
+- The first column is the likelihood of the model in log scale.
+- The last column is the population-scale mutation rate.
+- The second last column is the parameter for the ancestral allele misidentification. If `--nomisid` is used, this column will not occur.
+- Other columns are the demographic parameters corresponding to the model specified by `--model`. Different demographic models have different parameters. To understand their order and meaning, please use `dadi-cli Model`.
+
 Users can use `BestFit` to obtain the best fit parameters across all optimization runs with a matching prefix.
 
 ```         

@@ -1,4 +1,4 @@
-# /lisc/scratch/admixlab/xinhuang/software/mambaforge/envs/dadi-cli-cpu/bin/dadi-cli InferDM --fs examples/results/fs/1KG.YRI.CEU.20.syn.unfolded.fs --model split_mig --lbounds 1e-3 1e-3 0 0 0 --ubounds 100 100 1 10 0.5 --output-prefix examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params --optimizations 10 --cpus 2
+# /Users/user/mambaforge/envs/dadi-cli-cpu/bin/dadi-cli InferDM --fs examples/results/fs/1KG.YRI.CEU.20.syn.unfolded.fs --model split_mig --lbounds 1e-3 1e-3 0 0 0 --ubounds 100 100 1 10 0.5 --output-prefix examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params --optimizations 10 --cpus 2
 # Log(likelihood)	nu1	nu2	T	m	misid	theta
 -1363.2200840259638	2.2270712838611826	0.5216637414533595	0.28707487206148485	1.2124631528233945	0.020437855404645933	6804.072401672313
 -1470.5333431072556	1.9662096210813453	0.6035362171867105	0.46423214235747146	1.3147455119553204	0.01757407083077342	6231.485409395597
