@@ -1,6 +1,6 @@
 site_name: dadi-cli
 site_url: "https://dadi-cli.readthedocs.io"
-repo_url: "https://github.com/xin-huang/dadi-cli/tree/readme-update"
+repo_url: "https://github.com/xin-huang/dadi-cli"
 edit_uri: ""
 docs_dir: 'docs'
 theme:
