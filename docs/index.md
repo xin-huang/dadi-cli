@@ -72,3 +72,9 @@ dadi-cli GenerateFs -h
 ```
 
 In this manual, we use the data from the 1000 Genomes Project and data simulated with `dadi-cli` to demonstrate how to apply `dadi-cli` in research. Users could also refer to [the dadi manual](https://dadi.readthedocs.io/en/latest/) for more details on parameters in `dadi`.
+
+## Overview
+
+The overview of the workflow implemented in `dadi-cli` is shown below:
+
+![dadi-cli-workflow]()

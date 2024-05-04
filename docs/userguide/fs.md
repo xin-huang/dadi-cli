@@ -25,7 +25,7 @@ NA19107 YRI
 
 `--projections` specifies the sample size of the population. Here we have 108 YRI individuals and 99 CEU individuals. Therefore, we have 216 and 198 haplotypes for YRI and CEU respectively. We use a lower sample size here, because it allows us to speed up examples.
 
-By default, `dadi-cli` generates folded spectra. To generate unfolded spectra, users should add `--polarized` and **the VCF files should have the `AA` in the `INFO` field and header to specify the ancestral allele for each SNP**.
+By default, `dadi-cli` generates folded spectra. To generate unfolded spectra, users should add the `--polarized` flag and **the VCF files should have the `AA` in the `INFO` field and header to specify the ancestral allele for each SNP**.
 
 ## Output
 
