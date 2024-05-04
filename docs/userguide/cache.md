@@ -13,3 +13,20 @@ Here is an example command to generate a cache with independent selection coeffi
 dadi-cli GenerateCache --model split_mig_sel --dimensionality 2 --demo-popt ./examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits --sample-size 20 20 --grids 60 80 100 --gamma-pts 10 --gamma-bounds 1e-4 200 --output ./examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.spectra.bpkl --cpus 4
 ```
 Users will likely want to use larger `--gamma-bounds` and `--gamma-pts` than the example.
+
+## Settings
+
+| Argument | Description |
+| - | - |
+| `--additional-gammas` | Additional positive population-scaled selection coefficients to cache for. Default: []. |
+| `--gamma-bounds` | Range of population-scaled selection coefficients to cache. Default: [1e-4, 2000]. |
+| `--gamma-pts` | Number of gamma grid points over which to integrate. Default: 50. |
+| `--cpus` |  Number of CPUs to use in multiprocessing. Default: All available CPUs. |
+| `--gpus` | Number of GPUs to use in multiprocessing. Default: 0. |
+| `--dimensionality` | Determine whether using demographic model plus selection with the same gamma in both the two populations or not. Default: 1. |
+| `--sample-sizes` | Sample sizes of populations. |
+| `--output` | Name of the output file. |
+| `--demo-popt` | File containing the bestfit parameters for the demographic model. |
+| `--grids` | Sizes of grids. Default: Based on sample size. |
+| `--model` | Name of the demographic model. To check available demographic models, please use `dadi-cli Model`. |
+| `--model-file` | Name of python module file (not including .py) that contains custom models to use. Can be an HTML link. Default: None. |
