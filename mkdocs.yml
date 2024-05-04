@@ -31,6 +31,7 @@ nav:
 - User Guide:
         - Allele frequency spectrum generation: 'userguide/fs.md'
         - Demographic inference: 'userguide/demog.md'
+        - Cache generation: 'userguide/cache.md'
         - DFE inference: 'userguide/dfe.md'
         - Statistical testing: 'userguide/stat.md'
         - Cloud computing: 'userguide/cloud.md'
