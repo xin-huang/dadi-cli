@@ -6,13 +6,19 @@ After obtaining the allele frequency spectrum, we can infer a demographic model 
 
 ![split_mig](https://github.com/xin-huang/dadi-cli/blob/revision/docs/figs/split_mig.png?raw=true)
 
-In this model, the ancestral population diverges into two populations, which then have an instantaneous change of population size with migration between the two populations over time. Users then can use the following command:
+In this model, the ancestral population diverges into two populations, which then have an instantaneous change of population size with migration between the two populations over time. Hence, we have four parameters and can use the following command for fitting the demographic model:
 
 ```
 dadi-cli InferDM --fs examples/results/fs/1KG.YRI.CEU.20.syn.unfolded.fs --model split_mig --lbounds 1e-3 1e-3 0 0 0 --ubounds 100 100 1 10 0.5  --output examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params --optimizations 10
 ```
 
-To see descriptions of the four parameters of the `split_mig` model, use `dadi-cli Model --names split_mig`. By default, with unfolded data an additional parameter is added, which quantifies the proportion of sites for which the ancestral state was misidentified. (To disable this, use the `--nomisid` option.) Therefore, we have five parameters in total: `nu1`, `nu2`, `T`, `m`, `misid`.
+To see descriptions of the four parameters of the `split_mig` model, users can use:
+
+```
+dadi-cli Model --names split_mig
+```
+
+By default, with unfolded data an additional parameter is added, which quantifies the proportion of sites for which the ancestral state was misidentified (to disable this, the `--nomisid` option can be added). Therefore, we have five parameters in total: `nu1`, `nu2`, `T`, `m`, `misid`.
 
 To start the inference, users should specify the boundaries for the model parameters with `--lbounds` and `--ubounds`. For demographic models, setting parameter boundaries prevents optimizers from going into parameter spaces that are hard for `dadi` to calculate, such as low population size, high time, and high migration. In this case, we set the range of relative population sizes to be explored as 1e-3 to 100, the range of divergence time to 0 to 1, the range of migration rates from 0 to 10, and the range of misidentification proportions to 0 to 0.5. `dadi-cli` will by default calculate starting parameters between the boundaries, but users can specify starting parameters with `--p0`. Parameters can be fixed to certain values with `--constants`. If a parameter value passed into `--constants` is `-1`, it will not be fixed to a value. Because we need to run optimization several times to find a converged result with maximum likelihood, we use `--optimizations` to specify how many times the optimization will run. `dadi-cli` can use multiprocessing to run optimizations in parallel and by default the max number of CPUs available will be utilized. If users want fewer CPUs to be used, they can use the `--cpus` option to pass in the number of CPUs they want utilized for multiprocessing. If GPUs are available, they can be used by passing the `--gpus` option with the number of GPUs to be used.
 
