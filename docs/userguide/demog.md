@@ -9,7 +9,7 @@ After obtaining the allele frequency spectrum, we can infer a demographic model 
 In this model, the ancestral population diverges into two populations, which then have an instantaneous change of population size with migration between the two populations over time. Hence, we have four parameters and can use the following command for fitting the demographic model:
 
 ```
-dadi-cli InferDM --fs examples/results/fs/1KG.YRI.CEU.20.syn.unfolded.fs --model split_mig --lbounds 1e-3 1e-3 0 0 0 --ubounds 100 100 1 10 0.5  --output examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params --optimizations 10
+dadi-cli InferDM --fs examples/results/fs/1KG.YRI.CEU.20.syn.unfolded.fs --model split_mig --lbounds 1e-3 1e-3 0 0 0 --ubounds 100 100 1 10 0.5 --output-prefix examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params --optimizations 10
 ```
 
 To see descriptions of the four parameters of the `split_mig` model, users can use:
@@ -47,12 +47,12 @@ Because we need to run optimization several times to find a converged result wit
 
 ## Output
 
-After the optimization, a file `./examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.opts.0` will be made. Any subsequent optimzations using the same output argument will be number `.1`, `.2`, etc.
+After the optimization, a file [1KG.YRI.CEU.20.split_mig.demog.params.InferDM.opts.0](https://github.com/xin-huang/dadi-cli/blob/revision/examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.opts.0) will be made. Any subsequent optimzations using the same output argument will be number `.1`, `.2`, etc.
 
 Users can use `BestFit` to obtain the best fit parameters across all optimization runs with a matching prefix.
 
 ```         
-dadi-cli BestFit --input-prefix ./examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM --lbounds 1e-3 1e-3 0 0 0 --ubounds 100 100 1 10 0.5
+dadi-cli BestFit --input-prefix examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM --lbounds 1e-3 1e-3 0 0 0 --ubounds 100 100 1 10 0.5
 ```
 
 The result is in a file `./examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits`. This file contains the 100 highest likelihood parameter sets found (if at least that many optimizations have been carried out). If optimization converged, then the file also contains the converged results.
