@@ -9,7 +9,7 @@ To generate a spectrum, users can use:
 ```
 dadi-cli GenerateFs --vcf examples/data/1KG.YRI.CEU.syn.vcf.gz --pop-info examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 20 20 --polarized --output examples/results/fs/1KG.YRI.CEU.20.syn.unfolded.fs
 
-dadi-cli GenerateFs --vcf examples/data/1KG.YRI.CEU.non.vcf.gz --pop-info examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 20 20 --polarized --output examples/results/fs/1KG.YRI.CEU.20.non.snps.unfolded.fs
+dadi-cli GenerateFs --vcf examples/data/1KG.YRI.CEU.non.vcf.gz --pop-info examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 20 20 --polarized --output examples/results/fs/1KG.YRI.CEU.20.non.unfolded.fs
 ```
 
 Here, [1KG.YRI.CEU.popfile.txt](https://github.com/xin-huang/dadi-cli/blob/master/examples/data/1KG.YRI.CEU.popfile.txt) is a file providing the population information for each individual. In the population information file, each line contains two fields. The first field is the name of the individual, and the second field is the name of the population that the individual belongs to. For example,
