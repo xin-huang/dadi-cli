@@ -23,7 +23,7 @@ dadi-cli GenerateCache --cache-type cache1d --model split_mig_sel_single_gamma -
 
 By default, `GenerateCache` will make the cache for the situation where the selection coefficients are the same in the two populations (i.e. `--cache-type cache1d`). If users want to to make the cache for the situation where the selection coefficients are independent from one another, they should use the `--cache-type cache2d` option. 
 
-Users can use the `--gamma-bounds` option to choose the range of the gamma distribution and the `--gamma-pts` option can be used to specify the number of selection coefficients that will be selected in that range to generate the cache. Note that the higher (more negative) you make the `--gamma-bounds`, the bigger the grid points, altered via the `--grids` option, users will want to use.
+Users can use the `--gamma-bounds` option to choose the range of the distribution of selection coefficients and the `--gamma-pts` option can be used to specify the number of selection coefficients that will be selected in that range to generate the cache. Note that the higher (more negative because `dadi` assumes deleterious DFEs by default) you make the `--gamma-bounds`, the bigger the grid points. Alternatively, users can use the `--grids` option to adjust the grid sizes.
 
 ## Output
 
