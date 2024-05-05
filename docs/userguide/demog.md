@@ -12,7 +12,7 @@ In this model, the ancestral population diverges into two populations, which the
 dadi-cli InferDM --fs examples/results/fs/1KG.YRI.CEU.20.syn.unfolded.fs --model split_mig --lbounds 1e-3 1e-3 0 0 0 --ubounds 100 100 1 10 0.5 --output-prefix examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params --optimizations 10 --cpus 2
 ```
 
-To see descriptions of the four parameters of the `split_mig` model, users can use:
+To see descriptions of the four parameters in the `split_mig` model, users can use:
 
 ```
 dadi-cli Model --names split_mig
