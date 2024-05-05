@@ -52,7 +52,7 @@ def test_generate_cache_args():
     sample_sizes = [10, 10]
     cpus = 1
     gpus = 0
-    dim = 1
+    cache_type = 'cache2d'
 
     args = parser.parse_args(
         [
@@ -69,8 +69,6 @@ def test_generate_cache_args():
             "10", "10",
             "--grids",
             "20", "40", "60",
-            "--dim",
-            "1",
             "--model-file",
             model_file,
             "--model",
@@ -78,7 +76,9 @@ def test_generate_cache_args():
             "--output",
             output,
             "--demo-popt",
-            demo_popt
+            demo_popt,
+            "--cache-type",
+            cache_type,
         ]
     )
     assert args.gamma_bounds == gamma_bounds
@@ -87,12 +87,12 @@ def test_generate_cache_args():
     assert args.gpus == gpus
     assert args.sample_sizes == sample_sizes
     assert args.grids == grids
-    assert args.dim == dim
     assert args.model_file == model_file
     assert args.model == model
     assert args.output == output
     assert args.demo_popt == demo_popt
     assert args.additional_gammas == additional_gammas
+    assert args.cache_type == cache_type
 
 
 def test_simulate_dm_args():
