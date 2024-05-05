@@ -45,6 +45,9 @@ def _run_generate_cache(args: argparse.Namespace) -> None:
                 - cache2d for JSFS from two populations and assuming the population-scaled selection coefficients are different in the two populations.
 
     """
+    if (args.model in ['bottlegrowth_1d_sel', 'equil', 'growth_sel', 'two_epoch_sel', 'three_epoch_sel']) and (args.cache_type != 'cache1d'):
+        raise ValueError(f'The demographic model {args.model} is only supported for generating `cache1d`.')
+
     if args.model_file is None and args.model not in [m[0] for m in getmembers(DFE.DemogSelModels, isfunction)]:
         raise ValueError(f"{args.model} is not in dadi.DFE.DemogSelModels, did you mean to include _sel or _single_sel in the model name or specify a --model-file?")
 

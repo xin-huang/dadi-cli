@@ -51,9 +51,13 @@ def generate_cache(
     ------
     ValueError
         If the number of populations is not 1 or 2.
+        If the number of populations is 1 and `cache_type` is `cache2d`.
 
     """
     num_pop = len(sample_sizes)
+
+    if (num_pop == 1) and (cache_type == 'cache2d'):
+        raise ValueError("`cache2d` is only supported for JSFS from two populations.")
 
     if num_pop not in [1, 2]:
         raise ValueError(f"Invalid number of populations: {num_pop}. Only 1 or 2 are accepted.")
