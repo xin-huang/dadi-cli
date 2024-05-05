@@ -146,7 +146,7 @@ def add_generate_cache_parsers(subparsers: argparse.ArgumentParser) -> None:
         type=str,
         choices=['cache1d', 'cache2d'],
         default='cache1d',
-        help="Type of the generated cache: `cache1d` for SFS from one population or JSFS from two populations but assuming the population-scaled selection coefficients are the same in the two populations; `cache2d` for JSFS from two populations and assuming the population-scaled selection coefficients are different in the two populations. Default: `cache1d`.",
+        help="Type of the generated cache: `cache1d` for SFS from one population or JSFS from two populations but assuming the population-scaled selection coefficients are the same in the two populations; `cache2d` for JSFS from two populations and assuming the population-scaled selection coefficients are independent in the two populations. Default: `cache1d`.",
         dest="cache_type",
     )
 

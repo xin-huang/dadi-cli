@@ -8,7 +8,7 @@ After inferring a best fit demographic model, users may also infer distributions
 
 To perform DFE inference, users need to first generate of cache of frequency spectra. Because we use the `split_mig` model in the demographic inference, we need to use the same demographic model plus selection, the `split_mig_sel` model or the `split_mig_sel_single_gamma` model:
  
-- The `split_mig_sel` model is used for inferring the DFE from two populations by assuming the population-scaled selection coefficients are different in the two populations. 
+- The `split_mig_sel` model is used for inferring the DFE from two populations by assuming the population-scaled selection coefficients (usually denoted as `gamma` in population genetics) are independent in the two populations. 
 - The `split_mig_sel_single_gamma` model assumes the population-scaled selection coefficients are the same in the two populations.
 
 Here is an example command to generate a cache with shared selection coefficients:
@@ -17,9 +17,9 @@ Here is an example command to generate a cache with shared selection coefficient
 dadi-cli GenerateCache --cache-type cache1d --model split_mig_sel_single_gamma --demo-popt examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits --sample-size 20 20 --grids 60 80 100 --gamma-pts 10 --gamma-bounds 1e-4 200 --output examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.single.gamma.spectra.bpkl --cpus 2
 ```
 
-`--demo-popt` specifies the demographic parameters, which are stored in [1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits]. 
+`--demo-popt` specifies the demographic parameters, which are stored in [1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits](https://github.com/xin-huang/dadi-cli/blob/revision/examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits). 
 
-`--sample-size` defines the population size of each population. Only allele frequency specturm from one or two populations is supported.
+`--sample-size` defines the population size of each population. Only allele frequency spectra from one or two populations are supported.
 
 By default, `GenerateCache` will make the cache for the situation where the selection coefficients are the same in the two populations (i.e. `--cache-type cache1d`). If users want to to make the cache for the situation where the selection coefficients are independent from one another, they should use the `--cache-type cache2d` option. 
 
@@ -38,7 +38,7 @@ The output file [1KG.YRI.CEU.20.split_mig.sel.single.gamma.spectra.bpkl](https:/
 | `--gamma-pts` | Number of gamma grid points over which to integrate. Default: 50. |
 | `--cpus` |  Number of CPUs to use in multiprocessing. Default: All available CPUs. |
 | `--gpus` | Number of GPUs to use in multiprocessing. Default: 0. |
-| `--cache-type` | Type of the generated cache: `cache1d` for SFS from one population or JSFS from two populations but assuming the population-scaled selection coefficients are the same in the two populations; `cache2d` for JSFS from two populations and assuming the population-scaled selection coefficients are different in the two populations. Default: `cache1d`. |
+| `--cache-type` | Type of the generated cache: `cache1d` for SFS from one population or JSFS from two populations but assuming the population-scaled selection coefficients are the same in the two populations; `cache2d` for JSFS from two populations and assuming the population-scaled selection coefficients are independent in the two populations. Default: `cache1d`. |
 | `--sample-sizes` | Sample sizes of populations. |
 | `--output` | Name of the output file. |
 | `--demo-popt` | File containing the bestfit parameters for the demographic model. |
