@@ -115,6 +115,8 @@ If users have experience with the data they are using, they can use the `--check
 
 Because there is randomness built into `dadi-cli` for where the starting parameters are for each optimization, it is possible the results could have not converged. Some things that can be done when using `InferDM` are increasing the max number of parameter sets each optimization will attempt with the `--maxeval` option. Users can also try to use a global optimization before moving onto the local optimization with the `--global-optimization` option. 25% of the number of optimizations the user passes in will be used for the global optimization and the remaining will be used for the local optimization. Additionally, users can use the output files from `InferDM` or `BestFit` as a starting point for the inital parameters with the `--bestfit-p0-file` flag and passing in the file they want to use. The starting parameters will be randomly chosen from the top ten fits and perturbed.
 
+Finally, the grid sizes may also affect the inference. If `n` is the maximum of the sample sizes, then the default grid sizes are `(int(n*1.1)+2, int(n*1.2)+4, int(n*1.3)+6)`.
+
 ## Settings
 
 | Argument | Description |
