@@ -32,7 +32,7 @@ Here, `log_mu` is the mean of the lognormal distribution, and `log_sigma` is the
 
 ## Output
 
-The result stored in [1KG.YRI.CEU.20.split_mig.dfe.1D_lognormal.InferDFE.bestfits](https://github.com/xin-huang/dadi-cli/blob/revision/examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.1D_lognormal.InferDFE.bestfits) is:
+The results stored in [1KG.YRI.CEU.20.split_mig.dfe.1D_lognormal.InferDFE.bestfits](https://github.com/xin-huang/dadi-cli/blob/revision/examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.1D_lognormal.InferDFE.bestfits) are:
 
 ```
 # /Users/user/mambaforge/envs/dadi-cli-cpu/bin/dadi-cli InferDFE --fs examples/results/fs/1KG.YRI.CEU.20.non.unfolded.fs --cache1d examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.single.gamma.spectra.bpkl --pdf1d lognormal --p0 1 1 .5 --lbounds -10 0.01 0 --ubounds 10 10 0.5 --demo-popt examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits --ratio 2.31 --output-prefix examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.1D_lognormal --optimizations 10 --maxeval 400 --check-convergence 5 --cpus 2
@@ -57,6 +57,8 @@ The result stored in [1KG.YRI.CEU.20.split_mig.dfe.1D_lognormal.InferDFE.bestfit
 which is similar to the file [1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits](https://github.com/xin-huang/dadi-cli/blob/revision/examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits) from the `InferDM` command.
 
 ## Joint DFE inference
+
+Besides inferring one-dimensional DFEs, we can also analyze the joint DFE or quantify the correlation between DFEs in two populations. This is done using the joint allele frequency spectrum, under the assumption that the selection coefficients are independent in each population<sup>2</sup>.
 
 ### Inferring a bivariate lognormal joint DFE
 
