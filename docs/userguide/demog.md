@@ -9,7 +9,7 @@ After obtaining the allele frequency spectrum, we can infer a demographic model 
 In this model, the ancestral population diverges into two populations, which then have an instantaneous change of population size with migration between the two populations over time. Hence, we have four parameters and can use the following command for fitting the demographic model:
 
 ```
-dadi-cli InferDM --fs examples/results/fs/1KG.YRI.CEU.20.syn.unfolded.fs --model split_mig --lbounds 1e-3 1e-3 0 0 0 --ubounds 100 100 1 10 0.5 --output-prefix examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params --optimizations 10
+dadi-cli InferDM --fs examples/results/fs/1KG.YRI.CEU.20.syn.unfolded.fs --model split_mig --lbounds 1e-3 1e-3 0 0 0 --ubounds 100 100 1 10 0.5 --output-prefix examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params --optimizations 10 --cpus 2
 ```
 
 To see descriptions of the four parameters of the `split_mig` model, users can use:
@@ -34,8 +34,6 @@ which returns:
 ```
 
 By default, with unfolded data an additional parameter is added, which quantifies the proportion of sites for which the ancestral state was misidentified (to disable this, the `--nomisid` option can be specified). Therefore, we have five parameters in total: `nu1`, `nu2`, `T`, `m`, `misid`.
-
-`--model` specifies the demographic model for inference (e.g., `split_mig`)
 
 `--lbounds` and `--ubounds` set the lower and upper boundaries, respectively, for the model parameters during inference. Establishing these boundaries prevents optimizers from going into parameter spaces that are difficult for `dadi` to calculate, such as low population size, high time, and high migration. In this case, we set the range of relative population sizes to be explored as 1e-3 to 100, the range of divergence time to 0 to 1, the range of migration rates from 0 to 10, and the range of misidentification proportions to 0 to 0.5. 
 
@@ -66,14 +64,16 @@ The results in [1KG.YRI.CEU.20.split_mig.demog.params.InferDM.opts.0](https://gi
 -2919.3740667483544     0.4201870261583265      0.07565453551901934     1.0     9.999999999999998       0.0     23511.320211309674
 ```
 
-The first line of the header records the command and parameters that create the results. 
+The first line of the header records the command and parameters that were used to generate the results.
 
-The second line of the header records the meaning of each column:
+The second line of the header describes the meaning of each column:
 
-- The first column is the likelihood of the model in log scale.
-- The last column is the population-scale mutation rate.
-- The second last column is the parameter for the ancestral allele misidentification. If `--nomisid` is used, this column will not occur.
-- Other columns are the demographic parameters corresponding to the model specified by `--model`. Different demographic models have different parameters. To understand their order and meaning, please use `dadi-cli Model`.
+- The first column represents the likelihood of the model in log scale.
+- The last column indicates the population-scale mutation rate.
+- The second to last column contains the parameter for ancestral allele misidentification. If `--nomisid` is used, this column will not be present.
+- The remaining columns detail the demographic parameters corresponding to the model specified by `--model`. Different demographic models will have different parameters. To understand their order and meaning, please use `dadi-cli Model`.
+
+Since we perform 10 optimizations, this file contains 10 rows, with each row recording the results from an individual optimization.
 
 Users can use `BestFit` to obtain the best fit parameters across all optimization runs with a matching prefix.
 
