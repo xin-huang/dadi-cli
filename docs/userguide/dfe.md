@@ -10,26 +10,48 @@ dadi-cli InferDFE --fs examples/results/fs/1KG.YRI.CEU.20.non.unfolded.fs --cach
 
 Many arguments are the same as those in the `InferDM` command.
 
-We define the marginal DFE as a lognormal distribution with `--pdf1d`. We use `--ratio` to specify the ratio of the nonsynonymous SNPs to the synonymous SNPs to calculate the population-scaled mutation rate of the nonsynonymous SNPs. Our parameters are `log_mu` the mean of the lognormal distribution, `log_sigma` the standard deviation of the lognormal distribution, and `misid`.
+Furthermore, we can define the marginal DFE as a lognormal distribution with `--pdf1d`, and use `--ratio` to specify the ratio of the nonsynonymous SNPs to the synonymous SNPs to calculate the population-scaled mutation rate of the nonsynonymous SNPs.
+
+To see descriptions of the parameters in the `lognormal` distribution, users can use:
+
+```
+dadi-cli Pdf --names lognormal
+```
+
+which returns:
+
+```
+- lognormal:
+
+            Lognormal probability density function.
+
+            params = [log_mu, log_sigma]
+```
+
+Here, `log_mu` the mean of the lognormal distribution, `log_sigma` the standard deviation of the lognormal distribution.
 
 ## Output
 
-The result is
+The result stored in [1KG.YRI.CEU.20.split_mig.dfe.1D_lognormal.InferDFE.bestfits](https://github.com/xin-huang/dadi-cli/blob/revision/examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.1D_lognormal.InferDFE.bestfits) is:
 
-```         
-# /Users/user/anaconda3/envs/dadicli/bin/dadi-cli InferDFE --fs ./examples/results/fs/1KG.YRI.CEU.20.nonsynonymous.snps.unfold.fs --cache1d ./examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.single.gamma.spectra.bpkl --pdf1d lognormal --p0 1 1 .5 --lbounds -10 0.01 0 --ubounds 10 10 0.5 --demo-popt ./examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits --ratio 2.31 --output ./examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.1D_lognormal.params --optimizations 10 --maxeval 400 --check-convergence 5
+```
+# /Users/user/mambaforge/envs/dadi-cli-cpu/bin/dadi-cli InferDFE --fs examples/results/fs/1KG.YRI.CEU.20.non.unfolded.fs --cache1d examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.single.gamma.spectra.bpkl --pdf1d lognormal --p0 1 1 .5 --lbounds -10 0.01 0 --ubounds 10 10 0.5 --demo-popt examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits --ratio 2.31 --output-prefix examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.1D_lognormal --optimizations 10 --maxeval 400 --check-convergence 5 --cpus 2
+# /Users/user/mambaforge/envs/dadi-cli-cpu/bin/dadi-cli InferDFE --fs examples/results/fs/1KG.YRI.CEU.20.non.unfolded.fs --cache1d examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.single.gamma.spectra.bpkl --pdf1d lognormal --p0 1 1 .5 --lbounds -10 0.01 0 --ubounds 10 10 0.5 --demo-popt examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits --ratio 2.31 --output-prefix examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.1D_lognormal --optimizations 10 --maxeval 400 --check-convergence 5 --cpus 2
 #
 # Converged results
-# Log(likelihood)   log_mu  log_sigma   misid   theta
--1388.7168092990519 5.490553018509483   7.617358688984522   0.016580353311106688    15644.214296668904
--1388.7182268917072 5.48833179537645    7.612505954083041   0.016574649919878663    15644.214296668904
--1388.7511876804606 5.465373979901826   7.565453530395414   0.01664401774234844 15644.214296668904
+# Log(likelihood)	log_mu	log_sigma	misid	theta
+-1390.216558502869	5.7078081159785725	7.934694578672994	0.01647346102391192	15691.446711371886
+-1390.2206755646514	5.696866719099689	7.910257538672334	0.016549081772691945	15691.446711371886
+-1390.2321802957717	5.6985080744503795	7.915039953288335	0.01632034569197264	15691.446711371886
 #
 # Top 100 results
-# Log(likelihood)   log_mu  log_sigma   misid   theta
--1388.7168092990519 5.490553018509483   7.617358688984522   0.016580353311106688    15644.214296668904
--1388.7182268917072 5.48833179537645    7.612505954083041   0.016574649919878663    15644.214296668904
--1388.7511876804606 5.465373979901826   7.565453530395414   0.01664401774234844 15644.214296668904
+# Log(likelihood)	log_mu	log_sigma	misid	theta
+-1390.216558502869	5.7078081159785725	7.934694578672994	0.01647346102391192	15691.446711371886
+-1390.2206755646514	5.696866719099689	7.910257538672334	0.016549081772691945	15691.446711371886
+-1390.2321802957717	5.6985080744503795	7.915039953288335	0.01632034569197264	15691.446711371886
+-1390.5785860284573	5.838670032124382	8.202117596248334	0.016267679223638656	15691.446711371886
+-1391.602004080164	5.883742893394162	8.301911448575662	0.015025267493752754	15691.446711371886
+-2851.693923307018	0.9456483751405087	0.2546946309528162	0.03942740949097054	15691.446711371886         
 ```
 
 Similar to the best fit parameters in `./examples/results/demog/1KG.YRI.CEU.split_mig.bestfit.demog.params`, the first column is the log-likelihood followed by the parameters.
