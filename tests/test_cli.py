@@ -52,7 +52,7 @@ def test_generate_cache_args():
     sample_sizes = [10, 10]
     cpus = 1
     gpus = 0
-    dimensionality = 1
+    dim = 1
 
     args = parser.parse_args(
         [
@@ -69,7 +69,7 @@ def test_generate_cache_args():
             "10", "10",
             "--grids",
             "20", "40", "60",
-            "--dimensionality",
+            "--dim",
             "1",
             "--model-file",
             model_file,
@@ -87,7 +87,7 @@ def test_generate_cache_args():
     assert args.gpus == gpus
     assert args.sample_sizes == sample_sizes
     assert args.grids == grids
-    assert args.dimensionality == dimensionality
+    assert args.dim == dim
     assert args.model_file == model_file
     assert args.model == model
     assert args.output == output

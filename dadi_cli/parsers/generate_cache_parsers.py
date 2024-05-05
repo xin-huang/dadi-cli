@@ -39,7 +39,7 @@ def _run_generate_cache(args: argparse.Namespace) -> None:
             Number of CPU cores to use for computation.
         - gpus : int
             Number of GPU devices to use for computation, if applicable.
-        - dimensionality : int
+        - dim : int
             The dimensionality of the demographic model.
 
     """
@@ -77,7 +77,7 @@ def _run_generate_cache(args: argparse.Namespace) -> None:
         sample_sizes=args.sample_sizes,
         cpus=args.cpus,
         gpus=args.gpus,
-        dimensionality=args.dimensionality,
+        dimensionality=args.dim,
     )
 
 
@@ -140,11 +140,10 @@ def add_generate_cache_parsers(subparsers: argparse.ArgumentParser) -> None:
     )
 
     parser.add_argument(
-        "--dimensionality",
+        "--dim",
         type=positive_int,
         default=1,
         help="Determine whether using demographic model plus selection with the same gamma in both the two populations or not. Default: 1.",
-        dest="dimensionality",
     )
 
     add_sample_sizes_argument(parser)

@@ -34,7 +34,7 @@ The output file [1KG.YRI.CEU.20.split_mig.sel.single.gamma.spectra.bpkl](https:/
 | `--gamma-pts` | Number of gamma grid points over which to integrate. Default: 50. |
 | `--cpus` |  Number of CPUs to use in multiprocessing. Default: All available CPUs. |
 | `--gpus` | Number of GPUs to use in multiprocessing. Default: 0. |
-| `--dimensionality` | Determine whether using demographic model plus selection with the same gamma in both the two populations or not. Default: 1. |
+| `--dim` | Determine whether using demographic model plus selection with the same gamma in both the two populations or not. Default: 1. |
 | `--sample-sizes` | Sample sizes of populations. |
 | `--output` | Name of the output file. |
 | `--demo-popt` | File containing the bestfit parameters for the demographic model. |
