@@ -25,11 +25,7 @@ By default, `GenerateCache` will make the cache for the situation where the sele
 
 Users can use the `--gamma-bounds` option to choose the range of the distribution of selection coefficients and the `--gamma-pts` option can be used to specify the number of selection coefficients that will be selected in that range to generate the cache. Note that the higher (more negative because `dadi` assumes deleterious DFEs by default) you make the `--gamma-bounds`, the bigger the grid points. Alternatively, users can use the `--grids` option to adjust the grid sizes.
 
-If the sample sizes $n = \max\{n_1, n_2\}$, then the default grid sizes are:
-
-$$
-(int(n\prod 2.2)+2, int(n\prod 2.4)+4, int(n\prod 2.6)+6)
-$$
+If n is the maximum of the sample sizes, then the default grid sizes are `(int(n*2.2)+2, int(n*2.4)+4, int(n*2.6)+6)`.
 
 ## Output
 
