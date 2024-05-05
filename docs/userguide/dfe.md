@@ -28,7 +28,7 @@ which returns:
             params = [log_mu, log_sigma]
 ```
 
-Here, `log_mu` the mean of the lognormal distribution, `log_sigma` the standard deviation of the lognormal distribution.
+Here, `log_mu` is the mean of the lognormal distribution, and `log_sigma` is the standard deviation of the lognormal distribution.
 
 ## Output
 
@@ -54,11 +54,7 @@ The result stored in [1KG.YRI.CEU.20.split_mig.dfe.1D_lognormal.InferDFE.bestfit
 -2851.693923307018	0.9456483751405087	0.2546946309528162	0.03942740949097054	15691.446711371886         
 ```
 
-Similar to the best fit parameters in `./examples/results/demog/1KG.YRI.CEU.split_mig.bestfit.demog.params`, the first column is the log-likelihood followed by the parameters.
-
-| likelihood | mu  | sigma | misidentification |
-|------------|-----|-------|-------------------|
-| -1389      | 5.5 | 7.6   | 0.017             |
+which is similar to the file [1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits](https://github.com/xin-huang/dadi-cli/blob/revision/examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits) from the `InferDM` command.
 
 ## Joint DFE inference
 
