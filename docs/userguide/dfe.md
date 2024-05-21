@@ -71,6 +71,33 @@ dadi-cli InferDFE --fs examples/results/fs/1KG.YRI.CEU.20.non.unfolded.fs --cach
 We define the DFE as a bivariate lognormal distribution with `--pdf2d` and pass in a cache (e.g., [1KG.YRI.CEU.20.split_mig_sel.spectra.bpkl](https://github.com/xin-huang/dadi-cli/blob/revision/examples/results/caches/1KG.YRI.CEU.20.split_mig_sel.spectra.bpkl)) that assumes the population-scaled selection coefficients are different in the two populations through `--cache2d`. 
 
 
+The best-fit results from the above command is stored in [1KG.YRI.CEU.20.split_mig.dfe.biv_lognormal.params.InferDFE.bestfits](https://github.com/xin-huang/dadi-cli/blob/revision/examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.biv_lognormal.params.InferDFE.bestfits) and look like:
+
+```
+# /Users/user/mambaforge/envs/dadi-cli-cpu/bin/dadi-cli InferDFE --fs examples/results/fs/1KG.YRI.CEU.20.non.unfolded.fs --cache2d examples/results/caches/1KG.YRI.CEU.20.split_mig_sel.spectra.bpkl --pdf2d biv_lognormal --p0 1 1 1 1 .5 .5 --lbounds -10 -10 0.01 0.01 0.001 0 --ubounds 10 10 10 10 0.999 0.5 --demo-popt examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits --ratio 2.31 --output-prefix examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.biv_lognormal.params --force-convergence 10 --cpus 128
+# /Users/user/mambaforge/envs/dadi-cli-cpu/bin/dadi-cli InferDFE --fs examples/results/fs/1KG.YRI.CEU.20.non.unfolded.fs --cache2d examples/results/caches/1KG.YRI.CEU.20.split_mig_sel.spectra.bpkl --pdf2d biv_lognormal --p0 1 1 1 1 .5 .5 --lbounds -10 -10 0.01 0.01 0.001 0 --ubounds 10 10 10 10 0.999 0.5 --demo-popt examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits --ratio 2.31 --output-prefix examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.biv_lognormal.params --force-convergence 10 --cpus 128
+#
+# Converged results
+# Log(likelihood)	log_mu1	log_sigma1	log_mu2	log_sigma2	rho	misid	theta
+-1269.7688158561698	3.496765165218968	3.713425228640547	3.3489414810581377	2.6233786532528143	0.9988080368472209	0.013328659186589912	15691.446711371886
+-1269.792126279663	3.128291713144148	3.421135576024593	3.186303154478381	2.514221425732018	0.9988076145452933	0.013702129045609968	15691.446711371886
+-1269.8877978967253	3.0240471911322313	3.3454245244505976	3.0473363107678586	2.3992755341484835	0.9986348102628311	0.014090425518404406	15691.446711371886
+#
+# Top 100 results
+# Log(likelihood)	log_mu1	log_sigma1	log_mu2	log_sigma2	rho	misid	theta
+-1269.7688158561698	3.496765165218968	3.713425228640547	3.3489414810581377	2.6233786532528143	0.9988080368472209	0.013328659186589912	15691.446711371886
+-1269.792126279663	3.128291713144148	3.421135576024593	3.186303154478381	2.514221425732018	0.9988076145452933	0.013702129045609968	15691.446711371886
+-1269.8877978967253	3.0240471911322313	3.3454245244505976	3.0473363107678586	2.3992755341484835	0.9986348102628311	0.014090425518404406	15691.446711371886
+-1269.9768426449568	3.402552377296842	3.6352537861478456	3.293520359555489	2.5218120840365947	0.999	0.013553877933897708	15691.446711371886
+-1270.1749230540172	3.004289099264522	3.31239816183356	3.3706123914881956	2.677877497950098	0.9989894576849508	0.012896735682239547	15691.446711371886
+-1270.2393868987194	3.4127788846571487	3.6436099931488393	3.349659056851049	2.560962685456004	0.999	0.013358245693701804	15691.446711371886
+-1270.255094793673	3.5271192261011777	3.7268942107340144	3.740359538817612	2.966809407053775	0.999	0.013398534572324667	15691.446711371886
+-1270.4034392718133	3.1272513385462704	3.4156165650909025	3.321722351328588	2.6311679352352364	0.998887151654479	0.014509122413232493	15691.446711371886
+-1270.4486445522762	3.0464337787417115	3.3711318845681606	2.9341408629023156	2.2816973032386105	0.9985513367584204	0.014223720395626535	15691.446711371886
+-1270.6884149515372	1.708994689384669	2.2742510209018523	2.5459076510477185	2.0317673702672434	0.9983759848347304	0.013288635793938096	15691.446711371886
+```
+
+
 The bivariate lognormal has an extra parameter `rho`, the correlation of the DFE between the populations. We can allow `mu_log` and `sigma_log` be different or the same in our populations. `dadi-cli` will run either the symmetric (shared `mu_log` and `sigma_log`) or asymmetric (independent `mu_log` and `sigma_log`) bivariate lognormal based on the number of parameters. For the symmetric bivariate lognormal the parameters are `log_mu`, `log_sigma`, and `rho`, the asymmetric bivariate lognormal the parameters are `log_mu1`, `log_mu2`, `log_sigma1`, `log_sigma2`, and `rho`, where 1 denotes the first population and 2 denotes the second population.
 
 ### Inferring mixture model joint DFE
