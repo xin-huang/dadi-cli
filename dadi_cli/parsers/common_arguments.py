@@ -417,14 +417,14 @@ def add_inference_argument(parser: argparse.ArgumentParser) -> None:
         "--maxeval",
         type=positive_int,
         default=False,
-        help="Max number of parameter set evaluations tried for optimizing demography. Default: Number of parameters multiplied by 100.",
+        help="Max number of parameter set evaluations tried for optimization. Default: Number of parameters multiplied by 100.",
     )
 
     parser.add_argument(
         "--maxtime",
         type=positive_int,
         default=np.inf,
-        help="Max amount of time for optimizing demography. Default: Infinite.",
+        help="Max amount of time for optimization. Default: Infinite.",
     )
 
     parser.add_argument(

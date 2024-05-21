@@ -6,7 +6,7 @@ After inferring a best fit demographic model, users may also infer distributions
 
 ![dfe](https://github.com/xin-huang/dadi-cli/blob/revision/docs/figs/dfe.png?raw=true)
 
-To perform DFE inference, users need to first generate of cache of frequency spectra. Because we use the `split_mig` model in the demographic inference, we need to use the same demographic model plus selection, the `split_mig_sel` model or the `split_mig_sel_single_gamma` model:
+To perform DFE inference, users need to first generate of cache of frequency spectra with different selection coefficients. Because we use the `split_mig` model in the demographic inference, we need to use the same demographic model plus selection, the `split_mig_sel` model or the `split_mig_sel_single_gamma` model:
  
 - The `split_mig_sel` model is used for inferring the DFE from two populations by assuming the population-scaled selection coefficients (usually denoted as `gamma` in population genetics) are independent in the two populations. 
 - The `split_mig_sel_single_gamma` model assumes the population-scaled selection coefficients are the same in the two populations.

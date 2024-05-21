@@ -65,13 +65,13 @@ Besides inferring one-dimensional DFEs, we can also analyze the joint DFE or qua
 Here, we can infer a joint DFE with selection potentially being different in the two populations using the following command:
 
 ```
-dadi-cli InferDFE --fs examples/results/fs/1KG.YRI.CEU.20.non.unfolded.fs --cache2d examples/results/caches/1KG.YRI.CEU.20.split_mig_sel.spectra.bpkl --pdf2d biv_lognormal --p0 1 1 1 1 .5 .5 --lbounds -10 -10 0.01 0.01 0.001 0 --ubounds 10 10 10 10 0.999 0.5 --demo-popt examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits --ratio 2.31 --output-prefix examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.biv_lognormal --optimizations 15 --maxeval 400 --check-convergence 10
+dadi-cli InferDFE --fs examples/results/fs/1KG.YRI.CEU.20.non.unfolded.fs --cache2d examples/results/caches/1KG.YRI.CEU.20.split_mig_sel.spectra.bpkl --pdf2d biv_lognormal --p0 1 1 1 1 .5 .5 --lbounds -10 -10 0.01 0.01 0.001 0 --ubounds 10 10 10 10 0.999 0.5 --demo-popt examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits --ratio 2.31 --output-prefix examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.biv_lognormal.params --force-convergence 10 --cpus 128
 ```
 
-We define the DFE as a bivariate lognormal distribution with `--pdf2d` and pass in a cache that assumes the population-scaled selection coefficients are different in the two populations through `--cache2d`. The bivariate lognormal has an extra parameter `rho`, the correlation of the DFE between the populations. We can allow `mu_log` and `sigma_log` be different or the same in our populations. `dadi-cli` will run either the symmetric (shared `mu_log` and `sigma_log`) or asymmetric (independent `mu_log` and `sigma_log`) bivariate lognormal based on the number of parameters. For the symmetric bivariate lognormal the parameters are `log_mu`, `log_sigma`, and `rho`, the asymmetric bivariate lognormal the parameters are `log_mu1`, `log_mu2`, `log_sigma1`, `log_sigma2`, and `rho`, where 1 denotes the first population and 2 denotes the second population.
+We define the DFE as a bivariate lognormal distribution with `--pdf2d` and pass in a cache (e.g., [1KG.YRI.CEU.20.split_mig_sel.spectra.bpkl](https://github.com/xin-huang/dadi-cli/blob/revision/examples/results/caches/1KG.YRI.CEU.20.split_mig_sel.spectra.bpkl)) that assumes the population-scaled selection coefficients are different in the two populations through `--cache2d`. 
 
-An example of running an asymmetrical bivariate lognormal is:
 
+The bivariate lognormal has an extra parameter `rho`, the correlation of the DFE between the populations. We can allow `mu_log` and `sigma_log` be different or the same in our populations. `dadi-cli` will run either the symmetric (shared `mu_log` and `sigma_log`) or asymmetric (independent `mu_log` and `sigma_log`) bivariate lognormal based on the number of parameters. For the symmetric bivariate lognormal the parameters are `log_mu`, `log_sigma`, and `rho`, the asymmetric bivariate lognormal the parameters are `log_mu1`, `log_mu2`, `log_sigma1`, `log_sigma2`, and `rho`, where 1 denotes the first population and 2 denotes the second population.
 
 ### Inferring mixture model joint DFE
 
@@ -107,8 +107,8 @@ Similar to the best fit parameters in `./examples/results/demog/1KG.YRI.CEU.spli
 | `--work-queue`          | Enable Work Queue. Additional arguments are the WorkQueue project name, the name of the password file. |
 | `--port`                | Choose a specific port for Work Queue communication. Default 9123. |
 | `--debug-wq`            | Store debug information from WorkQueue to a file called "debug.log". Default: False. |
-| `--maxeval`             | Max number of parameter set evaluations tried for optimizing demography. Default: Number of parameters multiplied by 100. |
-| `--maxtime`             | Max amount of time for optimizing demography. Default: Infinite. |
+| `--maxeval`             | Max number of parameter set evaluations tried for optimization. Default: Number of parameters multiplied by 100. |
+| `--maxtime`             | Max amount of time for optimization. Default: Infinite. |
 | `--cpus`                | Number of CPUs to use in multiprocessing. Default: All available CPUs. |
 | `--gpus`                | Number of GPUs to use in multiprocessing. Default: 0. |
 | `--bestfit-p0-file`     | Pass in a .bestfit or .opt.<N> file name to cycle --p0 between up to the top 10 best fits for each optimization. |

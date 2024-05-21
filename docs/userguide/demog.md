@@ -130,8 +130,8 @@ Finally, the grid sizes may also affect the inference. If `n` is the maximum of 
 | `--work-queue`          | Enable Work Queue. Additional arguments are the WorkQueue project name, the name of the password file. |
 | `--port`                | Choose a specific port for Work Queue communication. Default 9123. |
 | `--debug-wq`            | Store debug information from WorkQueue to a file called "debug.log". Default: False. |
-| `--maxeval`             | Max number of parameter set evaluations tried for optimizing demography. Default: Number of parameters multiplied by 100. |
-| `--maxtime`             | Max amount of time for optimizing demography. Default: Infinite. |
+| `--maxeval`             | Max number of parameter set evaluations tried for optimization. Default: Number of parameters multiplied by 100. |
+| `--maxtime`             | Max amount of time for optimization. Default: Infinite. |
 | `--cpus`                | Number of CPUs to use in multiprocessing. Default: All available CPUs. |
 | `--gpus`                | Number of GPUs to use in multiprocessing. Default: 0. |
 | `--bestfit-p0-file`     | Pass in a .bestfit or .opt.<N> file name to cycle --p0 between up to the top 10 best fits for each optimization. |
