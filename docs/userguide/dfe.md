@@ -71,7 +71,7 @@ dadi-cli InferDFE --fs examples/results/fs/1KG.YRI.CEU.20.non.unfolded.fs --cach
 We define the DFE as a bivariate lognormal distribution with `--pdf2d` and pass in a cache (e.g., [1KG.YRI.CEU.20.split_mig_sel.spectra.bpkl](https://github.com/xin-huang/dadi-cli/blob/revision/examples/results/caches/1KG.YRI.CEU.20.split_mig_sel.spectra.bpkl)) that assumes the population-scaled selection coefficients are different in the two populations through `--cache2d`. 
 
 
-The best-fit results from the above command is stored in [1KG.YRI.CEU.20.split_mig.dfe.biv_lognormal.params.InferDFE.bestfits](https://github.com/xin-huang/dadi-cli/blob/revision/examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.biv_lognormal.params.InferDFE.bestfits) and look like:
+The best-fit results from the above command are stored in [1KG.YRI.CEU.20.split_mig.dfe.biv_lognormal.params.InferDFE.bestfits](https://github.com/xin-huang/dadi-cli/blob/revision/examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.biv_lognormal.params.InferDFE.bestfits) and look like:
 
 ```
 # /Users/user/mambaforge/envs/dadi-cli-cpu/bin/dadi-cli InferDFE --fs examples/results/fs/1KG.YRI.CEU.20.non.unfolded.fs --cache2d examples/results/caches/1KG.YRI.CEU.20.split_mig_sel.spectra.bpkl --pdf2d biv_lognormal --p0 1 1 1 1 .5 .5 --lbounds -10 -10 0.01 0.01 0.001 0 --ubounds 10 10 10 10 0.999 0.5 --demo-popt examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits --ratio 2.31 --output-prefix examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.biv_lognormal.params --force-convergence 10 --cpus 128
@@ -97,8 +97,9 @@ The best-fit results from the above command is stored in [1KG.YRI.CEU.20.split_m
 -1270.6884149515372	1.708994689384669	2.2742510209018523	2.5459076510477185	2.0317673702672434	0.9983759848347304	0.013288635793938096	15691.446711371886
 ```
 
+The bivariate lognormal distribution has an extra parameter `rho`, which represents the correlation of the DFE between the populations. We can allow `log_mu` and `log_sigma` to be either the same or different in our populations. `dadi-cli` will run either the symmetric (shared `log_mu` and `log_sigma`) or asymmetric (independent `log_mu` and `log_sigma`) bivariate lognormal distribution based on the number of parameters: three parameters for the symmetric distribution and five parameters for the asymmetric distribution.
 
-The bivariate lognormal has an extra parameter `rho`, the correlation of the DFE between the populations. We can allow `mu_log` and `sigma_log` be different or the same in our populations. `dadi-cli` will run either the symmetric (shared `mu_log` and `sigma_log`) or asymmetric (independent `mu_log` and `sigma_log`) bivariate lognormal based on the number of parameters. For the symmetric bivariate lognormal the parameters are `log_mu`, `log_sigma`, and `rho`, the asymmetric bivariate lognormal the parameters are `log_mu1`, `log_mu2`, `log_sigma1`, `log_sigma2`, and `rho`, where 1 denotes the first population and 2 denotes the second population.
+For the symmetric bivariate lognormal distribution, the parameters are `log_mu`, `log_sigma`, and `rho`. For the asymmetric bivariate lognormal distribution, the parameters are `log_mu1`, `log_mu2`, `log_sigma1`, `log_sigma2`, and `rho`, where `1` denotes the first population and `2` denotes the second population.
 
 ### Inferring mixture model joint DFE
 
