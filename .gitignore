@@ -7,6 +7,7 @@ examples/snakepipe/results/*
 */.DS_Store
 *__pycache__*
 *.sh
+*.out
 .coverage
 tests/test_results/
 wq-factory-*
