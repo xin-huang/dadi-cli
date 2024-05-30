@@ -26,7 +26,7 @@ def test_generate_cache_code(capsys):
         additional_gammas=[],
         cpus=None,
         gpus=0,
-        dimensionality=1,
+        cache_type='cache1d',
     )
 
     assert os.path.exists("./tests/test_results/cache_large_two_epoch_code.bpkl")
@@ -37,8 +37,6 @@ def test_generate_cache_code(capsys):
 
 def test_generate_cache_failure():
     with pytest.raises(ValueError) as excinfo:
-        dimensionality=10
-
         generate_cache(
             func=DFE.DemogSelModels.two_epoch_sel,
             grids=[120, 140, 160],
@@ -46,14 +44,14 @@ def test_generate_cache_failure():
             gamma_bounds=[1e-4, 2000],
             gamma_pts=50,
             output="./tests/test_results/cache_large_two_epoch_code.bpkl",
-            sample_sizes=[20],
+            sample_sizes=[20, 30, 40],
             additional_gammas=[],
             cpus=None,
             gpus=0,
-            dimensionality=dimensionality,
+            cache_type='cache3d',
         )
 
-    assert f"Invalid dimensionality {dimensionality}. Only 1 or 2 are accepted." in str(excinfo.value)
+    assert f"Invalid number of populations" in str(excinfo.value)
 
 
 @pytest.mark.skip()
@@ -63,7 +61,7 @@ def test_generate_cache_bash(capsys):
     subprocess.run(
         "dadi-cli GenerateCache --demo-popt tests/example_data/example.two_epoch.demo.params.InferDM.bestfits "
         + "--model two_epoch_sel --gamma-pts 50 --gamma-bounds 1e-4 2000 "
-        + "--grids 120 140 160 --sample-sizes 20 --dimensionality 1 --output tests/test_results/cache_large_two_epoch_bash.bpkl",
+        + "--grids 120 140 160 --sample-sizes 20 --cache-type cache1d --output tests/test_results/cache_large_two_epoch_bash.bpkl",
         shell=True,
     )
 
@@ -88,7 +86,7 @@ def test_generate_cache_custom_model_code(capsys):
         additional_gammas=[],
         cpus=None,
         gpus=0,
-        dimensionality=2,
+        cache_type='cache2d',
     )
 
     assert os.path.exists(
@@ -134,12 +132,10 @@ def test_generate_cache_equil_code(capsys):
         additional_gammas=[],
         cpus=None,
         gpus=0,
-        dimensionality=1,
+        cache_type='cache1d',
     )
 
     assert os.path.exists("./tests/test_results/cache_equil_code.bpkl")
     s = pickle.load(open("./tests/test_results/cache_equil_code.bpkl", "rb"))
     assert int(np.min(s.gammas)) == -20
     assert len(s.gammas) == 50
-
-

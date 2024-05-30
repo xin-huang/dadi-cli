@@ -3,10 +3,9 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - dadi
   - codecov
   - cyvcf2
-  - gcc
+  - dadi
   - demes
   - dill
   - matplotlib
@@ -17,7 +16,5 @@ dependencies:
   - pytest-cov
   - python==3.9
   - scipy
-  - snakemake==7.1.1
   - pip:
-      - demes
       - .

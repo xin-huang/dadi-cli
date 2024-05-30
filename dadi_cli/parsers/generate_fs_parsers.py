@@ -87,7 +87,7 @@ def add_generate_fs_parsers(subparsers: argparse.ArgumentParser) -> None:
         "--polarized",
         default=False,
         action="store_true",
-        help="Determine whether the resulting frequency spectrum is polarized or not; Default: False.",
+        help="Determine whether the resulting frequency spectrum is polarized or not. Default: False.",
     )
 
     parser.add_argument(
@@ -112,14 +112,14 @@ def add_generate_fs_parsers(subparsers: argparse.ArgumentParser) -> None:
         type=positive_int,
         nargs="+",
         required=True,
-        help="Sample sizes after projection; If you do not want to project down your data, please input the original sample sizes of your data.",
+        help="Sample sizes after projection. If you do not want to project down your data, please input the original sample sizes of your data.",
     )
 
     parser.add_argument(
         "--vcf",
         type=existed_file,
         required=True,
-        help="Name of the VCF file for generating frequency spectrum.",
+        help="Name of the VCF file for generating frequency spectra.",
     )
 
     parser.add_argument(
