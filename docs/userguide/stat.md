@@ -16,23 +16,25 @@ The output files from the above commands can be found in the `bootstrapping_syn`
 
 ## Confidence interval estimation
 
-To estimate the confidence intervals for the demographic parameters, users can use
+After obtaining bootstrapped spetra, users can estimate the confidence intervals for the demographic or DFE parameters.
+
+For our [demographic inference example](https://dadi-cli.readthedocs.io/en/revision/userguide/demog/), users can use the following command to estimate the confidence intervals for the demographic parameters:
 
 ```         
-dadi-cli StatDM --fs ./examples/results/fs/1KG.YRI.CEU.20.synonymous.snps.unfold.fs --model split_mig --demo-popt ./examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits --grids 60 80 100 --bootstrapping-dir ./examples/results/fs/bootstrapping_syn/ --output ./examples/results/stat/1KG.YRI.CEU.20.split_mig.bestfit.demog.params.godambe.ci
+dadi-cli StatDM --fs examples/results/fs/1KG.YRI.CEU.20.syn.unfolded.fs --model split_mig --demo-popt examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits --grids 60 80 100 --bootstrapping-dir examples/results/fs/bootstrapping_syn/ --output examples/results/stat/1KG.YRI.CEU.20.split_mig.bestfit.demog.params.godambe.ci
 ```
 
-To estimate the confidence intervals for the joint DFE parameters, users can use
+For our [DFE inference example](https://dadi-cli.readthedocs.io/en/revision/userguide/dfe/), users can use the following command to estimate the confidence intervals for the 1d DFE parameters:
 
 ```         
-dadi-cli StatDFE --fs ./examples/results/fs/1KG.YRI.CEU.20.nonsynonymous.snps.unfold.fs --dfe-popt ./examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.1D_lognormal.params.InferDFE.bestfits --cache1d ./examples/results/caches/1KG.YRI.CEU.20.split_mig.sel.single.gamma.spectra.bpkl --pdf1d lognormal --bootstrapping-nonsynonymous-dir ./examples/results/fs/bootstrapping_non/ --bootstrapping-synonymous-dir ./examples/results/fs/bootstrapping_non/ --output ./examples/results/stat/1KG.YRI.CEU.20.split_mig.bestfit.dfe.1D_lognormal.params.godambe.ci
+dadi-cli StatDFE --fs examples/results/fs/1KG.YRI.CEU.20.non.unfolded.fs --dfe-popt examples/results/dfe/1KG.YRI.CEU.20.split_mig.dfe.1D_lognormal.params.InferDFE.bestfits --cache1d examples/results/caches/1KG.YRI.CEU.20.split_mig_sel_single_gamma.spectra.bpkl --pdf1d lognormal --bootstrapping-nonsynonymous-dir examples/results/fs/bootstrapping_non/ --bootstrapping-synonymous-dir examples/results/fs/bootstrapping_non/ --output examples/results/stat/1KG.YRI.CEU.20.split_mig.bestfit.dfe.1D_lognormal.params.godambe.ci
 ```
 
 Three different step sizes are tested when using the GIM. Ideally 95% confidence intervals will be consistent between step sizes.
 
 ## Arguments
 
-For the `StatDM` subcommand:
+### `StatDM`
 
 | Argument | Description |
 | - | - |
@@ -48,7 +50,7 @@ For the `StatDM` subcommand:
 | `--bootstrapping-dir` | Directory containing boostrapping spectra. |
 | `--logscale` | Determine whether estimating the uncertainties by assuming log-normal distribution of parameters; Default: False. |
 
-For the `StatDFE` subcommand:
+### `StatDFE`
 
 | Argument | Description |
 | - | - |
