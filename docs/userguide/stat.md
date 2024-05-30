@@ -1,6 +1,8 @@
 # Statistical testing
 
-To performing statistical testing with the Godambe Information Matrix (GIM), users should first use `GenerateFs` to generate bootstrapping data from VCF files. In this example we generate 20 bootstraps to save on time, but we recommend users do 100. `--chunk-size` is the max length of chunks the chromosomes will be broken up into and used to randomly draw from with replacement to make our bootstrapped chromosomes.
+To perform uncertainty analysis, `dadi` offers [an approach](https://dadi.readthedocs.io/en/latest/user-guide/uncertainty-analysis/) using the Godambe Information Matrix (GIM). To utilize this method, users should begin by using the `GenerateFs` subcommand to generate bootstrapped data from VCF files.
+
+In this example we generate 20 bootstraps to save on time, but we recommend users do 100. `--chunk-size` is the max length of chunks the chromosomes will be broken up into and used to randomly draw from with replacement to make our bootstrapped chromosomes.
 
 ```         
 dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 20 20 --polarized --bootstrap 20 --chunk-size 1000000 --output ./examples/results/fs/bootstrapping_syn/1KG.YRI.CEU.20.synonymous.snps.unfold
