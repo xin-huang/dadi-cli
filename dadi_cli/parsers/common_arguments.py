@@ -253,7 +253,7 @@ def add_eps_argument(parser: argparse.ArgumentParser) -> None:
         type=positive_num,
         nargs="+",
         required=False,
-        help="Step sizes to try for Godambe analysis. Default: [0.1, 0.01, 0.001]",
+        help="Step sizes to try for Godambe analysis. Default: [0.1, 0.01, 0.001].",
     )
 
 
