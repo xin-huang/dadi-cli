@@ -4,10 +4,10 @@ To perform uncertainty analysis, `dadi` offers [an approach](https://dadi.readth
 
 In this example we generate 20 bootstraps to save on time, but we recommend users do 100. `--chunk-size` is the max length of chunks the chromosomes will be broken up into and used to randomly draw from with replacement to make our bootstrapped chromosomes.
 
-```         
-dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 20 20 --polarized --bootstrap 20 --chunk-size 1000000 --output ./examples/results/fs/bootstrapping_syn/1KG.YRI.CEU.20.synonymous.snps.unfold
+```
+dadi-cli GenerateFs --vcf examples/data/1KG.YRI.CEU.syn.vcf.gz --pop-info examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 20 20 --polarized --bootstrap 20 --chunk-size 1000000 --output examples/results/fs/bootstrapping_syn/1KG.YRI.CEU.20.syn
 
-dadi-cli GenerateFs --vcf ./examples/data/1KG.YRI.CEU.biallelic.nonsynonymous.snps.withanc.strict.vcf.gz --pop-info ./examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 20 20 --polarized --bootstrap 20 --chunk-size 1000000 --output ./examples/results/fs/bootstrapping_non/1KG.YRI.CEU.20.nonsynonymous.snps.unfold
+dadi-cli GenerateFs --vcf examples/data/1KG.YRI.CEU.non.vcf.gz --pop-info examples/data/1KG.YRI.CEU.popfile.txt --pop-ids YRI CEU --projections 20 20 --polarized --bootstrap 20 --chunk-size 1000000 --output examples/results/fs/bootstrapping_non/1KG.YRI.CEU.20.non
 ```
 
 To estimate the confidence intervals for the demographic parameters, users can use
