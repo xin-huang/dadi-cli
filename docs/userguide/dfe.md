@@ -115,7 +115,7 @@ Similar to the best fit parameters in `./examples/results/demog/1KG.YRI.CEU.spli
 |------------|------|-------|-----|-----|-------------------|
 | -1389      | 5.51 | 7.65  | 0   | 0   | 0.017             |
 
-## Settings
+## Arguments
 
 | Argument | Description |
 | - | - |

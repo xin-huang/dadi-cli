@@ -53,7 +53,7 @@ An example for a folded allele frequency spectrum from one population is below.
 1 0 0 1 1
 ```
 
-## Settings
+## Arguments
 
 | Argument | Description |
 | - | - |

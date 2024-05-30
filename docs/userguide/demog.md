@@ -117,7 +117,7 @@ Because there is randomness built into `dadi-cli` for where the starting paramet
 
 Finally, the grid sizes may also affect the inference. If `n` is the maximum of the sample sizes, then the default grid sizes are `(int(n*1.1)+2, int(n*1.2)+4, int(n*1.3)+6)`.
 
-## Settings
+## Arguments
 
 | Argument | Description |
 | - | - |
