@@ -1,5 +1,4 @@
 import dadi, random
-from cyvcf2 import VCF
 
 
 def generate_fs(
@@ -60,11 +59,16 @@ def generate_fs(
         raise ValueError("The lengths of `pop_ids` and `projections` must match.")
 
     if polarized:
-        if not VCF(vcf).contains('AA'):
-            raise ValueError(
-                f'The AA (Ancestral allele) INFO field cannot be found in the header of {vcf}, ' +
-                'but an unfolded frequency spectrum is requested.'
-            )
+        try:
+            from cyvcf2 import VCF
+            if not VCF(vcf).contains('AA'):
+                raise ValueError(
+                    f'The AA (Ancestral allele) INFO field cannot be found in the header of {vcf}, ' +
+                    'but an unfolded frequency spectrum is requested.'
+                )
+        except ModuleNotFoundError:
+            print("Unable to load cyvcf2 and check if ancestral alleles are in provided VCF.\n"+
+                  "Generated FS may be empty if ancestral allele not found.")
 
     if subsample:
         subsample_dict = {}

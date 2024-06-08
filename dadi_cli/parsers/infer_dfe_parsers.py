@@ -1,5 +1,4 @@
 import argparse, glob, pickle, os, random, sys, time, warnings
-import work_queue as wq
 from multiprocessing import Process, Queue
 from dadi_cli.parsers.common_arguments import *
 from dadi_cli.parsers.argument_validation import *
@@ -212,6 +211,10 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
             bestfits = None
 
         if args.work_queue:
+            try:
+                import work_queue as wq
+            except ModuleNotFoundError:
+                raise ValueError("Work Queue could not be loaded.")
 
             if args.debug_wq:
                 q = wq.WorkQueue(name=args.work_queue[0], debug_log="debug.log", port=args.port)

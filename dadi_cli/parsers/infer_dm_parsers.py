@@ -1,5 +1,4 @@
 import argparse, inspect, nlopt, os, random, sys, time, warnings
-import work_queue as wq
 from multiprocessing import Process, Queue
 from sys import exit
 from dadi_cli.parsers.common_arguments import *
@@ -191,7 +190,10 @@ def _run_infer_dm(args: argparse.Namespace) -> None:
             else:
                 global_algorithm = nlopt.GN_MLSL_LDS
             if args.work_queue:
-
+                try:
+                    import work_queue as wq
+                except ModuleNotFoundError:
+                    raise ValueError("Work Queue could not be loaded.")
                 if args.debug_wq:
                     q = wq.WorkQueue(name=args.work_queue[0], debug_log="debug.log", port=args.port)
                 else:
@@ -346,6 +348,10 @@ def _run_infer_dm(args: argparse.Namespace) -> None:
                        bestfits]
 
         if args.work_queue:
+            try:
+                import work_queue as wq
+            except ModuleNotFoundError:
+                raise ValueError("Work Queue could not be loaded.")
             if args.debug_wq:
                 q = wq.WorkQueue(name=args.work_queue[0], debug_log="debug.log", port=args.port)
             else:
