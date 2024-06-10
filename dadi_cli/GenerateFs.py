@@ -69,6 +69,8 @@ def generate_fs(
         except ModuleNotFoundError:
             print("Unable to load cyvcf2 and check if ancestral alleles are in provided VCF.\n"+
                   "Generated FS may be empty if ancestral allele not found.")
+        except ImportError:
+            print("Error importing cyvcf2")
 
     if subsample:
         subsample_dict = {}
