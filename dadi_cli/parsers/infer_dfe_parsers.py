@@ -109,7 +109,7 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
                     )
 
     if args.p0 == -1:
-        args.p0 = _calc_p0_from_bounds(args.lbounds, args.ubounds)
+        args.p0 = calc_p0_from_bounds(args.lbounds, args.ubounds)
 
 
     if "://" in args.demo_popt:
