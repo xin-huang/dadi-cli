@@ -12,7 +12,7 @@ with open(os.path.join(HERE, "README.md")) as fid:
 setup(
     name="dadi-cli",
     python_requires='>=3.9',
-    version="0.9.4b",
+    version="0.9.6",
     description="A command line interface for dadi",
     long_description=README,
     long_description_content_type="text/markdown",
