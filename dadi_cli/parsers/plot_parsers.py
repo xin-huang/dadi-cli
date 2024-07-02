@@ -197,4 +197,11 @@ def add_plot_parsers(subparsers: argparse.ArgumentParser) -> None:
         required=False,
         help="Display plots in matplotlib window.",
     )
+    parser.add_argument(
+        "--show",
+        default=False,
+        action="store_true",
+        required=False,
+        help="Display plots in matplotlib window.",
+    )
     parser.set_defaults(runner=_run_plot)

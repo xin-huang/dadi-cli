@@ -50,7 +50,7 @@ def plot_single_sfs(
         dadi.Plotting.plot_1d_fs(fs, show=show)
     if len(fs.sample_sizes) == 2:
         fig = plt.figure(219033)
-        dadi.Plotting.plot_single_2d_sfs(fs, vmin=vmin, show=show)
+        dadi.Plotting.plot_single_2d_sfs(fs, vmin=vmin)#, show=show)
     if len(fs.sample_sizes) == 3:
         try:
             fig = plt.figure(219033, figsize=(10,4))
