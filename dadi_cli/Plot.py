@@ -50,7 +50,7 @@ def plot_single_sfs(
         dadi.Plotting.plot_1d_fs(fs, show=show)
     if len(fs.sample_sizes) == 2:
         fig = plt.figure(219033)
-        dadi.Plotting.plot_single_2d_sfs(fs, vmin=vmin)#, show=show)
+        dadi.Plotting.plot_single_2d_sfs(fs, vmin=vmin, show=show)
     if len(fs.sample_sizes) == 3:
         try:
             fig = plt.figure(219033, figsize=(10,4))
@@ -297,14 +297,14 @@ def plot_fitted_dfe(
             projections = ns
         fs = fs.project(projections)
         model = model.project(projections)
-        dadi.Plotting.plot_1d_comp_Poisson(model, fs)
+        dadi.Plotting.plot_1d_comp_Poisson(model, fs, show=show)
     if len(ns) == 2:
         if projections == None:
             projections = ns
         fs = fs.project(projections)
         model = model.project(projections)
         dadi.Plotting.plot_2d_comp_Poisson(
-            model, fs, vmin=vmin, resid_range=resid_range
+            model, fs, vmin=vmin, resid_range=resid_range, show=show
         )
     if len(ns) == 3:
         if projections == None:
@@ -312,7 +312,7 @@ def plot_fitted_dfe(
         fs = fs.project(projections)
         model = model.project(projections)
         dadi.Plotting.plot_3d_comp_Poisson(
-            model, fs, vmin=vmin, resid_range=resid_range
+            model, fs, vmin=vmin, resid_range=resid_range, show=show
         )
     if len(ns) > 3:
         raise ValueError("dadi-cli does not support comparing fs and model with more than three populations")
