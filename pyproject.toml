@@ -5,6 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "dadi-cli"
 version = "0.9.6"
+requires-python = ">=3.9"
 description = "A command line interface for dadi"
 readme = "README.md"
 license = "Apache-2.0"
@@ -14,7 +15,7 @@ authors = [
 classifiers = [
     "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
 ]
 dependencies = [
     "dadi",
