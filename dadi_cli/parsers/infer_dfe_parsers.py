@@ -72,6 +72,11 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
             Path or URL to the file with best fit parameters.
         - nomisid : bool
             Flag to indicate that misidentification should not be considered.
+        - cov_args : list
+            Dictionary that contains the data dictionary with coverage information 
+            and total number of sample sequenced in each population for coverage correction.
+        - cov_inbreeding : list
+            Inbreeding parameter for each population from 0 to 1, see dadi manual for more information.
         - mix_pdf : str or None
             The mixed PDF model if applicable.
 
@@ -240,6 +245,8 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
                     args.lbounds,
                     args.constants,
                     args.misid,
+                    args.cov_args,
+                    args.cov_inbreeding,
                     None,
                     args.maxeval,
                     args.maxtime,
@@ -263,6 +270,8 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
                 args.lbounds,
                 args.constants,
                 args.misid,
+                args.cov_args,
+                args.cov_inbreeding,
                 None,
                 args.maxeval,
                 args.maxtime,
@@ -385,6 +394,7 @@ def add_infer_dfe_parsers(subparsers: argparse.ArgumentParser) -> None:
     add_inference_argument(parser)
     add_delta_ll_argument(parser)
     add_misid_argument(parser)
+    add_coverage_model_argument(parser)
     add_constant_argument(parser)
     add_bounds_argument(parser)
     add_seed_argument(parser)

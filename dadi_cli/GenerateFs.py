@@ -14,6 +14,7 @@ def generate_fs(
     bootstrap: int,
     chunk_size: int,
     masking: str,
+    calc_coverage: bool,
     seed: int,
 ) -> None:
     """
@@ -31,8 +32,9 @@ def generate_fs(
         Name of the file containing population information.
     projections : list[int]
         List of sample sizes after projection.
-    subsample : bool
-        If True, spectrum is generated with sub-samples; otherwise, spectrum is generated with all samples.
+    subsample : list
+        If filled, spectrum is generated based on number of requested sub-sampled individuals for each population; 
+        otherwise, spectrum is generated with all samples.
     polarized : bool
         If True, unfolded spectrum is generated; otherwise, folded spectrum is generated.
     marginalize_pops : list[str]
@@ -46,6 +48,8 @@ def generate_fs(
         'singleton' - Masks singletons in each population,
         'shared' - Masks singletons in each population and those shared across populations,
         '' - No masking is applied.
+    calc_coverage : bool
+        If True, a data dictionary with coverage information is generated as <output>.coverage.pickle.
     seed : int
         Seed for generating random numbers. If None, a random seed is used.
 
@@ -66,15 +70,24 @@ def generate_fs(
                 'but an unfolded frequency spectrum is requested.'
             )
 
-    if subsample:
+    if subsample != []:
         subsample_dict = {}
         for i in range(len(pop_ids)):
-            subsample_dict[pop_ids[i]] = projections[i]
-        dd = dadi.Misc.make_data_dict_vcf(
-            vcf_filename=vcf, popinfo_filename=pop_info, subsample=subsample_dict
+            subsample_dict[pop_ids[i]] = subsample[i]
+        # dadi will store the number of chromosomes in ploidy
+        dd, ploidy = dadi.Misc.make_data_dict_vcf(
+            vcf_filename=vcf, popinfo_filename=pop_info, subsample=subsample_dict, calc_coverage=calc_coverage, extract_ploidy=True
         )
+        # multiply number of individuals subsamples by the ploidy to get sample size
+        projections = [individuals*ploidy for individuals in subsample]
+        print(projections, ploidy, subsample)
     else:
-        dd = dadi.Misc.make_data_dict_vcf(vcf_filename=vcf, popinfo_filename=pop_info)
+        dd = dadi.Misc.make_data_dict_vcf(vcf_filename=vcf, popinfo_filename=pop_info, calc_coverage=calc_coverage)
+    if calc_coverage:    
+        import pickle
+        coverage_dd = {chrom_pos:{'coverage':dd[chrom_pos]['coverage']} for chrom_pos in dd}
+        print(f"\nSaving coverage dictionary in pickle named:\n{output}.coverage.pickle\n")
+        pickle.dump(coverage_dd, open(f"{output}.coverage.pickle","wb"))
 
     if bootstrap is None:
         fs = dadi.Spectrum.from_data_dict(

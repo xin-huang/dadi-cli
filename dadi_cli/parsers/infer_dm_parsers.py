@@ -36,6 +36,11 @@ def _run_infer_dm(args: argparse.Namespace) -> None:
             Grid sizes to use in demographic calculations.
         - misid : bool
             Flag to indicate if misidentification handling should be enabled.
+        - cov_args : list
+            Dictionary that contains the data dictionary with coverage information 
+            and total number of sample sequenced in each population for coverage correction.
+        - cov_inbreeding : list
+            Inbreeding parameter for each population from 0 to 1, see dadi manual for more information.
         - seed : int or None
             Seed for random number generation to ensure reproducibility.
         - maxeval : int
@@ -216,6 +221,8 @@ def _run_infer_dm(args: argparse.Namespace) -> None:
                         args.lbounds,
                         args.constants,
                         args.misid,
+                        args.cov_args,
+                        args.cov_inbreeding,
                         None,
                         args.maxeval,
                         args.maxtime,
@@ -237,6 +244,8 @@ def _run_infer_dm(args: argparse.Namespace) -> None:
                     args.lbounds,
                     args.constants,
                     args.misid,
+                    args.cov_args,
+                    args.cov_inbreeding,
                     None,
                     args.maxeval,
                     args.maxtime,
@@ -340,6 +349,8 @@ def _run_infer_dm(args: argparse.Namespace) -> None:
                        args.lbounds,
                        args.constants,
                        args.misid,
+                       args.cov_args,
+                       args.cov_inbreeding,
                        None,
                        args.maxeval,
                        args.maxtime,
@@ -449,6 +460,7 @@ def add_infer_dm_parsers(subparsers: argparse.ArgumentParser) -> None:
     add_model_argument(parser)
     add_grids_argument(parser)
     add_misid_argument(parser)
+    add_coverage_model_argument(parser)
     add_constant_argument(parser)
     add_bounds_argument(parser)
     parser.add_argument(

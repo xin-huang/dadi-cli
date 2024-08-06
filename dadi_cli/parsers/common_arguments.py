@@ -492,3 +492,35 @@ def make_dir(path: str) -> None:
     parent_dir = os.path.dirname(path)
     if parent_dir != '':
         os.makedirs(parent_dir, exist_ok=True)
+
+
+def add_coverage_model_argument(parser: argparse.ArgumentParser) -> None:
+    """
+    Add arguments to correct models for low coverage from the dadi LowPass module.
+
+    Parameters
+    ----------
+    parser : argparse.ArgumentParser
+        The parser object to which all inference-related arguments will be added.
+
+    """
+    parser.add_argument(
+        "--coverage-model",
+        nargs="+",
+        default=[],
+        action="store",
+        required=False,
+        dest="cov_args",
+        help="Enable coverage model.\nArguments are:\
+        \n1. The name of the <>.coverage.pickle file produced by GenerateFs --calc-coverage.\
+        \n2. The total number of samples sequenced for each population in the VCF.",
+    ) # Need to make the convergence dictionary because dadi-cli does not save a data dictionary
+    parser.add_argument(
+        "--coverage-inbreeding",
+        nargs="+",
+        default=[],
+        action="store",
+        required=False,
+        dest="cov_inbreeding",
+        help="Pass in optional population inbreeding parameters for the coverage model.",
+    )
