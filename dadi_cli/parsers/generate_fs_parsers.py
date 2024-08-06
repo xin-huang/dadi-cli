@@ -108,11 +108,15 @@ def add_generate_fs_parsers(subparsers: argparse.ArgumentParser) -> None:
         dest="pop_info",
     )
 
+    # Check if subsamples are being requested to determin if --projections needed
+    proj_req = True
+    if "--subsample" in sys.argv:
+        proj_req = False
     parser.add_argument(
         "--projections",
         type=positive_int,
         nargs="+",
-        required=True,
+        required=proj_req,
         help="Sample sizes after projection; If you do not want to project down your data, please input the original sample sizes of your data.",
     )
 

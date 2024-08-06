@@ -59,8 +59,6 @@ def generate_fs(
         If the VCF file does not contain the AA INFO field and `polarized` is True.
 
     """
-    if len(pop_ids) != len(projections):
-        raise ValueError("The lengths of `pop_ids` and `projections` must match.")
 
     if polarized:
         try:
@@ -89,6 +87,11 @@ def generate_fs(
         print(projections, ploidy, subsample)
     else:
         dd = dadi.Misc.make_data_dict_vcf(vcf_filename=vcf, popinfo_filename=pop_info, calc_coverage=calc_coverage)
+
+    # Moved this lower, since using subsamples make projections not required
+    if len(pop_ids) != len(projections):
+        raise ValueError("The lengths of `pop_ids` and `projections` must match.")
+
     if calc_coverage:    
         import pickle
         coverage_dd = {chrom_pos:{'coverage':dd[chrom_pos]['coverage']} for chrom_pos in dd}
