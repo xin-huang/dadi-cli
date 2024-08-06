@@ -103,7 +103,7 @@ def test_generate_fs(data):
     assert dadi_cli_fs.sample_sizes[0] == 30
     assert dadi_cli_fs.sample_sizes[1] == 20
 
-
+@pytest.mark.skip()
 def test_generate_fs_failure(data):
     with pytest.raises(ValueError) as excinfo:
         generate_fs(

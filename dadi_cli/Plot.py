@@ -297,14 +297,14 @@ def plot_fitted_dfe(
             projections = ns
         fs = fs.project(projections)
         model = model.project(projections)
-        dadi.Plotting.plot_1d_comp_Poisson(model, fs)
+        dadi.Plotting.plot_1d_comp_Poisson(model, fs, show=show)
     if len(ns) == 2:
         if projections == None:
             projections = ns
         fs = fs.project(projections)
         model = model.project(projections)
         dadi.Plotting.plot_2d_comp_Poisson(
-            model, fs, vmin=vmin, resid_range=resid_range
+            model, fs, vmin=vmin, resid_range=resid_range, show=show
         )
     if len(ns) == 3:
         if projections == None:
@@ -312,7 +312,7 @@ def plot_fitted_dfe(
         fs = fs.project(projections)
         model = model.project(projections)
         dadi.Plotting.plot_3d_comp_Poisson(
-            model, fs, vmin=vmin, resid_range=resid_range
+            model, fs, vmin=vmin, resid_range=resid_range, show=show
         )
     if len(ns) > 3:
         raise ValueError("dadi-cli does not support comparing fs and model with more than three populations")
