@@ -88,17 +88,15 @@ def infer_demography(
     if cov_args != []:
         try:
             from dadi.LowPass.LowPass import make_low_pass_func_GATK_multisample as func_cov
-            import pickle
         except ModuleNotFoundError:
             raise ImportError("ERROR:\nCurrent dadi version does not support coverage model\n")
-        cov_dd = cov_args[0]
         nseq = [int(ele) for ele in cov_args[1:]]
         if cov_inbreeding == []:
             Fx = None
+        else:
+            Fx = cov_inbreeding
 
-        cov_dd = pickle.load(open(cov_dd, 'rb'))
-        func_ex = func_cov(func_ex, cov_dd, fs.pop_ids, nseq, fs.sample_sizes, Fx=Fx)
-        print(func_cov)
+        func_ex = func_cov(func_ex, cov_args[0], fs.pop_ids, nseq, fs.sample_sizes, Fx=Fx)
 
     p0_len = len(p0)
     lower_bounds = convert_to_None(lower_bounds, p0_len)
@@ -217,13 +215,13 @@ def infer_global_opt(
             import pickle
         except ModuleNotFoundError:
             raise ImportError("ERROR:\nCurrent dadi version does not support coverage model\n")
-        cov_dd = cov_args[0]
         nseq = [int(ele) for ele in cov_args[1:]]
         if cov_inbreeding == []:
             Fx = None
+        else:
+            Fx = cov_inbreeding
 
-        cov_dd = pickle.load(open(cov_dd, 'rb'))
-        func_ex = func_cov(func_ex, cov_dd, fs.pop_ids, nseq, fs.sample_sizes, Fx=Fx)
+        func_ex = func_cov(func_ex, cov_args[0], fs.pop_ids, nseq, fs.sample_sizes, Fx=Fx)
 
     p0_len = len(p0)
     lower_bounds = convert_to_None(lower_bounds, p0_len)

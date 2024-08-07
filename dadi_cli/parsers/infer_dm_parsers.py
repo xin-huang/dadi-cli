@@ -91,6 +91,10 @@ def _run_infer_dm(args: argparse.Namespace) -> None:
 
     make_dir(args.output_prefix)
 
+    if args.cov_args != []:
+        import pickle
+        args.cov_args[0] = pickle.load(open(args.cov_args[0], 'rb'))
+
     # Because basic standard neutral models do not need to optimized
     # we can calculate the log-likelihood and theta
     if args.model in ['snm_1d', 'snm_2d'] and args.p0 == -1 and args.lbounds == None and args.ubounds == None:

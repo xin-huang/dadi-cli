@@ -92,6 +92,9 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
     # Due to development history, much of the code expects a args.misid variable, so create it.
     args.misid = not (fs.folded or args.nomisid)
 
+    if args.cov_args != []:
+        args.cov_args[0] = pickle.load(open(args.cov_args[0], 'rb'))
+
     make_dir(args.output_prefix)
 
     # # Things need to be updated for these to work
