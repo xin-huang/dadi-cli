@@ -87,6 +87,10 @@ def _run_plot(args: argparse.Namespace) -> None:
 
     make_dir(args.output)
 
+    if args.cov_args != []:
+        import pickle
+        args.cov_args[0] = pickle.load(open(args.cov_args[0], 'rb'))
+
     if args.fs is None:
         plot_mut_prop(
             pdf=args.pdf1d,
