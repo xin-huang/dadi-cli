@@ -178,7 +178,7 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
                 _, param_names = check_pdf_params(args.p0, pdf, "", args.misid)
 
     param_names = "# Log(likelihood)\t" + "\t".join(param_names)
-    if not args.nomisid:
+    if args.misid:
         param_names += "\tmisid"
     fid.write(param_names + "\ttheta\n")
 

@@ -150,7 +150,10 @@ def _run_infer_dm(args: argparse.Namespace) -> None:
     fid.write("# {0}\n".format(" ".join(sys.argv)))
 
     # Write column headers
-    if not args.nomisid:
+    # Bugfix: use args.misid instead of args.nomisid.
+    # Since args.misid can be true and args.nomisid can be false
+    # due to checking for fs.folded, use args.misid for future commands.
+    if args.misid:
         param_names += ["misid"]
     fid.write("# Log(likelihood)\t" + "\t".join(param_names) + "\ttheta\n")
 
