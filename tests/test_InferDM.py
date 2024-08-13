@@ -60,7 +60,7 @@ def test_infer_demography_code():
 
 def test_infer_coverage_model_code():
     import pickle
-    fs = dadi.Spectrum.from_file("./tests/example_data/cov.fs")
+    fs = dadi.Spectrum.from_file("./tests/example_data/LowPass-files/cov.fs")
     func = dadi.Demographics2D.split_mig
     p0 = [1, 1, 0.1, 1, 0.01]
     pts_l = [120, 140, 160]
@@ -68,7 +68,7 @@ def test_infer_coverage_model_code():
     lower_bounds = [1e-3, 1e-3, 1e-3, 1e-3, 1e-3]
     fixed_params = -1
     misid = True
-    cov_args = [pickle.load(open("./tests/example_data/cov.fs.coverage.pickle", 'rb')), 20, 20]
+    cov_args = [pickle.load(open("./tests/example_data/LowPass-files/cov.fs.coverage.pickle", 'rb')), 20, 20]
     cov_inbreeding = []
     cuda = False
     maxeval = 10

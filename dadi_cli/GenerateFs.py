@@ -7,7 +7,7 @@ def generate_fs(
     pop_ids: list[str],
     pop_info: str,
     projections: list[int],
-    subsample: bool,
+    subsample: list[int],
     polarized: bool,
     marginalize_pops: list[str],
     bootstrap: int,

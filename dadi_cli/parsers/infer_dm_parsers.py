@@ -203,7 +203,7 @@ def _run_infer_dm(args: argparse.Namespace) -> None:
                 global_algorithm = nlopt.GN_MLSL_LDS
             if args.work_queue:
                 try:
-                    import work_queue as wq
+                    import ndcctools.work_queue as wq
                 except ModuleNotFoundError:
                     raise ValueError("Work Queue could not be loaded.")
                 if args.debug_wq:
@@ -367,7 +367,7 @@ def _run_infer_dm(args: argparse.Namespace) -> None:
 
         if args.work_queue:
             try:
-                import work_queue as wq
+                import ndcctools.work_queue as wq
             except ModuleNotFoundError:
                 raise ValueError("Work Queue could not be loaded.")
             if args.debug_wq:

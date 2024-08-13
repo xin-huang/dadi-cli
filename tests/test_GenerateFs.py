@@ -50,7 +50,7 @@ def test_generate_fs(data):
         bootstrap=None,
         chunk_size=None,
         masking="",
-        calc_coverage = [],
+        calc_coverage=False,
         seed=None,
     )
     dadi_cli_fs = dadi.Spectrum.from_file(pytest.unfolded_output)
@@ -74,7 +74,7 @@ def test_generate_fs(data):
         bootstrap=None,
         chunk_size=None,
         masking="",
-        calc_coverage = [],
+        calc_coverage=False,
         seed=None,
     )
     dadi_cli_fs = dadi.Spectrum.from_file(pytest.folded_output)
@@ -98,7 +98,7 @@ def test_generate_fs(data):
         bootstrap=None,
         chunk_size=None,
         masking="",
-        calc_coverage = [],
+        calc_coverage=False,
         seed=None,
     )
     dadi_cli_fs = dadi.Spectrum.from_file(pytest.unfolded_output)
@@ -121,7 +121,7 @@ def test_generate_fs_failure(data):
             bootstrap=None,
             chunk_size=None,
             masking="",
-            calc_coverage = [],
+            calc_coverage=False,
             seed=None,
         )
 
@@ -140,7 +140,7 @@ def test_generate_fs_failure(data):
             bootstrap=None,
             chunk_size=None,
             masking="",
-            calc_coverage = [],
+            calc_coverage=False,
             seed=None,
         )
 
@@ -161,7 +161,7 @@ def test_generate_fs_subsample(data):
         bootstrap=None,
         chunk_size=None,
         masking="",
-        calc_coverage = [],
+        calc_coverage=False,
         seed=None,
     )
     dadi_cli_fs = dadi.Spectrum.from_file(pytest.subsample_output)
@@ -191,7 +191,7 @@ def test_generate_fs_bootstrap(data):
         bootstrap=10,
         chunk_size=100000,
         masking="",
-        calc_coverage = [],
+        calc_coverage=False,
         seed=123,
     )
 
@@ -223,7 +223,7 @@ def test_generate_fs_masks(data):
         bootstrap=None,
         chunk_size=None,
         masking="singletons",
-        calc_coverage = [],
+        calc_coverage=False,
         seed=None,
     )
     dadi_cli_fs = dadi.Spectrum.from_file(pytest.marginalize_CEU_output)
@@ -244,7 +244,7 @@ def test_generate_fs_masks(data):
         bootstrap=None,
         chunk_size=None,
         masking="singletons",
-        calc_coverage = [],
+        calc_coverage=False,
         seed=None,
     )
     dadi_cli_fs = dadi.Spectrum.from_file(pytest.singleton_mask_output)
@@ -276,7 +276,7 @@ def test_generate_fs_masks(data):
         bootstrap=None,
         chunk_size=None,
         masking="shared",
-        calc_coverage = [],
+        calc_coverage=False,
         seed=None,
     )
     dadi_cli_fs = dadi.Spectrum.from_file(pytest.shared_singleton_mask_output)
@@ -306,7 +306,7 @@ def test_generate_fs_masks(data):
         bootstrap=None,
         chunk_size=None,
         masking="singletons",
-        calc_coverage = [],
+        calc_coverage=False,
         seed=None,
     )
     dadi_cli_fs = dadi.Spectrum.from_file(pytest.shared_singleton_mask_output)
@@ -330,7 +330,7 @@ def test_generate_fs_masks(data):
         bootstrap=None,
         chunk_size=None,
         masking="shared",
-        calc_coverage = [],
+        calc_coverage=False,
         seed=None,
     )
     dadi_cli_fs = dadi.Spectrum.from_file(pytest.shared_singleton_mask_output)
@@ -356,7 +356,7 @@ def test_generate_fs_masks(data):
             bootstrap=None,
             chunk_size=None,
             masking="shared",
-            calc_coverage = [],
+            calc_coverage=False,
             seed=None,
         )
 
@@ -379,7 +379,7 @@ def test_generate_fs_marginalize(data):
         bootstrap=None,
         chunk_size=None,
         masking="",
-        calc_coverage = [],
+        calc_coverage=False,
         seed=None,
     )
     dadi_cli_fs = dadi.Spectrum.from_file(pytest.marginalize_CEU_output)
@@ -404,8 +404,35 @@ def test_generate_fs_marginalize(data):
             bootstrap=None,
             chunk_size=None,
             masking="",
-            calc_coverage = [],
+            calc_coverage=False,
             seed=None,
         )
 
     assert "All populations to marginalize must be in the list of population ids." in str(excinfo.value)
+
+
+def test_generate_fs_lowpass(data):
+    generate_fs(
+        vcf="tests/example_data/LowPass-files/cov_gatk_Replicate_8_filtered_2D-GT-update.vcf",
+        output="tests/test_results/cov-test.fs",
+        pop_ids=["pop1", "pop2"],
+        pop_info="tests/example_data/LowPass-files/cov_popfile_2D.txt",
+        projections=[20, 20],
+        marginalize_pops=None,
+        subsample=[],
+        polarized=False,
+        bootstrap=None,
+        chunk_size=None,
+        masking="",
+        calc_coverage=True,
+        seed=None,
+    )
+    dadi_cli_fs = dadi.Spectrum.from_file("tests/test_results/cov-test.fs")
+
+    dd = dadi.Misc.make_data_dict_vcf("tests/example_data/LowPass-files/cov_gatk_Replicate_8_filtered_2D-GT-update.vcf", "tests/example_data/LowPass-files/cov_popfile_2D.txt", calc_coverage=True)
+    pop_ids, ns = ["pop1", "pop2"], [20, 20]
+    dadi_fs = dadi.Spectrum.from_data_dict(dd, pop_ids, ns, polarized=False)
+
+    assert np.allclose(dadi_cli_fs, dadi_fs)
+
+

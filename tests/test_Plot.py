@@ -1,4 +1,4 @@
-import dadi, glob, matplotlib, os, pytest, subprocess
+import dadi, glob, matplotlib, os, pytest, subprocess, pickle
 from dadi_cli.Plot import plot_single_sfs
 from dadi_cli.Plot import plot_comparison
 from dadi_cli.Plot import plot_fitted_demography
@@ -127,6 +127,8 @@ def test_plot_fitted_demography(files):
         popt=pytest.fs1d_demo_popt,
         projections=[8],
         nomisid=True,
+        cov_args=[],
+        cov_inbreeding=[],
         output="tests/test_results/plot_plot_fitted_demography_1d_w_proj.png",
         vmin=0,
         resid_range=3,
@@ -138,6 +140,8 @@ def test_plot_fitted_demography(files):
         popt=pytest.fs2d_demo_popt,
         projections=[8, 8],
         nomisid=True,
+        cov_args=[],
+        cov_inbreeding=[],
         output="tests/test_results/plot_plot_fitted_demography_2d_w_proj.png",
         vmin=1e-3,
         resid_range=3,
@@ -149,6 +153,8 @@ def test_plot_fitted_demography(files):
         popt=pytest.fs1d_demo_popt,
         projections=None,
         nomisid=True,
+        cov_args=[],
+        cov_inbreeding=[],
         output="tests/test_results/plot_plot_fitted_demography_1d_no_proj.png",
         vmin=0,
         resid_range=3,
@@ -160,6 +166,8 @@ def test_plot_fitted_demography(files):
         popt=pytest.fs2d_demo_popt,
         projections=None,
         nomisid=True,
+        cov_args=[],
+        cov_inbreeding=[],
         output="tests/test_results/plot_plot_fitted_demography_2d_no_proj.png",
         vmin=1e-3,
         resid_range=3,
@@ -171,7 +179,23 @@ def test_plot_fitted_demography(files):
         popt=pytest.fs3d_popt,
         projections=None,
         nomisid=False,
+        cov_args=[],
+        cov_inbreeding=[],
         output="tests/test_results/plot_plot_fitted_demography_3d_no_proj.png",
+        vmin=1e-3,
+        resid_range=3,
+        show=False,
+    )
+    # Test LowPass
+    plot_fitted_demography(
+        fs="tests/example_data/LowPass-files/cov.fs",
+        func=dadi.Demographics2D.split_mig,
+        popt=pytest.fs2d_demo_popt,
+        projections=None,
+        nomisid=True,
+        cov_args=[pickle.load(open("./tests/example_data/LowPass-files/cov.fs.coverage.pickle", 'rb')), 20, 20],
+        cov_inbreeding=[],
+        output="tests/test_results/plot_plot_low-pass_demography.png",
         vmin=1e-3,
         resid_range=3,
         show=False,
@@ -189,12 +213,30 @@ def test_plot_fitted_dfe(files):
         pdf="lognormal",
         pdf2="biv_lognormal",
         nomisid=True,
+        cov_args=[],
+        cov_inbreeding=[],
         output="tests/test_results/plot_fitted_dfe_mixture_w_proj.png",
         vmin=1e-3,
         resid_range=3,
         show=False,
     )
-
+    # Test LowPass
+    plot_fitted_dfe(
+        fs="tests/example_data/LowPass-files/cov.fs",
+        cache1d=pytest.fs2d_cache1d,
+        cache2d=pytest.fs2d_cache2d,
+        sele_popt=pytest.fs2d_dfe_popt,
+        projections=[8, 8],
+        pdf="lognormal",
+        pdf2="biv_lognormal",
+        nomisid=True,
+        cov_args=[pickle.load(open("./tests/example_data/LowPass-files/cov.fs.coverage.pickle", 'rb')), 20, 20],
+        cov_inbreeding=[],
+        output="tests/test_results/plot_fitted_dfe_mixture_w_proj.png",
+        vmin=1e-3,
+        resid_range=3,
+        show=False,
+    )
 
 def test_plot_mut_prop(files):
     plot_mut_prop(

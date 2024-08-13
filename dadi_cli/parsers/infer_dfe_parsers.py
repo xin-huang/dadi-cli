@@ -220,7 +220,7 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
 
         if args.work_queue:
             try:
-                import work_queue as wq
+                import ndcctools.work_queue as wq
             except ModuleNotFoundError:
                 raise ValueError("Work Queue could not be loaded.")
 
