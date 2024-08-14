@@ -170,7 +170,7 @@ def plot_fitted_demography(
 
     """
 
-    popt, _, param_names = get_opts_and_theta(popt, gen_plot=True)
+    popt, _, param_names = get_opts_and_theta(popt, post_infer=True)
     fs = dadi.Spectrum.from_file(fs)
     if param_names[-2] == 'misid':
         func = dadi.Numerics.make_anc_state_misid_func(func)
@@ -270,7 +270,7 @@ def plot_fitted_dfe(
         If comparison with more than three populations.
 
     """
-    sele_popt, theta, param_names = get_opts_and_theta(sele_popt, gen_plot=True)
+    sele_popt, theta, param_names = get_opts_and_theta(sele_popt, post_infer=True)
 
     fs = dadi.Spectrum.from_file(fs)
 
