@@ -134,7 +134,6 @@ def plot_fitted_demography(
     func: callable, 
     popt: str, 
     projections: list[int], 
-    nomisid: bool, 
     cov_args: list,
     cov_inbreeding: list,
     output: str, 
@@ -155,8 +154,6 @@ def plot_fitted_demography(
         Path to the file containing the best-fit parameters for the demographic model.
     projections : list[int]
         List of integers representing the sample sizes after projection, used to adjust the plots.
-    nomisid : bool
-        If True, ancestral state misidentification is considered in the modeling; if False, it is not.
     output : str
         Path where the comparison plot will be saved. The file format is inferred from the file extension.
     vmin : float
@@ -173,10 +170,9 @@ def plot_fitted_demography(
 
     """
 
-    popt, _ = get_opts_and_theta(popt)
-
+    popt, _, param_names = get_opts_and_theta(popt, gen_plot=True)
     fs = dadi.Spectrum.from_file(fs)
-    if not nomisid:
+    if param_names[-2] == 'misid':
         func = dadi.Numerics.make_anc_state_misid_func(func)
     func_ex = dadi.Numerics.make_extrap_func(func)
     ns = fs.sample_sizes
@@ -233,7 +229,6 @@ def plot_fitted_dfe(
     projections: list[int],
     pdf: str,
     pdf2: str,
-    nomisid: bool,
     cov_args: list,
     cov_inbreeding: list,
     output: str,
@@ -260,8 +255,6 @@ def plot_fitted_dfe(
         Name of the 1D probability density function file for modeling the DFE.
     pdf2 : str
         Name of the 2D probability density function file for modeling the DFE.
-    nomisid : bool
-        If True, includes ancestral state misidentification in the modeling; if False, it does not.
     output : str
         Path where the comparison plot will be saved. The file format is inferred from the file extension.
     vmin : float
@@ -277,7 +270,7 @@ def plot_fitted_dfe(
         If comparison with more than three populations.
 
     """
-    sele_popt, theta = get_opts_and_theta(sele_popt)
+    sele_popt, theta, param_names = get_opts_and_theta(sele_popt, gen_plot=True)
 
     fs = dadi.Spectrum.from_file(fs)
 
@@ -300,8 +293,9 @@ def plot_fitted_dfe(
     if (cache1d != None) and (cache2d != None):
         func = dadi.DFE.mixture
 
-    if not nomisid:
+    if param_names[-2] == 'misid':
         func = dadi.Numerics.make_anc_state_misid_func(func)
+
     if cov_args != []:
         try:
             from dadi.LowPass.LowPass import make_low_pass_func_GATK_multisample as func_cov

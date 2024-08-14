@@ -43,8 +43,6 @@ def _run_plot(args: argparse.Namespace) -> None:
             Range of residuals for plotting.
         - projections : tuple, optional
             Projections for frequency spectrum summarization.
-        - nomisid : bool, optional
-            Whether misidentification corrections are to be considered.
         - cov_args : list
             Dictionary that contains the data dictionary with coverage information 
             and total number of sample sequenced in each population for coverage correction.
@@ -105,7 +103,6 @@ def _run_plot(args: argparse.Namespace) -> None:
             cache2d=args.cache2d,
             pdf=args.pdf1d,
             pdf2=args.pdf2d,
-            nomisid=args.nomisid,
             cov_args=args.cov_args,
             cov_inbreeding=args.cov_inbreeding,
             sele_popt=args.dfe_popt,
@@ -125,7 +122,6 @@ def _run_plot(args: argparse.Namespace) -> None:
             popt=args.demo_popt,
             vmin=args.vmin,
             projections=args.projections,
-            nomisid=args.nomisid,
             cov_args=args.cov_args,
             cov_inbreeding=args.cov_inbreeding,
             resid_range=args.resid_range,
@@ -179,7 +175,6 @@ def add_plot_parsers(subparsers: argparse.ArgumentParser) -> None:
     add_popt_argument(parser)
     add_model_argument(parser)
     add_dfe_argument(parser)
-    add_misid_argument(parser)
     add_coverage_model_argument(parser)
     add_output_argument(parser)
     parser.add_argument(
