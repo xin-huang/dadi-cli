@@ -4,6 +4,7 @@ import pytest
 import textwrap
 from dadi_cli.Models import *
 from inspect import isfunction, getmembers
+from importlib.metadata import version
 
 
 # Define varibles to hold list of all dadi model names and functions
