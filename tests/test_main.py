@@ -629,7 +629,6 @@ def plot_args():
     pytest.dfe_popt = "tests/example_data/example.split_mig.dfe.lognormal_mixture.params.InferDFE.bestfits"
     pytest.cache1d = "tests/example_data/cache_split_mig_1d.bpkl"
     pytest.cache2d = "tests/example_data/cache_split_mig_2d.bpkl"
-    pytest.nomisid = True
     pytest.vmin = 1e-3
     pytest.resid_range = 10
     pytest.projections = None
