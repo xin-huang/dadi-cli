@@ -17,7 +17,6 @@ def godambe_stat_demograpy(
     bootstrap_dir: str, 
     demo_popt: str, 
     fixed_params: list[Optional[float]], 
-    nomisid: bool, 
     logscale: bool, 
     eps_l: list[float],
 ) -> None:
@@ -41,8 +40,6 @@ def godambe_stat_demograpy(
         Path to the file containing the best-fit demographic parameters.
     fixed_params : list[Optional[float]]
         List of fixed parameters where `None` indicates parameters to be inferred.
-    nomisid : bool
-        If False, includes modeling of ancestral state misidentification.
     logscale : bool
         If True, statistics are calculated on a logarithmic scale.
     eps_l : list[float]
@@ -52,7 +49,7 @@ def godambe_stat_demograpy(
     # We want the best fits from the demograpic fit.
     # We set the second argument to true, since we want
     # all the parameters from the file.
-    demo_popt, _ = get_opts_and_theta(demo_popt)
+    demo_popt, _, param_names = get_opts_and_theta(demo_popt, post_infer=True)
     fixed_params = convert_to_None(fixed_params, len(demo_popt))
     free_params = _free_params(demo_popt, fixed_params)
     fs = dadi.Spectrum.from_file(fs)
@@ -62,7 +59,7 @@ def godambe_stat_demograpy(
         boot_fs = dadi.Spectrum.from_file(f)
         all_boot.append(boot_fs)
 
-    if not nomisid:
+    if param_names[-2] == 'misid':
         func = dadi.Numerics.make_anc_state_misid_func(func)
 
     func_ex = dadi.Numerics.make_extrap_func(func)
@@ -126,7 +123,6 @@ def godambe_stat_dfe(
     bootstrap_non_dir: str,
     dfe_popt: str,
     fixed_params: list[Optional[float]],
-    nomisid: bool,
     logscale: bool,
     eps_l: list[float],
 ) -> None:
@@ -155,8 +151,6 @@ def godambe_stat_dfe(
         Path to the file containing the best-fit DFE parameters.
     fixed_params : list[Optional[float]]
         List of fixed parameters where `None` indicates parameters to be inferred.
-    nomisid : bool
-        If False, includes a parameter for modeling ancestral state misidentification.
     logscale : bool
         If True, calculations are done on a logarithmic scale.
     eps_l : list[float]
@@ -171,7 +165,7 @@ def godambe_stat_dfe(
     if not cache1d and not cache2d:
         raise ValueError("At least one of cache1d or cache2d must be provided.")
 
-    dfe_popt, theta = get_opts_and_theta(dfe_popt)
+    dfe_popt, theta, param_names = get_opts_and_theta(dfe_popt, post_infer=True)
     fixed_params = convert_to_None(fixed_params, len(dfe_popt))
     free_params = _free_params(dfe_popt, fixed_params)
 
@@ -203,7 +197,7 @@ def godambe_stat_dfe(
 
     if (cache1d is not None) and (cache2d is not None):
         mfunc = dadi.DFE.mixture
-        if not nomisid:
+        if param_names[-2] == 'misid':
             mfunc = dadi.Numerics.make_anc_state_misid_func(mfunc)
 
         def func(free_params, ns, pts):
@@ -224,7 +218,7 @@ def godambe_stat_dfe(
             )
 
     elif (cache1d is not None) or (cache2d is not None):
-        if not nomisid:
+        if param_names[-2] == 'misid':
             sfunc = dadi.Numerics.make_anc_state_misid_func(sfunc)
 
         def func(free_params, ns, pts):

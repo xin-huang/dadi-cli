@@ -13,6 +13,8 @@ def infer_demography(
     lower_bounds: list[float],
     fixed_params: list[float],
     misid: bool,
+    cov_args: list,
+    cov_inbreeding: list,
     cuda: bool,
     maxeval: int,
     maxtime: int,
@@ -82,6 +84,20 @@ def infer_demography(
         func = dadi.Numerics.make_anc_state_misid_func(func)
 
     func_ex = dadi.Numerics.make_extrap_func(func)
+
+    if cov_args != []:
+        try:
+            from dadi.LowPass.LowPass import make_low_pass_func_GATK_multisample as func_cov
+        except ModuleNotFoundError:
+            raise ImportError("ERROR:\nCurrent dadi version does not support coverage model\n")
+        nseq = [int(ele) for ele in cov_args[1:]]
+        if cov_inbreeding == []:
+            Fx = None
+        else:
+            Fx = cov_inbreeding
+
+        func_ex = func_cov(func_ex, cov_args[0], fs.pop_ids, nseq, fs.sample_sizes, Fx=Fx)
+
     p0_len = len(p0)
     lower_bounds = convert_to_None(lower_bounds, p0_len)
     upper_bounds = convert_to_None(upper_bounds, p0_len)
@@ -131,6 +147,8 @@ def infer_global_opt(
     lower_bounds: list[float],
     fixed_params: list[float],
     misid: bool,
+    cov_args: list,
+    cov_inbreeding: list,
     cuda: bool,
     maxeval: int,
     maxtime: int,
@@ -190,6 +208,20 @@ def infer_global_opt(
         func = dadi.Numerics.make_anc_state_misid_func(func)
 
     func_ex = dadi.Numerics.make_extrap_func(func)
+
+    if cov_args != []:
+        try:
+            from dadi.LowPass.LowPass import make_low_pass_func_GATK_multisample as func_cov
+            import pickle
+        except ModuleNotFoundError:
+            raise ImportError("ERROR:\nCurrent dadi version does not support coverage model\n")
+        nseq = [int(ele) for ele in cov_args[1:]]
+        if cov_inbreeding == []:
+            Fx = None
+        else:
+            Fx = cov_inbreeding
+
+        func_ex = func_cov(func_ex, cov_args[0], fs.pop_ids, nseq, fs.sample_sizes, Fx=Fx)
 
     p0_len = len(p0)
     lower_bounds = convert_to_None(lower_bounds, p0_len)

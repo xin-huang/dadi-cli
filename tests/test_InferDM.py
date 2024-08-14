@@ -37,6 +37,8 @@ def test_infer_demography_code():
     lower_bounds = [1e-3, 1e-3]
     fixed_params = -1
     misid = False
+    cov_args = []
+    cov_inbreeding = []
     cuda = False
     maxeval = 100
     maxtime = 300
@@ -49,6 +51,39 @@ def test_infer_demography_code():
         lower_bounds,
         fixed_params,
         misid,
+        cov_args,
+        cov_inbreeding,
+        cuda,
+        maxeval,
+        maxtime,
+    )
+
+def test_infer_coverage_model_code():
+    import pickle
+    fs = dadi.Spectrum.from_file("./tests/example_data/LowPass-files/cov.fs")
+    func = dadi.Demographics2D.split_mig
+    p0 = [1, 1, 0.1, 1, 0.01]
+    pts_l = [120, 140, 160]
+    upper_bounds = [10, 10, 10, 10, 1]
+    lower_bounds = [1e-3, 1e-3, 1e-3, 1e-3, 1e-3]
+    fixed_params = -1
+    misid = True
+    cov_args = [pickle.load(open("./tests/example_data/LowPass-files/cov.fs.coverage.pickle", 'rb')), 20, 20]
+    cov_inbreeding = []
+    cuda = False
+    maxeval = 10
+    maxtime = 30
+    infer_demography(
+        fs,
+        func,
+        p0,
+        pts_l,
+        upper_bounds,
+        lower_bounds,
+        fixed_params,
+        misid,
+        cov_args,
+        cov_inbreeding,
         cuda,
         maxeval,
         maxtime,
@@ -63,6 +98,8 @@ def test_infer_custom_demography_code():
     lower_bounds = [1e-3, 1e-3]
     fixed_params = -1
     misid = False
+    cov_args = []
+    cov_inbreeding = []
     cuda = False
     maxeval = 100
     maxtime = 300
@@ -75,6 +112,8 @@ def test_infer_custom_demography_code():
         lower_bounds,
         fixed_params,
         misid,
+        cov_args,
+        cov_inbreeding,
         cuda,
         maxeval,
         maxtime,
@@ -89,6 +128,8 @@ def test_infer_global_opt_code():
     lower_bounds = [1e-3, 1e-3]
     fixed_params = -1
     misid = False
+    cov_args = []
+    cov_inbreeding = []
     cuda = False
     maxeval = 100
     maxtime = 300
@@ -102,6 +143,8 @@ def test_infer_global_opt_code():
         lower_bounds,
         fixed_params,
         misid,
+        cov_args,
+        cov_inbreeding,
         cuda,
         maxeval,
         maxtime,

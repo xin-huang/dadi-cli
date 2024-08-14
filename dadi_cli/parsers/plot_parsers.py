@@ -43,8 +43,11 @@ def _run_plot(args: argparse.Namespace) -> None:
             Range of residuals for plotting.
         - projections : tuple, optional
             Projections for frequency spectrum summarization.
-        - nomisid : bool, optional
-            Whether misidentification corrections are to be considered.
+        - cov_args : list
+            Dictionary that contains the data dictionary with coverage information 
+            and total number of sample sequenced in each population for coverage correction.
+        - cov_inbreeding : list
+            Inbreeding parameter for each population from 0 to 1, see dadi manual for more information.
         - interactive: bool, optional
             Whether displaying the plot in an interactive window.
 
@@ -82,6 +85,10 @@ def _run_plot(args: argparse.Namespace) -> None:
 
     make_dir(args.output)
 
+    if args.cov_args != []:
+        import pickle
+        args.cov_args[0] = pickle.load(open(args.cov_args[0], 'rb'))
+
     if args.fs is None:
         plot_mut_prop(
             pdf=args.pdf1d,
@@ -96,7 +103,8 @@ def _run_plot(args: argparse.Namespace) -> None:
             cache2d=args.cache2d,
             pdf=args.pdf1d,
             pdf2=args.pdf2d,
-            nomisid=args.nomisid,
+            cov_args=args.cov_args,
+            cov_inbreeding=args.cov_inbreeding,
             sele_popt=args.dfe_popt,
             vmin=args.vmin,
             resid_range=args.resid_range,
@@ -114,7 +122,8 @@ def _run_plot(args: argparse.Namespace) -> None:
             popt=args.demo_popt,
             vmin=args.vmin,
             projections=args.projections,
-            nomisid=args.nomisid,
+            cov_args=args.cov_args,
+            cov_inbreeding=args.cov_inbreeding,
             resid_range=args.resid_range,
             output=args.output,
             show=args.interactive,
@@ -166,7 +175,7 @@ def add_plot_parsers(subparsers: argparse.ArgumentParser) -> None:
     add_popt_argument(parser)
     add_model_argument(parser)
     add_dfe_argument(parser)
-    add_misid_argument(parser)
+    add_coverage_model_argument(parser)
     add_output_argument(parser)
     parser.add_argument(
         "--projections", type=int, nargs="+", help="Sample sizes after projection."

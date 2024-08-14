@@ -45,8 +45,9 @@ def test_run_generate_fs():
     gen_fs_args.projections = [216, 198]
     gen_fs_args.polarized = True
     gen_fs_args.marginalize_pops = None
-    gen_fs_args.subsample = False
+    gen_fs_args.subsample = []
     gen_fs_args.mask_shared = False
+    gen_fs_args.calc_coverage = False
     gen_fs_args.mask = False
 
     _run_generate_fs(gen_fs_args)
@@ -54,7 +55,15 @@ def test_run_generate_fs():
     _run_generate_fs(gen_fs_args)
     gen_fs_args.mask_shared = True
     _run_generate_fs(gen_fs_args)
+    # Test LowPass
+    gen_fs_args.vcf = "tests/example_data/LowPass-files/cov_gatk_Replicate_8_filtered_2D-GT-update.vcf"
+    gen_fs_args.pop_info = "tests/example_data/LowPass-files/cov_popfile_2D.txt"
+    gen_fs_args.pop_ids = ["pop1", "pop2"]
+    gen_fs_args.polarized = False
+    gen_fs_args.calc_coverage = True
+    _run_generate_fs(gen_fs_args)
     os.remove(gen_fs_args.output)
+    os.remove(gen_fs_args.output+".coverage.pickle")
 
 
 def test_run_simulate_dm():
@@ -207,6 +216,8 @@ def infer_dm_args():
     pytest.lbounds = [1e-3, 1e-3]
     pytest.constants = -1
     pytest.nomisid = True
+    pytest.cov_args = []
+    pytest.cov_inbreeding = []
     pytest.cuda = False
     pytest.maxeval = 200
     pytest.maxtime = 200
@@ -285,6 +296,19 @@ def test_run_infer_dm_misid(infer_dm_args):
     for ele in glob.glob(pytest.output_prefix+"*"):
         os.remove(ele)
 
+# Test LowPass
+def test_run_infer_dm_lowpass(infer_dm_args):
+    pytest.cov_args = ["tests/example_data/LowPass-files/cov.fs.coverage.pickle", 20, 20]
+    pytest.fs = "tests/example_data/LowPass-files/cov.fs"
+    pytest.model = "split_mig"
+    pytest.model_file = None
+    pytest.output_prefix = "tests/test_results/main.test.split_mig.demo_lowpass.params"
+    pytest.p0 = [1, 1, 0.1, 1]
+    pytest.ubounds = [10, 10, 1, 10]
+    pytest.lbounds = [1e-3, 1e-3, 1e-3, 1e-3]
+    _run_infer_dm(pytest)
+    for ele in glob.glob(pytest.output_prefix+"*"):
+        os.remove(ele)
 
 def test_run_infer_dm_global_bestfit(infer_dm_args):
     pytest.global_optimization = True
@@ -348,6 +372,8 @@ def infer_dfe_args():
     pytest.lbounds = [1e-3, 1e-3]
     pytest.constants = -1
     pytest.nomisid = True
+    pytest.cov_args = []
+    pytest.cov_inbreeding = []
     pytest.cuda = False
     pytest.maxeval = 100
     pytest.maxtime = 300
@@ -481,6 +507,22 @@ def test_run_infer_dfe_mix_html(infer_dfe_args):
         os.remove(fi)
 
 
+# Test LowPass
+@pytest.mark.skip(reason="Finish later")
+def test_run_infer_dfe_lowpass(infer_dm_args):
+    pytest.cov_args = ["tests/example_data/LowPass-files/cov.fs.coverage.pickle", 20, 20]
+    pytest.fs = "tests/example_data/LowPass-files/cov.fs"
+    # pytest.model = "split_mig"
+    # pytest.model_file = None
+    pytest.output_prefix = "tests/test_results/main.test.split_mig.dfe_lowpass.params"
+    # pytest.p0 = [1, 1, 0.1, 1]
+    # pytest.ubounds = [10, 10, 1, 10]
+    # pytest.lbounds = [1e-3, 1e-3, 1e-3, 1e-3]
+    _run_infer_dfe(pytest)
+    for ele in glob.glob(pytest.output_prefix+"*"):
+        os.remove(ele)
+
+
 # May want third top_tops test to make sure log-likelihood sorted, but that would require changing the function
 def test_top_opts_error():
     filename = "tests/example_data/_top_opts_test_files/top_opts.empty.txt"
@@ -587,7 +629,6 @@ def plot_args():
     pytest.dfe_popt = "tests/example_data/example.split_mig.dfe.lognormal_mixture.params.InferDFE.bestfits"
     pytest.cache1d = "tests/example_data/cache_split_mig_1d.bpkl"
     pytest.cache2d = "tests/example_data/cache_split_mig_2d.bpkl"
-    pytest.nomisid = True
     pytest.vmin = 1e-3
     pytest.resid_range = 10
     pytest.projections = None

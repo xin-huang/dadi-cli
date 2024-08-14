@@ -1,5 +1,4 @@
 import dadi, random
-from cyvcf2 import VCF
 
 
 def generate_fs(
@@ -8,12 +7,13 @@ def generate_fs(
     pop_ids: list[str],
     pop_info: str,
     projections: list[int],
-    subsample: bool,
+    subsample: list[int],
     polarized: bool,
     marginalize_pops: list[str],
     bootstrap: int,
     chunk_size: int,
     masking: str,
+    calc_coverage: bool,
     seed: int,
 ) -> None:
     """
@@ -31,8 +31,9 @@ def generate_fs(
         Name of the file containing population information.
     projections : list[int]
         List of sample sizes after projection.
-    subsample : bool
-        If True, spectrum is generated with sub-samples; otherwise, spectrum is generated with all samples.
+    subsample : list
+        If filled, spectrum is generated based on number of requested sub-sampled individuals for each population; 
+        otherwise, spectrum is generated with all samples.
     polarized : bool
         If True, unfolded spectrum is generated; otherwise, folded spectrum is generated.
     marginalize_pops : list[str]
@@ -46,6 +47,8 @@ def generate_fs(
         'singleton' - Masks singletons in each population,
         'shared' - Masks singletons in each population and those shared across populations,
         '' - No masking is applied.
+    calc_coverage : bool
+        If True, a data dictionary with coverage information is generated as <output>.coverage.pickle.
     seed : int
         Seed for generating random numbers. If None, a random seed is used.
 
@@ -56,25 +59,44 @@ def generate_fs(
         If the VCF file does not contain the AA INFO field and `polarized` is True.
 
     """
+
+    if polarized:
+        try:
+            from cyvcf2 import VCF
+            if not VCF(vcf).contains('AA'):
+                raise ValueError(
+                    f'The AA (Ancestral allele) INFO field cannot be found in the header of {vcf}, ' +
+                    'but an unfolded frequency spectrum is requested.'
+                )
+        except ModuleNotFoundError:
+            print("Unable to load cyvcf2 and check if ancestral alleles are in provided VCF.\n"+
+                  "Generated FS may be empty if ancestral allele not found.")
+        except ImportError:
+            print("Error importing cyvcf2")
+
+    if subsample != []:
+        subsample_dict = {}
+        for i in range(len(pop_ids)):
+            subsample_dict[pop_ids[i]] = subsample[i]
+        # dadi will store the number of chromosomes in ploidy
+        dd, ploidy = dadi.Misc.make_data_dict_vcf(
+            vcf_filename=vcf, popinfo_filename=pop_info, subsample=subsample_dict, calc_coverage=calc_coverage, extract_ploidy=True
+        )
+        # multiply number of individuals subsamples by the ploidy to get sample size
+        projections = [individuals*ploidy for individuals in subsample]
+        print(projections, ploidy, subsample)
+    else:
+        dd = dadi.Misc.make_data_dict_vcf(vcf_filename=vcf, popinfo_filename=pop_info, calc_coverage=calc_coverage)
+
+    # Moved this lower, since using subsamples make projections not required
     if len(pop_ids) != len(projections):
         raise ValueError("The lengths of `pop_ids` and `projections` must match.")
 
-    if polarized:
-        if not VCF(vcf).contains('AA'):
-            raise ValueError(
-                f'The AA (Ancestral allele) INFO field cannot be found in the header of {vcf}, ' +
-                'but an unfolded frequency spectrum is requested.'
-            )
-
-    if subsample:
-        subsample_dict = {}
-        for i in range(len(pop_ids)):
-            subsample_dict[pop_ids[i]] = projections[i]
-        dd = dadi.Misc.make_data_dict_vcf(
-            vcf_filename=vcf, popinfo_filename=pop_info, subsample=subsample_dict
-        )
-    else:
-        dd = dadi.Misc.make_data_dict_vcf(vcf_filename=vcf, popinfo_filename=pop_info)
+    if calc_coverage:    
+        import pickle
+        coverage_dd = {chrom_pos:{'coverage':dd[chrom_pos]['coverage']} for chrom_pos in dd}
+        print(f"\nSaving coverage dictionary in pickle named:\n{output}.coverage.pickle\n")
+        pickle.dump(coverage_dd, open(f"{output}.coverage.pickle","wb"))
 
     if bootstrap is None:
         fs = dadi.Spectrum.from_data_dict(

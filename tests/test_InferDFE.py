@@ -28,6 +28,8 @@ def test_infer_dfe_code():
     lower_bounds = [1e-3, 1e-3]
     fixed_params = -1
     misid = False
+    cov_args = []
+    cov_inbreeding = []
     cuda = False
     maxeval = 100
     maxtime = 300
@@ -43,6 +45,8 @@ def test_infer_dfe_code():
         lower_bounds,
         fixed_params,
         misid,
+        cov_args,
+        cov_inbreeding,
         cuda,
         maxeval,
         maxtime,
@@ -61,6 +65,8 @@ def test_infer_dfe_code():
             lower_bounds=lower_bounds,
             fixed_params=fixed_params,
             misid=misid,
+            cov_args=cov_args,
+            cov_inbreeding=cov_inbreeding,
             cuda=cuda,
             maxeval=maxeval,
             maxtime=maxtime,
@@ -68,6 +74,41 @@ def test_infer_dfe_code():
 
     assert "At least one of cache1d or cache2d must be provided." in str(excinfo.value)
 
+def test_infer_coverage_model_dfe_code():
+    fs = dadi.Spectrum.from_file("./tests/example_data/LowPass-files/cov.fs")
+    cache1d = pickle.load(open("./tests/example_data/cache_split_mig_1d.bpkl", "rb"))
+    cache2d = None
+    sele_dist = "lognormal"
+    sele_dist2 = None
+    theta = 1000 * 2.31
+    p0 = [1, 1]
+    upper_bounds = [10, 10]
+    lower_bounds = [1e-3, 1e-3]
+    fixed_params = -1
+    misid = False
+    cov_args = [pickle.load(open("./tests/example_data/LowPass-files/cov.fs.coverage.pickle", 'rb')), 20, 20]
+    cov_inbreeding = []
+    cuda = False
+    maxeval = 100
+    maxtime = 300
+    infer_dfe(
+        fs,
+        cache1d,
+        cache2d,
+        sele_dist,
+        sele_dist2,
+        theta,
+        p0,
+        upper_bounds,
+        lower_bounds,
+        fixed_params,
+        misid,
+        cov_args,
+        cov_inbreeding,
+        cuda,
+        maxeval,
+        maxtime,
+    )
 
 @pytest.mark.skip()
 def test_InferDFE_bash(capsys):
@@ -142,7 +183,7 @@ def test_InferDFE_seed(capsys):
         + " --pdf1d lognormal --ratio 2.31 "
         + "--p0 1 1 --ubounds 10 10 --lbounds 10e-3 10e-3 --nomisid "
         + "--output-prefix ./tests/test_results/example.two_epoch.dfe.seeded.params "
-        + "--seed 12345 --optimizations "
+        + "--seed 12345 --cpus 3 --optimizations "
         + str(optimizations),
         shell=True,
     )
@@ -154,7 +195,7 @@ def test_InferDFE_seed(capsys):
         + " --pdf1d lognormal --ratio 2.31 "
         + "--p0 1 1 --ubounds 10 10 --lbounds 10e-3 10e-3 --nomisid "
         + "--output-prefix ./tests/test_results/example.two_epoch.dfe.seeded.params "
-        + "--seed 12345 --optimizations "
+        + "--seed 12345 --cpus 3 --optimizations "
         + str(optimizations),
         shell=True,
     )

@@ -26,8 +26,6 @@ def _run_stat_demography(args: argparse.Namespace) -> None:
             Directory containing bootstrap resamples used for estimating parameter variance.
         - grids : list of int
             List of grid sizes used in the demographic analysis for numerical accuracy.
-        - nomisid : bool
-            Flag indicating whether to consider misidentification errors.
         - demo_popt : str
             Path to the file containing optimized parameter values for the demographic model.
         - constants : list
@@ -74,7 +72,6 @@ def _run_stat_demography(args: argparse.Namespace) -> None:
         func=func,
         bootstrap_dir=args.bootstrapping_dir,
         grids=args.grids,
-        nomisid=args.nomisid,
         demo_popt=args.demo_popt,
         fixed_params=args.constants,
         logscale=args.logscale,
@@ -103,7 +100,6 @@ def add_stat_dm_parsers(subparsers: argparse.ArgumentParser) -> None:
     add_fs_argument(parser)
     add_model_argument(parser)
     add_grids_argument(parser)
-    add_misid_argument(parser)
     add_output_argument(parser)
     add_constant_argument(parser)
     add_eps_argument(parser)

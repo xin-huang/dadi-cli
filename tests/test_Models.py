@@ -32,6 +32,7 @@ def test_get_built_in_model(model_list):
     assert str(e_info.value) == "Cannot find model: haha."
 
 
+@pytest.mark.skipif(version('dadi') <= '2.3.6', reason="Older version of dadi has extra redundant model names that have been removed.")
 def test_print_built_in_models(capfd, model_list):
     print_built_in_models()
     out, err = capfd.readouterr()

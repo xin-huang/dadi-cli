@@ -1,5 +1,4 @@
 import argparse, glob, pickle, os, random, sys, time, warnings
-import work_queue as wq
 from multiprocessing import Process, Queue
 from dadi_cli.parsers.common_arguments import *
 from dadi_cli.parsers.argument_validation import *
@@ -72,6 +71,11 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
             Path or URL to the file with best fit parameters.
         - nomisid : bool
             Flag to indicate that misidentification should not be considered.
+        - cov_args : list
+            Dictionary that contains the data dictionary with coverage information 
+            and total number of sample sequenced in each population for coverage correction.
+        - cov_inbreeding : list
+            Inbreeding parameter for each population from 0 to 1, see dadi manual for more information.
         - mix_pdf : str or None
             The mixed PDF model if applicable.
 
@@ -87,6 +91,9 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
     fs = dadi.Spectrum.from_file(args.fs)
     # Due to development history, much of the code expects a args.misid variable, so create it.
     args.misid = not (fs.folded or args.nomisid)
+
+    if args.cov_args != []:
+        args.cov_args[0] = pickle.load(open(args.cov_args[0], 'rb'))
 
     make_dir(args.output_prefix)
 
@@ -110,7 +117,7 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
                     )
 
     if args.p0 == -1:
-        args.p0 = _calc_p0_from_bounds(args.lbounds, args.ubounds)
+        args.p0 = calc_p0_from_bounds(args.lbounds, args.ubounds)
 
 
     if "://" in args.demo_popt:
@@ -171,7 +178,7 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
                 _, param_names = check_pdf_params(args.p0, pdf, "", args.misid)
 
     param_names = "# Log(likelihood)\t" + "\t".join(param_names)
-    if not args.nomisid:
+    if args.misid:
         param_names += "\tmisid"
     fid.write(param_names + "\ttheta\n")
 
@@ -212,6 +219,10 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
             bestfits = None
 
         if args.work_queue:
+            try:
+                import ndcctools.work_queue as wq
+            except ModuleNotFoundError:
+                raise ValueError("Work Queue could not be loaded.")
 
             if args.debug_wq:
                 q = wq.WorkQueue(name=args.work_queue[0], debug_log="debug.log", port=args.port)
@@ -240,6 +251,8 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
                     args.lbounds,
                     args.constants,
                     args.misid,
+                    args.cov_args,
+                    args.cov_inbreeding,
                     None,
                     args.maxeval,
                     args.maxtime,
@@ -263,6 +276,8 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
                 args.lbounds,
                 args.constants,
                 args.misid,
+                args.cov_args,
+                args.cov_inbreeding,
                 None,
                 args.maxeval,
                 args.maxtime,
@@ -385,6 +400,7 @@ def add_infer_dfe_parsers(subparsers: argparse.ArgumentParser) -> None:
     add_inference_argument(parser)
     add_delta_ll_argument(parser)
     add_misid_argument(parser)
+    add_coverage_model_argument(parser)
     add_constant_argument(parser)
     add_bounds_argument(parser)
     add_seed_argument(parser)

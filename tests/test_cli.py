@@ -467,7 +467,6 @@ def test_plot_args():
     cache2d = "tests/example_data/cache_split_mig_2d.bpkl"
     pdf1d = "lognormal"
     pdf2d = "biv_lognormal"
-    nomisid = True
     output = "tests/test_results/plot_cli_test.png"
     projections = [10, 10]
     resid_range = 3
@@ -495,7 +494,6 @@ def test_plot_args():
             pdf1d,
             "--pdf2d",
             pdf2d,
-            "--nomisid",
             "--output",
             output,
             "--projections",
@@ -518,7 +516,6 @@ def test_plot_args():
     assert args.cache2d == cache2d
     assert args.pdf1d == pdf1d
     assert args.pdf2d == pdf2d
-    assert args.nomisid == nomisid
     assert args.output == output
     assert args.projections == projections
     assert args.resid_range == resid_range
@@ -532,7 +529,6 @@ def test_stat_dm_args():
     fs = "tests/example_data/split_mig_syn.fs"
     model = "split_mig"
     grids = [60, 80, 100]
-    nomisid = False
     output = "tests/test_results/example.cli.split_mig.demo.params.ci"
     constants = -1
     demo_popt = "tests/example_data/example.split_mig.demo.params.InferDM.bestfits"
@@ -562,7 +558,6 @@ def test_stat_dm_args():
     assert args.fs == fs
     assert args.model == model
     assert args.grids == grids
-    assert args.nomisid == nomisid
     assert args.output == output
     assert args.constants == constants
     assert args.demo_popt == demo_popt
@@ -584,7 +579,6 @@ def test_stat_dfe_args():
     bootstrapping_nonsynonymous_dir = "tests/example_data/split_mig_bootstrap_non/bootstrap_non_mix/"
     dfe_popt = "tests/example_data/example.split_mig.dfe.lognormal_mixture.params.with.misid.InferDFE.bestfits"
     constants = [-1, -1, 0, -1, -1]
-    nomisid = False
     logscale = False
 
     args = parser.parse_args(

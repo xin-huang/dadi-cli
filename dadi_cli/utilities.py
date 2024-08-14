@@ -80,7 +80,8 @@ def convert_to_None(
 
 def get_opts_and_theta(
     filename: str, 
-    gen_cache: bool = False
+    gen_cache: bool = False,
+    post_infer: bool = False
 ) -> tuple[list[float], float]:
     """
     Parses a file to obtain optimized parameters and the population-scaled mutation rate (theta).
@@ -135,7 +136,10 @@ def get_opts_and_theta(
     if not is_converged:
         print("No converged optimization results found.")
 
-    return opts, theta
+    if post_infer:
+        return opts, theta, param_names
+    else:
+        return opts, theta
 
 
 # Worker functions for multiprocessing with demography/DFE inference
