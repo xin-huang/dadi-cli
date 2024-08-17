@@ -94,9 +94,10 @@ def generate_fs(
 
     if calc_coverage:    
         import pickle
-        coverage_dd = {chrom_pos:{'coverage':dd[chrom_pos]['coverage']} for chrom_pos in dd}
-        print(f"\nSaving coverage dictionary in pickle named:\n{output}.coverage.pickle\n")
-        pickle.dump(coverage_dd, open(f"{output}.coverage.pickle","wb"))
+        import dadi.LowPass.LowPass as lp
+        cov_dist = lp.compute_cov_dist(dd, pop_ids)
+        print(f"\nSaving coverage distribution data in pickle named:\n{output}.coverage.pickle\n")
+        pickle.dump(cov_dist, open(f"{output}.coverage.pickle","wb"))
 
     if bootstrap is None:
         fs = dadi.Spectrum.from_data_dict(
