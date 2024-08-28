@@ -83,7 +83,7 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
     # Make sure flags are used:
     if args.pdf1d == None and args.pdf2d == None:
         raise ValueError("Require --pdf1d and/or --pdf2d depending on DFE model")
-    if args.cache1d == None and agrs.cache2d == None:
+    if args.cache1d == None and args.cache2d == None:
         raise ValueError("cache1d --pdf1d and/or --cache2d depending on DFE model")
     if "://" in args.fs:
         import urllib.request
