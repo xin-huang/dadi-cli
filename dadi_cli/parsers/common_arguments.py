@@ -39,7 +39,7 @@ def add_bounds_argument(parser: argparse.ArgumentParser) -> None:
 
     parser.add_argument(
         "--lbounds",
-        type=float,
+        type=str,
         nargs="+",
         required=boundary_req,
         help="Lower bounds of the optimized parameters.",
@@ -47,7 +47,7 @@ def add_bounds_argument(parser: argparse.ArgumentParser) -> None:
 
     parser.add_argument(
         "--ubounds",
-        type=float,
+        type=str,
         nargs="+",
         required=boundary_req,
         help="Upper bounds of the optimized parameters.",
@@ -191,7 +191,7 @@ def add_constant_argument(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--constants",
         default=-1,
-        type=float,
+        type=str,
         nargs="+",
         help="Fixed parameters during the inference or using Godambe analysis. Use -1 to indicate a parameter is NOT fixed. Default: None.",
     )

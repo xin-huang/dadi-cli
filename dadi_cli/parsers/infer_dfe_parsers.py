@@ -80,6 +80,11 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
             The mixed PDF model if applicable.
 
     """
+    # Make sure flags are used:
+    if args.pdf1d == None and args.pdf2d == None:
+        raise ValueError("Require --pdf1d and/or --pdf2d depending on DFE model")
+    if args.cache1d == None and agrs.cache2d == None:
+        raise ValueError("cache1d --pdf1d and/or --cache2d depending on DFE model")
     if "://" in args.fs:
         import urllib.request
         sfs_fi = open("sfs.fs","w")
@@ -96,6 +101,9 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
         args.cov_args[0] = pickle.load(open(args.cov_args[0], 'rb'))
 
     make_dir(args.output_prefix)
+
+    # Converts str to float and None string to None value
+    args.lbounds, args.ubounds, args.constants = convert_bounds_and_constants(args.lbounds, args.ubounds, args.constants)
 
     # # Things need to be updated for these to work
     if None not in [args.pdf1d, args.pdf2d]:

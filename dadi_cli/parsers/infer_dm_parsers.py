@@ -91,6 +91,9 @@ def _run_infer_dm(args: argparse.Namespace) -> None:
 
     make_dir(args.output_prefix)
 
+    # Converts str to float and None string to None value
+    args.lbounds, args.ubounds, args.constants = convert_bounds_and_constants(args.lbounds, args.ubounds, args.constants)
+
     if args.cov_args != []:
         import pickle
         args.cov_args[0] = pickle.load(open(args.cov_args[0], 'rb'))

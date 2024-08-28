@@ -1,6 +1,7 @@
 import dadi, multiprocessing
 import numpy as np
 from typing import Optional
+import ast
 
 
 def pts_l_func(
@@ -77,6 +78,27 @@ def convert_to_None(
     )
     return inference_input
 
+
+def convert_bounds_and_constants(lbounds, ubounds, constants):
+    if lbounds != None:
+        try:
+            lbounds = [ast.literal_eval(ele) for ele in lbounds]
+        except ValueError:
+            raise ValueError("--lbounds must be int, float, or None")
+
+    if ubounds != None:
+        try:
+            ubounds = [ast.literal_eval(ele) for ele in ubounds]
+        except ValueError:
+            raise ValueError("--ubounds must be int, float, or None")
+
+    if constants != -1:
+        try:
+            constants = [ast.literal_eval(ele) for ele in constants]
+        except ValueError:
+            raise ValueError("--constants must be int, float, or None")
+
+    return lbounds, ubounds, constants
 
 def get_opts_and_theta(
     filename: str, 

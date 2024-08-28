@@ -99,9 +99,8 @@ def infer_demography(
         func_ex = func_cov(func_ex, cov_args[0], fs.pop_ids, nseq, fs.sample_sizes, Fx=Fx)
 
     p0_len = len(p0)
-    lower_bounds = convert_to_None(lower_bounds, p0_len)
-    upper_bounds = convert_to_None(upper_bounds, p0_len)
-    fixed_params = convert_to_None(fixed_params, p0_len)
+    if fixed_params == -1:
+        fixed_params = convert_to_None(fixed_params, p0_len)
 
     p0 = dadi.Misc.perturb_params(
         p0, fold=1, upper_bound=upper_bounds, lower_bound=lower_bounds
@@ -224,9 +223,8 @@ def infer_global_opt(
         func_ex = func_cov(func_ex, cov_args[0], fs.pop_ids, nseq, fs.sample_sizes, Fx=Fx)
 
     p0_len = len(p0)
-    lower_bounds = convert_to_None(lower_bounds, p0_len)
-    upper_bounds = convert_to_None(upper_bounds, p0_len)
-    fixed_params = convert_to_None(fixed_params, p0_len)
+    if fixed_params == -1:
+        fixed_params = convert_to_None(fixed_params, p0_len)
 
     p0 = dadi.Misc.perturb_params(
         p0, fold=1, upper_bound=upper_bounds, lower_bound=lower_bounds
