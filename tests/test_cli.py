@@ -1,6 +1,6 @@
 import pytest
 import dadi_cli.__main__ as cli
-import os
+import os, ast
 
 
 try:
@@ -310,8 +310,8 @@ def test_infer_dm_args(model, model_file, nomisid):
     assert args.grids == grids
     assert args.nomisid == False
     assert args.constants == -1
-    assert args.lbounds == lbounds
-    assert args.ubounds == ubounds
+    assert [ast.literal_eval(ele) for ele in args.lbounds] == lbounds
+    assert [ast.literal_eval(ele) for ele in args.ubounds] == ubounds
     assert args.global_optimization == True
     assert args.seed == seed
 
@@ -334,9 +334,9 @@ def test_infer_dfe_args():
     pdf_file = False
     p0 = [1, 1, 0, 0.001]
     grids = [120, 140, 160]
-    ubounds = [5, 5, -1, 0.999]
-    lbounds = [1e-4, 1e-4, -1, 1e-4]
-    constants = [-1, -1, 0, -1]
+    ubounds = [5, 5, None, 0.999]
+    lbounds = [1e-4, 1e-4, None, 1e-4]
+    constants = [None, None, 0, None]
     nomisid = True
     cuda = False
     maxeval = 100
@@ -399,11 +399,11 @@ def test_infer_dfe_args():
             str(delta_ll),
             "--nomisid",
             "--constants",
-            "-1", "-1", "0", "-1",
+            "None", "None", "0", "None",
             "--lbounds",
-            "1e-4", "1e-4", "-1", "1e-4",
+            "1e-4", "1e-4", "None", "1e-4",
             "--ubounds",
-            "5", "5", "-1", "0.999",
+            "5", "5", "None", "0.999",
             "--seed",
             str(seed),
         ]
@@ -423,9 +423,9 @@ def test_infer_dfe_args():
     assert args.delta_ll == delta_ll
     assert args.gpus == gpus
     assert args.nomisid == True
-    assert args.constants == constants
-    assert args.lbounds == lbounds
-    assert args.ubounds == ubounds
+    assert [ast.literal_eval(ele) for ele in args.constants] == constants
+    assert [ast.literal_eval(ele) for ele in args.lbounds] == lbounds
+    assert [ast.literal_eval(ele) for ele in args.ubounds] == ubounds
     assert args.seed == seed
     assert args.port == 9123
     assert args.pdf_file == None
@@ -578,7 +578,7 @@ def test_stat_dfe_args():
     bootstrapping_synonymous_dir = "tests/example_data/split_mig_bootstrap_syn/"
     bootstrapping_nonsynonymous_dir = "tests/example_data/split_mig_bootstrap_non/bootstrap_non_mix/"
     dfe_popt = "tests/example_data/example.split_mig.dfe.lognormal_mixture.params.with.misid.InferDFE.bestfits"
-    constants = [-1, -1, 0, -1, -1]
+    constants = [None, None, 0, None, None]
     logscale = False
 
     args = parser.parse_args(
@@ -597,7 +597,7 @@ def test_stat_dfe_args():
             "--output",
             output,
             "--constants",
-            "-1", "-1", "0", "-1", "-1",
+            "None", "None", "0", "None", "None",
             "--dfe-popt",
             dfe_popt,
             "--bootstrapping-synonymous-dir",
@@ -613,7 +613,7 @@ def test_stat_dfe_args():
     assert args.pdf1d ==  pdf1d
     assert args.pdf2d == pdf2d
     assert args.output == output
-    assert args.constants == constants
+    assert [ast.literal_eval(ele) for ele in args.constants] == constants
     assert args.dfe_popt == dfe_popt
     assert args.bootstrapping_syn_dir == bootstrapping_synonymous_dir
     assert args.bootstrapping_non_dir == bootstrapping_nonsynonymous_dir
