@@ -315,6 +315,14 @@ def add_dfe_argument(parser: argparse.ArgumentParser) -> None:
         type=str,
         help="2D probability density function for the joint DFE inference. To check available probability density functions, please use `dadi-cli Pdf`.",
     )
+    parser.add_argument(
+        "--pdf-file",
+        type=existed_file,
+        required=False,
+        dest="pdf_file",
+        help="Name of python probability density function module file (not including .py) that contains custom probability density functions to use. Default: None.",
+    )
+
 
 
 # Currently this command is only needed for param_names.

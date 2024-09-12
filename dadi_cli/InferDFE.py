@@ -13,6 +13,7 @@ def infer_dfe(
     cache2d: dadi.DFE.Cache2D_mod,
     sele_dist: str,
     sele_dist2: str,
+    pdf_file: str,
     theta: float,
     p0: list[float],
     upper_bounds: list[float],
@@ -96,9 +97,9 @@ def infer_dfe(
         func = cache2d.integrate
 
     if sele_dist is not None:
-        sele_dist = get_dadi_pdf(sele_dist)
+        sele_dist, _ = get_dadi_pdf(sele_dist, pdf_file)
     if sele_dist2 is not None:
-        sele_dist2 = get_dadi_pdf(sele_dist2)
+        sele_dist2, _ = get_dadi_pdf(sele_dist2, pdf_file)
     if (sele_dist is None) and (sele_dist2 is not None):
         sele_dist = sele_dist2
 
@@ -125,8 +126,8 @@ def infer_dfe(
         func = func_cov(func, cov_args[0], fs.pop_ids, nseq, fs.sample_sizes, Fx=Fx)
 
     p0_len = len(p0)
-    lower_bounds = convert_to_None(lower_bounds, p0_len)
-    upper_bounds = convert_to_None(upper_bounds, p0_len)
+    # lower_bounds = convert_to_None(lower_bounds, p0_len)
+    # upper_bounds = convert_to_None(upper_bounds, p0_len)
     fixed_params = convert_to_None(fixed_params, p0_len)
 
     # Fit a DFE to the data
