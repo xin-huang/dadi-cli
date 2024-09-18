@@ -229,6 +229,7 @@ def plot_fitted_dfe(
     projections: list[int],
     pdf: str,
     pdf2: str,
+    pdf_file: str,
     cov_args: list,
     cov_inbreeding: list,
     output: str,
@@ -255,6 +256,8 @@ def plot_fitted_dfe(
         Name of the 1D probability density function file for modeling the DFE.
     pdf2 : str
         Name of the 2D probability density function file for modeling the DFE.
+    pdf_file : str
+        Name of file with custom probability density function model(s) in it.
     output : str
         Path where the comparison plot will be saved. The file format is inferred from the file extension.
     vmin : float
@@ -275,9 +278,9 @@ def plot_fitted_dfe(
     fs = dadi.Spectrum.from_file(fs)
 
     if pdf != None:
-        pdf = get_dadi_pdf(pdf)
+        pdf, _ = get_dadi_pdf(pdf, pdf_file)
     if pdf2 != None:
-        pdf2 = get_dadi_pdf(pdf2)
+        pdf2, _ = get_dadi_pdf(pdf2, pdf_file)
         if pdf == None:
             pdf = pdf2
 

@@ -33,6 +33,8 @@ def _run_plot(args: argparse.Namespace) -> None:
             The 1D probability density function name for DFE plotting.
         - pdf2 : str, optional
             The 2D probability density function name for DFE plotting.
+        - pdf_file : str or None
+            Name of file with custom probability density function model(s) in it.
         - cache1d : str, optional
             Path to a cache file for 1D computation.
         - cache2d : str, optional
@@ -103,6 +105,7 @@ def _run_plot(args: argparse.Namespace) -> None:
             cache2d=args.cache2d,
             pdf=args.pdf1d,
             pdf2=args.pdf2d,
+            pdf_file=args.pdf_file,
             cov_args=args.cov_args,
             cov_inbreeding=args.cov_inbreeding,
             sele_popt=args.dfe_popt,

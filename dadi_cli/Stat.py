@@ -118,6 +118,7 @@ def godambe_stat_dfe(
     cache2d: str,
     sele_dist: str,
     sele_dist2: str,
+    pdf_file: str,
     output: str,
     bootstrap_syn_dir: str,
     bootstrap_non_dir: str,
@@ -141,6 +142,8 @@ def godambe_stat_dfe(
         Name of the 1D PDF for modeling DFE.
     sele_dist2 : str
         Name of the 2D PDF for modeling DFE.
+    pdf_file : str
+        Name of file with custom probability density function model(s) in it.
     output : str
         File path for the output results.
     bootstrap_syn_dir : str
@@ -189,9 +192,9 @@ def godambe_stat_dfe(
         sfunc = s2.integrate
 
     if sele_dist2 is not None:
-        sele_dist2 = get_dadi_pdf(sele_dist2)
+        sele_dist2, _ = get_dadi_pdf(sele_dist2, pdf_file)
     if sele_dist is not None:
-        sele_dist = get_dadi_pdf(sele_dist)
+        sele_dist, _ = get_dadi_pdf(sele_dist, pdf_file)
     else:
         sele_dist = sele_dist2
 

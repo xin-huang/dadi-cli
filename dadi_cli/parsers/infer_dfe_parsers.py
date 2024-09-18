@@ -27,8 +27,8 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
             The 1D probability distribution function name.
         - pdf2d : str or None
             The 2D probability distribution function name.
-        - pdf_file : bool
-            Flag indicating whether a custom PDF file is used.
+        - pdf_file : str or None
+            Name of file with custom probability density function model(s) in it.
         - constants : list or int
             List of constants for the PDFs or -1 if not using constants.
         - lbounds : list or None
