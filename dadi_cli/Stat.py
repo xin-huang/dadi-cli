@@ -54,6 +54,8 @@ def godambe_stat_demograpy(
     free_params = _free_params(demo_popt, fixed_params)
     fs = dadi.Spectrum.from_file(fs)
     fs_boot_files = glob.glob(bootstrap_dir + "/*.fs")
+    if fs_boot_files == []:
+        raise ValueError(f"ERROR:\n{bootstrap_dir} is empty\n")
     all_boot = []
     for f in fs_boot_files:
         boot_fs = dadi.Spectrum.from_file(f)
@@ -77,6 +79,8 @@ def godambe_stat_demograpy(
             # The uncertainty for theta is predicted, so we slice the
             # the uncertainties for just the parameters.
             uncerts_adj = uncerts_adj[:-1]
+            # # Add theta into popt
+            # popt +=
 
             f.write(
                 "Estimated 95% uncerts (theta adj), with step size "
