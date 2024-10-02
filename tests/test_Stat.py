@@ -70,6 +70,7 @@ def test_StatDFE_code_mix_lognormal():
     cache2d = "tests/example_data/cache_split_mig_2d.bpkl"
     sele_dist1 = "lognormal"
     sele_dist2 = "biv_lognormal"
+    pdf_file = None
     output = "./tests/test_results/example.split_mig.dfe.mixture_lognormal.params.ci"
     bootstrap_syn_dir = "tests/example_data/split_mig_bootstrap_syn/"
     bootstrap_non_dir = "tests/example_data/split_mig_bootstrap_non/bootstrap_non_mix/"
@@ -83,6 +84,7 @@ def test_StatDFE_code_mix_lognormal():
         cache2d,
         sele_dist1,
         sele_dist2,
+        pdf_file,
         output,
         bootstrap_syn_dir,
         bootstrap_non_dir,
@@ -99,6 +101,7 @@ def test_StatDFE_code_1d_lognormal():
     cache2d = None
     sele_dist1 = "lognormal"
     sele_dist2 = None
+    pdf_file = None
     output = "./tests/test_results/example.split_mig.dfe.1D_lognormal.params.ci"
     bootstrap_syn_dir = "tests/example_data/split_mig_bootstrap_syn/"
     bootstrap_non_dir = "tests/example_data/split_mig_bootstrap_non/bootstrap_non_1d/"
@@ -114,6 +117,7 @@ def test_StatDFE_code_1d_lognormal():
         cache2d,
         sele_dist1,
         sele_dist2,
+        pdf_file,
         output,
         bootstrap_syn_dir,
         bootstrap_non_dir,
@@ -130,6 +134,7 @@ def test_StatDFE_code_2d_lognormal():
     cache2d = "tests/example_data/cache_split_mig_2d.bpkl"
     sele_dist1 = None
     sele_dist2 = "biv_lognormal"
+    pdf_file = None
     output = "./tests/test_results/example.split_mig.dfe.2D_lognormal.params.ci"
     bootstrap_syn_dir = "tests/example_data/split_mig_bootstrap_syn/"
     bootstrap_non_dir = "tests/example_data/split_mig_bootstrap_non/bootstrap_non_2d/"
@@ -145,6 +150,7 @@ def test_StatDFE_code_2d_lognormal():
         cache2d,
         sele_dist1,
         sele_dist2,
+        pdf_file,
         output,
         bootstrap_syn_dir,
         bootstrap_non_dir,

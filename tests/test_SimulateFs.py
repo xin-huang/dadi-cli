@@ -104,6 +104,7 @@ def test_simulate_dfe_code():
     cache2d = pickle.load(open("tests/example_data/cache_split_mig_2d.bpkl", "rb"))
     sele_dist = "lognormal"
     sele_dist2 = "biv_lognormal"
+    pdf_file = None
     theta_ns = 2.31
     misid = False
     output_1d = "tests/test_results/simulate_dfe_split_mig_one_s_lognormal.fs"
@@ -114,20 +115,22 @@ def test_simulate_dfe_code():
     )
 
     # Test 1D
-    simulate_dfe(p0_1d, cache1d, None, sele_dist, None, theta_ns, misid, output_1d)
+    simulate_dfe(p0_1d, cache1d, None, sele_dist, None, pdf_file, theta_ns, misid, output_1d)
     dadi_cli_fs = dadi.Spectrum.from_file(output_1d)
-    dadi_fs = cache1d.integrate(p0_1d, None, get_dadi_pdf(sele_dist), theta_ns)
+    func, _ = get_dadi_pdf(sele_dist, pdf_file)
+    dadi_fs = cache1d.integrate(p0_1d, None, get_dadi_pdf(sele_dist, pdf_file)[0], theta_ns)
     assert np.allclose(dadi_cli_fs, dadi_fs)
 
     # Test 2D
-    simulate_dfe(p0_2d, None, cache2d, None, sele_dist2, theta_ns, misid, output_2d)
+    simulate_dfe(p0_2d, None, cache2d, None, sele_dist2, pdf_file, theta_ns, misid, output_2d)
     dadi_cli_fs = dadi.Spectrum.from_file(output_2d)
-    dadi_fs = cache2d.integrate(p0_2d, None, get_dadi_pdf(sele_dist2), theta_ns, None)
+    func, _ = get_dadi_pdf(sele_dist2, pdf_file)
+    dadi_fs = cache2d.integrate(p0_2d, None, get_dadi_pdf(sele_dist2, pdf_file)[0], theta_ns, None)
     assert np.allclose(dadi_cli_fs, dadi_fs)
 
     # Test mix
     simulate_dfe(
-        p0_mix, cache1d, cache2d, sele_dist, sele_dist2, theta_ns, misid, output_mix
+        p0_mix, cache1d, cache2d, sele_dist, sele_dist2, pdf_file, theta_ns, misid, output_mix
     )
     dadi_cli_fs = dadi.Spectrum.from_file(output_mix)
     dadi_fs = DFE.mixture(
@@ -135,8 +138,8 @@ def test_simulate_dfe_code():
         None,
         cache1d,
         cache2d,
-        get_dadi_pdf(sele_dist),
-        get_dadi_pdf(sele_dist2),
+        get_dadi_pdf(sele_dist)[0],
+        get_dadi_pdf(sele_dist2)[0],
         theta_ns,
         None,
     )
@@ -144,11 +147,11 @@ def test_simulate_dfe_code():
 
     # Test 1D misid
     simulate_dfe(
-        p0_1d_misid, cache1d, None, sele_dist, None, theta_ns, True, output_1d_misid
+        p0_1d_misid, cache1d, None, sele_dist, None, pdf_file, theta_ns, True, output_1d_misid
     )
     dadi_cli_fs = dadi.Spectrum.from_file(output_1d_misid)
     dadi_fs = dadi.Numerics.make_anc_state_misid_func(cache1d.integrate)(
-        p0_1d_misid, None, get_dadi_pdf(sele_dist), theta_ns
+        p0_1d_misid, None, get_dadi_pdf(sele_dist)[0], theta_ns
     )
     assert np.allclose(dadi_cli_fs, dadi_fs)
 
