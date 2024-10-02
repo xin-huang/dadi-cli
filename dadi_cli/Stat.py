@@ -49,7 +49,7 @@ def godambe_stat_demograpy(
     # We want the best fits from the demograpic fit.
     # We set the second argument to true, since we want
     # all the parameters from the file.
-    demo_popt, _, param_names = get_opts_and_theta(demo_popt, post_infer=True)
+    demo_popt, theta, param_names = get_opts_and_theta(demo_popt, post_infer=True)
     fixed_params = convert_to_None(fixed_params, len(demo_popt))
     free_params = _free_params(demo_popt, fixed_params)
     fs = dadi.Spectrum.from_file(fs)
@@ -76,11 +76,9 @@ def godambe_stat_demograpy(
             uncerts_adj = dadi.Godambe.GIM_uncert(
                 gfunc, grids, all_boot, popt, fs, multinom=True, log=logscale, eps=eps
             )
-            # The uncertainty for theta is predicted, so we slice the
-            # the uncertainties for just the parameters.
-            uncerts_adj = uncerts_adj[:-1]
-            # # Add theta into popt
-            # popt +=
+            # Add theta into popt
+            popt = np.append(popt, np.array([theta]))
+            f.write(f"Description\t{'\t'.join(param_names[1:])}\n")
 
             f.write(
                 "Estimated 95% uncerts (theta adj), with step size "
@@ -178,11 +176,17 @@ def godambe_stat_dfe(
 
     fs = dadi.Spectrum.from_file(fs)
     non_fs_files = glob.glob(bootstrap_non_dir + "/*.fs")
+    # Raise error if directory is empty
+    if non_fs_files == []:
+        raise ValueError(f"ERROR:\n{bootstrap_dir} is empty\n")
     all_non_boot = []
     for f in non_fs_files:
         boot_fs = dadi.Spectrum.from_file(f)
         all_non_boot.append(boot_fs)
     syn_fs_files = glob.glob(bootstrap_syn_dir + "/*.fs")
+    # Raise error if directory is empty
+    if syn_fs_files == []:
+        raise ValueError(f"ERROR:\n{bootstrap_dir} is empty\n")
     all_syn_boot = []
     for f in syn_fs_files:
         boot_fs = dadi.Spectrum.from_file(f)
