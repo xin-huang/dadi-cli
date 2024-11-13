@@ -6,7 +6,7 @@ import numpy as np
 from typing import Optional
 from dadi_cli.Models import get_model
 from dadi_cli.Pdfs import get_dadi_pdf
-from dadi_cli.utilities import get_opts_and_theta, convert_to_None
+from dadi_cli.utilities import get_opts_and_theta, convert_to_None, pts_l_func
 
 
 def godambe_stat_demograpy(
@@ -53,6 +53,8 @@ def godambe_stat_demograpy(
     fixed_params = convert_to_None(fixed_params, len(demo_popt))
     free_params = _free_params(demo_popt, fixed_params)
     fs = dadi.Spectrum.from_file(fs)
+    if grids is None:
+        grids = pts_l_func(fs.sample_sizes)
     fs_boot_files = glob.glob(bootstrap_dir + "/*.fs")
     if fs_boot_files == []:
         raise ValueError(f"ERROR:\n{bootstrap_dir} is empty\n")
