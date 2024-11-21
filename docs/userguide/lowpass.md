@@ -30,6 +30,7 @@ There are no extra parameters for the Low-Pass model correction, so results can 
 ## InferDFE with Low-Pass
 
 InferDFE is largely the same as InferDM. When users run `GenerateCache`, user's will want to use the number of haplotypes in the data for `--sample-sizes` instead of the sample sizes in the SFS file. Given that there were 10 Mmd_IRA samples and 16 Mmd_FRA haplotypes users would use `--sample-sizes 10 16` instead of `--sample-sizes 4 8`:
+
 ```python
 dadi-cli GenerateCache --model split_mig_sel_single_gamma --sample-sizes 10 16 --grids 50 60 70 --gamma-pts 20 --gamma-bounds 1e-4 100 --demo-popt examples/results/lowpass/mus.split_mig.lowpass.InferDM.bestfits --output examples/results/lowpass/mus.1d.cache
 ```
