@@ -46,12 +46,13 @@ To get help information, users can use
 dadi-cli -h
 ```
 
-There are thirteen subcommands in `dadi-cli`:
+There are fourteen subcommands in `dadi-cli`:
 
 - GenerateFs 
 - GenerateCache 
 - InferDM 
 - InferDFE 
+- LowPass 
 - BestFit 
 - StatDM 
 - StatDFE 
