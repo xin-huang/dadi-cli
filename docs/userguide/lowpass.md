@@ -1,6 +1,6 @@
 # dadi.LowPass Integration
 
-dadi-cli can utilize the LowPass module of dadi (url). This enables the ability to correct models based on the coverage each sample has.
+dadi-cli can utilize the [LowPass module of dadi](https://dadi.readthedocs.io/en/latest/user-guide/low-pass/). This enables the ability to correct models based on the coverage each sample has.
 
 ## GenerateFs Input
 
