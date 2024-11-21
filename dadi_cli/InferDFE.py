@@ -124,7 +124,7 @@ def infer_dfe(
             Fx = cov_inbreeding
 
         func = func_cov(func, cov_args[0], fs.pop_ids, nseq, fs.sample_sizes, Fx=Fx)
-
+    print(func)
     p0_len = len(p0)
     # lower_bounds = convert_to_None(lower_bounds, p0_len)
     # upper_bounds = convert_to_None(upper_bounds, p0_len)

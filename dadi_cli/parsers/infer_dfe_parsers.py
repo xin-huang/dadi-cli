@@ -166,7 +166,7 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
     else:
         cache2d = args.cache2d
 
-    if not np.all(cache_ns == fs.sample_sizes):
+    if not np.all(cache_ns == fs.sample_sizes) and args.cov_args == []:
         raise ValueError('Cache and frequencey spectrum do not have the same sample sizes')
 
     if args.maxeval == False:

@@ -196,13 +196,6 @@ def add_plot_parsers(subparsers: argparse.ArgumentParser) -> None:
         help="Minimum value to be plotted in the frequency spectrum, default: 0.1.",
     )
     parser.add_argument(
-        "--ratio",
-        type=positive_num,
-        default=False,
-        required=False,
-        help="Ratio for the nonsynonymous mutations to the synonymous mutations.",
-    )
-    parser.add_argument(
         "--interactive",
         default=False,
         action="store_true",
