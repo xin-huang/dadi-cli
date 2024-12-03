@@ -471,7 +471,6 @@ def test_plot_args():
     projections = [10, 10]
     resid_range = 3
     vmin = 1e-5
-    ratio = 2.31
 
     args = parser.parse_args(
         [
@@ -502,8 +501,6 @@ def test_plot_args():
             str(resid_range),
             "--vmin",
             str(vmin),
-            "--ratio",
-            str(ratio)
         ]
     )
 
@@ -520,7 +517,6 @@ def test_plot_args():
     assert args.projections == projections
     assert args.resid_range == resid_range
     assert args.vmin == vmin
-    assert args.ratio == ratio
 
 
 def test_stat_dm_args():
