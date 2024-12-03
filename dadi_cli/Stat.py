@@ -80,7 +80,8 @@ def godambe_stat_demograpy(
             )
             # Add theta into popt
             popt = np.append(popt, np.array([theta]))
-            f.write(f"Description\t{'\t'.join(param_names[1:])}\n")
+            # param_string = '\t'.join(param_names[1:])
+            # f.write(f"Description\t{param_string}\n")
 
             f.write(
                 "Estimated 95% uncerts (theta adj), with step size "
