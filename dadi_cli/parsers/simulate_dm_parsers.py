@@ -56,6 +56,7 @@ def _run_simulate_dm(args: argparse.Namespace) -> None:
         ns=args.sample_sizes,
         pts_l=args.grids,
         misid=args.misid,
+        theta=args.theta,
         output=args.output,
         inference_file=args.inference_file,
     )
@@ -89,6 +90,13 @@ def add_simulate_dm_parsers(subparsers: argparse.ArgumentParser) -> None:
         default=False,
         action="store_true",
         help='Make an output file like you would get for running InferDM to pass into GenerateCache to make caches with your simulated demographic model. Will be the same name and path as output + ".SimulateFs.pseudofit"; Default: False.',
+    )
+    parser.add_argument(
+        "--theta",
+        dest="theta",
+        default=1,
+        type=positive_num,
+        help='Set the theta of the demographic model; Default: 1.',
     )
     add_output_argument(parser)
     parser.set_defaults(runner=_run_simulate_dm)

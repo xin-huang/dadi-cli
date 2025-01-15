@@ -24,6 +24,7 @@ def test_simulate_demography_code():
     ns = [10]
     pts_l = [20, 30, 40]
     misid = False
+    theta = 1
     output = "tests/test_results/simulate_two_epoch.fs"
     inference_file = False
     simulate_demography(
@@ -33,6 +34,7 @@ def test_simulate_demography_code():
         ns=ns, 
         pts_l=pts_l, 
         misid=misid, 
+        theta=theta, 
         output=output, 
         inference_file=inference_file
     )
@@ -49,6 +51,7 @@ def test_simulate_custom_demography_code():
     ns = [10]
     pts_l = [20, 30, 40]
     misid = False
+    theta = 1
     output = "tests/test_results/simulate_three_epoch_bottleneck.fs"
     inference_file = False
     simulate_demography(
@@ -58,6 +61,7 @@ def test_simulate_custom_demography_code():
         ns=ns, 
         pts_l=pts_l, 
         misid=misid, 
+        theta=theta, 
         output=output, 
         inference_file=inference_file
     )
@@ -75,6 +79,7 @@ def test_simulate_demography_misid_code():
     ns = [10]
     pts_l = [20, 30, 40]
     misid = True
+    theta = 1
     output = "tests/test_results/simulate_two_epoch_with_misid.fs"
     inference_file = True
     simulate_demography(
@@ -84,6 +89,7 @@ def test_simulate_demography_misid_code():
         ns=ns, 
         pts_l=pts_l, 
         misid=misid, 
+        theta=theta, 
         output=output, 
         inference_file=inference_file
     )
@@ -105,7 +111,7 @@ def test_simulate_dfe_code():
     sele_dist = "lognormal"
     sele_dist2 = "biv_lognormal"
     pdf_file = None
-    theta_ns = 2.31
+    theta_ns = 2.31*1000
     misid = False
     output_1d = "tests/test_results/simulate_dfe_split_mig_one_s_lognormal.fs"
     output_2d = "tests/test_results/simulate_dfe_split_mig_two_s_lognormal.fs"

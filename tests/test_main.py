@@ -75,6 +75,7 @@ def test_run_simulate_dm():
     simulate_args.sample_sizes = [10]
     simulate_args.grids = [20, 30, 40]
     simulate_args.nomisid = True
+    simulate_args.theta = 1000
     simulate_args.output = "tests/test_results/main_simulate_two_epoch.fs"
     simulate_args.inference_file = False
 
@@ -91,6 +92,7 @@ def test_run_simulate_dm_html():
     simulate_args.sample_sizes = [10]
     simulate_args.grids = [20, 30, 40]
     simulate_args.nomisid = False
+    simulate_args.theta = 1000
     simulate_args.output = "tests/test_results/main_simulate_three_epoch_bottleneck_html.fs"
     simulate_args.inference_file = False
 
@@ -142,7 +144,7 @@ def test_run_simulate_dfe():
     simulate_args.pdf1d = "lognormal"
     simulate_args.pdf2d = "biv_lognormal"
     simulate_args.pdf_file = None
-    simulate_args.ratio = 2.31
+    simulate_args.theta_ns = 2.31*1000
     simulate_args.nomisid = False
     simulate_args.output = "tests/test_results/main_simulate_mix_dfe.fs"
 
@@ -159,7 +161,7 @@ def test_run_simulate_dfe_html():
     simulate_args.pdf1d = "lognormal"
     simulate_args.pdf2d = "biv_lognormal"
     simulate_args.pdf_file = None
-    simulate_args.ratio = 2.31
+    simulate_args.theta_ns = 2.31*1000
     simulate_args.nomisid = False
     simulate_args.output = "tests/test_results/main_simulate_mix_dfe_html.fs"
 

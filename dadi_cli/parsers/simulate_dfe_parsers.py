@@ -31,13 +31,18 @@ def _run_simulate_dfe(args: argparse.Namespace) -> None:
             The 2D probability distribution function name for the DFE.
         - pdf_file : str, optional
             Name of file with custom probability density function model(s) in it.
-        - ratio : float
-            Ratio for adjusting the selection parameters, typically used to scale between different
-            types of mutations or fitness effects.
+        - theta_ns : float
+            Nonsynonymous theta for the SFS with selection.
         - nomisid : bool
             Flag to not consider misidentification, which is converted internally to `misid`.
 
     """
+    # Make sure flags are used:
+    if args.cache1d == None and args.cache2d == None:
+        raise ValueError("\nRequire --cache1d and/or --cache2d depending on DFE model")
+    if args.pdf1d == None and args.pdf2d == None:
+        raise ValueError("\nRequire --pdf1d and/or --pdf2d depending on DFE model")
+
     if args.cache1d != None:
         if "://" in args.cache1d:
             from urllib.request import urlopen
@@ -66,7 +71,7 @@ def _run_simulate_dfe(args: argparse.Namespace) -> None:
         sele_dist=args.pdf1d,
         sele_dist2=args.pdf2d,
         pdf_file=args.pdf_file,
-        ratio=args.ratio,
+        theta_ns=args.theta_ns,
         misid=args.misid,
         output=args.output,
     )
@@ -94,11 +99,13 @@ def add_simulate_dfe_parsers(subparsers: argparse.ArgumentParser) -> None:
     )
     add_dfe_argument(parser)
     parser.add_argument(
-        "--ratio",
+        "--theta-ns",
         type=positive_num,
-        dest="ratio",
-        required=True,
-        help="Ratio for the nonsynonymous mutations to the synonymous mutations.",
+        dest="theta_ns",
+        default=1,
+        help="Set the theta for the nonsynonymous mutations.\n" + \
+        "In dadi this is usually determined by the [ demography model theta ] multiplied by the ratio of [ amount of potential neutral SNPs ] to [ potential selective SNPs ];\n" + \
+        "Default: 1.",
     )
     add_p0_argument(parser)
     add_misid_argument(parser)

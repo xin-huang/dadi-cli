@@ -82,7 +82,7 @@ def infer_dfe(
 
     """
     if not cache1d and not cache2d:
-        raise ValueError("At least one of cache1d or cache2d must be provided.")
+        raise ValueError("\nAt least one of cache1d or cache2d must be provided.")
 
     # Randomize starting parameter values
     if seed is not None:
@@ -116,7 +116,7 @@ def infer_dfe(
         try:
             from dadi.LowPass.LowPass import make_low_pass_func_GATK_multisample as func_cov
         except ModuleNotFoundError:
-            raise ImportError("ERROR:\nCurrent dadi version does not support coverage model\n")
+            raise ImportError("\nCurrent dadi version does not support coverage model\n")
         nseq = [int(ele) for ele in cov_args[1:]]
         if cov_inbreeding == []:
             Fx = None

@@ -13,6 +13,7 @@ def simulate_demography(
     ns: int, 
     pts_l: tuple[int],
     misid: bool, 
+    theta: float, 
     output: str, 
     inference_file: bool
 ) -> None:
@@ -33,6 +34,8 @@ def simulate_demography(
         Grid sizes for modeling. If None, a default is calculated based on ns.
     misid : bool
         If True, adds a parameter for modeling ancestral state misidentification.
+    theta : float
+        Set the theta value for the simulated demographic SFS. Default 1.
     output : str
         Name of the output file.
     inference_file : bool
@@ -49,7 +52,7 @@ def simulate_demography(
         func = dadi.Numerics.make_anc_state_misid_func(func)
         func.__param_names__ = param_names + ["misid"]
     func_ex = dadi.Numerics.make_extrap_func(func)
-    fs = func_ex(p0, ns, pts_l)
+    fs = func_ex(p0, ns, pts_l) * theta
     fs.to_file(output)
 
     if inference_file:
@@ -58,7 +61,7 @@ def simulate_demography(
                 "# Ran SimulateDM\n# This is a fake inference output results to generate caches\n# Log(likelihood)   "
                 + "\t".join(func.__param_names__)
                 + "\ttheta0\n"
-                + "-0\t" + "\t".join([str(ele) for ele in p0]) + "\t1"
+                + "-0\t" + "\t".join([str(ele) for ele in p0]) + "\t" + str(theta)
             )
 
 
@@ -103,7 +106,7 @@ def simulate_dfe(
     sele_dist: str, 
     sele_dist2: str, 
     pdf_file: str,
-    ratio: float, 
+    theta_ns: float, 
     misid: bool, 
     output: str
 ) -> None:
@@ -122,8 +125,8 @@ def simulate_dfe(
         Name of the 1D Probability Density Function (PDF) for modeling DFEs.
     sele_dist2 : str
         Name of the 2D PDF for modeling DFEs.
-    ratio : float
-        Ratio of synonymous to non-synonymous mutations.
+    theta_ns : float
+        Theta of non-synonymous mutations.
     misid : bool
         If True, adds a parameter for modeling ancestral state misidentification when data are polarized.
     output : str
@@ -152,16 +155,16 @@ def simulate_dfe(
 
     if (cache1d is not None) and (cache2d is not None):
         func = dadi.DFE.Cache2D_mod.mixture
-        func_args = [cache1d, cache2d, sele_dist, sele_dist2, ratio]
+        func_args = [cache1d, cache2d, sele_dist, sele_dist2, theta_ns]
     else:
-        func_args = [sele_dist, ratio]
+        func_args = [sele_dist, theta_ns]
 
     if misid:
         func = dadi.Numerics.make_anc_state_misid_func(func)
-    print(p0, None, sele_dist, ratio, None)
+    print(p0, None, sele_dist, theta_ns, None)
     # Get expected SFS for MLE
     if (cache1d is not None) and (cache2d is not None):
-        fs = func(p0, None, cache1d, cache2d, sele_dist, sele_dist2, ratio, None)
+        fs = func(p0, None, cache1d, cache2d, sele_dist, sele_dist2, theta_ns, None)
     else:
-        fs = func(p0, None, sele_dist, ratio, None)
+        fs = func(p0, None, sele_dist, theta_ns, None)
     fs.to_file(output)
