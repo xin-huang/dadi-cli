@@ -68,10 +68,9 @@ def add_simulate_demes_parsers(subparsers: argparse.ArgumentParser) -> None:
     )
     parser.add_argument(
         "--pop-ids",
-        default=True,
         type=str,
         nargs="+",
-        required=False,
+        required=True,
         help="Population names for the samples, required for Demes.",
         dest="pop_ids",
     )
