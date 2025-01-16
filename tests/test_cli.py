@@ -142,7 +142,7 @@ def test_simulate_dfe_args():
     cache2d = "tests/example_data/cache_split_mig_2d.bpkl"
     pdf1d = "lognormal"
     pdf2d = "biv_lognormal"
-    ratio = 2
+    theta_ns = 2*1000
     p0 = [1, 1.4, 0, 0.97, 0.02]
     nomisid = False
     output = "tests/test_results/simulate_cli_dfe_split_mig_mix_s_lognormal.fs"
@@ -158,8 +158,8 @@ def test_simulate_dfe_args():
             pdf1d,
             "--pdf2d",
             pdf2d,
-            "--ratio",
-            str(ratio),
+            "--theta-ns",
+            str(theta_ns),
             "--p0",
             "1", "1.4", "0", "0.97", "0.02",
             "--output",
@@ -171,7 +171,7 @@ def test_simulate_dfe_args():
     assert args.cache2d == cache2d
     assert args.pdf1d == pdf1d
     assert args.pdf2d == pdf2d
-    assert args.ratio == ratio
+    assert args.theta_ns == theta_ns
     assert args.p0 == p0
     assert args.nomisid == nomisid
     assert args.output == output
