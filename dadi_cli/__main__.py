@@ -4,6 +4,7 @@ from dadi_cli.parsers.generate_cache_parsers import add_generate_cache_parsers
 from dadi_cli.parsers.simulate_dm_parsers import add_simulate_dm_parsers
 from dadi_cli.parsers.simulate_dfe_parsers import add_simulate_dfe_parsers
 from dadi_cli.parsers.simulate_demes_parsers import add_simulate_demes_parsers
+from dadi_cli.parsers.generate_demes_parsers import add_generate_demes_parsers
 from dadi_cli.parsers.infer_dm_parsers import add_infer_dm_parsers
 from dadi_cli.parsers.infer_dfe_parsers import add_infer_dfe_parsers
 from dadi_cli.parsers.plot_parsers import add_plot_parsers
@@ -44,6 +45,7 @@ def _dadi_cli_parser() -> argparse.ArgumentParser:
     add_simulate_dm_parsers(subparsers)
     add_simulate_dfe_parsers(subparsers)
     add_simulate_demes_parsers(subparsers)
+    add_generate_demes_parsers(subparsers)
     add_infer_dm_parsers(subparsers)
     add_infer_dfe_parsers(subparsers)
     add_plot_parsers(subparsers)

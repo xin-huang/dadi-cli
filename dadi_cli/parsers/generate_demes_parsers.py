@@ -81,18 +81,18 @@ def add_generate_demes_parsers(subparsers: argparse.ArgumentParser) -> None:
         help="Number of populations (integer) for the model."
     )
 
-    # If users want custom names for populations, ancestral is always a population
-    # So names will always be ancestral + other populations
-    # or --pop-num + 1
-    pop_args = int(sys.argv[sys.argv.index("--pop-num")+1])
-    parser.add_argument(
-        "--pop-names", 
-        type=list, 
-        dest="pop_num", 
-        required=False, 
-        nargs=pop_args,
-        help="Number of populations (integer) for the model."
-    )
+    # # If users want custom names for populations, ancestral is always a population
+    # # So names will always be ancestral + other populations
+    # # or --pop-num + 1
+    # pop_args = int(sys.argv[sys.argv.index("--pop-num")+1])
+    # parser.add_argument(
+    #     "--pop-names", 
+    #     type=list, 
+    #     dest="pop_num", 
+    #     required=False, 
+    #     nargs=pop_args,
+    #     help="Number of populations (integer) for the model."
+    # )
 
     add_output_argument(parser)
     parser.set_defaults(runner=_run_generate_demes_file)
