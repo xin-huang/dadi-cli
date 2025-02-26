@@ -11,14 +11,14 @@ from dadi_cli.Pdfs import (
 
 
 def test_get_dadi_pdf():
-    assert get_dadi_pdf("beta") == DFE.PDFs.beta
-    assert get_dadi_pdf("biv_ind_gamma") == DFE.PDFs.biv_ind_gamma
-    assert get_dadi_pdf("biv_lognormal") == DFE.PDFs.biv_lognormal
-    assert get_dadi_pdf("exponential") == DFE.PDFs.exponential
-    assert get_dadi_pdf("gamma") == DFE.PDFs.gamma
-    assert get_dadi_pdf("lognormal") == DFE.PDFs.lognormal
-    assert get_dadi_pdf("normal") == DFE.PDFs.normal
-    assert get_dadi_pdf("mixture") == DFE.mixture
+    assert get_dadi_pdf("beta")[0] == DFE.PDFs.beta
+    assert get_dadi_pdf("biv_ind_gamma")[0] == DFE.PDFs.biv_ind_gamma
+    assert get_dadi_pdf("biv_lognormal")[0] == DFE.PDFs.biv_lognormal
+    assert get_dadi_pdf("exponential")[0] == DFE.PDFs.exponential
+    assert get_dadi_pdf("gamma")[0] == DFE.PDFs.gamma
+    assert get_dadi_pdf("lognormal")[0] == DFE.PDFs.lognormal
+    assert get_dadi_pdf("normal")[0] == DFE.PDFs.normal
+    assert get_dadi_pdf("mixture")[0] == DFE.mixture
 
     with pytest.raises(Exception) as e_info:
         get_dadi_pdf("haha")

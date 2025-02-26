@@ -39,7 +39,7 @@ def add_bounds_argument(parser: argparse.ArgumentParser) -> None:
 
     parser.add_argument(
         "--lbounds",
-        type=float,
+        type=str,
         nargs="+",
         required=boundary_req,
         help="Lower bounds of the optimized parameters.",
@@ -47,7 +47,7 @@ def add_bounds_argument(parser: argparse.ArgumentParser) -> None:
 
     parser.add_argument(
         "--ubounds",
-        type=float,
+        type=str,
         nargs="+",
         required=boundary_req,
         help="Upper bounds of the optimized parameters.",
@@ -191,7 +191,7 @@ def add_constant_argument(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--constants",
         default=-1,
-        type=float,
+        type=str,
         nargs="+",
         help="Fixed parameters during the inference or using Godambe analysis. Use -1 to indicate a parameter is NOT fixed. Default: None.",
     )
@@ -315,6 +315,14 @@ def add_dfe_argument(parser: argparse.ArgumentParser) -> None:
         type=str,
         help="2D probability density function for the joint DFE inference. To check available probability density functions, please use `dadi-cli Pdf`.",
     )
+    parser.add_argument(
+        "--pdf-file",
+        type=existed_file,
+        required=False,
+        dest="pdf_file",
+        help="Name of python probability density function module file (not including .py) that contains custom probability density functions to use. Default: None.",
+    )
+
 
 
 # Currently this command is only needed for param_names.

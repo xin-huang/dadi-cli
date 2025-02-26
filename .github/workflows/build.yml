@@ -17,7 +17,7 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Add micromamba to system path
-      uses: mamba-org/provision-with-micromamba@main
+      uses: mamba-org/setup-micromamba@main
       with:
         environment-name: dadi-cli
         activate-environment: dadi-cli

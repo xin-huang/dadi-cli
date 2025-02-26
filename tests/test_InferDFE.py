@@ -22,6 +22,7 @@ def test_infer_dfe_code():
     cache2d = None
     sele_dist = "lognormal"
     sele_dist2 = None
+    pdf_file = None
     theta = 1000 * 2.31
     p0 = [1, 1]
     upper_bounds = [10, 10]
@@ -39,6 +40,7 @@ def test_infer_dfe_code():
         cache2d,
         sele_dist,
         sele_dist2,
+        pdf_file,
         theta,
         p0,
         upper_bounds,
@@ -59,6 +61,7 @@ def test_infer_dfe_code():
             cache2d=None,
             sele_dist=sele_dist,
             sele_dist2=sele_dist2,
+            pdf_file=pdf_file,
             theta=theta,
             p0=p0,
             upper_bounds=upper_bounds,
@@ -80,6 +83,7 @@ def test_infer_coverage_model_dfe_code():
     cache2d = None
     sele_dist = "lognormal"
     sele_dist2 = None
+    pdf_file = None
     theta = 1000 * 2.31
     p0 = [1, 1]
     upper_bounds = [10, 10]
@@ -97,6 +101,7 @@ def test_infer_coverage_model_dfe_code():
         cache2d,
         sele_dist,
         sele_dist2,
+        pdf_file,
         theta,
         p0,
         upper_bounds,

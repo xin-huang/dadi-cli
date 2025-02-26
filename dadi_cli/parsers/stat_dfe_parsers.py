@@ -28,6 +28,8 @@ def _run_stat_dfe(args: argparse.Namespace) -> None:
             The 1D probability distribution function used for the DFE.
         - pdf2d : str
             The 2D probability distribution function used for the DFE.
+        - pdf_file : str
+            Name of file with custom probability density function model(s) in it.
         - dfe_popt : str
             Path to the file containing optimized parameter values for the DFE model.
         - constants : list
@@ -67,6 +69,7 @@ def _run_stat_dfe(args: argparse.Namespace) -> None:
         cache2d=args.cache2d,
         sele_dist=args.pdf1d,
         sele_dist2=args.pdf2d,
+        pdf_file=args.pdf_file,
         dfe_popt=args.dfe_popt,
         fixed_params=args.constants,
         logscale=args.logscale,
