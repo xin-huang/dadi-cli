@@ -39,7 +39,7 @@ def add_bounds_argument(parser: argparse.ArgumentParser) -> None:
 
     parser.add_argument(
         "--lbounds",
-        type=float,
+        type=str,
         nargs="+",
         required=boundary_req,
         help="Lower bounds of the optimized parameters.",
@@ -47,7 +47,7 @@ def add_bounds_argument(parser: argparse.ArgumentParser) -> None:
 
     parser.add_argument(
         "--ubounds",
-        type=float,
+        type=str,
         nargs="+",
         required=boundary_req,
         help="Upper bounds of the optimized parameters.",
@@ -191,7 +191,7 @@ def add_constant_argument(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--constants",
         default=-1,
-        type=float,
+        type=str,
         nargs="+",
         help="Fixed parameters during the inference or using Godambe analysis. Use -1 to indicate a parameter is NOT fixed. Default: None.",
     )
@@ -315,6 +315,14 @@ def add_dfe_argument(parser: argparse.ArgumentParser) -> None:
         type=str,
         help="2D probability density function for the joint DFE inference. To check available probability density functions, please use `dadi-cli Pdf`.",
     )
+    parser.add_argument(
+        "--pdf-file",
+        type=existed_file,
+        required=False,
+        dest="pdf_file",
+        help="Name of python probability density function module file (not including .py) that contains custom probability density functions to use. Default: None.",
+    )
+
 
 
 # Currently this command is only needed for param_names.
@@ -492,3 +500,35 @@ def make_dir(path: str) -> None:
     parent_dir = os.path.dirname(path)
     if parent_dir != '':
         os.makedirs(parent_dir, exist_ok=True)
+
+
+def add_coverage_model_argument(parser: argparse.ArgumentParser) -> None:
+    """
+    Add arguments to correct models for low coverage from the dadi LowPass module.
+
+    Parameters
+    ----------
+    parser : argparse.ArgumentParser
+        The parser object to which all inference-related arguments will be added.
+
+    """
+    parser.add_argument(
+        "--coverage-model",
+        nargs="+",
+        default=[],
+        action="store",
+        required=False,
+        dest="cov_args",
+        help="Enable coverage model.\nArguments are:\
+        \n1. The name of the <>.coverage.pickle file produced by GenerateFs --calc-coverage.\
+        \n2. The total number of samples sequenced for each population in the VCF.",
+    ) # Need to make the convergence dictionary because dadi-cli does not save a data dictionary
+    parser.add_argument(
+        "--coverage-inbreeding",
+        nargs="+",
+        default=[],
+        action="store",
+        required=False,
+        dest="cov_inbreeding",
+        help="Pass in optional population inbreeding parameters for the coverage model.",
+    )

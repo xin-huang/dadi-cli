@@ -6,7 +6,7 @@ import numpy as np
 from typing import Optional
 from dadi_cli.Models import get_model
 from dadi_cli.Pdfs import get_dadi_pdf
-from dadi_cli.utilities import get_opts_and_theta, convert_to_None
+from dadi_cli.utilities import get_opts_and_theta, convert_to_None, pts_l_func
 
 
 def godambe_stat_demograpy(
@@ -17,7 +17,6 @@ def godambe_stat_demograpy(
     bootstrap_dir: str, 
     demo_popt: str, 
     fixed_params: list[Optional[float]], 
-    nomisid: bool, 
     logscale: bool, 
     eps_l: list[float],
 ) -> None:
@@ -41,8 +40,6 @@ def godambe_stat_demograpy(
         Path to the file containing the best-fit demographic parameters.
     fixed_params : list[Optional[float]]
         List of fixed parameters where `None` indicates parameters to be inferred.
-    nomisid : bool
-        If False, includes modeling of ancestral state misidentification.
     logscale : bool
         If True, statistics are calculated on a logarithmic scale.
     eps_l : list[float]
@@ -52,17 +49,21 @@ def godambe_stat_demograpy(
     # We want the best fits from the demograpic fit.
     # We set the second argument to true, since we want
     # all the parameters from the file.
-    demo_popt, _ = get_opts_and_theta(demo_popt)
+    demo_popt, theta, param_names = get_opts_and_theta(demo_popt, post_infer=True)
     fixed_params = convert_to_None(fixed_params, len(demo_popt))
     free_params = _free_params(demo_popt, fixed_params)
     fs = dadi.Spectrum.from_file(fs)
+    if grids is None:
+        grids = pts_l_func(fs.sample_sizes)
     fs_boot_files = glob.glob(bootstrap_dir + "/*.fs")
+    if fs_boot_files == []:
+        raise ValueError(f"ERROR:\n{bootstrap_dir} is empty\n")
     all_boot = []
     for f in fs_boot_files:
         boot_fs = dadi.Spectrum.from_file(f)
         all_boot.append(boot_fs)
 
-    if not nomisid:
+    if param_names[-2] == 'misid':
         func = dadi.Numerics.make_anc_state_misid_func(func)
 
     func_ex = dadi.Numerics.make_extrap_func(func)
@@ -77,9 +78,10 @@ def godambe_stat_demograpy(
             uncerts_adj = dadi.Godambe.GIM_uncert(
                 gfunc, grids, all_boot, popt, fs, multinom=True, log=logscale, eps=eps
             )
-            # The uncertainty for theta is predicted, so we slice the
-            # the uncertainties for just the parameters.
-            uncerts_adj = uncerts_adj[:-1]
+            # Add theta into popt
+            popt = np.append(popt, np.array([theta]))
+            # param_string = '\t'.join(param_names[1:])
+            # f.write(f"Description\t{param_string}\n")
 
             f.write(
                 "Estimated 95% uncerts (theta adj), with step size "
@@ -121,12 +123,12 @@ def godambe_stat_dfe(
     cache2d: str,
     sele_dist: str,
     sele_dist2: str,
+    pdf_file: str,
     output: str,
     bootstrap_syn_dir: str,
     bootstrap_non_dir: str,
     dfe_popt: str,
     fixed_params: list[Optional[float]],
-    nomisid: bool,
     logscale: bool,
     eps_l: list[float],
 ) -> None:
@@ -145,6 +147,8 @@ def godambe_stat_dfe(
         Name of the 1D PDF for modeling DFE.
     sele_dist2 : str
         Name of the 2D PDF for modeling DFE.
+    pdf_file : str
+        Name of file with custom probability density function model(s) in it.
     output : str
         File path for the output results.
     bootstrap_syn_dir : str
@@ -155,8 +159,6 @@ def godambe_stat_dfe(
         Path to the file containing the best-fit DFE parameters.
     fixed_params : list[Optional[float]]
         List of fixed parameters where `None` indicates parameters to be inferred.
-    nomisid : bool
-        If False, includes a parameter for modeling ancestral state misidentification.
     logscale : bool
         If True, calculations are done on a logarithmic scale.
     eps_l : list[float]
@@ -171,17 +173,23 @@ def godambe_stat_dfe(
     if not cache1d and not cache2d:
         raise ValueError("At least one of cache1d or cache2d must be provided.")
 
-    dfe_popt, theta = get_opts_and_theta(dfe_popt)
+    dfe_popt, theta, param_names = get_opts_and_theta(dfe_popt, post_infer=True)
     fixed_params = convert_to_None(fixed_params, len(dfe_popt))
     free_params = _free_params(dfe_popt, fixed_params)
 
     fs = dadi.Spectrum.from_file(fs)
     non_fs_files = glob.glob(bootstrap_non_dir + "/*.fs")
+    # Raise error if directory is empty
+    if non_fs_files == []:
+        raise ValueError(f"ERROR:\n{bootstrap_dir} is empty\n")
     all_non_boot = []
     for f in non_fs_files:
         boot_fs = dadi.Spectrum.from_file(f)
         all_non_boot.append(boot_fs)
     syn_fs_files = glob.glob(bootstrap_syn_dir + "/*.fs")
+    # Raise error if directory is empty
+    if syn_fs_files == []:
+        raise ValueError(f"ERROR:\n{bootstrap_dir} is empty\n")
     all_syn_boot = []
     for f in syn_fs_files:
         boot_fs = dadi.Spectrum.from_file(f)
@@ -195,15 +203,15 @@ def godambe_stat_dfe(
         sfunc = s2.integrate
 
     if sele_dist2 is not None:
-        sele_dist2 = get_dadi_pdf(sele_dist2)
+        sele_dist2, _ = get_dadi_pdf(sele_dist2, pdf_file)
     if sele_dist is not None:
-        sele_dist = get_dadi_pdf(sele_dist)
+        sele_dist, _ = get_dadi_pdf(sele_dist, pdf_file)
     else:
         sele_dist = sele_dist2
 
     if (cache1d is not None) and (cache2d is not None):
         mfunc = dadi.DFE.mixture
-        if not nomisid:
+        if param_names[-2] == 'misid':
             mfunc = dadi.Numerics.make_anc_state_misid_func(mfunc)
 
         def func(free_params, ns, pts):
@@ -224,7 +232,7 @@ def godambe_stat_dfe(
             )
 
     elif (cache1d is not None) or (cache2d is not None):
-        if not nomisid:
+        if param_names[-2] == 'misid':
             sfunc = dadi.Numerics.make_anc_state_misid_func(sfunc)
 
         def func(free_params, ns, pts):

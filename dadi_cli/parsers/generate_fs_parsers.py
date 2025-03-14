@@ -39,8 +39,8 @@ def _run_generate_fs(args: argparse.Namespace) -> None:
             Whether to use polarized allele frequencies.
         - marginalize_pops : list
             Marginalize over a list of populations.
-        - subsample : bool
-            Whether to subsample data.
+        - subsample : list
+            Number of individuals to sub-sample from per-population.
 
     """
     if args.mask_shared:
@@ -65,6 +65,7 @@ def _run_generate_fs(args: argparse.Namespace) -> None:
         marginalize_pops=args.marginalize_pops,
         subsample=args.subsample,
         masking=mask,
+        calc_coverage=args.calc_coverage,
     )
 
 
@@ -107,11 +108,15 @@ def add_generate_fs_parsers(subparsers: argparse.ArgumentParser) -> None:
         dest="pop_info",
     )
 
+    # Check if subsamples are being requested to determin if --projections needed
+    proj_req = True
+    if "--subsample" in sys.argv:
+        proj_req = False
     parser.add_argument(
         "--projections",
         type=positive_int,
         nargs="+",
-        required=True,
+        required=proj_req,
         help="Sample sizes after projection. If you do not want to project down your data, please input the original sample sizes of your data.",
     )
 
@@ -135,10 +140,11 @@ def add_generate_fs_parsers(subparsers: argparse.ArgumentParser) -> None:
 
     parser.add_argument(
         "--subsample",
-        default=False,
-        action="store_true",
+        type=positive_int,
+        default=[],
+        nargs="+",
         dest="subsample",
-        help="Subsample from the VCF when generating the fs using the given pop-ids and subsample calls based on the projections passed in. Default: None.",
+        help="Number of individuals to subsample from the VCF when generating the fs using the given pop-ids. Default: None.",
     )
 
     parser.add_argument(
@@ -163,6 +169,14 @@ def add_generate_fs_parsers(subparsers: argparse.ArgumentParser) -> None:
         nargs="+",
         help="Population names you want to marginalize (remove) from the full fs. Default: None.",
         dest="marginalize_pops",
+    )
+
+    parser.add_argument(
+        "--calc-coverage",
+        default=False,
+        action="store_true",
+        dest="calc_coverage",
+        help="Store coverage information of sites in <output>.coverage.pickle object. Default: None.",
     )
 
     add_output_argument(parser)

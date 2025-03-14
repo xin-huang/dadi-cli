@@ -29,6 +29,8 @@ def _run_simulate_dfe(args: argparse.Namespace) -> None:
             The 1D probability distribution function name for the DFE.
         - pdf2d : str, optional
             The 2D probability distribution function name for the DFE.
+        - pdf_file : str, optional
+            Name of file with custom probability density function model(s) in it.
         - ratio : float
             Ratio for adjusting the selection parameters, typically used to scale between different
             types of mutations or fitness effects.
@@ -63,6 +65,7 @@ def _run_simulate_dfe(args: argparse.Namespace) -> None:
         cache2d=cache2d,
         sele_dist=args.pdf1d,
         sele_dist2=args.pdf2d,
+        pdf_file=args.pdf_file,
         ratio=args.ratio,
         misid=args.misid,
         output=args.output,

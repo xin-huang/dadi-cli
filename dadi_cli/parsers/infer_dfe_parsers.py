@@ -1,5 +1,4 @@
 import argparse, glob, pickle, os, random, sys, time, warnings
-import work_queue as wq
 from multiprocessing import Process, Queue
 from dadi_cli.parsers.common_arguments import *
 from dadi_cli.parsers.argument_validation import *
@@ -28,8 +27,8 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
             The 1D probability distribution function name.
         - pdf2d : str or None
             The 2D probability distribution function name.
-        - pdf_file : bool
-            Flag indicating whether a custom PDF file is used.
+        - pdf_file : str or None
+            Name of file with custom probability density function model(s) in it.
         - constants : list or int
             List of constants for the PDFs or -1 if not using constants.
         - lbounds : list or None
@@ -72,10 +71,20 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
             Path or URL to the file with best fit parameters.
         - nomisid : bool
             Flag to indicate that misidentification should not be considered.
+        - cov_args : list
+            Dictionary that contains the data dictionary with coverage information 
+            and total number of sample sequenced in each population for coverage correction.
+        - cov_inbreeding : list
+            Inbreeding parameter for each population from 0 to 1, see dadi manual for more information.
         - mix_pdf : str or None
             The mixed PDF model if applicable.
 
     """
+    # Make sure flags are used:
+    if args.pdf1d == None and args.pdf2d == None:
+        raise ValueError("Require --pdf1d and/or --pdf2d depending on DFE model")
+    if args.cache1d == None and args.cache2d == None:
+        raise ValueError("cache1d --pdf1d and/or --cache2d depending on DFE model")
     if "://" in args.fs:
         import urllib.request
         sfs_fi = open("sfs.fs","w")
@@ -83,12 +92,25 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
             sfs_fi.write(f.read().decode('utf-8'))
         sfs_fi.close()
         args.fs ="sfs.fs"
+    if args.pdf_file is not None:
+        if "://" in args.pdf_file:
+            model_fi = open("dadi_pdfs.py","w")
+            with urllib.request.urlopen(args.pdf_file) as f:
+                model_fi.write(f.read().decode('utf-8'))
+            model_fi.close()
+            args.pdf_file = "dadi_pdfs"
 
     fs = dadi.Spectrum.from_file(args.fs)
     # Due to development history, much of the code expects a args.misid variable, so create it.
     args.misid = not (fs.folded or args.nomisid)
 
+    if args.cov_args != []:
+        args.cov_args[0] = pickle.load(open(args.cov_args[0], 'rb'))
+
     make_dir(args.output_prefix)
+
+    # Converts str to float and None string to None value
+    args.lbounds, args.ubounds, args.constants = convert_bounds_and_constants(args.lbounds, args.ubounds, args.constants)
 
     # # Things need to be updated for these to work
     if None not in [args.pdf1d, args.pdf2d]:
@@ -100,17 +122,17 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
                     args.constants, _ = check_pdf_params(
                         args.constants, pdf, "--constant", args.misid
                     )
-                if not args.pdf_file and args.lbounds != -1:
+                if not args.pdf_file and args.lbounds != None:
                     args.lbounds, _ = check_pdf_params(
                         args.lbounds, pdf, "--lbounds", args.misid
                     )
-                if not args.pdf_file and args.ubounds != -1:
+                if not args.pdf_file and args.ubounds != None:
                     args.ubounds, _ = check_pdf_params(
                         args.ubounds, pdf, "--ubounds", args.misid
                     )
 
     if args.p0 == -1:
-        args.p0 = _calc_p0_from_bounds(args.lbounds, args.ubounds)
+        args.p0 = calc_p0_from_bounds(args.lbounds, args.ubounds)
 
 
     if "://" in args.demo_popt:
@@ -144,7 +166,7 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
     else:
         cache2d = args.cache2d
 
-    if not np.all(cache_ns == fs.sample_sizes):
+    if not np.all(cache_ns == fs.sample_sizes) and args.cov_args == []:
         raise ValueError('Cache and frequencey spectrum do not have the same sample sizes')
 
     if args.maxeval == False:
@@ -168,10 +190,15 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
     else:
         for pdf in [args.pdf1d, args.pdf2d]:
             if pdf != None:
-                _, param_names = check_pdf_params(args.p0, pdf, "", args.misid)
+                if args.pdf_file != None:
+                    # try:
+                    _, param_names = get_dadi_pdf(pdf, args.pdf_file)
+                    # except:
+                else:
+                    _, param_names = check_pdf_params(args.p0, pdf, "", args.misid)
 
     param_names = "# Log(likelihood)\t" + "\t".join(param_names)
-    if not args.nomisid:
+    if args.misid:
         param_names += "\tmisid"
     fid.write(param_names + "\ttheta\n")
 
@@ -212,6 +239,10 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
             bestfits = None
 
         if args.work_queue:
+            try:
+                import ndcctools.work_queue as wq
+            except ModuleNotFoundError:
+                raise ValueError("Work Queue could not be loaded.")
 
             if args.debug_wq:
                 q = wq.WorkQueue(name=args.work_queue[0], debug_log="debug.log", port=args.port)
@@ -234,12 +265,15 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
                     cache2d,
                     args.pdf1d,
                     args.pdf2d,
+                    args.pdf_file,
                     theta,
                     args.p0,
                     args.ubounds,
                     args.lbounds,
                     args.constants,
                     args.misid,
+                    args.cov_args,
+                    args.cov_inbreeding,
                     None,
                     args.maxeval,
                     args.maxtime,
@@ -257,12 +291,15 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
                 cache2d,
                 args.pdf1d,
                 args.pdf2d,
+                args.pdf_file,
                 theta,
                 args.p0,
                 args.ubounds,
                 args.lbounds,
                 args.constants,
                 args.misid,
+                args.cov_args,
+                args.cov_inbreeding,
                 None,
                 args.maxeval,
                 args.maxtime,
@@ -375,16 +412,11 @@ def add_infer_dfe_parsers(subparsers: argparse.ArgumentParser) -> None:
         required=True,
         help="Ratio for the nonsynonymous mutations to the synonymous mutations.",
     )
-    parser.add_argument(
-        "--pdf-file",
-        type=str,
-        required=False,
-        dest="pdf_file",
-        help="Name of python probability density function module file (not including .py) that contains custom probability density functions to use. Default: None.",
-    )
+
     add_inference_argument(parser)
     add_delta_ll_argument(parser)
     add_misid_argument(parser)
+    add_coverage_model_argument(parser)
     add_constant_argument(parser)
     add_bounds_argument(parser)
     add_seed_argument(parser)

@@ -45,8 +45,9 @@ def test_run_generate_fs():
     gen_fs_args.projections = [216, 198]
     gen_fs_args.polarized = True
     gen_fs_args.marginalize_pops = None
-    gen_fs_args.subsample = False
+    gen_fs_args.subsample = []
     gen_fs_args.mask_shared = False
+    gen_fs_args.calc_coverage = False
     gen_fs_args.mask = False
 
     _run_generate_fs(gen_fs_args)
@@ -54,7 +55,15 @@ def test_run_generate_fs():
     _run_generate_fs(gen_fs_args)
     gen_fs_args.mask_shared = True
     _run_generate_fs(gen_fs_args)
+    # Test LowPass
+    gen_fs_args.vcf = "tests/example_data/LowPass-files/cov_gatk_Replicate_8_filtered_2D-GT-update.vcf"
+    gen_fs_args.pop_info = "tests/example_data/LowPass-files/cov_popfile_2D.txt"
+    gen_fs_args.pop_ids = ["pop1", "pop2"]
+    gen_fs_args.polarized = False
+    gen_fs_args.calc_coverage = True
+    _run_generate_fs(gen_fs_args)
     os.remove(gen_fs_args.output)
+    os.remove(gen_fs_args.output+".coverage.pickle")
 
 
 def test_run_simulate_dm():
@@ -132,6 +141,7 @@ def test_run_simulate_dfe():
     simulate_args.cache2d = "tests/example_data/cache_split_mig_2d.bpkl"
     simulate_args.pdf1d = "lognormal"
     simulate_args.pdf2d = "biv_lognormal"
+    simulate_args.pdf_file = None
     simulate_args.ratio = 2.31
     simulate_args.nomisid = False
     simulate_args.output = "tests/test_results/main_simulate_mix_dfe.fs"
@@ -148,6 +158,7 @@ def test_run_simulate_dfe_html():
     simulate_args.cache2d = "https://github.com/xin-huang/dadi-cli/blob/master/tests/example_data/cache_split_mig_2d.bpkl?raw=true"
     simulate_args.pdf1d = "lognormal"
     simulate_args.pdf2d = "biv_lognormal"
+    simulate_args.pdf_file = None
     simulate_args.ratio = 2.31
     simulate_args.nomisid = False
     simulate_args.output = "tests/test_results/main_simulate_mix_dfe_html.fs"
@@ -203,10 +214,12 @@ def infer_dm_args():
     pytest.model_file = "tests/example_data/example_models"
     pytest.p0 = [1, 0.5]
     pytest.grids = [30, 40, 50]
-    pytest.ubounds = [10, 10]
-    pytest.lbounds = [1e-3, 1e-3]
+    pytest.ubounds = ["10", "10"]
+    pytest.lbounds = ["1e-3", "1e-3"]
     pytest.constants = -1
     pytest.nomisid = True
+    pytest.cov_args = []
+    pytest.cov_inbreeding = []
     pytest.cuda = False
     pytest.maxeval = 200
     pytest.maxtime = 200
@@ -262,9 +275,9 @@ def test_run_infer_dm_convergence(check_convergence, force_convergence, optimiza
 def test_run_infer_no_custom_model_dm(infer_dm_args):
     pytest.model = "three_epoch_inbreeding"
     pytest.model_file = None
-    pytest.constants = [None, 1, None, None, None]
-    pytest.ubounds = [10, 10, 10, 10, 1]
-    pytest.lbounds = [1e-3, 1e-3, 1e-3, 1e-3, 1e-5]
+    pytest.constants = ["None", "1", "None", "None", "None"]
+    pytest.ubounds = ["10", "10", "10", "10", "1"]
+    pytest.lbounds = ["1e-3", "1e-3", "1e-3", "1e-3", "1e-5"]
     pytest.p0 = -1
     pytest.maxeval = False
     pytest.inbreeding = True
@@ -279,12 +292,25 @@ def test_run_infer_dm_misid(infer_dm_args):
     pytest.nomisid = False
     pytest.output_prefix = "tests/test_results/main.test.two_epoch.demo_misid.params"
     pytest.p0 = [1, 0.5, 1e-2]
-    pytest.ubounds = [10, 10, 0.999]
-    pytest.lbounds = [1e-3, 1e-3, 1e-4]
+    pytest.ubounds = ["10", "10", "0.999"]
+    pytest.lbounds = ["1e-3", "1e-3", "1e-4"]
     _run_infer_dm(pytest)
     for ele in glob.glob(pytest.output_prefix+"*"):
         os.remove(ele)
 
+# Test LowPass
+def test_run_infer_dm_lowpass(infer_dm_args):
+    pytest.cov_args = ["tests/example_data/LowPass-files/cov.fs.coverage.pickle", 20, 20]
+    pytest.fs = "tests/example_data/LowPass-files/cov.fs"
+    pytest.model = "split_mig"
+    pytest.model_file = None
+    pytest.output_prefix = "tests/test_results/main.test.split_mig.demo_lowpass.params"
+    pytest.p0 = [1, 1, 0.1, 1]
+    pytest.ubounds = ["10", "10", "1", "10"]
+    pytest.lbounds = ["1e-3", "1e-3", "1e-3", "1e-3"]
+    _run_infer_dm(pytest)
+    for ele in glob.glob(pytest.output_prefix+"*"):
+        os.remove(ele)
 
 def test_run_infer_dm_global_bestfit(infer_dm_args):
     pytest.global_optimization = True
@@ -293,8 +319,8 @@ def test_run_infer_dm_global_bestfit(infer_dm_args):
     pytest.output_prefix = "tests/test_results/main.test.two_epoch.demo_bestfit_p0.params"
     pytest.nomisid = False
     pytest.p0 = [1, 0.5, 1e-2]
-    pytest.ubounds = [10, 10, 0.999]
-    pytest.lbounds = [1e-3, 1e-3, 1e-4]
+    pytest.ubounds = ["10", "10", "0.999"]
+    pytest.lbounds = ["1e-3", "1e-3", "1e-4"]
     pytest.maxeval = 10
     _run_infer_dm(pytest)
     for ele in glob.glob(pytest.output_prefix+"*"):
@@ -319,8 +345,8 @@ def test_run_infer_dm_html(infer_dm_args):
     pytest.model_file = "https://raw.githubusercontent.com/xin-huang/dadi-cli/master/tests/example_data/example_models.py"
     pytest.bestfit_p0 = "https://raw.githubusercontent.com/xin-huang/dadi-cli/master/tests/example_data/example.bestfit.two_epoch.demo.params.InferDM.opts.0"
     pytest.nomisid = False
-    pytest.ubounds = [10, 10, 0.999]
-    pytest.lbounds = [1e-3, 1e-3, 1e-4]
+    pytest.ubounds = ["10", "10", "0.999"]
+    pytest.lbounds = ["1e-3", "1e-3", "1e-4"]
     pytest.output_prefix += ".html"
     _run_infer_dm(pytest)
     for ele in glob.glob(pytest.output_prefix+"*"):
@@ -339,15 +365,17 @@ def infer_dfe_args():
     pytest.cache2d = "tests/example_data/cache_split_mig_2d.bpkl"
     pytest.pdf1d = "lognormal"
     pytest.pdf2d = "biv_lognormal"
+    pytest.pdf_file = None
     pytest.mix_pdf = False
     pytest.ratio = 2.31
-    pytest.pdf_file = False
     pytest.p0 = [1, 1]
     pytest.grids = [120, 140, 160]
-    pytest.ubounds = [10, 10]
-    pytest.lbounds = [1e-3, 1e-3]
+    pytest.ubounds = ["10", "10"]
+    pytest.lbounds = ["1e-3", "1e-3"]
     pytest.constants = -1
     pytest.nomisid = True
+    pytest.cov_args = []
+    pytest.cov_inbreeding = []
     pytest.cuda = False
     pytest.maxeval = 100
     pytest.maxtime = 300
@@ -372,6 +400,7 @@ def test_run_infer_dfe_1d(infer_dfe_args):
     pytest.cache2d = None
     pytest.mix_pdf = None
     pytest.output_prefix += "1d_lognormal_dfe"
+    print('pdf:',pytest.pdf_file)
     _run_infer_dfe(pytest)
     for ele in glob.glob(pytest.output_prefix+"*"):
         os.remove(ele)
@@ -429,8 +458,8 @@ def test_run_infer_dfe_2d_lognormal(infer_dfe_args):
     pytest.mix_pdf = None
     pytest.output_prefix += "2d_lognormal_dfe"
     pytest.p0 = [1, 1, 0.5]
-    pytest.ubounds = [10, 10, 0.999]
-    pytest.lbounds = [1e-3, 1e-3, 1e-3]
+    pytest.ubounds = ["10", "10", "0.999"]
+    pytest.lbounds = ["1e-3", "1e-3", "1e-3"]
 
     _run_infer_dfe(pytest)
     for ele in glob.glob(pytest.output_prefix+"*"):
@@ -442,9 +471,9 @@ def test_run_infer_dfe_mix(infer_dfe_args):
     pytest.mix_pdf = 'mixture_lognormal'
     pytest.output_prefix += "mix_lognormal_dfe"
     pytest.p0 = [1, 1, 0, 0.5]
-    pytest.ubounds = [10, 10, None, 0.999]
-    pytest.lbounds = [1e-3, 1e-3, None, 1e-3]
-    pytest.constants = [None, None, 0, None]
+    pytest.ubounds = ["10", "10", "None", "0.999"]
+    pytest.lbounds = ["1e-3", "1e-3", "None", "1e-3"]
+    pytest.constants = ["None", "None", "0", "None"]
 
     _run_infer_dfe(pytest)
     fids = glob.glob(pytest.output_prefix+"*")
@@ -467,9 +496,9 @@ def test_run_infer_dfe_mix_html(infer_dfe_args):
     pytest.output_prefix += "mix_lognormal_dfe_html"
     pytest.nomisid = False
     # pytest.p0 = None
-    pytest.ubounds = [10, 10, None, 0.999, 0.4]
-    pytest.lbounds = [1e-3, 1e-3, None, 1e-3, 1e-3]
-    pytest.constants = [None, None, 0, None, None]
+    pytest.ubounds = ["10", "10", "None", "0.999", "0.4"]
+    pytest.lbounds = ["1e-3", "1e-3", "None", "1e-3", "1e-3"]
+    pytest.constants = ["None", "None", "0", "None", "None"]
 
     _run_infer_dfe(pytest)
     fids = glob.glob(pytest.output_prefix+"*")
@@ -479,6 +508,22 @@ def test_run_infer_dfe_mix_html(infer_dfe_args):
         assert(ele)
     for fi in fids:
         os.remove(fi)
+
+
+# Test LowPass
+@pytest.mark.skip(reason="Finish later")
+def test_run_infer_dfe_lowpass(infer_dm_args):
+    pytest.cov_args = ["tests/example_data/LowPass-files/cov.fs.coverage.pickle", 20, 20]
+    pytest.fs = "tests/example_data/LowPass-files/cov.fs"
+    # pytest.model = "split_mig"
+    # pytest.model_file = None
+    pytest.output_prefix = "tests/test_results/main.test.split_mig.dfe_lowpass.params"
+    # pytest.p0 = [1, 1, 0.1, 1]
+    # pytest.ubounds = [10, 10, 1, 10]
+    # pytest.lbounds = [1e-3, 1e-3, 1e-3, 1e-3]
+    _run_infer_dfe(pytest)
+    for ele in glob.glob(pytest.output_prefix+"*"):
+        os.remove(ele)
 
 
 # May want third top_tops test to make sure log-likelihood sorted, but that would require changing the function
@@ -519,6 +564,7 @@ def test_run_infer_dm_workqueue(infer_dm_args):
     )
     pytest.output_prefix = "tests/test_results/main.test.two_epoch.demo_wq.params"
     pytest.work_queue = ['pytest-dadi-cli', 'tests/mypwfile']
+    pytest.port = 9123
 
     _run_infer_dm(pytest)
     factory.kill()
@@ -555,6 +601,7 @@ def test_run_stat_dfe():
     stat_args.cache2d=None
     stat_args.pdf1d="lognormal"
     stat_args.pdf2d=None
+    stat_args.pdf_file = None
     stat_args.bootstrapping_syn_dir="tests/example_data/split_mig_bootstrap_syn/"
     stat_args.bootstrapping_non_dir="tests/example_data/split_mig_bootstrap_non/bootstrap_non_1d/"
     stat_args.grids=[30, 40, 50]
@@ -576,6 +623,7 @@ def plot_args():
     # pytest.fs2_1d = "tests/example_data/two_epoch_non.fs"
     pytest.pdf1d = "lognormal"
     pytest.pdf2d = "biv_lognormal"
+    pytest.pdf_file = None
     pytest.output = "tests/test_results/main_test_plot.pdf"
     # pytest.demo_popt = "tests/example_data/example.two_epoch.demo.params.InferDM.bestfits"
     # pytest.fs1d_cache1d = "tests/example_data/cache_two_epoch_1d.bpkl"
@@ -587,7 +635,6 @@ def plot_args():
     pytest.dfe_popt = "tests/example_data/example.split_mig.dfe.lognormal_mixture.params.InferDFE.bestfits"
     pytest.cache1d = "tests/example_data/cache_split_mig_1d.bpkl"
     pytest.cache2d = "tests/example_data/cache_split_mig_2d.bpkl"
-    pytest.nomisid = True
     pytest.vmin = 1e-3
     pytest.resid_range = 10
     pytest.projections = None
