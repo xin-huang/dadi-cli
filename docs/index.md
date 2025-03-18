@@ -47,7 +47,7 @@ To get help information, users can use
 dadi-cli -h
 ```
 
-There are thirteen subcommands in `dadi-cli`:
+There are fourteen subcommands in `dadi-cli`:
 
 | Command | Description |
 | - | - |
@@ -64,6 +64,21 @@ There are thirteen subcommands in `dadi-cli`:
 | BestFit       | Obtain the best fit parameters. |
 | Model         | Display available demographic models. |
 | Pdf           | Display available probability density functions for distribution of fitness effects. |
+=======
+- GenerateFs 
+- GenerateCache 
+- InferDM 
+- InferDFE 
+- LowPass 
+- BestFit 
+- StatDM 
+- StatDFE 
+- Plot 
+- SimulateDM 
+- SimulateDFE 
+- SimulateDemes 
+- Model 
+- Pdf
 
 To display help information for each subcommand, users can use the `-h` option. For example,
 

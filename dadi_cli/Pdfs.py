@@ -1,7 +1,12 @@
+import dadi, importlib, os, sys
 import dadi.DFE as DFE
+from inspect import getmembers, isfunction
 
 
-def get_dadi_pdf(pdf: str) -> callable:
+def get_dadi_pdf(
+    pdf: str,
+    pdf_file: str = None
+    ) -> tuple[callable, list[str]]:
     """
     Obtains a built-in probability density function for modeling the distribution
     of fitness effects in dadi.
@@ -22,7 +27,27 @@ def get_dadi_pdf(pdf: str) -> callable:
         If the specified probability density function name is not recognized.
 
     """
-    if pdf == "beta":
+    if pdf_file is not None:
+        # If the user has the model folder in their PATH
+        #try:
+        #    func = getattr(importlib.import_module(model_file), model_name)
+        # If the user does not have the model folder in their PATH we add it
+        # This currently can mess with the User's PATH while running dadi-cli
+        #except:
+        #    model_file = os.path.abspath(model_file)
+        #    model_path = os.path.dirname(model_file)
+        #    model_file = os.path.basename(model_file)
+        #    model_file = os.path.splitext(model_file)[0]
+        #    sys.path.append(model_path)
+        #    func = getattr(importlib.import_module(model_file), model_name)
+        try:
+            module_name = os.path.splitext(os.path.basename(pdf_file))[0]
+            model_path = os.path.dirname(os.path.abspath(pdf_file))
+            sys.path.append(model_path)
+            func = getattr(importlib.import_module(module_name), pdf)
+        except ImportError as e:
+            raise ImportError(f"Failed to import module: {pdf_file}") from e
+    elif pdf == "beta":
         func = DFE.PDFs.beta
     elif pdf == "biv_ind_gamma":
         func = DFE.PDFs.biv_ind_gamma
@@ -41,7 +66,10 @@ def get_dadi_pdf(pdf: str) -> callable:
     else:
         raise ValueError("Probability density function " + pdf + " is not available!")
 
-    return func
+    if pdf_file is not None:
+        return func, func.__param_names__
+    else:
+        return func, None
 
 
 def get_dadi_pdf_params(pdf: str) -> list[str]:

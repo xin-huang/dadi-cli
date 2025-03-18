@@ -24,7 +24,6 @@ def test_StatDM_code():
     bootstrap_dir = "./tests/example_data/split_mig_bootstrap_syn/"
     demo_popt = "tests/example_data/example.split_mig.demo.params.InferDM.bestfits"
     fixed_params = -1
-    nomisid = True
     logscale = False
     eps = [0.1]
     godambe_stat_demograpy(
@@ -35,7 +34,6 @@ def test_StatDM_code():
         bootstrap_dir,
         demo_popt,
         fixed_params,
-        nomisid,
         logscale,
         eps,
     )
@@ -51,7 +49,6 @@ def test_StatDM_fix_code():
     bootstrap_dir = "./tests/example_data/split_mig_bootstrap_syn/"
     demo_popt = "tests/example_data/example.split_mig.demo.params.with.misid.InferDM.bestfits"
     fixed_params = [-1, -1, 0.00984767, -1, -1]
-    nomisid = False
     logscale = True
     eps = [0.01, 0.1]
     godambe_stat_demograpy(
@@ -62,7 +59,6 @@ def test_StatDM_fix_code():
         bootstrap_dir,
         demo_popt,
         fixed_params,
-        nomisid,
         logscale,
         eps,
     )
@@ -74,12 +70,12 @@ def test_StatDFE_code_mix_lognormal():
     cache2d = "tests/example_data/cache_split_mig_2d.bpkl"
     sele_dist1 = "lognormal"
     sele_dist2 = "biv_lognormal"
+    pdf_file = None
     output = "./tests/test_results/example.split_mig.dfe.mixture_lognormal.params.ci"
     bootstrap_syn_dir = "tests/example_data/split_mig_bootstrap_syn/"
     bootstrap_non_dir = "tests/example_data/split_mig_bootstrap_non/bootstrap_non_mix/"
     dfe_popt = "tests/example_data/example.split_mig.dfe.lognormal_mixture.params.with.misid.InferDFE.bestfits"
     fixed_params = [-1, -1, 0, -1, -1]
-    nomisid = False
     logscale = False
     eps = [0.01]
     godambe_stat_dfe(
@@ -88,12 +84,12 @@ def test_StatDFE_code_mix_lognormal():
         cache2d,
         sele_dist1,
         sele_dist2,
+        pdf_file,
         output,
         bootstrap_syn_dir,
         bootstrap_non_dir,
         dfe_popt,
         fixed_params,
-        nomisid,
         logscale,
         eps,
     )
@@ -105,6 +101,7 @@ def test_StatDFE_code_1d_lognormal():
     cache2d = None
     sele_dist1 = "lognormal"
     sele_dist2 = None
+    pdf_file = None
     output = "./tests/test_results/example.split_mig.dfe.1D_lognormal.params.ci"
     bootstrap_syn_dir = "tests/example_data/split_mig_bootstrap_syn/"
     bootstrap_non_dir = "tests/example_data/split_mig_bootstrap_non/bootstrap_non_1d/"
@@ -112,7 +109,6 @@ def test_StatDFE_code_1d_lognormal():
         "tests/example_data/example.split_mig.dfe.1D_lognormal.params.with.misid.InferDFE.bestfits"
     )
     fixed_params = -1
-    nomisid = False
     logscale = True
     eps = [0.01]
     godambe_stat_dfe(
@@ -121,12 +117,12 @@ def test_StatDFE_code_1d_lognormal():
         cache2d,
         sele_dist1,
         sele_dist2,
+        pdf_file,
         output,
         bootstrap_syn_dir,
         bootstrap_non_dir,
         dfe_popt,
         fixed_params,
-        nomisid,
         logscale,
         eps,
     )
@@ -138,6 +134,7 @@ def test_StatDFE_code_2d_lognormal():
     cache2d = "tests/example_data/cache_split_mig_2d.bpkl"
     sele_dist1 = None
     sele_dist2 = "biv_lognormal"
+    pdf_file = None
     output = "./tests/test_results/example.split_mig.dfe.2D_lognormal.params.ci"
     bootstrap_syn_dir = "tests/example_data/split_mig_bootstrap_syn/"
     bootstrap_non_dir = "tests/example_data/split_mig_bootstrap_non/bootstrap_non_2d/"
@@ -145,7 +142,6 @@ def test_StatDFE_code_2d_lognormal():
         "tests/example_data/example.split_mig.dfe.2D_lognormal.params.InferDFE.bestfits"
     )
     fixed_params = -1
-    nomisid = True
     logscale = False
     eps = [0.01]
     godambe_stat_dfe(
@@ -154,12 +150,12 @@ def test_StatDFE_code_2d_lognormal():
         cache2d,
         sele_dist1,
         sele_dist2,
+        pdf_file,
         output,
         bootstrap_syn_dir,
         bootstrap_non_dir,
         dfe_popt,
         fixed_params,
-        nomisid,
         logscale,
         eps,
     )
@@ -178,7 +174,7 @@ def test_StatDFE_terminal_1d_lognormal():
     )
     eps = " 0.1 "
     subprocess.run(
-        "dadi-cli StatDFE --nomisid"
+        "dadi-cli StatDFE"
         + " --fs "
         + fs
         + " --dfe-popt "
@@ -212,10 +208,9 @@ def test_StatDFE_terminal_2d_lognormal():
     dfe_popt = (
         "tests/example_data/example.split_mig.dfe.2D_lognormal.params.InferDFE.bestfits"
     )
-    nomisid = True
     logscale = False
     subprocess.run(
-        "dadi-cli StatDFE --nomisid"
+        "dadi-cli StatDFE"
         + " --fs "
         + fs
         + " --dfe-popt "
@@ -247,7 +242,7 @@ def test_StatDFE_terminal_mix_lognormal():
     dfe_popt = "tests/example_data/example.split_mig.dfe.lognormal_mixture.params.InferDFE.bestfits"
     constants = "-1 -1 0 -1"
     subprocess.run(
-        "dadi-cli StatDFE --nomisid"
+        "dadi-cli StatDFE"
         + " --fs "
         + fs
         + " --dfe-popt "

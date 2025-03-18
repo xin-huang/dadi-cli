@@ -1,8 +1,26 @@
 # Demographic inference
 
+## Model Parameters
+
+The demographic models in dadi are distinguished from one another by the parameters that make them up. For most models, the main parameters are `nu`, population size change, and `T`, time.
+
+`nu` is the population size relative to a reference population (the ancestral population or the effective population size). So a `nu` of 3 means the population is triple the size of the reference population, or $ 3 \times N_{\text{ref}} $.
+
+`T` is the time in $ ploidy \times N_{\text{ref}} $ generations. So for humans, time is in units of `T` are $ 2 \times N_{\text{ref}} $
+In order to convert `T` into years, for diploids, users would use the conversion: $ T \times 2N_{\text{ref}} $
+To convert `T` into generations, users would divide years by generations per-year, ex. for Humans estimating 25 years per-generation: $ \frac{T \times 2 \times N_{\text{ref}}}{25 \text{ years per generation}} $.
+
+Each model inference will produce a $\theta$ value, which is roughly a population scale neutral mutation rate. This value is important for estimating the DFE (see [dadi documentation](https://dadi.readthedocs.io/en/latest/user-guide/dfe-inference/) for more specific details) and calculating $ N_\text{ref} $, using the conversion $ \frac{\theta}{4 \times \mu \times L} $, where $\mu$ is the genomic mutation rate and $L$ is the length of sequence that could have ended up in the SNPs data. Put another way, $L$ is the total length of the genome that was sequenced and could have been the same type of SNP (intergenic, synonymous, nonsynonymous) being analyized.
+
+For demographic models with more than one population, `m`, the rate of migration, is an additional parameter that is common in dadi demographic models. It is common in dadi documentation to denote migration rate by `m`, then the destination population, followed by source population. For example, `m12` would translate to the rate of population 2 that migrants to population 1. `m` can be converted into units of fraction of inviduals in a destination population made up of a source population: $ \frac{m}{2 \times N_{\text{ref}}} $
+
+Another potential parameter users might infer is `misid`, the percentage of ancestral misidentification. If users' SNP data contains ancestral allele state (usually in the VCF, this will be denoted as AA= in the INFO column), dadi-cli can generate an unfolded alelle frequency spectrum by assuming the derived allele is the one not matching the ancestral state rather than assuming the derived allele is the one with the lower population frequency. This results in a more SNPs that are shared in more of the population. `misid` corrects for model assumptions that SNPs with high population prevelance are rarer.
+
+The final parameter that common in dadi models is `F`, the percentage of inbreeding in the population. A common sign of inbreeding in populations is more provalence of homozygotic SNPs, resulting in higher than expected SNPs with an even number of sample. See dadi's documentation on [inbreeding](https://dadi.readthedocs.io/en/latest/user-guide/inbreeding/) for more details.
+
 ## Input
 
-After obtaining the allele frequency spectrum, we can infer a demographic model from the spectrum for synonymous SNPs (e.g., [1KG.YRI.CEU.20.syn.unfolded.fs](https://github.com/xin-huang/dadi-cli/blob/master/examples/results/fs/1KG.YRI.CEU.20.syn.unfolded.fs)), because we usually assume synonymous SNPs are neutral. Here, we use the `split_mig` model:
+After obtaining the allele frequency spectrum, we can infer a demographic model from the spectrum for synonymous SNPs (e.g., [1KG.YRI.CEU.20.syn.unfolded.fs](https://github.com/xin-huang/dadi-cli/blob/master/examples/results/fs/1KG.YRI.CEU.20.syn.unfolded.fs)), because we usually assume synonymous SNPs are neutral. Intergenic SNPs are an alternative for data under neutral selection. Here, we use the `split_mig` model:
 
 ![split_mig](https://github.com/xin-huang/dadi-cli/blob/revision/docs/figs/split_mig.png?raw=true)
 
@@ -140,6 +158,8 @@ Finally, the grid sizes may also affect the inference. If `n` is the maximum of 
 | `--model-file`          | Name of python module file (not including .py) that contains custom models to use. Can be an HTML link. Default: None. |
 | `--grids`               | Sizes of grids. Default: Based on sample size. |
 | `--nomisid`             | Enable to *not* include a parameter modeling ancestral state misidentification when data are polarized. |
+| `--coverage-model`      | Enable coverage model. Arguments are: 1. The name of the <>.coverage.pickle file produced by GenerateFs --calc-coverage. 2. The total number of samples sequenced for each population in the VCF. |
+| `--coverage-inbreeding` | Pass in optional population inbreeding parameters for the coverage model. |
 | `--constants`           | Fixed parameters during the inference or using Godambe analysis. Use -1 to indicate a parameter is NOT fixed. Default: None. |
 | `--lbounds`             | Lower bounds of the optimized parameters. |
 | `--ubounds`             | Upper bounds of the optimized parameters. |

@@ -33,6 +33,8 @@ nav:
         - Demographic inference: 'userguide/demog.md'
         - Cache generation: 'userguide/cache.md'
         - DFE inference: 'userguide/dfe.md'
+        - Joint DFE inference: 'userguide/jdfe.md'
+        - LowPass sequence coverage correction: 'userguide/lowpass.md'
         - Statistical testing: 'userguide/stat.md'
         - Cloud computing: 'userguide/cloud.md'
         - Simulation: 'userguide/simulation.md'

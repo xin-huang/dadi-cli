@@ -1,5 +1,4 @@
 import argparse, inspect, nlopt, os, random, sys, time, warnings
-import work_queue as wq
 from multiprocessing import Process, Queue
 from sys import exit
 from dadi_cli.parsers.common_arguments import *
@@ -36,6 +35,11 @@ def _run_infer_dm(args: argparse.Namespace) -> None:
             Grid sizes to use in demographic calculations.
         - misid : bool
             Flag to indicate if misidentification handling should be enabled.
+        - cov_args : list
+            Dictionary that contains the data dictionary with coverage information 
+            and total number of sample sequenced in each population for coverage correction.
+        - cov_inbreeding : list
+            Inbreeding parameter for each population from 0 to 1, see dadi manual for more information.
         - seed : int or None
             Seed for random number generation to ensure reproducibility.
         - maxeval : int
@@ -87,6 +91,13 @@ def _run_infer_dm(args: argparse.Namespace) -> None:
 
     make_dir(args.output_prefix)
 
+    # Converts str to float and None string to None value
+    args.lbounds, args.ubounds, args.constants = convert_bounds_and_constants(args.lbounds, args.ubounds, args.constants)
+
+    if args.cov_args != []:
+        import pickle
+        args.cov_args[0] = pickle.load(open(args.cov_args[0], 'rb'))
+
     # Because basic standard neutral models do not need to optimized
     # we can calculate the log-likelihood and theta
     if args.model in ['snm_1d', 'snm_2d'] and args.p0 == -1 and args.lbounds == None and args.ubounds == None:
@@ -116,9 +127,9 @@ def _run_infer_dm(args: argparse.Namespace) -> None:
         args.constants = check_params(
             args.constants, args.model, "--constant", args.misid
         )
-    if not args.model_file and args.lbounds != -1:
+    if not args.model_file and args.lbounds != None:
         args.lbounds = check_params(args.lbounds, args.model, "--lbounds", args.misid)
-    if not args.model_file and args.ubounds != -1:
+    if not args.model_file and args.ubounds != None:
         args.ubounds = check_params(args.ubounds, args.model, "--ubounds", args.misid)
 
     if args.p0 == -1:
@@ -142,7 +153,10 @@ def _run_infer_dm(args: argparse.Namespace) -> None:
     fid.write("# {0}\n".format(" ".join(sys.argv)))
 
     # Write column headers
-    if not args.nomisid:
+    # Bugfix: use args.misid instead of args.nomisid.
+    # Since args.misid can be true and args.nomisid can be false
+    # due to checking for fs.folded, use args.misid for future commands.
+    if args.misid:
         param_names += ["misid"]
     fid.write("# Log(likelihood)\t" + "\t".join(param_names) + "\ttheta\n")
 
@@ -191,7 +205,10 @@ def _run_infer_dm(args: argparse.Namespace) -> None:
             else:
                 global_algorithm = nlopt.GN_MLSL_LDS
             if args.work_queue:
-
+                try:
+                    import ndcctools.work_queue as wq
+                except ModuleNotFoundError:
+                    raise ValueError("Work Queue could not be loaded.")
                 if args.debug_wq:
                     q = wq.WorkQueue(name=args.work_queue[0], debug_log="debug.log", port=args.port)
                 else:
@@ -216,6 +233,8 @@ def _run_infer_dm(args: argparse.Namespace) -> None:
                         args.lbounds,
                         args.constants,
                         args.misid,
+                        args.cov_args,
+                        args.cov_inbreeding,
                         None,
                         args.maxeval,
                         args.maxtime,
@@ -237,6 +256,8 @@ def _run_infer_dm(args: argparse.Namespace) -> None:
                     args.lbounds,
                     args.constants,
                     args.misid,
+                    args.cov_args,
+                    args.cov_inbreeding,
                     None,
                     args.maxeval,
                     args.maxtime,
@@ -340,12 +361,18 @@ def _run_infer_dm(args: argparse.Namespace) -> None:
                        args.lbounds,
                        args.constants,
                        args.misid,
+                       args.cov_args,
+                       args.cov_inbreeding,
                        None,
                        args.maxeval,
                        args.maxtime,
                        bestfits]
 
         if args.work_queue:
+            try:
+                import ndcctools.work_queue as wq
+            except ModuleNotFoundError:
+                raise ValueError("Work Queue could not be loaded.")
             if args.debug_wq:
                 q = wq.WorkQueue(name=args.work_queue[0], debug_log="debug.log", port=args.port)
             else:
@@ -449,6 +476,7 @@ def add_infer_dm_parsers(subparsers: argparse.ArgumentParser) -> None:
     add_model_argument(parser)
     add_grids_argument(parser)
     add_misid_argument(parser)
+    add_coverage_model_argument(parser)
     add_constant_argument(parser)
     add_bounds_argument(parser)
     parser.add_argument(

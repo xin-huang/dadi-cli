@@ -102,6 +102,7 @@ def simulate_dfe(
     cache2d: dadi.DFE.Cache2D_mod, 
     sele_dist: str, 
     sele_dist2: str, 
+    pdf_file: str,
     ratio: float, 
     misid: bool, 
     output: str
@@ -143,9 +144,9 @@ def simulate_dfe(
         func = cache2d.integrate
 
     if sele_dist is not None:
-        sele_dist = get_dadi_pdf(sele_dist)
+        sele_dist, _ = get_dadi_pdf(sele_dist, pdf_file)
     if sele_dist2 is not None:
-        sele_dist2 = get_dadi_pdf(sele_dist2)
+        sele_dist2, _ = get_dadi_pdf(sele_dist2, pdf_file)
     if (sele_dist is None) and (sele_dist2 is not None):
         sele_dist = sele_dist2
 

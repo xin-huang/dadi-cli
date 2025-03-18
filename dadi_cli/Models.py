@@ -3,18 +3,18 @@ import dadi.DFE as DFE
 from inspect import getmembers, isfunction
 
 duplicated_models = ["snm", "bottlegrowth"]
-duplicated_sele_models = [
-    "IM",
-    "IM_pre",
-    "IM_pre_single_gamma",
-    "IM_single_gamma",
-    "split_asym_mig",
-    "split_asym_mig_single_gamma",
-    "split_mig",
-    "three_epoch",
-    "two_epoch",
-    "split_mig_single_gamma",
-]
+# duplicated_sele_models = [
+#     "IM",
+#     "IM_pre",
+#     "IM_pre_single_gamma",
+#     "IM_single_gamma",
+#     "split_asym_mig",
+#     "split_asym_mig_single_gamma",
+#     "split_mig",
+#     "three_epoch",
+#     "two_epoch",
+#     "split_mig_single_gamma",
+# ]
 oned_models = [m[0] for m in getmembers(dadi.Demographics1D, isfunction)]
 twod_models = [m[0] for m in getmembers(dadi.Demographics2D, isfunction)]
 try:
@@ -29,8 +29,8 @@ for m in duplicated_models:
     oned_models.remove(m)
 for m in duplicated_models:
     twod_models.remove(m)
-for m in duplicated_sele_models:
-    sele_models.remove(m)
+# for m in duplicated_sele_models:
+#     sele_models.remove(m)
 
 
 def get_model(

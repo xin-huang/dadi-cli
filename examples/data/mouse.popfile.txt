@@ -1,0 +1,13 @@
+Mmd_IRA1_AH15.variant3	Mmd_IRA
+Mmd_IRA2_AH23.variant3	Mmd_IRA
+Mmd_IRA5_JR2-F1C.variant3	Mmd_IRA
+Mmd_IRA7_JR7-F1C.variant3	Mmd_IRA
+Mmd_IRA8_JR8-F1A.variant3	Mmd_IRA
+Mmd_FRA1_14.variant	Mmd_FRA
+Mmd_FRA2_15B.variant	Mmd_FRA
+Mmd_FRA3_16B.variant	Mmd_FRA
+Mmd_FRA4_18B.variant	Mmd_FRA
+Mmd_FRA5_B2C.variant	Mmd_FRA
+Mmd_FRA6_C1.variant	Mmd_FRA
+Mmd_FRA7_E1.variant	Mmd_FRA
+Mmd_FRA8_F1B.variant	Mmd_FRA
