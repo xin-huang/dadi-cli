@@ -68,5 +68,6 @@ An example for a folded allele frequency spectrum from one population is below.
 | `--mask-singletons`        | Mask the singletons that are exclusive to each population. Default: None. |
 | `--mask-shared-singletons` | Mask the singletons that are exclusive to each population and shared between populations. Default: None. |
 | `--marginalize-pop-ids`    | Population names you want to marginalize (remove) from the full fs. Default: None. |
+| `--calc-coverage`          | Store coverage information of sites in <output>.coverage.pickle object. Default: None. |
 | `--output`                 | Name of the output file. |
 | `--seed`                   | Random seed. |
