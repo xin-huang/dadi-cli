@@ -134,7 +134,7 @@ def test_bad_res_file(files):
         Nclose=3,
         Nbest=10,
         )
-    assert exc_info.value.args[0] == "No files or incorrect path naming (--input-prefix path name should end with InferDM)."
+    assert exc_info.value.args[0] == "No files or incorrect path naming (--input-prefix path name should end with InferDM or InferDFE)."
 
 def test_empty_res_file(files):
     open("empty_bestfit.opt.0","w")

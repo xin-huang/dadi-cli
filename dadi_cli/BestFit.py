@@ -3,6 +3,7 @@ import numpy as np
 from typing import Optional
 from dadi_cli.Models import get_model
 from dadi_cli.Pdfs import get_dadi_pdf_params
+from dadi_cli.utilities import convert_to_None
 
 
 def get_bestfit_params(
@@ -44,13 +45,14 @@ def get_bestfit_params(
     Raises
     ------
     ValueError
-        If no files are found at the specified path or if an incorrect path naming convention is used.
+        If no files are found at the specified path or 
+        if an incorrect path naming convention is used (end with InferDM or InferDFE).
 
     """
     files = glob.glob(path)
     if files == []:
         raise ValueError(
-            "No files or incorrect path naming (--input-prefix path name should end with InferDM)."
+            "No files or incorrect path naming (--input-prefix path name should end with InferDM or InferDFE)."
         )
     res, comments = [], []
 
@@ -79,7 +81,11 @@ def get_bestfit_params(
 
     # Filter results by boundary
     if ubounds is not None and lbounds is not None:
+        lbounds = convert_to_None(lbounds, len(lbounds))
+        ubounds = convert_to_None(ubounds, len(ubounds))
         res = boundary_filter(res, ubounds, lbounds)
+        if len(res) == 0:
+            print("WARNING: Results are filtered by boundary conditions.")
 
     try:
         opt_ll = res[0][0]

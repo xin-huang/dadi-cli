@@ -5,9 +5,8 @@ channels:
   - nvidia
 dependencies:
   - cuda
-  - gcc
-  - gfortran
-  - gxx==11.3
+  - cyvcf2
+  - dadi
   - demes
   - dill
   - matplotlib
@@ -16,8 +15,8 @@ dependencies:
   - numpy
   - pip
   - pycuda
+  - python==3.9
   - scipy
   - pip:
-      - dadi>2.1.0
       - scikit-cuda
       - .

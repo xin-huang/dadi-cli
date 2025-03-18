@@ -92,7 +92,7 @@ def add_grids_argument(parser: argparse.ArgumentParser) -> None:
         "--grids",
         type=positive_int,
         nargs=3,
-        help="Sizes of grids. Default is based on sample size.",
+        help="Sizes of grids. Default: Based on sample size.",
     )
 
 
@@ -253,7 +253,7 @@ def add_eps_argument(parser: argparse.ArgumentParser) -> None:
         type=positive_num,
         nargs="+",
         required=False,
-        help="Step sizes to try for Godambe analysis. Default: [0.1, 0.01, 0.001]",
+        help="Step sizes to try for Godambe analysis. Default: [0.1, 0.01, 0.001].",
     )
 
 
@@ -425,14 +425,14 @@ def add_inference_argument(parser: argparse.ArgumentParser) -> None:
         "--maxeval",
         type=positive_int,
         default=False,
-        help="Max number of parameter set evaluations tried for optimizing demography. Default: Number of parameters multiplied by 100.",
+        help="Max number of parameter set evaluations tried for optimization. Default: Number of parameters multiplied by 100.",
     )
 
     parser.add_argument(
         "--maxtime",
         type=positive_int,
         default=np.inf,
-        help="Max amount of time for optimizing demography. Default: infinite.",
+        help="Max amount of time for optimization. Default: Infinite.",
     )
 
     parser.add_argument(

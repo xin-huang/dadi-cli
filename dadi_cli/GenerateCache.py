@@ -17,7 +17,7 @@ def generate_cache(
     sample_sizes: list[int],
     cpus: int,
     gpus: int,
-    dimensionality: int,
+    cache_type: str
 ) -> None:
     """
     Generates caches of frequency spectra for DFE inference using demographic models.
@@ -44,17 +44,23 @@ def generate_cache(
         Number of CPUs to utilize.
     gpus : int
         Number of GPUs to utilize.
-    dimensionality : int
-        Dimensionality of the frequency spectrum (must be 1 or 2).
+    cache_type : str
+        Type of the cache.
 
     Raises
     ------
     ValueError
-        If the dimensionality is not 1 or 2.
+        If the number of populations is not 1 or 2.
+        If the number of populations is 1 and `cache_type` is `cache2d`.
 
     """
-    if dimensionality not in [1, 2]:
-        raise ValueError(f"Invalid dimensionality {dimensionality}. Only 1 or 2 are accepted.")
+    num_pop = len(sample_sizes)
+
+    if (num_pop == 1) and (cache_type == 'cache2d'):
+        raise ValueError("`cache2d` is only supported for JSFS from two populations.")
+
+    if num_pop not in [1, 2]:
+        raise ValueError(f"Invalid number of populations: {num_pop}. Only 1 or 2 are accepted.")
 
     if func is not getattr(DFE.DemogSelModels, 'equil'):
         popt, theta = get_opts_and_theta(popt, gen_cache=True)
@@ -64,7 +70,7 @@ def generate_cache(
     if grids == None:
         grids = cache_pts_l_func(sample_sizes)
 
-    if dimensionality == 1:
+    if cache_type == 'cache1d':
         spectra = DFE.Cache1D(
             popt,
             sample_sizes,
@@ -76,7 +82,7 @@ def generate_cache(
             cpus=cpus,
             gpus=gpus
         )
-    elif dimensionality == 2:
+    elif cache_type == 'cache2d':
         spectra = DFE.Cache2D(
             popt,
             sample_sizes,

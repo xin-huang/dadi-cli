@@ -181,7 +181,7 @@ def test_run_generate_cache():
     generate_cache_args.sample_sizes = [10, 10]
     generate_cache_args.cpus = 1
     generate_cache_args.gpus = 0
-    generate_cache_args.dimensionality = 1
+    generate_cache_args.cache_type = 'cache1d'
 
     _run_generate_cache(generate_cache_args)
     os.remove(generate_cache_args.output)
@@ -201,7 +201,7 @@ def test_run_generate_cache_html():
     generate_cache_args.sample_sizes = [10, 10]
     generate_cache_args.cpus = 1
     generate_cache_args.gpus = 0
-    generate_cache_args.dimensionality = 1
+    generate_cache_args.cache_type = 'cache1d'
 
     _run_generate_cache(generate_cache_args)
     os.remove(generate_cache_args.output)

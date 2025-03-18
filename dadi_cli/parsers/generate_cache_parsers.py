@@ -39,10 +39,15 @@ def _run_generate_cache(args: argparse.Namespace) -> None:
             Number of CPU cores to use for computation.
         - gpus : int
             Number of GPU devices to use for computation, if applicable.
-        - dimensionality : int
-            The dimensionality of the demographic model.
+        - cache_type: str
+            Type of the cache: 
+                - cache1d for SFS from one population or JSFS from two populations but assuming the population-scaled selection coefficients are the same in the two populations.
+                - cache2d for JSFS from two populations and assuming the population-scaled selection coefficients are different in the two populations.
 
     """
+    if (args.model in ['bottlegrowth_1d_sel', 'equil', 'growth_sel', 'two_epoch_sel', 'three_epoch_sel']) and (args.cache_type != 'cache1d'):
+        raise ValueError(f'The demographic model {args.model} is only supported for generating `cache1d`.')
+
     if args.model_file is None and args.model not in [m[0] for m in getmembers(DFE.DemogSelModels, isfunction)]:
         raise ValueError(f"{args.model} is not in dadi.DFE.DemogSelModels, did you mean to include _sel or _single_sel in the model name or specify a --model-file?")
 
@@ -77,7 +82,7 @@ def _run_generate_cache(args: argparse.Namespace) -> None:
         sample_sizes=args.sample_sizes,
         cpus=args.cpus,
         gpus=args.gpus,
-        dimensionality=args.dimensionality,
+        cache_type=args.cache_type
     )
 
 
@@ -140,11 +145,12 @@ def add_generate_cache_parsers(subparsers: argparse.ArgumentParser) -> None:
     )
 
     parser.add_argument(
-        "--dimensionality",
-        type=positive_int,
-        default=1,
-        help="Determine whether using demographic model plus selection with the same gamma in both the two populations or not. Default: 1.",
-        dest="dimensionality",
+        "--cache-type",
+        type=str,
+        choices=['cache1d', 'cache2d'],
+        default='cache1d',
+        help="Type of the generated cache: `cache1d` for SFS from one population or JSFS from two populations but assuming the population-scaled selection coefficients are the same in the two populations; `cache2d` for JSFS from two populations and assuming the population-scaled selection coefficients are independent in the two populations. Default: `cache1d`.",
+        dest="cache_type",
     )
 
     add_sample_sizes_argument(parser)
