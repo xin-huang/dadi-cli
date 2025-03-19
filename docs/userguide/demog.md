@@ -4,7 +4,7 @@
 
 One of the primary ways demographic models in dadi are distinguished from one another is by their parameters. For most models, the main parameters are `nu`, population size change relative to a reference population, \\(N_{\text{ref}}\\) (usually the ancestral population, \\(N_{\text{a}}\\), or effective population size, \\(N_{\text{e}}\\)), and `T`, time in the past in population-scaled genetic units. For example, a `two_epoch model` with a `nu` of 3 and `T` of 0.1 translates to 0.1 time-units in the past, the population increased to 3 times larger than \\(N_{\text{ref}}\\).
 
-Demographic models with more than one population (may be refered to elsewhere in documentation as 2D or 3D for two or three populations respectivly) can have `m`, the migration rate, as a parameter. It is common in dadi documentation to denote migration rate by `m`, then the destination population, followed by the source population. For example, `m12` would translate to the rate of population 2 that migrants to population 1.
+Demographic models with more than one population (may be refered to elsewhere in documentation as 2D or 3D for two or three populations respectivly) can have `m`, the migration rate, as a parameter. It is common in dadi documentation to denote migration rate by `m`, then the destination population, followed by the source population. For example, `m12` would translate to the rate of population 2 that migrates to population 1.
 
 <!-- `nu` is the population size relative to a reference population (the ancestral population or the effective population size). So a `nu` of 3 means the population is triple the size of the reference population, or \\(3 N_{\text{ref}}\\).
 
@@ -19,6 +19,8 @@ Each model inference will produce a \\(\theta\\) value, which is roughly a popul
 Another potential parameter users might infer is `misid`, the percentage of ancestral misidentification. If users' SNP data contains ancestral allele state (usually in the VCF, this will be denoted as AA= in the INFO column), dadi-cli can generate an unfolded allele frequency spectrum by assuming the derived allele is the one not matching the ancestral state rather than assuming the derived allele is the one with the lower population frequency. This results in more SNPs that are shared in more of the population. `misid` corrects for model assumptions that SNPs with high population prevalence are rarer.
 
 The final parameter that is common in dadi models is `F`, the percentage of inbreeding in the population. A common sign of inbreeding in populations is more prevalence of homozygotic SNPs, resulting in higher than expected SNPs with an even number of samples. See dadi's documentation on [inbreeding](https://dadi.readthedocs.io/en/latest/user-guide/inbreeding/) for more details.
+
+<!-- \\(\theta\\) is a final parameter that usually gets inferred by comparing the data and model to estimate a population-scaled rate of neutral mutations. -->
 
 <!-- \\(\theta\\) is a final parameter that usually gets inferred by comparing the data and model to estimate a population-scaled rate of neutral mutations. -->
 
