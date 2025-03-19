@@ -20,6 +20,8 @@ Another potential parameter users might infer is `misid`, the percentage of ance
 
 The final parameter that common in dadi models is `F`, the percentage of inbreeding in the population. A common sign of inbreeding in populations is more provalence of homozygotic SNPs, resulting in higher than expected SNPs with an even number of sample. See dadi's documentation on [inbreeding](https://dadi.readthedocs.io/en/latest/user-guide/inbreeding/) for more details.
 
+<!-- \\(\theta\\) is a final parameter that usually gets inferred by comparing the data and model to estimate a population-scaled rate of neutral mutations. -->
+
 ## Input
 
 After obtaining the allele frequency spectrum, we can infer a demographic model from the spectrum for synonymous SNPs (e.g., [1KG.YRI.CEU.20.syn.unfolded.fs](https://github.com/xin-huang/dadi-cli/blob/master/examples/results/fs/1KG.YRI.CEU.20.syn.unfolded.fs)), because we usually assume synonymous SNPs are neutral. Intergenic SNPs are an alternative for data under neutral selection. Here, we use the `split_mig` model:
@@ -137,11 +139,11 @@ Because there is randomness built into `dadi-cli` for where the starting paramet
 
 Finally, the grid sizes may also affect the inference. If `n` is the maximum of the sample sizes, then the default grid sizes are `(int(n*1.1)+2, int(n*1.2)+4, int(n*1.3)+6)`.
 
-## Parameter Conversions
+<!-- ## Parameter Conversions
 
 Users can convert the parameters in dadi, which are in population scaled and genetic units, into more meaningful units like number of individuals and years.
 
-`nu` is the population size relative to a reference population (the ancestral population or the effective population size). So a `nu` of 3 means the population is triple the size of the reference population, or \\(3 N_{\text{ref}}\\).
+`nu` the population size relative to a reference population (the ancestral population or the effective population size). So a `nu` of 3 means the population is triple the size of the reference population, or \\(3 N_{\text{ref}}\\).
 
 `T` is the time in \\(\text{ploidy} \cdot N_{\text{ref}}\\) generations. So for humans, time is in units of `T` are \\(2 N_{\text{ref}}\\)
 In order to convert `T` into years, for diploids, users would use the conversion: \\(2 N_{\text{ref}} T\\)
@@ -153,7 +155,7 @@ For demographic models with more than one population, `m`, the rate of migration
 
 Another potential parameter users might infer is `misid`, the percentage of ancestral misidentification. If users' SNP data contains ancestral allele state (usually in the VCF, this will be denoted as AA= in the INFO column), dadi-cli can generate an unfolded alelle frequency spectrum by assuming the derived allele is the one not matching the ancestral state rather than assuming the derived allele is the one with the lower population frequency. This results in a more SNPs that are shared in more of the population. `misid` corrects for model assumptions that SNPs with high population prevelance are rarer.
 
-The final parameter that is common in dadi models is `F`, the percentage of inbreeding in a population. A common sign of inbreeding in populations is more prevalence of homozygotic SNPs, resulting in higher than expected SNPs with an even number of sample. See dadi's documentation on [inbreeding](https://dadi.readthedocs.io/en/latest/user-guide/inbreeding/) for more details.
+The final parameter that is common in dadi models is `F`, the percentage of inbreeding in a population. A common sign of inbreeding in populations is more prevalence of homozygotic SNPs, resulting in higher than expected SNPs with an even number of sample. See dadi's documentation on [inbreeding](https://dadi.readthedocs.io/en/latest/user-guide/inbreeding/) for more details. -->
 
 ## Arguments
 
