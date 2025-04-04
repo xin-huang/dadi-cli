@@ -141,21 +141,39 @@ Because there is randomness built into `dadi-cli` for where the starting paramet
 
 Finally, the grid sizes may also affect the inference. If `n` is the maximum of the sample sizes, then the default grid sizes are `(int(n*1.1)+2, int(n*1.2)+4, int(n*1.3)+6)`.
 
-<!-- ## Parameter Conversions
+## Parameter Conversions
 
 Users can convert the parameters in dadi, which are in population scaled and genetic units, into more meaningful units like number of individuals and years.
 
-`nu` the population size relative to a reference population (the ancestral population or the effective population size). So a `nu` of 3 means the population is triple the size of the reference population, or \\(3 N_{\text{ref}}\\).
+To start, users might have to calculate the reference population size, \\(N_{\text{ref}}\\) (as previously mentioned, the ancestral population size or effective population size). To do this users need:
 
-`T` is the time in \\(\text{ploidy} \cdot N_{\text{ref}}\\) generations. So for humans, time is in units of `T` are \\(2 N_{\text{ref}}\\)
-In order to convert `T` into years, for diploids, users would use the conversion: \\(2 N_{\text{ref}} T\\)
-To convert `T` into generations, users would divide years by generations per-year, ex. for Humans estimating 25 years per-generation: \\(\frac{2 N_{\text{ref}} T}{25 \text{ years per generation}}\\).
+- \\(\theta\\), the population neutral mutation rate (inferred from the demographic history inference)
+- \\(\mu\\), the per-nucleotide mutation rate per-generation (usually derived from the literature)
+- \\(L\\), the full legth of sequence that could have been in the data.
 
-Each model inference will produce a \\(\theta\\) value, which is roughly a population scale neutral mutation rate. This value is important for estimating the DFE (see [dadi documentation](https://dadi.readthedocs.io/en/latest/user-guide/dfe-inference/) for more specific details) and calculating \\(N_\text{ref}\\), using the conversion \\(\frac{\theta}{4 \mu L}\\), where \\(\mu\\) is the genomic mutation rate and \\(L\\) is the length of sequence that could have ended up in the SNPs data. Put another way, \\(L\\) is the total length of the genome that was sequenced and could have been the same type of SNP (intergenic, synonymous, nonsynonymous) being analyized.
+Calculating \\(L\\) can be tricky, as at least it requires knowing the length of genome that was sequenced. If users are infering the demographic history from intergenic sequence, then \\(L_\text{intergenic}\\) is the same as the size of intergenic genome sequenced.
 
-For demographic models with more than one population, `m`, the rate of migration, is an additional parameter that is common in dadi demographic models. It is common in dadi documentation to denote migration rate by `m`, then the destination population, followed by source population. For example, `m12` would translate to the rate of population 2 that migrants to population 1. For diploids, `m` can be converted into units of fraction of inviduals in a destination population made up of a source population: \\(\frac{m}{2 N_{\text{ref}}}\\)
+In the case of finding \\(L_\text{synonymous}\\) and \\(L_\text{nonsynonymous}\\) can add an extra layer of complexity. If possible, users would want to simulate mutations on the whole sequenced exome and calculate the total mutations that are synonymous and nonsynonymous to get \\(L_\text{synonymous}\\) and \\(L_\text{nonsynonymous}\\). If users have the ratio of nonsynonymous to synonymous mutations (shortened to \\(R_\text{NS:S}\\)) and \\(L_\text{exon}\\) they can use the calculations:
 
-Another potential parameter users might infer is `misid`, the percentage of ancestral misidentification. If users' SNP data contains ancestral allele state (usually in the VCF, this will be denoted as AA= in the INFO column), dadi-cli can generate an unfolded alelle frequency spectrum by assuming the derived allele is the one not matching the ancestral state rather than assuming the derived allele is the one with the lower population frequency. This results in a more SNPs that are shared in more of the population. `misid` corrects for model assumptions that SNPs with high population prevelance are rarer.
+- \\(L_\text{synonymous}\\) = \\(\frac{1}{1+R_\text{NS:S}} \cdot L_\text{exon}\\)
+- \\(L_\text{nonsynonymous}\\) = \\(\frac{R_\text{NS:S}}{1+R_\text{NS:S}} \cdot L_\text{exon}\\)
+
+One last thing to note before getting into specifics of conversion is organism's ploidy can be a factor in the conversions.
+
+Once you have the above:
+
+- \\(N_{\text{ref}} = \frac{\theta}{(ploidy) \times 2 \mu L_{\text{neutral}}}\\), where \\(L_{\text{neutral}}\\) is either \\(L_\text{synonymous}\\) or \\(L_\text{intergenic}\\).
+
+Here are parameter conversions for `nu`, `T`, and `m`:
+
+- Because `nu` is the relative size change of \\(N_{\text{ref}}\\), it is a straightforward conversion: \\(\nu N_{\text{ref}}\\).
+- `T` is the time in \\((ploidy) N_{\text{ref}}\\) generations. So for humans, `T` is in units of \\(2 N_{\text{ref}}\\). In order to convert `T` into years, for diploids, users would use the conversion: \\(2 N_{\text{ref}} T\\). To convert `T` into generations, users would divide years by generations per-year, ex. for Humans estimating 25 generations per-year: \\(\frac{2 N_{\text{ref}} T}{25 \text{ years per generation}}\\).
+
+<!-- Each model inference will produce a \\(\theta\\) value, which is roughly a population scale neutral mutation rate. This value is important for estimating the DFE (see [dadi documentation](https://dadi.readthedocs.io/en/latest/user-guide/dfe-inference/) for more specific details) and calculating \\(N_\text{ref}\\), using the conversion \\(\frac{\theta}{4 \mu L}\\), where \\(\mu\\) is the genomic mutation rate and \\(L\\) is the length of sequence that could have ended up in the SNPs data. Put another way, \\(L\\) is the total length of the genome that was sequenced and could have been the same type of SNP (intergenic, synonymous, nonsynonymous) being analyized. -->
+
+- `m`, the rate of migration, is also in units of \\((ploidy) N_{\text{ref}}\\) generations. For diploids, `m` can be converted into units of fraction of inviduals in a destination population made up of a source population per-generation: \\(\frac{m}{2 N_{\text{ref}}}\\)
+
+<!-- Another potential parameter users might infer is `misid`, the percentage of ancestral misidentification. If users' SNP data contains ancestral allele state (usually in the VCF, this will be denoted as AA= in the INFO column), dadi-cli can generate an unfolded alelle frequency spectrum by assuming the derived allele is the one not matching the ancestral state rather than assuming the derived allele is the one with the lower population frequency. This results in a more SNPs that are shared in more of the population. `misid` corrects for model assumptions that SNPs with high population prevelance are rarer.
 
 The final parameter that is common in dadi models is `F`, the percentage of inbreeding in a population. A common sign of inbreeding in populations is more prevalence of homozygotic SNPs, resulting in higher than expected SNPs with an even number of sample. See dadi's documentation on [inbreeding](https://dadi.readthedocs.io/en/latest/user-guide/inbreeding/) for more details. -->
 
