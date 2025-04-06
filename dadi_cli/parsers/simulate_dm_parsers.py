@@ -56,6 +56,9 @@ def _run_simulate_dm(args: argparse.Namespace) -> None:
         ns=args.sample_sizes,
         pts_l=args.grids,
         misid=args.misid,
+        theta=args.theta,
+        sample=args.sample,
+        seed=args.seed,
         output=args.output,
         inference_file=args.inference_file,
     )
@@ -81,6 +84,23 @@ def add_simulate_dm_parsers(subparsers: argparse.ArgumentParser) -> None:
     add_sample_sizes_argument(parser)
     add_p0_argument(parser)
     add_misid_argument(parser)
+
+    parser.add_argument(
+        "--theta",
+        dest="theta",
+        type=positive_num,
+        default=1.0,
+        help='Scale the simulated data by some value. If creating an inference-file, this value will appear there. Default: 1.',
+    )
+
+    parser.add_argument(
+        "--sample",
+        dest="sample",
+        default=0,
+        type=nonnegative_int,
+        help='Number of times to Poisson sample the simulated data (inplace of standard simulation). Output name will be <output>.sample.<#>.fs. Default: 0.',
+    )
+
     add_grids_argument(parser)
 
     parser.add_argument(
@@ -91,4 +111,5 @@ def add_simulate_dm_parsers(subparsers: argparse.ArgumentParser) -> None:
         help='Make an output file like you would get for running InferDM to pass into GenerateCache to make caches with your simulated demographic model. Will be the same name and path as output + ".SimulateFs.pseudofit"; Default: False.',
     )
     add_output_argument(parser)
+    add_seed_argument(parser)
     parser.set_defaults(runner=_run_simulate_dm)

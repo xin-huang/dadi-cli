@@ -13,6 +13,9 @@ def simulate_demography(
     ns: int, 
     pts_l: tuple[int],
     misid: bool, 
+    theta: float,
+    sample: int,
+    seed: int,
     output: str, 
     inference_file: bool
 ) -> None:
@@ -39,6 +42,11 @@ def simulate_demography(
         If True, outputs the inference results to generate caches.
 
     """
+    # Set the random seed for reproducibility
+    if seed is not None:
+        import numpy as np
+        np.random.seed(seed)
+
     if pts_l is None:
         pts_l = pts_l_func(ns)
     # fs = dadi.Numerics.make_extrap_func(get_dadi_model_func(model, model_file))(popt, fs.sample_sizes, pts_l)*theta
@@ -49,8 +57,13 @@ def simulate_demography(
         func = dadi.Numerics.make_anc_state_misid_func(func)
         func.__param_names__ = param_names + ["misid"]
     func_ex = dadi.Numerics.make_extrap_func(func)
-    fs = func_ex(p0, ns, pts_l)
-    fs.to_file(output)
+    fs = func_ex(p0, ns, pts_l) * theta
+
+    if sample > 0:
+        for i in range(1,sample+1):
+            fs.sample().to_file(output + f".sample.{i}.fs")
+    else:
+        fs.to_file(output + ".fs")
 
     if inference_file:
         with open(f"{output}.SimulateDM.pseudofit", "w") as fi:
