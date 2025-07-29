@@ -546,7 +546,7 @@ def test_top_opts_func():
 
 
 try:
-    import work_queue as wq
+    import ndcctools.work_queue as wq
     wqskip = False
 except:
     wqskip = True
