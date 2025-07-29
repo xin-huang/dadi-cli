@@ -45,7 +45,7 @@ def _run_plot(args: argparse.Namespace) -> None:
             Range of residuals for plotting.
         - projections : tuple, optional
             Projections for frequency spectrum summarization.
-        - cov_args : list
+        - cov_args : str
             Dictionary that contains the data dictionary with coverage information 
             and total number of sample sequenced in each population for coverage correction.
         - cov_inbreeding : list
@@ -87,9 +87,9 @@ def _run_plot(args: argparse.Namespace) -> None:
 
     make_dir(args.output)
 
-    if args.cov_args != []:
+    if args.cov_args != None:
         import pickle
-        args.cov_args[0] = pickle.load(open(args.cov_args[0], 'rb'))
+        args.cov_args = pickle.load(open(args.cov_args, 'rb'))
 
     if args.fs is None:
         plot_mut_prop(

@@ -514,7 +514,7 @@ def add_coverage_model_argument(parser: argparse.ArgumentParser) -> None:
     """
     parser.add_argument(
         "--coverage-model",
-        default=False,
+        default=None,
         type=str,
         required=False,
         dest="cov_args",

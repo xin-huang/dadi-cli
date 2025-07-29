@@ -74,8 +74,10 @@ def generate_fs(
         except ImportError:
             print("Unable to load cyvcf2 and check if ancestral alleles are in provided VCF.\n"+
                   "Generated SFS may be empty if ancestral allele not found.")
-    # if calc_coverage != False:
-    #     calc_coverage, nseq = True, calc_coverage
+    if calc_coverage == None:
+        raise ValueError(
+            "Please provide the number of sequenced haploids with --calc-coverage."
+        )
 
     if subsample != []:
         subsample_dict = {}
