@@ -411,7 +411,7 @@ def test_generate_fs_marginalize(data):
     assert "All populations to marginalize must be in the list of population ids." in str(excinfo.value)
 
 
-def test_generate_fs_lowpass(data):
+def test_generate_fs_lowpass_dd(data):
     generate_fs(
         vcf="tests/example_data/LowPass-files/cov_gatk_Replicate_8_filtered_2D-GT-update.vcf",
         output="tests/test_results/cov-test.fs",
@@ -424,7 +424,28 @@ def test_generate_fs_lowpass(data):
         bootstrap=None,
         chunk_size=None,
         masking="",
-        calc_coverage=True,
+        calc_coverage=[20, 20],
+        seed=None,
+    )
+    import pickle
+    cov_dist, nseq = pickle.load(open("tests/test_results/cov-test.fs.coverage.pickle", "rb"))
+
+    assert nseq == [20, 20]
+
+def test_generate_fs_lowpass_fs(data):
+    generate_fs(
+        vcf="tests/example_data/LowPass-files/cov_gatk_Replicate_8_filtered_2D-GT-update.vcf",
+        output="tests/test_results/cov-test.fs",
+        pop_ids=["pop1", "pop2"],
+        pop_info="tests/example_data/LowPass-files/cov_popfile_2D.txt",
+        projections=[20, 20],
+        marginalize_pops=None,
+        subsample=[],
+        polarized=False,
+        bootstrap=None,
+        chunk_size=None,
+        masking="",
+        calc_coverage=[20, 20],
         seed=None,
     )
     dadi_cli_fs = dadi.Spectrum.from_file("tests/test_results/cov-test.fs")

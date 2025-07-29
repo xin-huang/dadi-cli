@@ -71,7 +71,7 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
             Path or URL to the file with best fit parameters.
         - nomisid : bool
             Flag to indicate that misidentification should not be considered.
-        - cov_args : list
+        - cov_args : str
             Dictionary that contains the data dictionary with coverage information 
             and total number of sample sequenced in each population for coverage correction.
         - cov_inbreeding : list
@@ -104,8 +104,8 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
     # Due to development history, much of the code expects a args.misid variable, so create it.
     args.misid = not (fs.folded or args.nomisid)
 
-    if args.cov_args != []:
-        args.cov_args[0] = pickle.load(open(args.cov_args[0], 'rb'))
+    if args.cov_args != None:
+        args.cov_args = pickle.load(open(args.cov_args, 'rb'))
 
     make_dir(args.output_prefix)
 
@@ -166,7 +166,7 @@ def _run_infer_dfe(args: argparse.Namespace) -> None:
     else:
         cache2d = args.cache2d
 
-    if not np.all(cache_ns == fs.sample_sizes) and args.cov_args == []:
+    if not np.all(cache_ns == fs.sample_sizes) and args.cov_args == None:
         raise ValueError('Cache and frequencey spectrum do not have the same sample sizes')
 
     if args.maxeval == False:

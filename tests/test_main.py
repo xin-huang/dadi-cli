@@ -60,7 +60,7 @@ def test_run_generate_fs():
     gen_fs_args.pop_info = "tests/example_data/LowPass-files/cov_popfile_2D.txt"
     gen_fs_args.pop_ids = ["pop1", "pop2"]
     gen_fs_args.polarized = False
-    gen_fs_args.calc_coverage = True
+    gen_fs_args.calc_coverage = [20, 20]
     _run_generate_fs(gen_fs_args)
     os.remove(gen_fs_args.output)
     os.remove(gen_fs_args.output+".coverage.pickle")
@@ -218,7 +218,7 @@ def infer_dm_args():
     pytest.lbounds = ["1e-3", "1e-3"]
     pytest.constants = -1
     pytest.nomisid = True
-    pytest.cov_args = []
+    pytest.cov_args = None
     pytest.cov_inbreeding = []
     pytest.cuda = False
     pytest.maxeval = 200
@@ -300,7 +300,7 @@ def test_run_infer_dm_misid(infer_dm_args):
 
 # Test LowPass
 def test_run_infer_dm_lowpass(infer_dm_args):
-    pytest.cov_args = ["tests/example_data/LowPass-files/cov.fs.coverage.pickle", 20, 20]
+    pytest.cov_args = "tests/example_data/LowPass-files/cov.fs.coverage.pickle"
     pytest.fs = "tests/example_data/LowPass-files/cov.fs"
     pytest.model = "split_mig"
     pytest.model_file = None
@@ -374,7 +374,7 @@ def infer_dfe_args():
     pytest.lbounds = ["1e-3", "1e-3"]
     pytest.constants = -1
     pytest.nomisid = True
-    pytest.cov_args = []
+    pytest.cov_args = None
     pytest.cov_inbreeding = []
     pytest.cuda = False
     pytest.maxeval = 100
@@ -513,7 +513,7 @@ def test_run_infer_dfe_mix_html(infer_dfe_args):
 # Test LowPass
 @pytest.mark.skip(reason="Finish later")
 def test_run_infer_dfe_lowpass(infer_dm_args):
-    pytest.cov_args = ["tests/example_data/LowPass-files/cov.fs.coverage.pickle", 20, 20]
+    pytest.cov_args = "tests/example_data/LowPass-files/cov.fs.coverage.pickle"
     pytest.fs = "tests/example_data/LowPass-files/cov.fs"
     # pytest.model = "split_mig"
     # pytest.model_file = None
@@ -546,7 +546,7 @@ def test_top_opts_func():
 
 
 try:
-    import work_queue as wq
+    import ndcctools.work_queue as wq
     wqskip = False
 except:
     wqskip = True
@@ -635,6 +635,7 @@ def plot_args():
     pytest.dfe_popt = "tests/example_data/example.split_mig.dfe.lognormal_mixture.params.InferDFE.bestfits"
     pytest.cache1d = "tests/example_data/cache_split_mig_1d.bpkl"
     pytest.cache2d = "tests/example_data/cache_split_mig_2d.bpkl"
+    pytest.cov_args = None
     pytest.vmin = 1e-3
     pytest.resid_range = 10
     pytest.projections = None

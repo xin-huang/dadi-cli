@@ -13,7 +13,7 @@ def generate_fs(
     bootstrap: int,
     chunk_size: int,
     masking: str,
-    calc_coverage: bool,
+    calc_coverage: int,
     seed: int,
 ) -> None:
     """
@@ -47,8 +47,8 @@ def generate_fs(
         'singleton' - Masks singletons in each population,
         'shared' - Masks singletons in each population and those shared across populations,
         '' - No masking is applied.
-    calc_coverage : bool
-        If True, a data dictionary with coverage information is generated as <output>.coverage.pickle.
+    calc_coverage : int
+        Pass in the number of sequenced haploids (nseq) and create a data dictionary with coverage information is generated as <output>.coverage.pickle than nseq.
     seed : int
         Seed for generating random numbers. If None, a random seed is used.
 
@@ -70,9 +70,14 @@ def generate_fs(
                 )
         except ModuleNotFoundError:
             print("Unable to load cyvcf2 and check if ancestral alleles are in provided VCF.\n"+
-                  "Generated FS may be empty if ancestral allele not found.")
+                  "Generated SFS may be empty if ancestral allele not found.")
         except ImportError:
-            print("Error importing cyvcf2")
+            print("Unable to load cyvcf2 and check if ancestral alleles are in provided VCF.\n"+
+                  "Generated SFS may be empty if ancestral allele not found.")
+    if calc_coverage == None:
+        raise ValueError(
+            "Please provide the number of sequenced haploids with --calc-coverage."
+        )
 
     if subsample != []:
         subsample_dict = {}
@@ -97,7 +102,7 @@ def generate_fs(
         import dadi.LowPass.LowPass as lp
         cov_dist = lp.compute_cov_dist(dd, pop_ids)
         print(f"\nSaving coverage distribution data in pickle named:\n{output}.coverage.pickle\n")
-        pickle.dump(cov_dist, open(f"{output}.coverage.pickle","wb"))
+        pickle.dump([cov_dist, calc_coverage], open(f"{output}.coverage.pickle","wb"))
 
     if bootstrap is None:
         fs = dadi.Spectrum.from_data_dict(

@@ -514,14 +514,11 @@ def add_coverage_model_argument(parser: argparse.ArgumentParser) -> None:
     """
     parser.add_argument(
         "--coverage-model",
-        nargs="+",
-        default=[],
-        action="store",
+        default=None,
+        type=str,
         required=False,
         dest="cov_args",
-        help="Enable coverage model.\nArguments are:\
-        \n1. The name of the <>.coverage.pickle file produced by GenerateFs --calc-coverage.\
-        \n2. The total number of samples sequenced for each population in the VCF.",
+        help="Enable coverage model. Pass in the name of the <>.coverage.pickle file produced by GenerateFs --calc-coverage.",
     ) # Need to make the convergence dictionary because dadi-cli does not save a data dictionary
     parser.add_argument(
         "--coverage-inbreeding",

@@ -85,18 +85,19 @@ def infer_demography(
 
     func_ex = dadi.Numerics.make_extrap_func(func)
 
-    if cov_args != []:
+    if cov_args != None:
         try:
             from dadi.LowPass.LowPass import make_low_pass_func_GATK_multisample as func_cov
         except ModuleNotFoundError:
             raise ImportError("ERROR:\nCurrent dadi version does not support coverage model\n")
-        nseq = [int(ele) for ele in cov_args[1:]]
+        # nseq = [int(ele) for ele in cov_args[1]]
+        # cov_args[1] should be a list with ints, so no need to convert to int
         if cov_inbreeding == []:
             Fx = None
         else:
             Fx = cov_inbreeding
 
-        func_ex = func_cov(func_ex, cov_args[0], fs.pop_ids, nseq, fs.sample_sizes, Fx=Fx)
+        func_ex = func_cov(func_ex, cov_args[0], fs.pop_ids, cov_args[1], fs.sample_sizes, Fx=Fx)
 
     p0_len = len(p0)
     if fixed_params == -1:
@@ -208,19 +209,19 @@ def infer_global_opt(
 
     func_ex = dadi.Numerics.make_extrap_func(func)
 
-    if cov_args != []:
+    if cov_args != None:
         try:
             from dadi.LowPass.LowPass import make_low_pass_func_GATK_multisample as func_cov
             import pickle
         except ModuleNotFoundError:
             raise ImportError("ERROR:\nCurrent dadi version does not support coverage model\n")
-        nseq = [int(ele) for ele in cov_args[1:]]
+        # nseq = [int(ele) for ele in cov_args[1:]]
         if cov_inbreeding == []:
             Fx = None
         else:
             Fx = cov_inbreeding
 
-        func_ex = func_cov(func_ex, cov_args[0], fs.pop_ids, nseq, fs.sample_sizes, Fx=Fx)
+        func_ex = func_cov(func_ex, cov_args[0], fs.pop_ids, cov_args[1], fs.sample_sizes, Fx=Fx)
 
     p0_len = len(p0)
     if fixed_params == -1:
