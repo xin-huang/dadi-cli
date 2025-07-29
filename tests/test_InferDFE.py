@@ -29,7 +29,7 @@ def test_infer_dfe_code():
     lower_bounds = [1e-3, 1e-3]
     fixed_params = -1
     misid = False
-    cov_args = []
+    cov_args = None
     cov_inbreeding = []
     cuda = False
     maxeval = 100
@@ -90,7 +90,7 @@ def test_infer_coverage_model_dfe_code():
     lower_bounds = [1e-3, 1e-3]
     fixed_params = -1
     misid = False
-    cov_args = [pickle.load(open("./tests/example_data/LowPass-files/cov.fs.coverage.pickle", 'rb')), 20, 20]
+    cov_args = pickle.load(open("./tests/example_data/LowPass-files/cov.fs.coverage.pickle", 'rb'))
     cov_inbreeding = []
     cuda = False
     maxeval = 100
