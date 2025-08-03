@@ -173,13 +173,10 @@ def add_generate_fs_parsers(subparsers: argparse.ArgumentParser) -> None:
 
     parser.add_argument(
         "--calc-coverage",
-        nargs="+",
         default=False,
-        type=list,
+        action="store_true",
         dest="calc_coverage",
-        help="Pass in the total number of sequenced haploids (nseq) for each population:\n"+
-        "ex. --calc-coverage 22 12, if the total number a sequenced haploids was 22 for population 1 and 12 for population 2.\n" +
-        "And store coverage information of sites and nseq in <output>.coverage.pickle object. Default: False.",
+        help="Store coverage information of sites and total haploids sequenced per population in <output>.coverage.pickle object. Default: False.",
     )
     add_output_argument(parser)
     add_seed_argument(parser)

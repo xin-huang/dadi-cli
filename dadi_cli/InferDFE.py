@@ -117,13 +117,15 @@ def infer_dfe(
             from dadi.LowPass.LowPass import make_low_pass_func_GATK_multisample as func_cov
         except ModuleNotFoundError:
             raise ImportError("ERROR:\nCurrent dadi version does not support coverage model\n")
-        # nseq = [int(ele) for ele in cov_args[1:]]
+        nseq = []
+        for pop in fs.pop_ids:
+            nseq.append(cov_args[1][pop])
         if cov_inbreeding == []:
             Fx = None
         else:
             Fx = cov_inbreeding
 
-        func = func_cov(func, cov_args[0], fs.pop_ids, cov_args[1], fs.sample_sizes, Fx=Fx)
+        func = func_cov(func, cov_args[0], fs.pop_ids, nseq, fs.sample_sizes, Fx=Fx)
 
     p0_len = len(p0)
     # lower_bounds = convert_to_None(lower_bounds, p0_len)
