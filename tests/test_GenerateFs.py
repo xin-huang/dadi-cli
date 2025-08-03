@@ -424,13 +424,13 @@ def test_generate_fs_lowpass_dd(data):
         bootstrap=None,
         chunk_size=None,
         masking="",
-        calc_coverage=[20, 20],
+        calc_coverage=True,
         seed=None,
     )
     import pickle
     cov_dist, nseq = pickle.load(open("tests/test_results/cov-test.fs.coverage.pickle", "rb"))
 
-    assert nseq == [20, 20]
+    assert nseq == {'pop1': 20, 'pop2': 20}
 
 def test_generate_fs_lowpass_fs(data):
     generate_fs(
@@ -445,7 +445,7 @@ def test_generate_fs_lowpass_fs(data):
         bootstrap=None,
         chunk_size=None,
         masking="",
-        calc_coverage=[20, 20],
+        calc_coverage=True,
         seed=None,
     )
     dadi_cli_fs = dadi.Spectrum.from_file("tests/test_results/cov-test.fs")

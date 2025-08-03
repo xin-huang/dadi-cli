@@ -183,13 +183,15 @@ def plot_fitted_demography(
             from dadi.LowPass.LowPass import make_low_pass_func_GATK_multisample as func_cov
         except ModuleNotFoundError:
             raise ImportError("ERROR:\nCurrent dadi version does not support coverage model\n")
-        # nseq = [int(ele) for ele in cov_args[1:]]
+        nseq = []
+        for pop in fs.pop_ids:
+            nseq.append(cov_args[1][pop])
         if cov_inbreeding == []:
             Fx = None
         else:
             Fx = cov_inbreeding
 
-        func_ex = func_cov(func_ex, cov_args[0], fs.pop_ids, cov_args[1], fs.sample_sizes, Fx=Fx)
+        func_ex = func_cov(func_ex, cov_args[0], fs.pop_ids, nseq, fs.sample_sizes, Fx=Fx)
 
     model = func_ex(popt, ns, pts_l)
 
@@ -304,13 +306,15 @@ def plot_fitted_dfe(
             from dadi.LowPass.LowPass import make_low_pass_func_GATK_multisample as func_cov
         except ModuleNotFoundError:
             raise ImportError("ERROR:\nCurrent dadi version does not support coverage model\n")
-        # nseq = [int(ele) for ele in cov_args[1:]]
+        nseq = []
+        for pop in fs.pop_ids:
+            nseq.append(cov_args[1][pop])
         if cov_inbreeding == []:
             Fx = None
         else:
             Fx = cov_inbreeding
 
-        func = func_cov(func, cov_args[0], fs.pop_ids, cov_args[1], fs.sample_sizes, Fx=Fx)
+        func = func_cov(func, cov_args[0], fs.pop_ids, nseq, fs.sample_sizes, Fx=Fx)
     # Get expected SFS for MLE
     if (cache1d != None) and (cache2d != None):
         model = func(sele_popt, None, spectra1d, spectra2d, pdf, pdf2, theta, None)

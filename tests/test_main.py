@@ -60,7 +60,7 @@ def test_run_generate_fs():
     gen_fs_args.pop_info = "tests/example_data/LowPass-files/cov_popfile_2D.txt"
     gen_fs_args.pop_ids = ["pop1", "pop2"]
     gen_fs_args.polarized = False
-    gen_fs_args.calc_coverage = [20, 20]
+    gen_fs_args.calc_coverage = True
     _run_generate_fs(gen_fs_args)
     os.remove(gen_fs_args.output)
     os.remove(gen_fs_args.output+".coverage.pickle")

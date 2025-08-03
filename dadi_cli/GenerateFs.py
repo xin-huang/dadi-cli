@@ -90,6 +90,12 @@ def generate_fs(
         # multiply number of individuals subsamples by the ploidy to get sample size
         projections = [individuals*ploidy for individuals in subsample]
         print(projections, ploidy, subsample)
+    elif calc_coverage:
+        dd, ploidy = dadi.Misc.make_data_dict_vcf(vcf_filename=vcf, popinfo_filename=pop_info, calc_coverage=calc_coverage, extract_ploidy=True)
+        import collections
+        nseq = collections.defaultdict(int)
+        for line in open(pop_info).readlines():
+            nseq[line.strip().split()[-1]] += 1 * ploidy
     else:
         dd = dadi.Misc.make_data_dict_vcf(vcf_filename=vcf, popinfo_filename=pop_info, calc_coverage=calc_coverage)
 
@@ -97,12 +103,12 @@ def generate_fs(
     if len(pop_ids) != len(projections):
         raise ValueError("The lengths of `pop_ids` and `projections` must match.")
 
-    if calc_coverage:    
+    if calc_coverage:
         import pickle
         import dadi.LowPass.LowPass as lp
         cov_dist = lp.compute_cov_dist(dd, pop_ids)
         print(f"\nSaving coverage distribution data in pickle named:\n{output}.coverage.pickle\n")
-        pickle.dump([cov_dist, calc_coverage], open(f"{output}.coverage.pickle","wb"))
+        pickle.dump([cov_dist, nseq], open(f"{output}.coverage.pickle","wb"))
 
     if bootstrap is None:
         fs = dadi.Spectrum.from_data_dict(
