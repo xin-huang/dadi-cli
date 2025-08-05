@@ -88,14 +88,15 @@ def generate_fs(
             vcf_filename=vcf, popinfo_filename=pop_info, subsample=subsample_dict, calc_coverage=calc_coverage, extract_ploidy=True
         )
         # multiply number of individuals subsamples by the ploidy to get sample size
-        projections = [individuals*ploidy for individuals in subsample]
+        for pop in pop_ids:
+            projections = [individuals*ploidy[pop] for individuals in subsample]
         print(projections, ploidy, subsample)
     elif calc_coverage:
         dd, ploidy = dadi.Misc.make_data_dict_vcf(vcf_filename=vcf, popinfo_filename=pop_info, calc_coverage=calc_coverage, extract_ploidy=True)
         import collections
         nseq = collections.defaultdict(int)
         for line in open(pop_info).readlines():
-            nseq[line.strip().split()[-1]] += 1 * ploidy
+            nseq[line.strip().split()[-1]] += 1 * ploidy[line.strip().split()[-1]]
     else:
         dd = dadi.Misc.make_data_dict_vcf(vcf_filename=vcf, popinfo_filename=pop_info, calc_coverage=calc_coverage)
 
