@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "dadi-cli"
-version = "0.9.12"
+version = "0.9.13"
 requires-python = ">=3.9"
 description = "A command line interface for dadi"
 readme = "README.md"
