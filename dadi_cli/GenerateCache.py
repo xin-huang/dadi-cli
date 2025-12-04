@@ -102,5 +102,5 @@ def generate_cache(
         )
 
     fid = open(output, "wb")
-    pickle.dump(spectra, fid, protocol=2)
+    pickle.dump(spectra, fid, protocol=4)
     fid.close()
