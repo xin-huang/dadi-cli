@@ -125,7 +125,7 @@ def generate_fs(
             random.seed(seed)
         fragments = dadi.Misc.fragment_data_dict(dd, chunk_size)
         bootstrap_list = dadi.Misc.bootstraps_from_dd_chunks(
-            fragments, bootstrap, pop_ids, projections, polarized
+            fragments, bootstrap, pop_ids, projections, polarized=polarized
         )
         for fs, b in zip(bootstrap_list, range(len(bootstrap_list))):
             if marginalize_pops is not None:
