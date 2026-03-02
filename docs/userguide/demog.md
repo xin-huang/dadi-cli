@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # Demographic inference
 
 ## Model Parameters
@@ -7,8 +12,10 @@ The demographic models in dadi are distinguished from one another by the paramet
 `nu` is the population size relative to a reference population (the ancestral population or the effective population size). So a `nu` of 3 means the population is triple the size of the reference population, or \\(3 N_{\text{ref}}\\).
 
 `T` is the time in \\(\text{ploidy} \cdot N_{\text{ref}}\\) generations. So for humans, time is in units of `T` are \\(2 N_{\text{ref}}\\)
-In order to convert `T` into years, for diploids, users would use the conversion: \\(2 N_{\text{ref}} T\\)
-To convert `T` into generations, users would divide years by generations per-year, ex. for Humans estimating 25 years per-generation: \\(\frac{2 N_{\text{ref}} T}{25 \text{ years per generation}}\\).
+In order to convert `T` into generations, for diploids, users would use the conversion: \\(2 N_{\text{ref}} T\\)
+To convert `T` into years, users would multiply by years per-generation, 
+ex. for Humans estimating 25 years per-generation: 
+\\(2 N_{\text{ref}} T \times \frac{25 \text{years}{\text{generation}}}\\).
 
 Each model inference will produce a \\(\theta\\) value, which is roughly a population scale neutral mutation rate. This value is important for estimating the DFE (see [dadi documentation](https://dadi.readthedocs.io/en/latest/user-guide/dfe-inference/) for more specific details) and calculating \\(N_\text{ref}\\), using the conversion \\(\frac{\theta}{4 \mu L}\\), where \\(\mu\\) is the genomic mutation rate and \\(L\\) is the length of sequence that could have ended up in the SNPs data. Put another way, \\(L\\) is the total length of the genome that was sequenced and could have been the same type of SNP (intergenic, synonymous, nonsynonymous) being analyized.
 
