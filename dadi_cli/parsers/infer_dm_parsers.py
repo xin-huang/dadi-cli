@@ -35,7 +35,7 @@ def _run_infer_dm(args: argparse.Namespace) -> None:
             Grid sizes to use in demographic calculations.
         - misid : bool
             Flag to indicate if misidentification handling should be enabled.
-        - cov_args : list
+        - cov_args : str
             Dictionary that contains the data dictionary with coverage information 
             and total number of sample sequenced in each population for coverage correction.
         - cov_inbreeding : list
@@ -94,9 +94,9 @@ def _run_infer_dm(args: argparse.Namespace) -> None:
     # Converts str to float and None string to None value
     args.lbounds, args.ubounds, args.constants = convert_bounds_and_constants(args.lbounds, args.ubounds, args.constants)
 
-    if args.cov_args != []:
+    if args.cov_args != None:
         import pickle
-        args.cov_args[0] = pickle.load(open(args.cov_args[0], 'rb'))
+        args.cov_args = pickle.load(open(args.cov_args, 'rb'))
 
     # Because basic standard neutral models do not need to optimized
     # we can calculate the log-likelihood and theta

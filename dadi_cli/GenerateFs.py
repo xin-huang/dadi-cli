@@ -13,7 +13,7 @@ def generate_fs(
     bootstrap: int,
     chunk_size: int,
     masking: str,
-    calc_coverage: bool,
+    calc_coverage: int,
     seed: int,
 ) -> None:
     """
@@ -47,8 +47,8 @@ def generate_fs(
         'singleton' - Masks singletons in each population,
         'shared' - Masks singletons in each population and those shared across populations,
         '' - No masking is applied.
-    calc_coverage : bool
-        If True, a data dictionary with coverage information is generated as <output>.coverage.pickle.
+    calc_coverage : int
+        Pass in the number of sequenced haploids (nseq) and create a data dictionary with coverage information is generated as <output>.coverage.pickle than nseq.
     seed : int
         Seed for generating random numbers. If None, a random seed is used.
 
@@ -70,9 +70,14 @@ def generate_fs(
                 )
         except ModuleNotFoundError:
             print("Unable to load cyvcf2 and check if ancestral alleles are in provided VCF.\n"+
-                  "Generated FS may be empty if ancestral allele not found.")
+                  "Generated SFS may be empty if ancestral allele not found.")
         except ImportError:
-            print("Error importing cyvcf2")
+            print("Unable to load cyvcf2 and check if ancestral alleles are in provided VCF.\n"+
+                  "Generated SFS may be empty if ancestral allele not found.")
+    if calc_coverage == None:
+        raise ValueError(
+            "Please provide the number of sequenced haploids with --calc-coverage."
+        )
 
     if subsample != []:
         subsample_dict = {}
@@ -83,8 +88,15 @@ def generate_fs(
             vcf_filename=vcf, popinfo_filename=pop_info, subsample=subsample_dict, calc_coverage=calc_coverage, extract_ploidy=True
         )
         # multiply number of individuals subsamples by the ploidy to get sample size
-        projections = [individuals*ploidy for individuals in subsample]
+        for pop in pop_ids:
+            projections = [individuals*ploidy[pop] for individuals in subsample]
         print(projections, ploidy, subsample)
+    elif calc_coverage:
+        dd, ploidy = dadi.Misc.make_data_dict_vcf(vcf_filename=vcf, popinfo_filename=pop_info, calc_coverage=calc_coverage, extract_ploidy=True)
+        import collections
+        nseq = collections.defaultdict(int)
+        for line in open(pop_info).readlines():
+            nseq[line.strip().split()[-1]] += 1 * ploidy[line.strip().split()[-1]]
     else:
         dd = dadi.Misc.make_data_dict_vcf(vcf_filename=vcf, popinfo_filename=pop_info, calc_coverage=calc_coverage)
 
@@ -92,12 +104,12 @@ def generate_fs(
     if len(pop_ids) != len(projections):
         raise ValueError("The lengths of `pop_ids` and `projections` must match.")
 
-    if calc_coverage:    
+    if calc_coverage:
         import pickle
         import dadi.LowPass.LowPass as lp
         cov_dist = lp.compute_cov_dist(dd, pop_ids)
         print(f"\nSaving coverage distribution data in pickle named:\n{output}.coverage.pickle\n")
-        pickle.dump(cov_dist, open(f"{output}.coverage.pickle","wb"))
+        pickle.dump([cov_dist, nseq], open(f"{output}.coverage.pickle","wb"))
 
     if bootstrap is None:
         fs = dadi.Spectrum.from_data_dict(
@@ -113,7 +125,7 @@ def generate_fs(
             random.seed(seed)
         fragments = dadi.Misc.fragment_data_dict(dd, chunk_size)
         bootstrap_list = dadi.Misc.bootstraps_from_dd_chunks(
-            fragments, bootstrap, pop_ids, projections, polarized
+            fragments, bootstrap, pop_ids, projections, polarized=polarized
         )
         for fs, b in zip(bootstrap_list, range(len(bootstrap_list))):
             if marginalize_pops is not None:

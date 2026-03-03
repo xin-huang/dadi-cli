@@ -176,9 +176,8 @@ def add_generate_fs_parsers(subparsers: argparse.ArgumentParser) -> None:
         default=False,
         action="store_true",
         dest="calc_coverage",
-        help="Store coverage information of sites in <output>.coverage.pickle object. Default: None.",
+        help="Store coverage information of sites and total haploids sequenced per population in <output>.coverage.pickle object. Default: False.",
     )
-
     add_output_argument(parser)
     add_seed_argument(parser)
     parser.set_defaults(runner=_run_generate_fs)
