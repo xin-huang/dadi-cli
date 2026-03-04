@@ -14,8 +14,12 @@ plugins:
       default_handler: python
       handlers:
         python:
+          paths: [src]
           options:
+            show_root_toc_entry: false
             show_source: true
+            show_signature_annotations: true
+            merge_init_into_class: true
 markdown_extensions:
   - extra
   - tables
