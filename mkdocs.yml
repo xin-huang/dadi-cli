@@ -16,8 +16,6 @@ plugins:
         python:
           options:
             show_source: true
-      watch:
-        - dadi-cli
 markdown_extensions:
   - extra
   - tables
