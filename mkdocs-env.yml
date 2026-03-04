@@ -13,7 +13,7 @@ dependencies:
   - matplotlib
   - mkdocstrings==0.26.1
   - mkdocs-material
-  - ndcctools==7.4.3
+  - ndcctools
   - nlopt
   - numpy
   - pip
