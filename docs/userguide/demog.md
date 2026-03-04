@@ -15,7 +15,7 @@ The demographic models in dadi are distinguished from one another by the paramet
 In order to convert `T` into generations, for diploids, users would use the conversion: \\(2 N_{\text{ref}} T\\)
 To convert `T` into years, users would multiply by years per-generation, 
 ex. for Humans estimating 25 years per-generation: 
-\\(2 N_{\text{ref}} T \times \frac{25 \text{years}{\text{generation}}}\\).
+\\(2 N_{\text{ref}} T \times 25 \frac{\text{years}}{\text{generation}}\\).
 
 Each model inference will produce a \\(\theta\\) value, which is roughly a population scale neutral mutation rate. This value is important for estimating the DFE (see [dadi documentation](https://dadi.readthedocs.io/en/latest/user-guide/dfe-inference/) for more specific details) and calculating \\(N_\text{ref}\\), using the conversion \\(\frac{\theta}{4 \mu L}\\), where \\(\mu\\) is the genomic mutation rate and \\(L\\) is the length of sequence that could have ended up in the SNPs data. Put another way, \\(L\\) is the total length of the genome that was sequenced and could have been the same type of SNP (intergenic, synonymous, nonsynonymous) being analyized.
 

@@ -34,7 +34,7 @@ These commands use the bootstrapped spectra to estimate the confidence intervals
 
 ## Output
 
-The results are stored in [1KG.YRI.CEU.20.split_mig.bestfit.demog.params.godambe.ci](https://github.com/xin-huang/dadi-cli/blob/revision/examples/results/stat/1KG.YRI.CEU.20.split_mig.bestfit.demog.params.godambe.ci) and [1KG.YRI.CEU.20.split_mig.bestfit.dfe.1D_lognormal.params.godambe.ci](https://github.com/xin-huang/dadi-cli/blob/revision/examples/results/stat/1KG.YRI.CEU.20.split_mig.bestfit.dfe.1D_lognormal.params.godambe.ci), respectivly.
+The results are stored in [1KG.YRI.CEU.20.split_mig.bestfit.demog.params.godambe.ci](https://github.com/xin-huang/dadi-cli/blob/revision/examples/results/stat/1KG.YRI.CEU.20.split_mig.bestfit.demog.params.godambe.ci) and [1KG.YRI.CEU.20.split_mig.bestfit.dfe.1D_lognormal.params.godambe.ci](https://github.com/xin-huang/dadi-cli/blob/revision/examples/results/stat/1KG.YRI.CEU.20.split_mig.bestfit.dfe.1D_lognormal.params.godambe.ci), respectively.
 
 The 95% confidence intervals for the demographic parameters in our [demographic inference example](https://dadi-cli.readthedocs.io/en/revision/userguide/demog/) are shown below: 
 
@@ -55,7 +55,10 @@ Upper bounds of 95% confidence interval : [2.2926914  0.53161583 0.29296151 1.23
 Three different step sizes (0.1, 0.01, and 0.001) are tested when using the GIM. Ideally, 95% confidence intervals will be consistent across step sizes. For each step size:
 
 - The first line shows the estimated uncertainty at the 95% confidence level.
-- The second line provides the lower bounds of the 95% confidence intervals for each parameter. The parameters and their order match those in [1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits](examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits). The parameters are `nu1`, `nu2`, `T`, `m`, `misid`. For example, if the best fit value of `nu1` is `2.234010915680658` and the estimated uncertainty at the 95% confidence level with step size 0.1 for `nu1` is `0.0652234`, its lower bound is calculated as `2.234010915680658 - 0.0652234 = 2.16878752`.
+- The second line provides the lower bounds of the 95% confidence intervals for each parameter. 
+The parameters and their order match those in [1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits](https://github.com/xin-huang/dadi-cli/blob/revision/examples/results/demog/1KG.YRI.CEU.20.split_mig.demog.params.InferDM.bestfits). 
+The parameters are `nu1`, `nu2`, `T`, `m`, `misid`. 
+For example, if the best fit value of `nu1` is `2.234010915680658` and the estimated uncertainty at the 95% confidence level with step size 0.1 for `nu1` is `0.0652234`, its lower bound is calculated as `2.234010915680658 - 0.0652234 = 2.16878752`.
 - The third line shows the upper bounds of the 95% confidence intervals for each parameter.
 
 For step size 0.1, the confidence intervals for each demographic parameters are:
